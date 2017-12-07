@@ -17,6 +17,9 @@
 package com.wuweibi.bullet.websocket;
 
 import com.wuweibi.bullet.ByteUtils;
+import com.wuweibi.bullet.protocol.Message;
+import com.wuweibi.bullet.protocol.MsgHead;
+import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.server.HandlerBytes;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -63,7 +68,7 @@ public class BulletAnnotation {
      */
     @OnOpen
     public void start(Session session, @PathParam("user")String deviceId) {
-        this.session = session;
+        this.session  = session;
         this.deviceId = deviceId;// 设备ID
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(60000);
@@ -86,33 +91,43 @@ public class BulletAnnotation {
     @OnMessage
     public void incoming(byte[] bytes) {
 
-        byte[] timeBytes =  new byte[8];
-        System.arraycopy(bytes, 0, timeBytes, 0, 8);
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        MsgHead head = new MsgHead();
+        MsgProxyHttp msg = null;
+        try {
+            head.read(bis);//读取消息头
+            switch (head.getCommand()) {
+                case Message.Proxy_Http:// Bind响应命令
+                    msg = new MsgProxyHttp(head);
+                    msg.read(bis);
+                    ;break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        logger.debug("读取请求信息...");
-        long time = ByteUtils.bytes2Long(timeBytes);
-        logger.debug("time = {}", ByteUtils.bytes2Long(timeBytes));
-        int size = bytes.length - 8;
-        logger.debug("size = {}", size);
-        byte[] responseData = new byte[size];
-        System.arraycopy(bytes, 8, responseData, 0, size);
+
+
+        String sequence =  msg.getSequence();
+        byte[] responseData =  msg.getContent();
+
 
 
         synchronized (BulletAnnotation.class){
 
+            ChannelHandlerContext ctx = HandlerBytes.cache.get(sequence);
 
-            ChannelHandlerContext ctx = HandlerBytes.cache.get(time);
-
-
-            // 在当前场景下，发送的数据必须转换成ByteBuf数组
-            ByteBuf encoded = ctx.alloc().buffer(responseData.length);
-            encoded.writeBytes(responseData);
-            ctx.write(encoded);
-            ctx.flush();
-            ctx.close();
-            HandlerBytes.cache.remove(time);
-            logger.debug("count={}", HandlerBytes.cache.size());
-            System.out.println(HandlerBytes.cache.size());
+            if(ctx != null){
+                // 在当前场景下，发送的数据必须转换成ByteBuf数组
+                ByteBuf encoded = ctx.alloc().buffer(responseData.length);
+                encoded.writeBytes(responseData);
+                ctx.write(encoded);
+                ctx.flush();
+                ctx.close();
+                HandlerBytes.cache.remove(sequence);
+                logger.debug("count={}", HandlerBytes.cache.size());
+                System.out.println(HandlerBytes.cache.size());
+            }
 
         }
     }

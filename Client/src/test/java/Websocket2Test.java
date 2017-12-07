@@ -34,7 +34,8 @@ public class Websocket2Test extends Draft_6455 {
         String uuid = "12345678";
 
 
-        String url = ConfigUtils.getTunnel() + uuid;
+        String url = ConfigUtils.getTunnel() +"/"+ uuid;
+        System.out.println(url);
 
 
         WebSocketContainer container = ContainerProvider.getWebSocketContainer(); // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");

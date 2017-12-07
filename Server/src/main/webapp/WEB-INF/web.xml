@@ -6,6 +6,10 @@
     </welcome-file-list>
 
 
+    <listener>
+        <listener-class>ApplicationInit</listener-class>
+    </listener>
+
     <!--  Spring的ApplicationContext 载入 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

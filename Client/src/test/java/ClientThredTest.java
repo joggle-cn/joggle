@@ -68,8 +68,7 @@ public class ClientThredTest extends Draft_6455 {
 
 
                             SocketThread socketThread = new SocketThread(new WebSocketClientProxyTest(socket), results);
-                            socketThread.setHost("localhost");
-                            socketThread.setPort(8080);
+
                             socketThread.start();
                         } catch(Exception e){
                             e.printStackTrace();

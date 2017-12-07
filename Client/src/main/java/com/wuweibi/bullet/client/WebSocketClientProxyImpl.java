@@ -1,4 +1,5 @@
-package com.wuweibi.bullet.client;/**
+package com.wuweibi.bullet.client;
+/**
  * Created by marker on 2017/11/20.
  */
 
@@ -38,11 +39,6 @@ public class WebSocketClientProxyImpl implements WebSocketClientProxy {
 
     @Override
     public void send(byte[] results) {
-//        this.client.send(results);
-        try {
-            this.session.getBasicRemote().sendBinary(ByteBuffer.wrap(results));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.session.getAsyncRemote().sendBinary(ByteBuffer.wrap(results));
     }
 }

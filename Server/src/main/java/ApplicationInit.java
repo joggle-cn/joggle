@@ -45,15 +45,15 @@ public class ApplicationInit implements ServletContextListener {
                 NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
                 bootstrap.group(boss, work);
                 bootstrap.channel(NioServerSocketChannel.class);
-                bootstrap.localAddress("localhost", 80);
+                bootstrap.localAddress("localhost", 8081);
                 bootstrap.childHandler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
 
-                        // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
-                        ch.pipeline().addLast(new ByteArrayDecoder());
-                        // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
-                        ch.pipeline().addLast(new SimpleServerHandler());
+                    // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
+                    ch.pipeline().addLast(new ByteArrayDecoder());
+                    // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
+                    ch.pipeline().addLast(new SimpleServerHandler());
 
                     }
                 }).option(ChannelOption.SO_BACKLOG, 128)

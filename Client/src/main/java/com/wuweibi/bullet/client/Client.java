@@ -2,6 +2,8 @@ package com.wuweibi.bullet.client;/**
  * Created by marker on 2017/11/22.
  */
 
+import com.wuweibi.bullet.ConfigUtils;
+
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -32,8 +34,6 @@ public class Client {
         byte[] bytes = message.array();
 
         SocketThread socketThread = new SocketThread(new WebSocketClientProxyImpl(session), bytes);
-        socketThread.setHost("localhost");
-        socketThread.setPort(8080);
 
         socketThread.start();
     }
@@ -48,8 +48,11 @@ public class Client {
         System.out.println(closeReason.toString());
         System.out.println("链接已关闭");
 
-        String url = "ws://localhost:8082/ws/chat/marker";
+        String uuid = "12345678";
 
+
+        String url = ConfigUtils.getTunnel() +"/"+ uuid;
+        System.out.println(url);
 
         WebSocketContainer container = ContainerProvider.getWebSocketContainer(); // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
 

@@ -4,6 +4,9 @@ package com.wuweibi.bullet.client;/**
 
 import com.wuweibi.bullet.ByteUtils;
 import com.wuweibi.bullet.SocketUtils;
+import com.wuweibi.bullet.protocol.Message;
+import com.wuweibi.bullet.protocol.MsgHead;
+import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import org.apache.commons.io.IOUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.slf4j.Logger;
@@ -31,11 +34,6 @@ public class SocketThread extends Thread{
     /** bytes */
     private byte[] bytes;
 
-    /** host */
-    private String host;
-
-    /** 端口 */
-    private int port;
 
 
     /**
@@ -53,14 +51,32 @@ public class SocketThread extends Thread{
     public void run() {
         logger.debug("接收到服务器的转发请求信息！");
 
-        byte[] timeBytes =  new byte[8];
-        System.arraycopy(bytes, 0, timeBytes, 0, 8);
 
-        logger.debug("time = {}", ByteUtils.bytes2Long(timeBytes));
-        int size = bytes.length - 8;
-        logger.debug("size = {}", size);
-        byte[] requestData = new byte[size];
-        System.arraycopy(bytes, 8, requestData, 0, size);
+
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        MsgHead head = new MsgHead();
+        MsgProxyHttp msg = null;
+        try {
+            head.read(bis);//读取消息头
+            logger.info("{}", head.toString());
+
+            switch (head.getCommand()) {
+                case Message.Proxy_Http:// Bind响应命令
+                    msg = new MsgProxyHttp(head);
+                    msg.read(bis);
+                ;break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        String host = msg.getServerAddr();
+        int  port   = msg.getPort();
+        byte[] requestData = msg.getContent();
+
+
+
 
         SocketChannel socketChannel = null;
         // 代理请求
@@ -70,40 +86,30 @@ public class SocketThread extends Thread{
             socketChannel = SocketChannel.open(isa);
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
-
             ByteBuffer buffer = ByteBuffer.wrap(requestData);
             socketChannel.write(buffer);
             socketChannel.shutdownOutput();
-
-
 
         } catch (IOException e) {
             logger.error("", e);
         }
         // 处理响应
-            logger.debug("接收响应内容...");
+        logger.debug("接收响应内容...");
+        byte[] bytesout = SocketUtils.receiveData(socketChannel);
 
-            byte[] bytesout = SocketUtils.receiveData(socketChannel);
+        msg.setContent(bytesout);
 
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            msg.write(os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            byte[] results  = ByteUtils.byteMerger(timeBytes, bytesout);
-            client.send(results);
+        byte[] results = os.toByteArray();
+
+        client.send(results);
 
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
 }
