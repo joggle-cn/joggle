@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="mapper.user"> 
+	 
+	<resultMap type="com.wuweibi.bullet.domain.User" id="userResultMap">
+		<result column="name" property="name"/>
+		<result column="pass" property="pass"/>
+	</resultMap>
+
+
+
+	<!-- 保存用户信息 -->
+	<insert id="insert" parameterType="com.wuweibi.bullet.domain.User"
+		useGeneratedKeys="true" 
+		keyProperty="id">	<!-- 向数据库中插入用户 -->
+		insert into t_user ( name, email, pass, sex, agree, age) 
+			values (#{name},#{email},#{pass},#{sex},#{agree},#{age})
+	</insert>
+	
+	
+	<select id="mapper.user.findByEmail" resultMap="userResultMap" parameterType="string">
+		select id,name, pass, icon from t_user where email=#{email} LIMIT 1
+	</select>
+
+	<!-- 更新用户密码 -->
+	<update id="updatePass" parameterType="map">
+		update t_user set
+		pass = #{pass}
+		where id = #{userId}
+	</update>
+
+    <select id="mapper.user.findByUserList" resultMap="userResultMap" parameterType="list">
+        select id,name, pass, icon from t_user where id IN
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,63 @@
+{
+	"home":{
+		"nav":{
+			"index": "首页",
+			"topic": "话题"
+		},
+		"btn":{
+			"flashchat": "闪聊模式",
+			"wishwall":  "创建心愿墙",
+		  	"onlinevideo":"在线视频"
+			
+		},
+		
+		"banner":{
+			"title": "面部的秘密",
+			"desc": "免费的web应用"
+		}
+	},
+	"footer":{
+		"nav":{
+			"about": "关于我们",
+			"contact": "联系我们",
+			"privacy": "隐私声明",
+			"work": "工作机会",
+			"terms": "服务条款",
+			"feedback": "信息反馈"
+		}
+	},
+	"user":{
+		"login": "登录",
+		"register": "注册",
+		"loginout": "退出",
+		"profile": "我的资料"
+	},
+	"register":{
+		"email": "邮箱",
+		"nickname": "昵称",
+		"sex": "性别",
+		"sexgirl": "女",
+		"sexboy": "男",
+		"age": "年龄",
+		"password": "密码",
+		"password2": "确认密码",
+		"agree": "同意",
+		"protocol": "《互联网应用使用条款》"
+	},
+    "user3":{
+        "greeting": "Welcome %1",
+        "browser": "You are using %{browser}.",
+        "logout": "退出",
+        "count":{
+            "1": "There is 1 user online.",
+            "n": "There are %1 users online."
+        }
+    },
+    "error":{
+    	"MSG_100001": "邮箱错误" 
+    	,"MSG_100002": "该邮箱已经被注册"
+    	,"MSG_100003": "该项必须填写"
+    	,"MSG_100004": "两次密码输入不一致"
+    
+    }
+}

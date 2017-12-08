@@ -1,4 +1,5 @@
-package com.wuweibi.bullet.client;/**
+package com.wuweibi.bullet.client;
+/**
  * Created by marker on 2017/11/22.
  */
 

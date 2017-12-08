@@ -14,6 +14,10 @@
     <artifactId>server</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <properties>
+        <mybaitsplus.version>2.1.4</mybaitsplus.version>
+
+    </properties>
 
     <dependencies>
         <dependency>
@@ -115,6 +119,34 @@
             <version>2.3.20</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>qq-connect</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <!-- Mybatis-Plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
+            <version>${mybaitsplus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.15</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jconsole</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>tools</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
 

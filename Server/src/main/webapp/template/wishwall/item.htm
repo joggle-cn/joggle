@@ -1,0 +1,63 @@
+<div id="show_wishwall_wrapper" class="wishwall_wrapper" >
+	<div style="height:600px;">
+	
+	</div>
+
+	<div class="wish wish-edit" style="top:400px; left: 300px; width:300px;">
+		<img class="icon" src="/resource/images/20141024134140.jpg" />
+		
+		<div class="msg" style="width:229px;">
+			我希望他能快点好起来我希望他能快点好来我希望他能快点好来我希望他能快点好起来！他能快点好起来！他能快点好起来！
+		
+		</div> 
+	</div>
+	
+	<div class="wish wish-edit" style="top:200px; left: 400px; width:300px;">
+		<img class="icon" src="/resource/images/20141023223008.jpg" />
+		
+		<div class="msg" style="width:229px;">
+			<p>
+				我希望他能快点好起来！
+			</p>
+		</div> 
+	</div>
+	
+	
+	
+	
+	
+ 	
+</div>
+<script id="createWish-template" type="text/x-template">
+	<div class="wish wish-edit" style="{{style}}">
+		<img class="icon" src="/resource/images/20141024134140.jpg" />
+		
+		<div class="msg" style="width:229px;">
+			在这里写下您的小小愿望，我们不能实现您的愿望，但是可以留住回忆！
+		</div> 
+	</div>
+ 	
+</script>
+ 
+
+
+
+<div id="createWishModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">友情提示</h4>
+      </div>
+      <div class="modal-body">
+      	<p style="margin: 10px 60px; ">
+        	 创建心愿：找一个空地，双击鼠标左键。<br /> <br /> 
+        	 <img id="study-createWish" alt=""  data-src="/resource/images/demo_newwish1.gif" />
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a ng-click="confirmation()" class="btn btn-default">我知道了</a>
+        <a ng-click="cancel()"  class="btn btn-default">取消</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

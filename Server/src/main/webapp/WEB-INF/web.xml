@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
 
     <welcome-file-list>
-        <welcome-file>cms</welcome-file>
+        <welcome-file>index</welcome-file>
     </welcome-file-list>
 
 
@@ -27,8 +27,6 @@
             classpath:/spring/application.xml
         </param-value>
     </context-param>
-
-
 
 
     <filter>
@@ -66,7 +64,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SpringServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
 

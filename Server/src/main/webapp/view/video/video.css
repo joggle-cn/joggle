@@ -1,0 +1,7 @@
+.videoView{
+    display: inline-block;
+    background: #cccc77;
+}
+.video_content{
+    margin: 20px 30px;
+}

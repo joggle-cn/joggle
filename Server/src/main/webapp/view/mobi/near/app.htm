@@ -1,0 +1,74 @@
+<!--
+    @title 附近秘密
+    @author marker
+    @createTime 2016-08-11
+
+-->
+<header class="demo-header demo-bar am-header-fixed">
+    <span class="am-icon-bars btn-back btn-menu-list"></span>
+    <h1>附近秘密</h1>
+    <a class="btn-menu-bar btn-filter">
+        <i class="am-menu-toggle-icon am-icon-filter"></i>
+    </a>
+</header>
+
+
+<div id="widget-list">
+    <ul class="am-list m-widget-list"
+        style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+
+        <li class="am-g" ng-repeat="item in secretList">
+            <a>
+                <div class="grid-header">
+                    <div class="header-fl">
+                        <img ng-src="{{item.usericon}}" />
+                        <span class="header-name">{{item.username}}</span>
+                    </div>
+                    <div class="header-fr">
+                       <span class="am-icon-location-arrow"></span> {{item.distance|showDistance}} km
+                    </div>
+                </div>
+                <div class="grid-content">
+                     {{item.content}}
+                </div>
+                <div class="grid-footer">
+                    <div class="footer-fl">
+                        <span class="am-icon-share"></span>
+
+                    </div>
+                    <div class="footer-fr">
+                        {{item.createTime | showDate}}
+                    </div>
+                </div>
+            </a>
+        </li>
+
+        <!--<li>-->
+            <!--<a class="am-btn am-btn-primary near-loadmore">加载更多</a>-->
+        <!--</li>-->
+
+    </ul>
+</div>
+
+
+<!--  -->
+<div class="am-modal-actions" id="my-actions">
+    <div class="am-modal-actions-group">
+        <ul class="am-list">
+            <li class="am-modal-actions-danger">
+                <a ng-click="near()">查看所有</a>
+            </li>
+        </ul>
+    </div>
+    <div class="am-modal-actions-group">
+        <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取 消</button>
+    </div>
+</div>
+
+
+
+<div data-am-widget="gotop" class="am-gotop am-gotop-fixed" >
+    <a href="#top" title="">
+        <i class="am-gotop-icon am-icon-hand-o-up"></i>
+    </a>
+</div>

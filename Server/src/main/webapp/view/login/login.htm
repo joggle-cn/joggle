@@ -1,0 +1,79 @@
+<div id="wrap-all"><div id="main" class="inner">
+<!-- // data-ng-controller="user_login_ctrl"_= -->
+<div class="other-warp login-wrap" >
+
+    <div class="single-panel clearfix">
+        <div class="single-panel-inner login-mini">
+            <div class="single-panel-header">
+                <h3>登录</h3>
+            </div>
+            <div class="single-panel-body">
+                <div class="single-panel-section">
+                    <form name="login_form" class="form-horizontal wt-form"  >
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icon icon-user"></i></span>
+                                <input class="form-control" type="text" ng-model="user.name" ng-focus="nameMsg=''"  />
+
+                            </div>
+                            <span class="message" ng-bind="nameMsg"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon fs_17"><i class="icon icon-lock"></i></span>
+                                <input class="form-control" type="password"
+                                    ng-model="user.pass"  ng-focus="passMsg=''" />
+                            </div>
+                            <span class="message" ng-bind="passMsg"></span>
+                        </div>
+ 						<div class="form-group" ng-show="openvalid == true">
+                            <div class="input-group">
+                                <span class="input-group-addon fs_17"><i class="icon icon-lock"></i></span>
+                                <input class="form-control" type="password" placeholder="输入验证码"
+                                    ng-model="user.code" style="width:120px"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button ng-click="login()" class="btn btn-success btn-lg btn-block"
+                               data-loading-text="登录中..."  ng-bind="res.t('user.login')"></button>
+                        </div>
+
+                        <div class="form-group">
+					    	<p class="thirdparty_title">使用三方平台账号登录</p>
+						    <div class="col-sm-3">
+						       <a target="_self" href="/thirdparty/qq/login.face">
+						       	  <div class="login_with_thirdparty"><i class="fa fa-qq"></i></div>
+						       </a>
+						    </div>
+						    <div class="col-sm-3">
+						       <a target="_self" href="/thirdparty/qq/login.face">
+						       	  <div class="login_with_thirdparty"><i class="fa fa-weibo"></i></div>
+						       </a>
+						    </div>
+						    <div class="col-sm-3">
+						       <a target="_self" href="/thirdparty/qq/login.face">
+						       	  <div class="login_with_thirdparty"><i class="fa fa-wechat"></i></div>
+						       </a>
+						    </div>
+						    <div class="col-sm-3">
+						       <a target="_self" href="/thirdparty/qq/login.face">
+						       	  <div class="login_with_thirdparty"><i class="fa fa-twitter"></i></div>
+						       </a>
+						    </div>
+						</div>
+
+                    </form>
+                </div>
+
+            </div>
+            <div class="single-panel-footer">
+                <div class="pull-right">
+                    <a href="/forgot">忘记密码？</a></div>
+            </div>
+        </div>
+ 
+    </div>
+</div>
+
+</div></div>

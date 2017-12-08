@@ -12,6 +12,7 @@
 
 
 	<import resource="application-cache.xml" />
+	<import resource="spring-jdbc.xml" />
 
 
 </beans>

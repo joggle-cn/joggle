@@ -1,0 +1,6 @@
+{
+   "regEmailError": "MSG_100001" 
+   ,"regEmailExist": "MSG_100002" 
+   ,"mustFillInput": "MSG_100003"
+   ,"passwordInputNotEquals": "MSG_100004"
+}

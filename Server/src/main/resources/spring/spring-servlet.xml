@@ -30,7 +30,7 @@
         <property name="defaultEncoding" value="utf-8"/>
 		<property name="basenames">
             <array>
-                <value>config/international/messages</value>
+                <value>messages</value>
             </array>
         </property>
     </bean>

@@ -1,0 +1,26 @@
+<div class="container"> 
+	<div class="row">
+	  <div class="col-sm-6 col-md-4"  ng-repeat="item in wishwalls">
+	    <div class="thumbnail">
+	      <img ng-src="{{item.background}}" alt="...">
+	      <div class="caption">
+	        <a ng-href="/wishwall/item/{{item.id}}.html"><h3>{{item.name}}</h3></a>
+	        <p>{{item.description}}</p>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
+<div class="container"> 
+	<nav>
+	  <ul class="pagination">
+	    <li><a href="#">&laquo;</a></li>
+	    <li><a href="#">1</a></li>
+	    <li><a href="#">2</a></li>
+	    <li><a href="#">3</a></li>
+	    <li><a href="#">4</a></li>
+	    <li><a href="#">5</a></li>
+	    <li><a href="#">&raquo;</a></li>
+	  </ul>
+	</nav>
+</div>

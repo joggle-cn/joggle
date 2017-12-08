@@ -1,0 +1,102 @@
+<div class="container">
+  	
+  	<h3 class="flashchat-title">{{user}}与{{nickname}}聊天</h3>
+  	<button ng-click="retry()" class="retry-fetch btn btn-default">重新匹配</button>
+  	<div class="cb flashchat-title-line"></div>
+  	<div class="flashchat-left">
+  		<div class="chat-message">
+  		  <div id="chat-message"  class="chat-message-inner">
+  		  <!-- 
+  		    <div class="msg-you">
+  			 	<div class="msg-left">
+  			 		<img src="/resource/images/20141023223008.jpg" />
+  			 	</div>
+  			 	<div class="msg-right">
+  			 		<div class="msg-name">【话唠】张卜文</div>
+  			 		<div class="msg-content">烟。。dsadasdsa。。。。。。。。。。。。。。。。。。</div> 
+  			 	</div>
+  			 	<div class="msg-cb"></div>
+  			 </div>
+  		 	 <div class="msg-me">
+  			 	<div class="msg-me-left">
+  			 		<div class="msg-me-name">【话唠】张卜文</div>
+  			 		<div class="msg-cb"></div>
+  			 		<div class="msg-me-content">烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。烟。 。。d 。。。。</div> 
+  			 	</div>
+  			 	<div class="msg-me-right">
+  			 		<img src="/resource/images/20141024134140.jpg" />
+  			 	</div>
+  			 	<div class="msg-cb"></div>
+  			 </div> -->
+  		  </div>
+  		</div>
+  		<div class="chat-tools">
+  		</div>
+  		<div class="chat-edit">
+  			<textarea id="myEditor" class="chat-input" rows="" cols=""></textarea>
+  			<div class="chat-edit-bar">
+  				<button ng-click="send()" class="chat-send btn btn-default">发送</button>
+  			</div>
+  		</div>
+  		
+  		
+  	</div>
+  	
+  	
+  	<div class="flashchat-right">
+  		
+  	</div>
+  	
+  
+  
+  
+  
+</div>
+
+<div id="findUserModal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">正在寻找聊天对象...({{time}} s)</h4>
+      </div>
+      <div class="modal-body">
+      	<h3 style="text-align: center;">当前在玩用户{{usercount}}人，{{waitcount}}人在等待</h3>
+        <p style="text-align: center; margin: 30px;">
+        	 {{finduser}}&hellip; 
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a ng-click="onece()" class="btn btn-default">重新匹配</a>
+        <a ng-click="exit()"  class="btn btn-default">取消</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script id="msg-you-template" type="text/x-handlebars-template">
+<div class="msg-you">
+ 	<div class="msg-left">
+ 		<img src="/resource/images/20141023223008.jpg" />
+ 	</div>
+ 	<div class="msg-right">
+ 		<div class="msg-name">{{user}}</div>
+ 		<div class="msg-content">[content]</div> 
+ 	</div>
+ 	<div class="msg-cb"></div>
+ </div>
+</script>
+
+<script id="msg-me-template" type="text/x-handlebars-template">
+ <div class="msg-me">
+	<div class="msg-me-left">
+		<div class="msg-me-name">{{user}}</div>
+		<div class="msg-cb"></div>
+		<div class="msg-me-content">[content]</div> 
+	</div>
+	<div class="msg-me-right">
+		<img src="/resource/images/20141024134140.jpg" />
+	</div>
+	<div class="msg-cb"></div>
+</div>
+ </script>

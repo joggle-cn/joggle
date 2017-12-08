@@ -1,0 +1,52 @@
+{	
+	"home":{
+		"nav":{
+			"index": "Home"
+		},
+		"btn":{
+			"flashchat": "Flash Chat",
+			"wishwall":  "Create Wish Wall",
+		    "onlinevideo":"Online Video"
+			
+		},
+		"banner": {
+			"title": "Face Inner",
+			"desc": "free app play!"
+		}
+	},
+ 	"user":{
+		"login": "Login",
+		"register": "Register",
+		"loginout": "Exit"
+	},
+ 	"footer":{
+		"nav":{
+			"about": "About",
+			"contact": "Contact",
+			"privacy": "Privacy",
+			"work": "Working",
+			"terms": "Service Terms",
+			"feedback":"Feedback"
+		}
+	},
+ 	"register":{
+		"email": "Email",
+		"nickname": "NickName",
+		"sex": "Sex",
+		"sexgirl": "Girl",
+		"sexboy": "Boy",
+		"password": "Password",
+		"password2": "Confirm Password",
+		"agree": "Agree",
+		"protocol": "《The application of Internet terms》"
+	},
+    "user3":{
+        "greeting":"Welcome %1",
+        "browser":"You are using %{browser}.",
+        "logout":"logout",
+        "count":{
+            "1":"There is 1 user online.",
+            "n":"There are %1 users online."
+        }
+    }
+}
