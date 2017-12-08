@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.domain.message;
 
-import cn.com.wuweiit.alias.State;
-import cn.com.wuweiit.annotation.Text;
+import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -16,7 +16,7 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
 
 			faceinner.post(api['user.login'], $scope.user , function(res){
 				if(res.status == 0){
-					window.location.href ='/index.html';
+					window.location.href ='#/index';
 				}
 				faceinner.handleFieldError($scope, res);
 			});

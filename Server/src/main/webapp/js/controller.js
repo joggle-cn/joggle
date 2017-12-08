@@ -74,6 +74,17 @@ define([
 
 
 
+		console.log("+===")
+        // 加载用户登录信息
+        faceinner.get(api['user.login.info'], function(res){
+            if(res.status == 0){
+                $scope.user = res.results;
+                $scope.islogin = true;
+                //$session.user = res.results;
+            }
+        });
+
+
 	}])
 
 
@@ -106,8 +117,6 @@ define([
             });
         }
         initLocation();
-
-
 
 
 

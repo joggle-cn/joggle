@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.utils;
 
-import com.faceinner.alias.Var;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -104,7 +103,7 @@ public class HttpUtils {
 		String lang = null;
 		HttpSession session = request.getSession(false);
 		if(session != null){
-			lang = (String) session.getAttribute(Var.WEB_APP_LANG);
+			lang = (String) session.getAttribute("lang");
 		}
 		if(lang == null){
 			lang = request.getParameter("lang"); 

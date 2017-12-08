@@ -48,7 +48,7 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
                             faceinner.post(api['user.login'], $scope.user , function(result){
 								if(result.status){
 									// 登录成功，跳转到主页
-									window.location.href ='/index.html';
+									window.location.href ='#/index';
 								}
 							});
 						} else{// 注册失败

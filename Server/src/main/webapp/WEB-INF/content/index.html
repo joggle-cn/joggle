@@ -32,10 +32,10 @@
 	    <nav ng-controller="navController" class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 	      <ul class="nav navbar-nav">
 	        <li>
-	          <a href="${url}/index.html" ng-bind="res.t('home.nav.index')"></a>
+	          <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
 	        </li>
 	        <li>
-	          <a href="${url}/wishwall/index.html">心愿墙</a>
+	          <a href="#/wishwall/index">心愿墙</a>
 	        </li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
@@ -53,8 +53,8 @@
 					${user.name!} <span class="caret"></span>
 				  </a>
 		          <ul class="dropdown-menu" role="menu">
-		            <li><a href="/user/profile.html" ng-bind="res.t('user.profile')"></a></li>
-		            <li><a href="#">Another action</a></li>
+		            <li><a href="#/user/profile" ng-bind="res.t('user.profile')"></a></li>
+		            <li><a href="#"></a></li>
 		            <li><a href="#">Something else here</a></li>
 		            <li class="divider"></li>
 		            <li><a ng-click="loginout()"><i class="fa fa-user"></i> <span ng-bind="res.t('user.loginout')"></span></a></li>

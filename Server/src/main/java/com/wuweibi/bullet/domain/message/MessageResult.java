@@ -141,7 +141,7 @@ public class MessageResult {
 			try {
 				if(messages.size() == 0){
 					@SuppressWarnings("static-access")
-					Class<?> clzz = getClass().forName("cn.com.wuweiit.alias.State");
+					Class<?> clzz = getClass().forName("com.wuweibi.bullet.alias.State");
 					Field[] fields =  clzz.getDeclaredFields();
 					for(Field field : fields){
 						Text t = field.getAnnotation(Text.class);

@@ -16,6 +16,8 @@
     ">
 
 
+	<!--  API Controller 消息拦截 -->
+	<bean class="com.wuweibi.bullet.service.impl.RestResponseBodyAdvice" />
 
 
     <!-- file uplaod -->

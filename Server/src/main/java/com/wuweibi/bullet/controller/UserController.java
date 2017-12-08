@@ -8,10 +8,10 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.ResultMessage;
-import com.wuweibi.bullet.domain.User;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.Utils;
@@ -86,13 +86,13 @@ public class UserController {
 		}
 
         // 验证是否存在
-        User u = userService.find(user.getEmail());
+        User u = userService.getByEmail(user.getEmail());
         if(u != null){
             errors.rejectValue("email", String.valueOf(State.RegEmailExist));
             return MessageFactory.getErrorMessage(errors);
         }
 
-        userService.save(user);
+        userService.insert(user);
 		return MessageFactory.getOperationSuccess();
 	}
 
@@ -128,14 +128,9 @@ public class UserController {
 				try {
 					userInfoBean = qzoneUserInfo.getUserInfo();
 					if (userInfoBean.getRet() == 0) {
-						user.setName(userInfoBean.getNickname());
-						if("男".equals(userInfoBean.getGender())){
-							user.setSex(0);
-						}else{
-							user.setSex(1);
-						}
-						user.setIcon(userInfoBean.getAvatar().getAvatarURL100());
-						user.setOpenId(openID);
+//						user.setName(userInfoBean.getNickname());
+
+//						user.setOpenId(openID);
 						return new ResultMessage(true, user);
 		            }else{
 		            	return new ResultMessage(false, "很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());

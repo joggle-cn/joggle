@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.alias;
 
-import cn.com.wuweiit.annotation.Text;
 
+import com.wuweibi.bullet.annotation.Text;
 
 /**
  * 状态码代码

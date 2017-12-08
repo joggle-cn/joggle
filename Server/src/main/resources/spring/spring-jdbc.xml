@@ -64,10 +64,50 @@
 
 
 	<!-- 创建SqlSessionFactory，同时指定数据源-->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-    	<property name="dataSource" ref="dataSource" />
-      	<property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"></property>
-    </bean>
+	<!-- Spring整合Mybatis，更多查看文档：http://mp.baomidou.com -->
+	<bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 自动扫描Mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+		<!--<property name="typeAliasesPackage" value="com.wuweibi.bullet.entity.*"/>-->
+		<property name="plugins">
+			<array>
+				<!-- 分页插件配置 -->
+				<bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+				</bean>
+			</array>
+		</property>
+		<!-- 全局配置注入 -->
+		<property name="globalConfig" ref="globalConfig" />
+	</bean>
+	<bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
+		<!--
+            AUTO->`0`("数据库ID自增")
+             INPUT->`1`(用户输入ID")
+            ID_WORKER->`2`("全局唯一ID")
+            UUID->`3`("全局唯一ID")
+        -->
+		<property name="idType" value="2" />
+		<!--
+			MYSQL->`mysql`
+			ORACLE->`oracle`
+			DB2->`db2`
+			H2->`h2`
+			HSQL->`hsql`
+			SQLITE->`sqlite`
+			POSTGRE->`postgresql`
+			SQLSERVER2005->`sqlserver2005`
+			SQLSERVER->`sqlserver`
+		-->
+		<!-- Oracle需要添加该项 -->
+		<!-- <property name="dbType" value="oracle" /> -->
+		<!-- 全局表为下划线命名设置 true -->
+		<!-- <property name="dbColumnUnderline" value="true" /> -->
+		<!--<property name="metaObjectHandler">-->
+			<!--<bean class="com.baomidou.springmvc.common.MyMetaObjectHandler" />-->
+		<!--</property>-->
+	</bean>
 
  	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"> 
       	<constructor-arg index="0" ref="sqlSessionFactory" /> 
@@ -80,6 +120,13 @@
 	</bean>
 
 
+
+	<!-- MyBatis 动态扫描  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.wuweibi.bullet.mapper"/>
+	</bean>
+
+
 	<!-- 事务配置 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -87,21 +134,39 @@
 	</bean>
 
 
-	<!-- 基于注解的声明式事务管理配置 -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	
- 	<tx:advice id="txAdvice" transaction-manager="transactionManager">  
-        <tx:attributes>  
-            <tx:method name="do*" propagation="REQUIRED" />  
-        </tx:attributes>  
-    </tx:advice>
-    
-    <aop:config>  
-        <aop:pointcut id="interceptorPointCuts"  
-            expression="execution(* com.faceinner.service.*.*(..))" />  
-        <aop:advisor advice-ref="txAdvice"  
-            pointcut-ref="interceptorPointCuts" />          
-    </aop:config>  
+	<!-- 事务管理 属性 -->
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="append*" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="modify*" propagation="REQUIRED"/>
+			<tx:method name="edit*" propagation="REQUIRED"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="remove*" propagation="REQUIRED"/>
+			<tx:method name="repair" propagation="REQUIRED"/>
+
+			<tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="search*" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="datagrid*" propagation="REQUIRED" read-only="true"/>
+
+			<tx:method name="*" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置切面 -->
+	<aop:config>
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.wuweibi.bullet.service..*.*(..))"/>
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
+	</aop:config>
+
+
+
+	<context:component-scan base-package="com.wuweibi.bullet.service.impl"/>
 
 
 
