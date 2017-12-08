@@ -7,16 +7,16 @@
  */
 define(['app','css!./login.css'], function (app) {// 加载依赖js,
 	
-	return ['$scope','$location','userService', '$AjaxService',
-	        function ($scope, $location, userService, $AjaxService) { 
+	return ['$rootScope','$scope','$location','userService', '$AjaxService',
+	        function ($rootScope, $scope, $location, userService, $AjaxService) {
 		// 登录操作
 		$scope.login = function(){
 			// 表单验证
-
-
 			faceinner.post(api['user.login'], $scope.user , function(res){
 				if(res.status == 0){
-					window.location.href ='#/index';
+                    $scope.$apply(function() {
+                        $location.path('/index').replace();;
+                    });
 				}
 				faceinner.handleFieldError($scope, res);
 			});

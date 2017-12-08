@@ -16,6 +16,9 @@
  */
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.websocket.Endpoint;
 import javax.websocket.server.ServerApplicationConfig;
 import javax.websocket.server.ServerEndpointConfig;
@@ -23,6 +26,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ExamplesConfig implements ServerApplicationConfig {
+    // 日志记录器
+    private Logger logger = LoggerFactory.getLogger(ExamplesConfig.class);
 
     @Override
     public Set<ServerEndpointConfig> getEndpointConfigs(
@@ -50,7 +55,7 @@ public class ExamplesConfig implements ServerApplicationConfig {
         // Deploy all WebSocket endpoints defined by annotations in the examples
         // web application. Filter out all others to avoid issues when running
         // tests on Gump
-    	System.out.println("12222222222222222222222222222222222222222222" );
+        logger.debug("scan websocket endpoint...");
         Set<Class<?>> results = new HashSet<Class<?>>();
         for (Class<?> clazz : scanned) {
             if (clazz.getPackage().getName().startsWith("com.wuweibi.bullet")) {

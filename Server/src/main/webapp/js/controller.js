@@ -70,7 +70,7 @@ define([
 	 * $routeParams
 	 * */
 	// 到航控制器
-	app.controller('navController', ['$scope','$location','userService',function ($scope, $location,userService) {
+	app.controller('navController', ['$rootScope', '$scope','$location','userService',function ($rootScope, $scope, $location, userService) {
 
 
 
@@ -78,11 +78,30 @@ define([
         // 加载用户登录信息
         faceinner.get(api['user.login.info'], function(res){
             if(res.status == 0){
-                $scope.user = res.results;
-                $scope.islogin = true;
-                //$session.user = res.results;
+                $rootScope.$apply(function() {
+                    $rootScope.user = res.data;
+                    $rootScope.islogin = true;
+                    //$session.user = res.results;
+                });
             }
         });
+
+
+
+        /**
+         * 退出登录
+         */
+        $scope.loginout = function(){
+            faceinner.get(api['user.loginout'],function(res){
+                if(res.status == 0){
+                    $rootScope.$apply(function() {
+                        delete $rootScope.user;
+                        delete $rootScope.islogin;
+                        $location.path('/login');
+                    });
+                }
+            });
+        }
 
 
 	}])
@@ -232,7 +251,7 @@ define([
 		$scope.loginout = function(){
 			faceinner.get(api['user.loginout'],function(res){
 				if(res.status == 0){
-					window.location.href = '/index.html';
+					window.location.href = '#/index';
 				}
 			});
 		}

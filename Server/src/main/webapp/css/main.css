@@ -4,7 +4,11 @@ body{
 }
 a{font-size: 13px;}
 
+[ng\:cloak],[ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak{
 
+	display:none ! important;
+
+}
 
 
 .cb{
@@ -30,6 +34,15 @@ a{font-size: 13px;}
 .bs-docs-nav .nav>li>a:hover, .nav>li>a:focus{
 	background: #000;
 }
+.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+	 background-color: #000000;
+}
+
+
+
+
+
+
 
 .bs-docs-header{
 	background: url(images/tour_bg.jpg);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="${lang}">
+<html lang="${lang}" ng-app="faceinner">
   <head>
     <title>Bullet</title>
     <meta name="keywords" content="faceinner">
@@ -16,9 +16,9 @@
 	
 
   </head>
-  
+
   <body ng-cloak>
-	<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+	<header  ng-controller="navController" class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
 	  <div class="container">
 	    <div class="navbar-header">
 	      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -27,9 +27,10 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a target="_self" href="${url}/" class="navbar-brand">Bullet</a>
+	      <a target="_self" href="/" class="navbar-brand">Bullet
+			  </a>
 	    </div>
-	    <nav ng-controller="navController" class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 	      <ul class="nav navbar-nav">
 	        <li>
 	          <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
@@ -40,34 +41,31 @@
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	      	<li class="divider-vertical hidden-xs"></li>
-	      	
-	      	<#if user??>
-	      		<li>
+
+	      		<li ng-if="islogin">
 	      			<div>
-	      				<img style="height:50px;" src="${user.icon!}" />
+	      				<img style="height:50px;" src="" />
 	      				<span style='color:#fff; margin-top: 10px;'></span> 
 	      			</div> 
 	      		</li>
-	      		<li class="dropdown">
-		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-					${user.name!} <span class="caret"></span>
+	      		<li class="dropdown" ng-if="islogin">
+		          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+					  <span ng-bind="user.email"></span> <span class="caret"></span>
 				  </a>
 		          <ul class="dropdown-menu" role="menu">
 		            <li><a href="#/user/profile" ng-bind="res.t('user.profile')"></a></li>
-		            <li><a href="#"></a></li>
-		            <li><a href="#">Something else here</a></li>
+		            <li><a href="#">我的设备</a></li>
+		            <li><a href="#">绑定设备</a></li>
 		            <li class="divider"></li>
 		            <li><a ng-click="loginout()"><i class="fa fa-user"></i> <span ng-bind="res.t('user.loginout')"></span></a></li>
 		          </ul>
-		        </li> 
-	      	<#else>
-		      	<li>
+		        </li>
+		      	<li ng-if="!islogin">
 		        	<a href="${url}/#/login"><i class="fa fa-user"></i> <span ng-bind="res.t('user.login')"></span></a>
 		        </li>
-		        <li>
+		        <li ng-if="!islogin">
 		        	<a href="${url}/#/register"><i class="fa fa-user"></i> <span ng-bind="res.t('user.register')"></span></a>
 		        </li>
-	      	</#if>
 	      </ul>
 	    </nav>
 	  </div>
