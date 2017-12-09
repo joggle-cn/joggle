@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="${lang}" ng-app="faceinner">
+<html lang="${lang}">
   <head>
     <title>Bullet</title>
     <meta name="keywords" content="faceinner">
@@ -27,8 +27,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a target="_self" href="/" class="navbar-brand">Bullet
-			  </a>
+	      <a target="_self" href="/" class="navbar-brand">Bullet</a>
 	    </div>
 	    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 	      <ul class="nav navbar-nav">
@@ -61,10 +60,10 @@
 		          </ul>
 		        </li>
 		      	<li ng-if="!islogin">
-		        	<a href="${url}/#/login"><i class="fa fa-user"></i> <span ng-bind="res.t('user.login')"></span></a>
+		        	<a href="#/login"><i class="fa fa-user"></i> <span ng-bind="res.t('user.login')"></span></a>
 		        </li>
 		        <li ng-if="!islogin">
-		        	<a href="${url}/#/register"><i class="fa fa-user"></i> <span ng-bind="res.t('user.register')"></span></a>
+		        	<a href="#/register"><i class="fa fa-user"></i> <span ng-bind="res.t('user.register')"></span></a>
 		        </li>
 	      </ul>
 	    </nav>

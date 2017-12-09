@@ -70,18 +70,16 @@ define([
 	 * $routeParams
 	 * */
 	// 到航控制器
-	app.controller('navController', ['$rootScope', '$scope','$location','userService',function ($rootScope, $scope, $location, userService) {
+	app.controller('navController', ['$rootScope', '$scope','$location',function ($rootScope, $scope, $location) {
 
 
 
-		console.log("+===")
         // 加载用户登录信息
         faceinner.get(api['user.login.info'], function(res){
             if(res.status == 0){
                 $rootScope.$apply(function() {
                     $rootScope.user = res.data;
                     $rootScope.islogin = true;
-                    //$session.user = res.results;
                 });
             }
         });

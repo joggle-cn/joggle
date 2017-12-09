@@ -14,8 +14,15 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
 			// 表单验证
 			faceinner.post(api['user.login'], $scope.user , function(res){
 				if(res.status == 0){
-                    $scope.$apply(function() {
-                        $location.path('/index').replace();;
+                    // 加载用户登录信息
+                    faceinner.get(api['user.login.info'], function(res){
+                        if(res.status == 0){
+                            $rootScope.$apply(function() {
+                                $rootScope.user = res.data;
+                                $rootScope.islogin = true;
+                                $location.path('/index').replace();;
+                            });
+                        }
                     });
 				}
 				faceinner.handleFieldError($scope, res);
