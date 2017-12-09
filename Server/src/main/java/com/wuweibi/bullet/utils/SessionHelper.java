@@ -1,5 +1,8 @@
 package com.wuweibi.bullet.utils;
 
+import com.wuweibi.bullet.alias.Var;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpSession;
  */
 public class SessionHelper {
 
+    private static Logger logger = LoggerFactory.getLogger(SessionHelper.class);
+
     public static String USER_ID = "s_userId";
 
 
@@ -22,16 +27,18 @@ public class SessionHelper {
      * 没有登录返回-1;
      *
      * @return
+     * @param request
      */
-    public static long getUserId(){
+    public static Long getUserId(HttpServletRequest request){
         HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 
         HttpSession session = req.getSession();
-        try{
+        try {
             return (Long)session.getAttribute(USER_ID);
 
-        }catch (Exception e){
-            return -1;
+        } catch (Exception e) {
+            logger.error("", e);
+            return -1L;
         }
     }
 }

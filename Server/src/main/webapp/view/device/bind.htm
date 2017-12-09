@@ -1,0 +1,89 @@
+<div style="margin-top:30px; "></div>
+<div class="container"> 
+	<div class="row">
+	  <div class="col-xs-12">
+          <style>
+              .progress{
+               margin-bottom: 10px;
+              }
+          </style>
+
+          <div style="width: 450px; margin: 100px auto ">
+              <div class="input-group">
+                  <input type="text" ng-model="deviceId" class="form-control" aria-label="Text input with multiple buttons">
+                  <div class="input-group-btn">
+                      <button id="bindButton" ng-click="validate()" type="button" class="btn btn-default">绑定设备</button>
+                  </div>
+              </div>
+              <div style="padding-top: 20px;">
+                  <div class="progress" id="progress-bar" style="visibility: hidden;">
+                      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                           style="width: 45%; ">
+                          <span class="sr-only">45% Complete</span>
+                      </div>
+                  </div>
+                  <p style="text-align: center;" ng-bind="info">正在为链接校验服务器...</p>
+              </div>
+
+
+          </div>
+
+      </div>
+	 	
+	</div>
+</div>
+
+
+
+
+<!-- 编辑弹出框 -->
+<div id="editDevice" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑设备</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="a" class="col-sm-2 control-label">设备名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.name" class="form-control" id="a" placeholder="名称">
+                        </div>
+                        <div class="col-sm-4">
+                            1
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="b" class="col-sm-2 control-label">设备标识</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.deviceId"  class="form-control" id="b" placeholder="设备" readonly>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="c" class="col-sm-2 control-label">创建时间</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.createTimeStr"  class="form-control" id="c" readonly>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <a ng-click="save()" class="btn btn-default">保 存</a>
+                <a ng-click="exit()"  class="btn btn-default">取消</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

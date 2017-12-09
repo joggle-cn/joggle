@@ -27,11 +27,12 @@ var options = {
         , 'amazeui':'lib/amazeui/js/amazeui.min'
         , 'dropload':'lib/jquery/plugins/dropload-gh-pages/dropload'
 
+
        
         
         /* 自定义JavaScript */	
         , 'app': 'js/app'
-        , 'moudleRouter': 'js/routersa'
+        , 'moudleRouter': 'js/routers'
         , 'moudleServices': 'js/services'
         , 'moudleController': 'js/controller'
         , 'moudleFilters': 'js/filters'

@@ -6,9 +6,11 @@ define([
    	  'angular' 
   	, 'jquery'
   	], function (angular, $) {//加载依赖js,
-	
-	
+
 return angular.module('app.directives', [])
+
+
+
 
 	.directive('appVersion', ['version', function(version) {
 	    return function(scope, elm, attrs) {
@@ -63,6 +65,8 @@ return angular.module('app.directives', [])
 
 
     .directive('loadFragment', ['version', function(version) {
+
+        alert("dsadsad");
     return {
     	 restrict : 'A',
     	 controller: function($scope, $element, $attrs, $transclude){ 

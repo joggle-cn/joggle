@@ -66,6 +66,7 @@
 
 	<mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+        <bean class="com.wuweibi.bullet.controller.interceptor.AllInterceptor" />
 
 	</mvc:interceptors>
 

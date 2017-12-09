@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
 
     <welcome-file-list>
-        <welcome-file>index</welcome-file>
+        <welcome-file>/.face</welcome-file>
     </welcome-file-list>
 
 
@@ -39,7 +39,7 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.face</url-pattern>
     </filter-mapping>
 
 
@@ -64,7 +64,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SpringServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>*.face</url-pattern>
     </servlet-mapping>
 
 

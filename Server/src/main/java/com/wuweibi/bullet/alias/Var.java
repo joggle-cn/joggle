@@ -10,4 +10,5 @@ public interface Var {
 	
 	/** 网站国际化 */
 	String WEB_APP_LANG = "lang";
+	String UserId = "__userId";
 }

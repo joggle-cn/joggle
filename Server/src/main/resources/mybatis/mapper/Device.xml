@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.mapper.DeviceMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.wuweibi.bullet.entity.Device">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="deviceId" property="deviceId" />
+		<result column="createTime" property="createTime" />
+		<result column="userId" property="userId" />
+	</resultMap>
+
+</mapper>

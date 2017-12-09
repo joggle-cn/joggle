@@ -31,8 +31,23 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 		
 	
 		
-		// 关于我们
-		.when('/about', {templateUrl: 'service/about.htm'}) 
+		// 我的设备
+		.when('/user/device', router({
+            minTitle: "我的设备"
+            , templateUrl: 'view/device/device.htm'
+            , controllerUrl: 'view/device/device.js'
+		}))
+        .when('/user/device/bind', router({
+            minTitle: "绑定设备"
+            , templateUrl: 'view/device/bind.htm'
+            , controllerUrl: 'view/device/bind.js'
+        }))
+        // 端口映射
+        .when('/user/device/:deviceId/mapping', router({
+            minTitle: "设备端口映射"
+            , templateUrl: 'view/device/mapping.htm'
+            , controllerUrl: 'view/device/mapping.js'
+        }))
 		
 		
 		.when('/register', router({
@@ -160,7 +175,7 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 function router(config){
 	
 	// 生成独立URL，保证不缓存页面数据
-	var random = "?t="+Math.random();
+	var random = "?t=" + Math.random();
 	config.templateUrl = config.templateUrl + random;
 	return angularAMD.route(config);
 }

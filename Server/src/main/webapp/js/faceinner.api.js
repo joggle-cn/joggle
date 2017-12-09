@@ -37,6 +37,14 @@ var api = {
     /* 附近秘密 */
     "secret.near": '/api/secret/near',
 
+
+    /* 用户设备 */
+    "user.device": '/api/user/device/',
+    "user.device.validate": '/api/user/device/validate',
+
+
+
+
 };
 
 

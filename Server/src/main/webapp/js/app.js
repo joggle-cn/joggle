@@ -20,9 +20,7 @@ define([
 	// 加载国际化文件
 	$.getScript('/lib/angular/i18n/angular-locale_'+lang+'.js');
 	
-	
-	
-	
+
 	
 	return angular.module('faceinner', [
 			'ngRoute',
