@@ -28,6 +28,7 @@
 					  <th>序号</th>
 					  <th>设备名称</th>
 					  <th>设备标识</th>
+					  <th>状态</th>
 					  <th width="200">操作</th>
 				  </tr>
 				  </thead>
@@ -36,6 +37,7 @@
 					  <td>{{item.id}}</td>
 					  <td>{{item.name}}</td>
 					  <td>{{item.deviceId}}</td>
+					  <td>{{item.status}}</td>
 					  <td>
 						  <a ng-click="editDevice(item)" class="btn btn-info">编辑</a>
                           <a href="#/user/device/{{item.id}}/mapping" class="btn btn-default">端口映射</a>

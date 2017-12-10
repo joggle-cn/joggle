@@ -73,6 +73,8 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                 if (res.status == 0) {
                     $("#addMapping").modal('hide');
                     flushData();
+                } else if(res.status ==  200100){// 域名被绑定
+                    alert(res.msg);
                 }
             });
 

@@ -1,9 +1,13 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
+import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.wuweibi.bullet.service.DeviceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;
@@ -19,6 +23,9 @@ import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 @Service
 public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, DeviceMapping> implements DeviceMappingService {
 
+    @Autowired
+    private DeviceService deviceService;
+
     @Override
     public boolean existsDomain(String domain) {
         return this.baseMapper.existsDomain(newMap(1)
@@ -32,5 +39,28 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
                 .setParam("userId", userId)
                 .setParam("id", id)
                 .build());
+    }
+
+    @Override
+    public DeviceMappingDto getMapping(String host) {
+        // TODO host处理
+
+
+        DeviceMapping params = new DeviceMapping();
+        params.setDomain(host);
+
+        DeviceMapping deviceMapping = this.baseMapper.selectOne(params);
+
+        long deviceId = deviceMapping.getDeviceId();
+        Device device = deviceService.selectById(deviceId);
+
+
+        DeviceMappingDto dto = new DeviceMappingDto();
+        dto.setDeviceCode(device.getDeviceId());
+        dto.setPort(deviceMapping.getPort());
+        dto.setProtocol(deviceMapping.getProtocol());
+
+
+        return dto;
     }
 }

@@ -110,6 +110,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
         this.userId = userId;
     }
 
+
     @Override
 	public String toString() {
 		return "DeviceMapping{" +

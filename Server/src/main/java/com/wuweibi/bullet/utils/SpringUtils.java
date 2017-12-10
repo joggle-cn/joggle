@@ -4,6 +4,9 @@ package com.wuweibi.bullet.utils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *  以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候中取出ApplicaitonContext.
  *  
@@ -58,4 +61,22 @@ public class SpringUtils implements ApplicationContextAware {
 			throw new IllegalStateException("applicaitonContext未注入,请在applicationContext.xml中定义SpringContextHolder");
 		}
 	}
+
+
+    /**
+     * 验证输入的邮箱格式是否符合
+     *
+     * @param email
+     * @return 是否合法
+     */
+    public static boolean emailFormat(String email) {
+        boolean tag = true;
+        final String pattern1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        final Pattern pattern = Pattern.compile(pattern1);
+        final Matcher mat = pattern.matcher(email);
+        if (!mat.find()) {
+            tag = false;
+        }
+        return tag;
+    }
 }

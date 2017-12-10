@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service;
 
+import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.baomidou.mybatisplus.service.IService;
 
@@ -29,4 +30,12 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     boolean exists(Long userId, Long id);
+
+
+    /**
+     * 根据域名前缀获取映射信息
+     * @param host host
+     * @return
+     */
+    DeviceMappingDto getMapping(String host);
 }

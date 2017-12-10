@@ -94,6 +94,10 @@ public interface State {
 
 
 
+    @Text("域名已经被使用！")
+    int DomainIsUsed = 200100;
+
+
 
 
 }

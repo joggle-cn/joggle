@@ -2,6 +2,7 @@ package com.wuweibi.bullet.controller.validator;
 
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.Utils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -22,7 +23,7 @@ public class RegisterValidator implements Validator{
 		    ValidationUtils.rejectIfEmpty(errors, "email", String.valueOf(State.PleseInputContent));
 	    }else{
 	    	if(account.indexOf("@") != -1){// email
-	    		if(!Utils.emailFormat(user.getNickname())){// 邮箱格式正确
+	    		if(!SpringUtils.emailFormat(user.getNickname())){// 邮箱格式正确
 	    			errors.rejectValue("email", String.valueOf(State.RegEmailError));
 				}	
 	    	} 

@@ -5,9 +5,14 @@ package com.wuweibi.bullet.server;
 
 import com.wuweibi.bullet.ByteUtils;
 import com.wuweibi.bullet.Sequence;
+import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
+import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringHttpUtils;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +59,7 @@ public class HandlerBytes implements Runnable{
      */
     public void run(){
 
+        String deviceCode = "";
 
         // 解析http协议，获取域名
         String httpRequestStr = null;
@@ -65,7 +71,20 @@ public class HandlerBytes implements Runnable{
             String host = StringHttpUtils.getHost(httpRequestStr);
 
             // 通过域名找到设备ID与映射端口
-            msgProxyHttp = new MsgProxyHttp(host, 8080);
+
+            DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
+
+            DeviceMappingDto mapping = deviceMappingService.getMapping(host);
+            if(mapping == null){
+                return;
+            }
+
+            // 设备编码
+            deviceCode = mapping.getDeviceCode();
+            int port = mapping.getPort();
+            String localHost = "localhost";
+
+            msgProxyHttp = new MsgProxyHttp(localHost, port);
             logger.info("{}",msgProxyHttp.getHead().toString());
             msgProxyHttp.setContent(result);
 
@@ -81,23 +100,21 @@ public class HandlerBytes implements Runnable{
 
         String seq = msgProxyHttp.getSequence();
 
-        cache.put(seq, ctx);
 
         try{
-            String uuid = "12345678";
-
-
             synchronized (HandlerBytes.class){
                 for (BulletAnnotation client : BulletAnnotation.connections) {
                     // 获取对应设备Id的链接
-                    if(client.getDeviceId().equals(uuid)){
+                    if(client.getDeviceId().equals(deviceCode)){
 
                         ByteBuffer buf = ByteBuffer.wrap(resultBytes);
                         Session session = client.getSession();
 
                         if(session.isOpen()){
+                            cache.put(seq, ctx);
                             session.getBasicRemote().sendBinary(buf,true);
 
+                            return;
                         }
                     }
                 }
@@ -105,6 +122,23 @@ public class HandlerBytes implements Runnable{
         } catch (Exception e){
             e.printStackTrace();
         }
+
+        // 设备没有上线
+        if(ctx != null){
+            // 在当前场景下，发送的数据必须转换成ByteBuf数组
+            ByteBuf encoded = ctx.alloc().buffer(1024);
+            encoded.writeBytes("HTTP/1.1 200 OK\n".getBytes());
+            encoded.writeBytes("Content-Type:text/html; charset:GBK".getBytes());
+            encoded.writeBytes("\n\n".getBytes());
+            encoded.writeBytes("sorry! device is not online!".getBytes());
+
+            ctx.write(encoded);
+            ctx.flush();
+            ctx.close();
+        }
+
+
+
     }
 
 

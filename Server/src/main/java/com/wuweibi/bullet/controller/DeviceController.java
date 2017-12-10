@@ -7,18 +7,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import javax.websocket.Session;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
@@ -47,9 +49,40 @@ public class DeviceController {
     @ResponseBody
     public Object device(HttpServletRequest request ){
         Long userId = getUserId();
-        return MessageFactory.get(deviceService.selectByMap(newMap(1)
+
+        List<Device> list  =deviceService.selectByMap(newMap(1)
                 .setParam("userId", userId)
-                .build()));
+                .build());
+
+        Iterator<Device> it = list.iterator();
+
+        List<DeviceDto> deviceList = new ArrayList<>();
+
+        while (it.hasNext()){
+            Device device = it.next();
+            DeviceDto deviceDto = new DeviceDto(device);
+            String deviceCode = device.getDeviceId();
+
+            int status = getStatus(deviceCode);
+            deviceDto.setStatus(status);
+
+            deviceList.add(deviceDto);
+        }
+
+
+
+
+        return MessageFactory.get(deviceList);
+    }
+
+    private int getStatus(String deviceCode){
+        for (BulletAnnotation client : BulletAnnotation.connections) {
+            // 获取对应设备Id的链接
+            if(client.getDeviceId().equals(deviceCode)){
+                return 1;
+            }
+        }
+        return -1;
     }
 
 

@@ -14,6 +14,7 @@ import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -60,7 +61,7 @@ public class UserController {
     public MessageResult forget(@RequestParam String email,
 								HttpServletRequest request){
         // 验证邮箱正确性
-        if(email.indexOf("@") == -1 && !Utils.emailFormat(email)){// 邮箱格式不正确
+        if(email.indexOf("@") == -1 && !SpringUtils.emailFormat(email)){// 邮箱格式不正确
             FormFieldMessage ffm = new FormFieldMessage();
             ffm.setField("email");
             ffm.setStatus(State.RegEmailError);

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.controller;
 
 
+import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -75,7 +76,7 @@ public class DeviceMappingController {
             // 验证域名是否被使用
             boolean isOk = deviceMappingService.existsDomain(entity.getDomain());
             if(isOk){
-                return MessageFactory.getErrorMessage("域名已经被使用！");
+                return MessageFactory.get(State.DomainIsUsed);
             }
 
             status = deviceMappingService.insert(entity);
