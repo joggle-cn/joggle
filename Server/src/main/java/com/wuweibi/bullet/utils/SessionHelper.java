@@ -22,6 +22,10 @@ public class SessionHelper {
 
 
 
+    public static Long getUserId(){
+        return getUserId(null);
+    }
+
     /**
      * 获取Session中的用户Id
      * 没有登录返回-1;
@@ -31,14 +35,15 @@ public class SessionHelper {
      */
     public static Long getUserId(HttpServletRequest request){
         HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-
         HttpSession session = req.getSession();
         try {
-            return (Long)session.getAttribute(USER_ID);
-
+            Long userId = (Long) session.getAttribute(USER_ID);
+            if(userId != null){
+                return userId;
+            }
         } catch (Exception e) {
             logger.error("", e);
-            return -1L;
         }
+        return -1L;
     }
 }

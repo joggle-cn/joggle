@@ -49,6 +49,20 @@ define([
     }]);
 
     /**
+     * 显示协议 过滤器
+     */
+    app.filter('showProtocol',[function(){
+        return function(protocol ){
+            switch (protocol){
+                case 1 : return "HTTP1.1";
+                default: return "-";
+            }
+            return "-";
+        }
+    }]);
+
+
+    /**
      * 显示距离
      */
     app.filter('showDistance',[function(){

@@ -82,5 +82,18 @@ public interface State {
 	int CodeInvalid = 100014;
 
 
+	/**
+	 * 设备
+	 * */
+
+	@Text("设备不在线！")
+	int DeviceNotOnline = 200000;
+
+    @Text("设备已经被其他账号绑定！")
+	int DeviceIdBinded = 200001;
+
+
+
+
 
 }

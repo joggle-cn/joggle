@@ -29,6 +29,15 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Long deviceId;
 	private String domain;
 	private Integer port;
+
+	private Long userId;
+
+	/** 协议 1 HTTP */
+	private Integer protocol;
+
+	/** 备注 */
+	private String description;
+
 	private Date createTime;
 
 
@@ -77,7 +86,31 @@ public class DeviceMapping extends Model<DeviceMapping> {
 		return this.id;
 	}
 
-	@Override
+    public Integer getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(Integer protocol) {
+        this.protocol = protocol;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
 	public String toString() {
 		return "DeviceMapping{" +
 			", id=" + id +

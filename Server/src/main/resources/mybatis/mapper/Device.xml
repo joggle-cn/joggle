@@ -11,4 +11,16 @@
 		<result column="userId" property="userId" />
 	</resultMap>
 
+
+
+	<update id="updateName" parameterType="map">
+		update t_device set name =#{name} where id =#{id}
+	</update>
+
+	<select id="exists" resultType="boolean" parameterType="map">
+		select count(1) from t_device where userId = #{userId} and id = #{id}
+	</select>
+	<select id="existsDevice" resultType="boolean" parameterType="map">
+		select count(1) from t_device where deviceId = #{deviceId}
+	</select>
 </mapper>

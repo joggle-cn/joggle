@@ -1,9 +1,13 @@
 package com.wuweibi.bullet.controller.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.alias.Var;
+import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.utils.CodeHelper;
+import com.wuweibi.bullet.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,7 +23,12 @@ public class AllInterceptor implements HandlerInterceptor {
 	/** 日志记录器 */ 
 	protected Logger logger = LoggerFactory.getLogger(getClass()); 
 	
-	
+
+    /** 不需要登录的接口 */
+	static String[] NotLoginUrls = new String[]{
+        "/api/user/login/"
+        , "/api/login"
+    };
 	
 	
 	/**
@@ -60,23 +69,34 @@ public class AllInterceptor implements HandlerInterceptor {
 //			}
 //		}
 //		
-//		
-//		// 安全防护
-//		if(uri.startsWith("/api/user") || uri.startsWith("/api/student") ||
-//					uri.startsWith("/api/teacher")){// 调用的 API  
-////			Object user = session.getAttribute(SessionAttr.LOGIN_USER);
-////
-////			if(md5.equals(cookieDeceive)){
-////				if(user != null){
-////					return true; // 已经登录可以正常调用  
-////				}  
-////			}
-////			MessageResult msg = MessageFactory.getUserNotLoginError();
-////			String str = JSON.toJSONString(msg, false);
-////			response.getWriter().write(str);
-////			logger.warn("_User Not Login! {}", str);
-//			return false;
-//		}
+//
+        // 验证不需要登录的接口
+        String url = request.getRequestURI().toString();
+        for (String string : NotLoginUrls) {
+            if (url.contains(string)) {
+                return true;
+            }
+        }
+
+
+
+
+		// 安全防护
+		if(uri.startsWith("/api/")){// 调用的 API
+			Object user = session.getAttribute(SessionAttr.LOGIN_USER);
+
+//			if(md5.equals(cookieDeceive)){
+                if(user != null){
+                    return true; // 已经登录可以正常调用
+                }
+//			}
+			MessageResult msg = MessageFactory.getUserNotLoginError();
+			String str = JSON.toJSONString(msg, false);
+            response.setContentType("application/json;charset=utf-8");
+			response.getWriter().write(str);
+			logger.warn("_User Not Login! {}", str);
+			return false;
+		}
 //		
 //		// 老师学生Web
 //		if(uri.startsWith("/teacher")|| uri.startsWith("/student")){

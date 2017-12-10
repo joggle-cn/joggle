@@ -11,4 +11,13 @@
 		<result column="createTime" property="createTime" />
 	</resultMap>
 
+
+	<select id="existsDomain" resultType="boolean" parameterType="map">
+		select count(1) from t_device_mapping where domain = #{domain}
+	</select>
+
+    <select id="exists" resultType="boolean" parameterType="map">
+		select count(1) from t_device_mapping where id = #{id} and userId =#{userId}
+	</select>
+
 </mapper>

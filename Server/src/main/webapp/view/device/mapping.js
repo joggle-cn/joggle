@@ -8,33 +8,73 @@
 define(['app','jquery'], function (app, $) {//加载依赖js,
 
 
-	var callback = ["$scope", function ($scope) {
 
 
-        $scope.list = [
-            {id:1,name:"家里1", deviceId:"2321323"},
-            {id:2,name:"家里2", deviceId:"2321323"},
-            {id:3,name:"家里3", deviceId:"2321323"},
-            {id:4,name:"家里4", deviceId:"2321323"}
-        ]
+	var callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
+        // 设备ID
+        var deviceId = $routeParams.deviceId;
+
+
+        function flushData(){
+            faceinner.get(api['user.device.mapping'], {deviceId:deviceId}, function(res){
+                if (res.status == 0) {
+                    $scope.$apply(function() {
+                        $scope.list = res.data;
+                    });
+                }
+            });
+        }
+        flushData();
+
+
 
 
         /**
          * 编辑设备
          */
-        $scope.editDevice = function(item){
+        $scope.addMapping = function(item){
             $scope.item = item;
-
-            $("#editDevice").modal({
+            $("#addMapping").modal({
                 backdrop: false
             });
 		}
 
         /**
+         * 删除
+         * @param id
+         */
+		$scope.delMapping = function(id, $index){
+
+            faceinner.delete(api['user.device.mapping'], {id:id} , function(res) {
+                if (res.status == 0) {
+                    flushData();
+                }
+            });
+
+        }
+
+        /**
          * 保存
          */
 		$scope.save = function(){
-		    console.log("baocu")
+		    var params = {
+		        id : $scope.item.id,
+		        domain : $scope.item.domain,
+                protocol : $scope.item.protocol,
+		        port : $scope.item.port,
+                deviceId: deviceId,
+		        description : $scope.item.description,
+            }
+
+
+
+
+            faceinner.post(api['user.device.mapping'],params , function(res) {
+                if (res.status == 0) {
+                    $("#addMapping").modal('hide');
+                    flushData();
+                }
+            });
 
         }
 
@@ -42,7 +82,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
          * 弹框退出
          */
 		$scope.exit = function(){
-            $("#editDevice").modal('hide');
+            $("#addMapping").modal('hide');
         }
 		 
 		 

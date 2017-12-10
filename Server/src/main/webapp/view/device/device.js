@@ -35,18 +35,9 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
          * 保存
          */
 		$scope.save = function(){
-		    console.log("baocu");
-
-
-
-
-
-
             faceinner.post(api['user.device'], $scope.item , function(res) {
                 if (res.status == 0) {
-
-                    console.log("===========")
-
+                    $("#editDevice").modal('hide');
                 }
             });
 

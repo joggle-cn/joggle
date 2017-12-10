@@ -30,11 +30,7 @@ public class Websocket2Test extends Draft_6455 {
     @Test
     public void test() throws URISyntaxException, InterruptedException, IOException, DeploymentException {
 
-
-        String uuid = "12345678";
-
-
-        String url = ConfigUtils.getTunnel() +"/"+ uuid;
+        String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceId();
         System.out.println(url);
 
 

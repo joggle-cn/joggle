@@ -41,6 +41,8 @@ var api = {
     /* 用户设备 */
     "user.device": '/api/user/device/',
     "user.device.validate": '/api/user/device/validate',
+    "user.device.mapping": '/api/user/device/mapping/',
+
 
 
 

@@ -107,6 +107,35 @@ var faceinner = {
 
 
     /**
+     * delete 请求
+     *
+     * @param url URL地址
+     * @param data 参数
+     * @param func 回调函数
+     */
+    delete: function(url, data, func){
+        if(!data){
+            data = {}
+        }
+        data._method = "DELETE";
+        var options = {
+            url: faceinner.server + url + '.face',
+            type: 'POST',
+            data: data ,
+            dataType: "json",
+            success:func,
+            error: faceinner.errorfunc
+        }
+        if(func === undefined){
+            delete options.data;
+            options.success = data;
+        }
+        $.ajax(options);
+    },
+
+
+
+    /**
      * 获取 IP:端口
      */
     getHost : function(){

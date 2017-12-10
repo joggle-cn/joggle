@@ -45,13 +45,14 @@ public class Client {
     }
 
     @OnClose
-    public void onClose( Session session, CloseReason closeReason) {
+    public void onClose( Session session, CloseReason closeReason) throws InterruptedException {
         System.out.println(closeReason.toString());
         System.out.println("链接已关闭");
 
         String uuid = "12345678";
 
 
+        Thread.sleep(3000L);
         String url = ConfigUtils.getTunnel() +"/"+ uuid;
         System.out.println(url);
 

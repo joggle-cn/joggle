@@ -46,4 +46,11 @@ public class ConfigUtils {
     }
 
 
+    /**
+     * 获取设备ID
+     * @return
+     */
+    public static String getDeviceId() {
+        return CONF.getString("deviceId");
+    }
 }

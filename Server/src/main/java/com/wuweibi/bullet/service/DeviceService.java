@@ -12,5 +12,28 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-09
  */
 public interface DeviceService extends IService<Device> {
-	
+
+
+    /**
+     * 更新设备名称
+     * @param id Id
+     * @param name 名称
+     */
+    void updateName(String id, String name);
+
+    /**
+     * 判断用户是否存在设备
+     * @param userId 用户Id
+     * @param deviceId 设备ID
+     * @return
+     */
+    boolean exists(Long userId, String deviceId);
+
+
+    /**
+     * 判断设备是否存在
+     * @param deviceId
+     * @return
+     */
+    boolean existsDevice(String deviceId);
 }

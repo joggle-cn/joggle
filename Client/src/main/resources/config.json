@@ -1,4 +1,5 @@
 {
   "api":"http://localhost:8082",
-  "tunnel": "ws://localhost:8082/tunnel"
+  "tunnel": "ws://localhost:8082/tunnel",
+  "deviceId": "0000000113"
 }

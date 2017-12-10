@@ -12,5 +12,18 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2017-12-09
  */
 public interface DeviceOnlineService extends IService<DeviceOnline> {
-	
+
+
+    /**
+     * 保存或更新为在线状态
+     * @param deviceId
+     */
+    void saveOrUpdateOnline(String deviceId);
+
+
+    /**
+     * 设备下线
+     * @param deviceId
+     */
+    void updateOutLine(String deviceId);
 }

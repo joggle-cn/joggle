@@ -17,7 +17,7 @@
 	  <div class="col-xs-9 ">
 	  	<div class="panel panel-primary">
 	      <div class="panel-heading">
-	        <h3 class="panel-title">设备</h3>
+	        <h3 class="panel-title">设备端口映射</h3>
 	      </div>
 	      <div class="panel-body">
 
@@ -34,23 +34,24 @@
 				  <tbody>
 				  <tr ng-repeat="item in list">
 					  <td>{{item.id}}</td>
-					  <td>{{item.name}}</td>
-					  <td>{{item.deviceId}}</td>
+					  <td>{{item.domain}}</td>
+					  <td>{{item.protocol | showProtocol}}</td>
 					  <td>{{item.port}}</td>
 					  <td>
-						  <a ng-click="editDevice(item)" class="btn btn-info">编辑</a>
+						  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+						  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
 					  </td>
 				  </tr>
 				  </tbody>
 			  </table>
-	        
-	        
-	        
-	        
 	      </div>
 	    </div>
-	  
-	  
+
+
+		  <div>
+			  <a ng-click="addMapping()" class="btn btn-default">添加端口映射</a>
+
+		  </div>
 	  
 	  </div>
 	 	
@@ -61,27 +62,52 @@
 
 
 <!-- 编辑弹出框 -->
-<div id="editDevice" class="modal fade">
+<div id="addMapping" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">编辑设备</h4>
+                <h4 class="modal-title">添加端口映射</h4>
             </div>
             <div class="modal-body">
-
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label for="a" class="col-sm-2 control-label">设备名称</label>
-                        <div class="col-sm-10">
-                            <input type="text" ng-model="item.name" class="form-control" id="a" placeholder="名称">
+                        <label for="b" class="col-sm-2 control-label">域名</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input ng-model="item.domain" type="text" class="form-control" style="text-align: right"
+                                        ng-show="item.id" readonly>
+                                <input ng-model="item.domain" type="text" class="form-control" style="text-align: right"
+                                       ng-show="!item.id">
+                                <span class="input-group-addon" id="basic-addon2">.joggle.cn</span>
+                            </div>
                         </div>
+                        <div class="col-sm-4"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="b" class="col-sm-2 control-label">设备标识</label>
-                        <div class="col-sm-10">
-                            <input type="text" ng-model="item.deviceId"  class="form-control" id="b" placeholder="设备">
-                        </div>
-                    </div>
+
+					<div class="form-group">
+						<label for="b" class="col-sm-2 control-label">协议</label>
+						<div class="col-sm-6">
+                            <select class="form-control" ng-model="item.protocol" >
+                                <option value="1">HTTP1.1</option>
+                            </select>
+						</div>
+                        <div class="col-sm-4"></div>
+					</div>
+					<div class="form-group">
+						<label for="b" class="col-sm-2 control-label">端口</label>
+						<div class="col-sm-6">
+							<input type="number" ng-model="item.port"  class="form-control" id="b" placeholder="">
+						</div>
+                        <div class="col-sm-4"></div>
+					</div>
+
+					<div class="form-group">
+						<label for="b" class="col-sm-2 control-label">备注</label>
+						<div class="col-sm-6">
+                            <textarea class="form-control" ng-model="item.description" rows="3"></textarea>
+						</div>
+                        <div class="col-sm-4"></div>
+					</div>
 
                 </form>
 

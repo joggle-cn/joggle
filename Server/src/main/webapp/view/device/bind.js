@@ -21,30 +21,38 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             $("#progress-bar").css({visibility:"visible"});
             faceinner.get(api['user.device.validate'], {deviceId: $scope.deviceId}, function(res) {
 
-                $scope.$apply(function(){
-                    $scope.info = "绑定完成！ 等待3秒跳转到 > 我的设备。";
-                    $("#progress-bar .progress-bar").css({width:"100%"});
-                    $("#progress-bar .progress-bar").addClass("progress-bar-success");
-                })
-
                 if (res.status == 0) {
-                    console.log("===========");
+                    $scope.$apply(function(){
+                        $("#progress-bar .progress-bar").removeClass("progress-bar-danger");
+                        $("#progress-bar .progress-bar").addClass("progress-bar-success");
+                        $("#progress-bar .progress-bar").css({width:"100%"});
+                        $scope.info = "绑定完成！ 等待3秒跳转到 > 我的设备。";
+                    })
+
+
+                    // 准备跳转
+                    $scope.time = 3;
+                    var timer = $interval(function(){
+                        $scope.time = $scope.time -1;
+
+                        $scope.info = "绑定完成！ 等待" + $scope.time + "秒跳转到 > 我的设备。";
+                        if($scope.time < 0){
+                            $("#bindButton").attr("disabled", false);
+                            $location.path("/user/device");
+                            $interval.cancel(timer);
+                        }
+                    }, 1000);
 
                 } else {
-                    $("#bindButton").attr("disabled", false);
+                    $scope.$apply(function(){
+                        $("#progress-bar .progress-bar").addClass("progress-bar-danger");
+                        $scope.info = res.msg;
+                        $("#bindButton").attr("disabled", false);
+
+                    });
                 }
 
-                $scope.time = 3;
-                var timer = $interval(function(){
-                    $scope.time = $scope.time -1;
 
-                    $scope.info = "绑定完成！ 等待" + $scope.time + "秒跳转到 > 我的设备。";
-                    if($scope.time < 0){
-                        $("#bindButton").attr("disabled", false);
-                        $location.path("/user/device");
-                        $interval.cancel(timer);
-                    }
-                }, 1000);
             });
 
         }

@@ -17,10 +17,15 @@
 package com.wuweibi.bullet.websocket;
 
 import com.wuweibi.bullet.ByteUtils;
+import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.server.HandlerBytes;
+import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -74,9 +79,12 @@ public class BulletAnnotation {
         session.setMaxIdleTimeout(60000);
 
         // 注册相关信息
-
-
         connections.add(this);
+
+        // 更新设备状态
+        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+
+        deviceOnlineService.saveOrUpdateOnline(deviceId);
 
     }
 
@@ -85,6 +93,9 @@ public class BulletAnnotation {
     @OnClose
     public void end() {
         connections.remove(this);
+
+        updateOutLine();
+
     }
 
 
@@ -139,8 +150,19 @@ public class BulletAnnotation {
     public void onError(Throwable t) throws Throwable {
         t.printStackTrace();
         System.out.println("Chat Error: " + t.toString() );
+
+
+        updateOutLine();
     }
 
+
+    private void updateOutLine(){
+
+        // 更新设备状态
+        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+
+        deviceOnlineService.updateOutLine(this.deviceId);
+    }
 
 
     /**
