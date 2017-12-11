@@ -112,6 +112,8 @@ public class BulletAnnotation {
                     msg = new MsgProxyHttp(head);
                     msg.read(bis);
                     ;break;
+                case Message.Heart:// 心跳消息
+                    return;
             }
         } catch (IOException e) {
             e.printStackTrace();

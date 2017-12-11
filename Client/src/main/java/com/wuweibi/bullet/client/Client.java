@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.Timer;
 
 /**
  *
@@ -28,6 +29,14 @@ public class Client {
     public void onOpen(Session session) {
         this.session = session;
         System.out.println("Connected to endpoint: " + session.getBasicRemote());
+
+
+        // 启动一个线程做心跳配置
+        HeartThread task = new HeartThread(session);
+
+
+        Timer timer = new Timer();
+        timer.schedule(task, 5000, 30000);
     }
 
     @OnMessage
