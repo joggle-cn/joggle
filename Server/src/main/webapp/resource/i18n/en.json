@@ -6,12 +6,13 @@
 		"btn":{
 			"flashchat": "Flash Chat",
 			"wishwall":  "Create Wish Wall",
-		    "onlinevideo":"Online Video"
+		    "onlinevideo":"Online Video",
+			"device": "My Devices"
 			
 		},
 		"banner": {
-			"title": "Face Inner",
-			"desc": "free app play!"
+			"title": "'bullet' base on Java.",
+			"desc": "free & opensource!"
 		}
 	},
  	"user":{

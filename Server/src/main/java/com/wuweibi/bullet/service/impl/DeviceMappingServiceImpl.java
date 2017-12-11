@@ -50,7 +50,9 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         params.setDomain(host);
 
         DeviceMapping deviceMapping = this.baseMapper.selectOne(params);
-
+        if(deviceMapping == null){
+            return null;
+        }
         long deviceId = deviceMapping.getDeviceId();
         Device device = deviceService.selectById(deviceId);
 

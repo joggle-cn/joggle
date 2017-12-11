@@ -76,6 +76,7 @@ public class HandlerBytes implements Runnable{
 
             DeviceMappingDto mapping = deviceMappingService.getMapping(host);
             if(mapping == null){
+                sendMessage("sorry! device is not mapping info!");
                 return;
             }
 
@@ -125,23 +126,32 @@ public class HandlerBytes implements Runnable{
 
         // 设备没有上线
         if(ctx != null){
-            // 在当前场景下，发送的数据必须转换成ByteBuf数组
-            ByteBuf encoded = ctx.alloc().buffer(1024);
-            encoded.writeBytes("HTTP/1.1 200 OK\n".getBytes());
-            encoded.writeBytes("Content-Type:text/html; charset:GBK".getBytes());
-            encoded.writeBytes("\n\n".getBytes());
-            encoded.writeBytes("sorry! device is not online!".getBytes());
-
-            ctx.write(encoded);
-            ctx.flush();
-            ctx.close();
+            sendMessage("sorry! device is not online!");
         }
+
 
 
 
     }
 
 
+    /**
+     * 发送消息
+     *
+     * @param msg 消息内容
+     */
+    private void sendMessage(String msg){
+        // 在当前场景下，发送的数据必须转换成ByteBuf数组
+        ByteBuf encoded = ctx.alloc().buffer(1024);
+        encoded.writeBytes("HTTP/1.1 200 OK\n".getBytes());
+        encoded.writeBytes("Content-Type:text/html; charset:GBK".getBytes());
+        encoded.writeBytes("\n\n".getBytes());
+        encoded.writeBytes(msg.getBytes());
+
+        ctx.write(encoded);
+        ctx.flush();
+        ctx.close();
+    }
 
 
 }
