@@ -7,11 +7,7 @@ package com.wuweibi.bullet;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-
-
+import java.io.*;
 
 
 /**
@@ -23,10 +19,14 @@ public class ConfigUtils {
     static JSONObject CONF ;
 
     static {
-        InputStream inputStream = ConfigUtils.class.getResourceAsStream("/config.json");
-
         String result = "{}";
         try {
+            InputStream inputStream = new FileInputStream("./conf/config.json");
+
+//            InputStream inputStream = ConfigUtils.class.getResourceAsStream("/config.json");
+
+
+
             result = IOUtils.toString(inputStream, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();

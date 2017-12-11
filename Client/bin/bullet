@@ -1,0 +1,57 @@
+#!/bin/sh
+
+
+
+
+
+
+
+#                            _ooOoo_
+#                            o8888888o
+#                            88" . "88
+#                            (| -_- |)
+#                            O\  =  /O
+#                         ____/`---'\____
+#                       .'  \\|     |//  `.
+#                      /  \\|||  :  |||//  \
+#                     /  _||||| -:- |||||_  \
+#                     |   | \\\  -  /'| |   |
+#                     | \_|  `\`---'//  |_/ |
+#                     \  .-\__ `-. -'__/-.  /
+#                   ___`. .'  /--.--\  `. .'___
+#                ."" '<  `.___\_<|>_/___.' _> \"".
+#               | | :  `- \`. ;`. _/; .'/ /  .' ; |
+#               \  \ `-.   \_\_`. _.'_/_/  -' _.' /
+#             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
+
+
+
+
+
+if [ -x "$JAVA_HOME/bin/java" ]; then
+    JAVA="$JAVA_HOME/bin/java"
+else
+    JAVA=`which java`
+fi
+
+
+if [ ! -x "$JAVA" ]; then
+    echo "Could not find any executable java binary. Please install java in your PATH or set JAVA_HOME"
+    exit 1
+fi
+
+
+CLASS='com.wuweibi.bullet.client.Main'
+
+
+bin=`dirname "${BASH_SOURCE-$0}"`
+bin=`cd "$bin"; pwd`
+BULLET_HOME=`cd "."; pwd`
+echo "Bullet当前工作目录: $BULLET_HOME"
+
+CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
+
+echo $CLASSPATH
+
+
+exec "$JAVA" -jar $BULLET_HOME/target/bullet-client.jar -classpath $CLASSPATH $CLASS "$@"
