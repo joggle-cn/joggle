@@ -51,8 +51,6 @@ public class SocketThread extends Thread{
     public void run() {
         logger.debug("接收到服务器的转发请求信息！");
 
-
-
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         MsgHead head = new MsgHead();
         MsgProxyHttp msg = null;
@@ -64,19 +62,16 @@ public class SocketThread extends Thread{
                 case Message.Proxy_Http:// Bind响应命令
                     msg = new MsgProxyHttp(head);
                     msg.read(bis);
-                ;break;
+                break;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
 
         String host = msg.getServerAddr();
         int  port   = msg.getPort();
         byte[] requestData = msg.getContent();
-
-
-
 
         SocketChannel socketChannel = null;
         // 代理请求
@@ -98,12 +93,13 @@ public class SocketThread extends Thread{
         byte[] bytesout = SocketUtils.receiveData(socketChannel);
 
         msg.setContent(bytesout);
+        System.out.println("wlen=" + bytesout.length);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             msg.write(os);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         byte[] results = os.toByteArray();

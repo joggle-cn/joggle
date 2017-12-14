@@ -5,8 +5,14 @@ package com.wuweibi.bullet.client;
  */
 
 import com.wuweibi.bullet.ByteUtils;
+import com.wuweibi.bullet.protocol.Message;
+import com.wuweibi.bullet.protocol.MsgHead;
+import com.wuweibi.bullet.protocol.MsgProxyHttp;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -18,43 +24,48 @@ import java.net.Socket;
 public class WebSocketClientProxyTest implements WebSocketClientProxy {
 
     /** socket */
-    private volatile Socket socket;
+    private ChannelHandlerContext ctx;
 
 
-    public WebSocketClientProxyTest(Socket socket) {
-        this.socket = socket;
+
+    public WebSocketClientProxyTest(ChannelHandlerContext ctx) {
+        this.ctx = ctx;
+
     }
 
     @Override
     public void send(byte[] bytes) {
         System.out.println("==============================");
 
-        OutputStream os = null;
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        MsgHead head = new MsgHead();
+        MsgProxyHttp msg = null;
         try {
-
-            byte[] timeBytes = new byte[8];
-            System.arraycopy(bytes, 0, timeBytes, 0, 8);
-            long time = ByteUtils.bytes2Long(timeBytes);
-            int size  = bytes.length - 8;
-            byte[] dst = new byte[size];
-            System.arraycopy(bytes, 8, dst, 0, size);
-
-
-            os = socket.getOutputStream();
-
-            os.write(dst);
-            os.flush();
-
+            head.read(bis);//读取消息头
+            switch (head.getCommand()) {
+                case Message.Proxy_Http:// Bind响应命令
+                    msg = new MsgProxyHttp(head);
+                    msg.read(bis);
+                    ;break;
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        }
 
-            IOUtils.closeQuietly(os);
-            try {
-//                socket.isConnected()
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        byte[] responseData =  msg.getContent();
+        System.out.println("wlen=" + responseData.length);
+
+        if(ctx != null){
+            // 在当前场景下，发送的数据必须转换成ByteBuf数组
+            try{
+                ByteBuf encoded = ctx.alloc().buffer(responseData.length);
+                encoded.writeBytes(responseData);
+                ctx.writeAndFlush(encoded);
+            } catch (Exception e){
+
+            } finally {
+                ctx.close();
+
             }
 
         }

@@ -46,12 +46,11 @@ public class SocketUtils {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 缓冲区
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
         try {
             byte[] bytes;
             int size = 0;
             int count = 0;
-            long a = System.currentTimeMillis();
             while ((size = socketChannel.read(buffer)) >= 0) {
                 buffer.flip();
                 bytes = new byte[size];
@@ -64,10 +63,9 @@ public class SocketUtils {
             logger.error("", e);
         } finally {
             try {
-                socketChannel.shutdownInput();
-                socketChannel.close();
-                baos.flush();
-                baos.close();
+//                socketChannel.shutdownInput();
+//                socketChannel.close();
+
             } catch (Exception ex) {
             }
         }

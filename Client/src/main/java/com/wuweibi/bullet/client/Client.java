@@ -36,7 +36,7 @@ public class Client {
 
 
         Timer timer = new Timer();
-        timer.schedule(task, 5000, 30000);
+        timer.schedule(task, 5000, 20000);
     }
 
     @OnMessage

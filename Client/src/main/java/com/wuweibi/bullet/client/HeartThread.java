@@ -35,7 +35,6 @@ public class HeartThread extends TimerTask {
 
     @Override
     public void run() {
-
         logger.info("heart time={}", new Date());
 
         try {
@@ -48,11 +47,10 @@ public class HeartThread extends TimerTask {
                 byte[] resultBytes = outputStream.toByteArray();
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-
                 session.getAsyncRemote().sendBinary(buf);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
 
