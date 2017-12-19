@@ -6,6 +6,8 @@ package com.wuweibi.bullet;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -15,24 +17,27 @@ import java.io.*;
  * @create 2017-12-06 下午9:43
  **/
 public class ConfigUtils {
+    /** 日志 */
+    private static Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
 
     static JSONObject CONF ;
 
     static {
         String result = "{}";
         try {
-            InputStream inputStream = new FileInputStream("./conf/config.json");
+            File file = new File("./conf/config.json");
+            System.out.println(file.getAbsoluteFile());
+            InputStream inputStream = new FileInputStream(file);
 
 //            InputStream inputStream = ConfigUtils.class.getResourceAsStream("/config.json");
 
 
 
             result = IOUtils.toString(inputStream, "UTF-8");
+            logger.debug("{}", result);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
-
-
         CONF = JSONObject.parseObject(result);
     }
 

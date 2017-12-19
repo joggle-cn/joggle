@@ -42,33 +42,24 @@ public class SocketUtils {
      * @return
      * @throws IOException
      */
-    public static byte[] receiveData(SocketChannel socketChannel) {
+    public static byte[] receiveData(SocketChannel socketChannel) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 缓冲区
         ByteBuffer buffer = ByteBuffer.allocate(1024);
-        try {
-            byte[] bytes;
-            int size = 0;
-            int count = 0;
-            while ((size = socketChannel.read(buffer)) >= 0) {
-                buffer.flip();
-                bytes = new byte[size];
-                buffer.get(bytes);
-                baos.write(bytes);
-                buffer.clear();
-                count++;
-            }
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            try {
-//                socketChannel.shutdownInput();
-//                socketChannel.close();
 
-            } catch (Exception ex) {
-            }
+        byte[] bytes;
+        int size = 0;
+        int count = 0;
+        while ((size = socketChannel.read(buffer)) >= 0) {
+            buffer.flip();
+            bytes = new byte[size];
+            buffer.get(bytes);
+            baos.write(bytes);
+            buffer.clear();
+            count++;
         }
+
         return baos.toByteArray();
     }
 

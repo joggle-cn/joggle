@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 public class Main {
 
 
-    public static void main(String[] args) throws URISyntaxException, IOException, DeploymentException {
+    public static void main(String[] args) throws URISyntaxException, IOException, DeploymentException, InterruptedException {
 
 
         String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceId();
@@ -36,6 +36,9 @@ public class Main {
         Session session1 = container.connectToServer(Client.class, new URI(url)); // 连接会话
 
 
+        while (true){
+            Thread.sleep(3000000L);
+        }
 
     }
 

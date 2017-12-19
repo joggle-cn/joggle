@@ -7,6 +7,7 @@ import com.wuweibi.bullet.SocketUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
+import io.netty.buffer.ByteBuf;
 import org.apache.commons.io.IOUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.slf4j.Logger;
@@ -86,13 +87,21 @@ public class SocketThread extends Thread{
             socketChannel.shutdownOutput();
 
         } catch (IOException e) {
-            logger.error("", e);
+//            logger.error("", e);
+            msg.setContent(getMessage(e.getMessage()));
         }
         // 处理响应
         logger.debug("接收响应内容...");
-        byte[] bytesout = SocketUtils.receiveData(socketChannel);
+        byte[] bytesout = new byte[0];
+        try {
+            bytesout = SocketUtils.receiveData(socketChannel);
+            msg.setContent(bytesout);
+        } catch (IOException e) {
+            msg.setContent(getMessage(e.getMessage()));
 
-        msg.setContent(bytesout);
+        } catch (NullPointerException e) {
+            msg.setContent(getMessage("server "+msg.getServerAddr()+":"+msg.getPort()+" invoke faild!"));
+        }
         System.out.println("wlen=" + bytesout.length);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -106,6 +115,22 @@ public class SocketThread extends Thread{
 
         client.send(results);
 
+    }
+
+
+
+    /**
+     * 发送消息
+     *
+     * @param msg 消息内容
+     */
+    private byte[] getMessage(String msg){
+        StringBuilder sb = new StringBuilder();
+        sb.append("HTTP/1.1 200 OK\n");
+        sb.append("Content-Type:text/html; charset:GBK");
+        sb.append("\n\n");
+        sb.append(msg);
+        return sb.toString().getBytes();
     }
 
 }
