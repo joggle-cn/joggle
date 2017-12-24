@@ -52,7 +52,15 @@ CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
 
 echo $CLASSPATH
 
-cp $BULLET_HOME/target/bullet-client.jar $BULLET_HOME/lib/
+jarfile="$BULLET_HOME/target/bullet-client.jar"
+
+if [ -e $jarfile ]; then
+cp $jarfile $BULLET_HOME/lib/
+else
+echo "continue..."
+fi
+
+
 exec "$JAVA" \
 -Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
 -classpath $CLASSPATH \
