@@ -44,9 +44,17 @@ bin=`cd "$bin"; pwd`
 BULLET_HOME=`cd "."; pwd`
 echo "Bullet当前工作目录: $BULLET_HOME"
 
+BULLER_CONF_DIR="$BULLET_HOME/conf"
+echo "Bullet配置文件目录: $BULLER_CONF_DIR"
+
+
 CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
 
 echo $CLASSPATH
 
-
-exec "$JAVA" -jar $BULLET_HOME/target/bullet-client.jar -classpath $CLASSPATH $CLASS "$@"
+cp $BULLET_HOME/target/bullet-client.jar $BULLET_HOME/lib/
+exec "$JAVA" \
+-Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
+-classpath $CLASSPATH \
+-jar $BULLET_HOME/lib/bullet-client.jar \
+$CLASS

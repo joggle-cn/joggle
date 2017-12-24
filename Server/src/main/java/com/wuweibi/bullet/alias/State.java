@@ -91,6 +91,8 @@ public interface State {
 
     @Text("设备已经被其他账号绑定！")
 	int DeviceIdBinded = 200001;
+	@Text("请输入设备码！")
+	int DeviceNotInput = 200002;
 
 
 

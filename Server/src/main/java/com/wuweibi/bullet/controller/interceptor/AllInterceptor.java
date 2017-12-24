@@ -28,6 +28,7 @@ public class AllInterceptor implements HandlerInterceptor {
 	static String[] NotLoginUrls = new String[]{
         "/api/user/login/"
         , "/api/login"
+		, "/api/user/loginout"
     };
 	
 	

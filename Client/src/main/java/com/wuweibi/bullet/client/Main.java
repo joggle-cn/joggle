@@ -13,9 +13,12 @@ import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Timer;
 
 /**
  * 启动主要运行类
+ *
+ * (目前采用单个长链接，且没有重试机制)
  *
  *
  * @author marker
@@ -33,7 +36,9 @@ public class Main {
 
         WebSocketContainer container = ContainerProvider.getWebSocketContainer(); // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
 
-        Session session1 = container.connectToServer(Client.class, new URI(url)); // 连接会话
+        Session session = container.connectToServer(Client.class, new URI(url)); // 连接会话
+
+
 
 
         while (true){

@@ -2,10 +2,7 @@
  * Created by marker on 2017/11/19.
  */
 
-import com.wuweibi.bullet.ByteUtils;
-import com.wuweibi.bullet.SocketUtils;
 import com.wuweibi.bullet.client.SocketThread;
-import com.wuweibi.bullet.client.WebSocketClientProxyImpl;
 import com.wuweibi.bullet.client.WebSocketClientProxyTest;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import io.netty.bootstrap.ServerBootstrap;
@@ -13,27 +10,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_6455;
-import org.java_websocket.handshake.ServerHandshake;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import javax.ws.rs.client.Client;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
 
 /**
  * 本地测试
@@ -42,7 +24,7 @@ import java.nio.ByteBuffer;
  * @author marker
  * @create 2017-11-19 下午4:19
  **/
-public class ClientThredTest extends Draft_6455 {
+public class ClientThredTest  {
 
     private Logger logger = LoggerFactory.getLogger(SocketThread.class);
 

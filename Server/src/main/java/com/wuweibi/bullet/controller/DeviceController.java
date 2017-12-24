@@ -15,6 +15,7 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,8 +111,14 @@ public class DeviceController {
     // 设备校验
     @RequestMapping(value = "/device/validate", method = RequestMethod.GET)
     @ResponseBody
-    public Object validate(@RequestParam String deviceId,  HttpServletRequest request){
+    public Object validate(String deviceId,  HttpServletRequest request){
         Long userId = getUserId(request);
+
+        // 没有输入设备ID
+        if(StringUtils.isEmpty(deviceId)){
+            return MessageFactory.get(State.DeviceNotInput);
+        }
+
 
         EntityWrapper ew=new EntityWrapper();
         ew.setEntity(new DeviceOnline());

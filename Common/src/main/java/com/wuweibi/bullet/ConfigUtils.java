@@ -5,6 +5,7 @@ package com.wuweibi.bullet;
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.utils.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,9 @@ import java.io.*;
 
 
 /**
+ * 配置文件工具
+ *
+ *
  * @author marker
  * @create 2017-12-06 下午9:43
  **/
@@ -23,15 +27,18 @@ public class ConfigUtils {
     static JSONObject CONF ;
 
     static {
+        // 获取配置文件路径
+        String confDir = System.getProperty("java.bullet.conf.dir");
+        System.out.println(confDir);
+        if(StringUtils.isEmpty(confDir)){
+            confDir = "Client/conf";
+        }
+
         String result = "{}";
         try {
-            File file = new File("./conf/config.json");
-            System.out.println(file.getAbsoluteFile());
+            File file = new File(confDir + "/config.json");
+            logger.info("正在加载配置文件 ",file.getAbsoluteFile());
             InputStream inputStream = new FileInputStream(file);
-
-//            InputStream inputStream = ConfigUtils.class.getResourceAsStream("/config.json");
-
-
 
             result = IOUtils.toString(inputStream, "UTF-8");
             logger.debug("{}", result);

@@ -61,8 +61,9 @@ var faceinner = {
      * @param url URL地址
      * @param data 参数
      * @param func 回调函数
+     * @param funcerror 调用失败函数
      */
-    get: function(url, data, func){
+    get: function(url, data, func, funcerror){
         var options = {
             url: faceinner.server + url + '.face',
             type: 'get',
@@ -74,6 +75,9 @@ var faceinner = {
         if(func === undefined){
             delete options.data;
             options.success = data;
+        }
+        if(funcerror){
+            options.error = funcerror;
         }
 
 

@@ -11,6 +11,7 @@ import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,7 +36,8 @@ public class HeartThread extends TimerTask {
 
     @Override
     public void run() {
-        logger.info("heart time={}", new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.info("heart time={}", sdf.format(new Date()));
 
         try {
             if(session.isOpen()){

@@ -3,9 +3,6 @@ package com.wuweibi.bullet.protocol;
  * Created by marker on 2017/12/7.
  */
 
-import com.wuweibi.bullet.ByteUtils;
-import com.wuweibi.bullet.utils.Utils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -8,8 +8,6 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import io.netty.buffer.ByteBuf;
-import org.apache.commons.io.IOUtils;
-import org.java_websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

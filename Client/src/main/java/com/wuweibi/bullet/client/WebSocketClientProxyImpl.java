@@ -3,7 +3,6 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2017/11/20.
  */
 
-import org.java_websocket.client.WebSocketClient;
 
 import javax.websocket.Session;
 import java.io.IOException;
@@ -18,20 +17,11 @@ import java.nio.ByteBuffer;
  **/
 public class WebSocketClientProxyImpl implements WebSocketClientProxy {
 
-    /** WebSocket客户端 */
-    private  WebSocketClient client;
 
     private Session session;
 
 
-    /**
-     *
-     * @param client
-     */
-    public WebSocketClientProxyImpl(WebSocketClient client){
-        this.client = client;
 
-    }
 
     public WebSocketClientProxyImpl(Session session) {
         this.session = session;

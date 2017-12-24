@@ -37,7 +37,10 @@
 					  <td>{{item.id}}</td>
 					  <td>{{item.name}}</td>
 					  <td>{{item.deviceId}}</td>
-					  <td>{{item.status}}</td>
+					  <td>
+						<span class="label label-success" ng-if="item.status == 1">在线</span>
+						<span class="label label-default" ng-if="item.status != 1">离线</span>
+					  </td>
 					  <td>
 						  <a ng-click="editDevice(item)" class="btn btn-info">编辑</a>
                           <a href="#/user/device/{{item.id}}/mapping" class="btn btn-default">端口映射</a>

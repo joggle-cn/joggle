@@ -9,7 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+
     <build>
+        <finalName>Bullet</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -51,36 +53,8 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>8.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>9.2.15.v20160210</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jetty-servlet</artifactId>
-                    <groupId>org.eclipse.jetty</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-websocket</artifactId>
-            <version>4.1.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-messaging</artifactId>
-            <version>4.1.1.RELEASE</version>
-        </dependency>
         <!-- 单元测试 -->
         <dependency>
             <groupId>junit</groupId>
