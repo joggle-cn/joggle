@@ -47,7 +47,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author marker
  * @version 1.0
  */
-@ServerEndpoint(value = "/tunnel/{user}")
+@ServerEndpoint(value = "/tunnel/{deviceId}/{conn}")
 public class BulletAnnotation {
     private Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
 
@@ -72,7 +72,12 @@ public class BulletAnnotation {
      * @param session session
      */
     @OnOpen
-    public void start(Session session, @PathParam("user")String deviceId) {
+    public void start(Session session,
+                      // 设备ID
+                      @PathParam("deviceId")String deviceId ,
+                      // 链接ID
+                      @PathParam("connId")String connId
+    ) {
         this.session  = session;
         this.deviceId = deviceId;// 设备ID
         session.setMaxBinaryMessageBufferSize(101024000);

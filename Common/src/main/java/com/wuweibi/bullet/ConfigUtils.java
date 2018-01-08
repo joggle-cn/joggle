@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -64,5 +66,18 @@ public class ConfigUtils {
      */
     public static String getDeviceId() {
         return CONF.getString("deviceId");
+    }
+
+
+    /**
+     * 获取配置对象
+     * @return
+     */
+    public static Properties getProperties() {
+        Properties pro = new Properties();
+        for(Map.Entry<String, Object> entry : CONF.entrySet()){
+            pro.setProperty(entry.getKey(), (String) entry.getValue());
+        }
+        return pro;
     }
 }

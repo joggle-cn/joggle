@@ -17,6 +17,9 @@ import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.string.StringDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,10 +34,22 @@ import java.nio.charset.StandardCharsets;
  **/
 public class ApplicationInit implements ServletContextListener {
 
+    private Logger logger = LoggerFactory.getLogger(ApplicationInit.class);
+
+
+
+//    @Value("#{bullet.server.port}")
+    private int port = 8081;
+
 
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        logger.info("===========================================================");
+        logger.info("Bullet Server Port={}", port);
+        logger.info("===========================================================");
+
+
 
         new Thread(){
             @Override
@@ -45,7 +60,7 @@ public class ApplicationInit implements ServletContextListener {
                 NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
                 bootstrap.group(boss, work);
                 bootstrap.channel(NioServerSocketChannel.class);
-                bootstrap.localAddress("localhost", 8081);
+                bootstrap.localAddress("localhost", port);
                 bootstrap.childHandler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {

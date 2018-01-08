@@ -23,6 +23,7 @@ import java.util.Timer;
  **/
 @ClientEndpoint()
 public class Client {
+
     /** 日志记录器 */
     protected Logger logger = LoggerFactory.getLogger(Client.class);
 
@@ -32,6 +33,11 @@ public class Client {
     /** 会话 */
     private Session session;
 
+    /** 链接 */
+    private Connection connection;
+
+
+
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
@@ -39,7 +45,7 @@ public class Client {
 
         // 启动一个线程做心跳配置
         HeartThread task = new HeartThread(session);
-        timer.schedule(task, 5000, 20000);
+        timer.schedule(task, 5000, 10000);
 
 
     }
@@ -71,25 +77,26 @@ public class Client {
         timer.cancel();
 
 
+        logger.info("正在检查链接配置...");
+        if(connection != null){
+            Thread.sleep(3000L);
+            logger.error("正在重启链接服务器...");
+            connection.open();
 
-        Thread.sleep(3000L);
-        logger.error("正在重启链接服务器...");
-        String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceId();
-        System.out.println(url);
-
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer(); // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
-
-
-        try {
-            container.connectToServer(Client.class, new URI(url)); // 连接会话
-        } catch (DeploymentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } else {
+            logger.error("Connection 对象找不到！");
         }
 
 
+
+
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

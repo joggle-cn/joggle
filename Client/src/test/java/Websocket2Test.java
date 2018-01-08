@@ -23,9 +23,14 @@ public class Websocket2Test  {
 
     @Test
     public void test() throws URISyntaxException, InterruptedException, IOException, DeploymentException {
+        // 设置配置文件地址
+        System.setProperty("java.bullet.conf.dir", "/WORK/git/Bullet/Client/conf");
+
 
         String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceId();
         System.out.println(url);
+
+        ConfigUtils.getProperties();
 
 
         WebSocketContainer container = ContainerProvider.getWebSocketContainer(); // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
