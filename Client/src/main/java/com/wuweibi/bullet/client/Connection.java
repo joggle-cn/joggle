@@ -39,9 +39,12 @@ public class Connection {
     }
 
 
+    /**
+     * 是否活跃
+     * @return
+     */
     public boolean isActive(){
         return session.isOpen();
-
     }
 
 
@@ -53,21 +56,40 @@ public class Connection {
         return id;
     }
 
+    WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
 
     /**
      * 打开WebSocket链接
      */
-    public void open() {
-        count++;
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+    public void open() throws Exception {
+        Client client = new Client();
+        this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
+        client.setConnection(this);
+
+    }
+
+
+    /**
+     * 再次打开连接
+     * （等待30秒，重试次数20次）
+     */
+    public void opeAngain() {
         try {
-            Client client = new Client();
-
-            this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
-            client.setConnection(this);
-
+            count++;
+            logger.debug("Connection[{}] 第{}次尝试连接", id, count);
+            if (count <= 20){ // 重试次数10次。
+                this.open();
+            }
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error(e.getMessage());
+            // 等地啊3秒
+            try {
+                Thread.sleep(30000L);
+            } catch (InterruptedException e1) {}
+            if (count <= 20) { // 重试次数10次。
+                opeAngain();
+            }
         }
     }
 }

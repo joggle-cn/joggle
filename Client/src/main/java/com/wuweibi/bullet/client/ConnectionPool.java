@@ -5,13 +5,6 @@ package com.wuweibi.bullet.client;/**
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,7 +21,7 @@ public class ConnectionPool {
     private Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
 
-    private int poolSize = 2;
+    private int poolSize = 5;
 
 
     private Properties config;
@@ -60,20 +53,26 @@ public class ConnectionPool {
 
         String url = tunnel + "/" + deviceId;
 
-        for(int i = 0; i < poolSize; i++){
-            // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
+        try {
+            for(int i = 0; i < poolSize; i++){
+                // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
 
-            String url2 = url + "/" + i;
-            logger.info("{}", url);
+                String url2 = url + "/" + i;
+                logger.info("{}", url2);
 
-            Connection connection = new Connection(url2);
-            connection.setId(i);
+                Connection connection = new Connection(url2);
+                connection.setId(i);
 
-            connection.open(); // 打开WebSocket链接
-            list.add(connection);
+                Thread.sleep(1000L);
 
+                connection.open(); // 打开WebSocket链接
+
+                list.add(connection);
+
+            }
+        } catch (Exception e) {
+            logger.error("", e);
         }
-
 
     }
 

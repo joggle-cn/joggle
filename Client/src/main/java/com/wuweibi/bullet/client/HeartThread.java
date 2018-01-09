@@ -27,20 +27,24 @@ public class HeartThread extends TimerTask {
 
     private Logger logger = LoggerFactory.getLogger(HeartThread.class);
 
-    private Session session;
 
-    public HeartThread(Session session) {
-        this.session = session;
+    /** 客户端 */
+    private Client client;
+
+    public HeartThread(Client client) {
+        this.client = client;
     }
 
 
     @Override
     public void run() {
+
+        int id = client.getId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logger.info("heart time={}", sdf.format(new Date()));
+        logger.info("Connection[{}] heart time={}", id, sdf.format(new Date()));
 
         try {
-            if(session.isOpen()){
+            if(client.getSession().isOpen()){
                 MsgHeart msgHeart = new MsgHeart();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 msgHeart.write(outputStream);
@@ -49,7 +53,7 @@ public class HeartThread extends TimerTask {
                 byte[] resultBytes = outputStream.toByteArray();
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                session.getAsyncRemote().sendBinary(buf);
+                client.getSession().getAsyncRemote().sendBinary(buf);
             }
         } catch (IOException e) {
             logger.error("", e);

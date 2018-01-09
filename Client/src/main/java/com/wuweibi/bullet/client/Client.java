@@ -41,13 +41,11 @@ public class Client {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        logger.info("Connected to endpoint: " + session.getBasicRemote());
+        logger.debug("Connected to endpoint({}): successs!", session.getId());
 
         // 启动一个线程做心跳配置
-        HeartThread task = new HeartThread(session);
+        HeartThread task = new HeartThread(this);
         timer.schedule(task, 5000, 10000);
-
-
     }
 
 
@@ -72,23 +70,20 @@ public class Client {
     @OnClose
     public void onClose( Session session, CloseReason closeReason) throws InterruptedException {
         logger.error("{} {}", closeReason.toString(), "链接已关闭" );
+        int id = connection.getId();
 
-        logger.error("正在取消心跳线程...");
+        logger.debug("Connection[{}] 正在取消心跳线程...", id);
         timer.cancel();
 
 
-        logger.info("正在检查链接配置...");
+        logger.debug("Connection[{}] 正在检查链接配置...", id);
         if(connection != null){
             Thread.sleep(3000L);
-            logger.error("正在重启链接服务器...");
-            connection.open();
-
+            logger.debug("Connection[{}] 正在重启链接服务器...", id);
+            connection.opeAngain();
         } else {
-            logger.error("Connection 对象找不到！");
+            logger.error("Connection[{}] 对象找不到！", id);
         }
-
-
-
 
     }
 
@@ -98,5 +93,20 @@ public class Client {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+
+
+
+    public Session getSession() {
+        return this.session;
+    }
+
+    /**
+     * 获取 连接 ID
+     * @return
+     */
+    public int getId() {
+        return this.connection.getId();
     }
 }
