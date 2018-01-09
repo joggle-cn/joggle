@@ -54,12 +54,13 @@ public class BulletAnnotation {
     /**  */
     public static final Set<BulletAnnotation> connections =
             new CopyOnWriteArraySet<>();
-    /**  */
+    /** session */
     private Session session;
 
-    /**
-     * 设备ID
-     * */
+    /** ID */
+    private int id;
+
+    /**  设备ID  */
     private String deviceId;
 
 
@@ -73,13 +74,15 @@ public class BulletAnnotation {
      */
     @OnOpen
     public void start(Session session,
-                      // 设备ID
-                      @PathParam("deviceId")String deviceId ,
-                      // 链接ID
-                      @PathParam("connId")String connId
+              // 设备ID
+              @PathParam("deviceId")String deviceId ,
+              // 链接ID
+              @PathParam("connId")int connId
     ) {
         this.session  = session;
         this.deviceId = deviceId;// 设备ID
+        this.id = connId;
+
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(60000);
 
@@ -100,7 +103,6 @@ public class BulletAnnotation {
         connections.remove(this);
 
         updateOutLine();
-
     }
 
 
@@ -155,16 +157,16 @@ public class BulletAnnotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-        t.printStackTrace();
-        System.out.println("Chat Error: " + t.toString() );
-
+        logger.error("Chat Error: " + t.toString() );
 
         updateOutLine();
     }
 
 
+    /**
+     * 更新为离线状态
+     */
     private void updateOutLine(){
-
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 

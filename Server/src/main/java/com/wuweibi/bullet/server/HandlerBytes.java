@@ -48,6 +48,8 @@ public class HandlerBytes implements Runnable{
     /** 请求内容 */
     private byte[] result;
 
+
+
     public HandlerBytes(ChannelHandlerContext ctx, byte[] result1) {
         this.ctx = ctx;
         this.result = result1;
@@ -104,6 +106,10 @@ public class HandlerBytes implements Runnable{
 
         try{
             synchronized (HandlerBytes.class){
+                // TODO 使用相关算法获取多个连接中的一个
+
+
+
                 for (BulletAnnotation client : BulletAnnotation.connections) {
                     // 获取对应设备Id的链接
                     if(client.getDeviceId().equals(deviceCode)){

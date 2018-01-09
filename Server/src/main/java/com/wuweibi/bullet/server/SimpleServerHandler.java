@@ -1,19 +1,19 @@
-package com.wuweibi.bullet.server;/**
+package com.wuweibi.bullet.server;
+/**
  * Created by marker on 2017/12/5.
  */
 
 /**
+ *
+ * SimpleServerHandler 处理请求
+ *
  * @author marker
  * @create 2017-12-05 下午10:00
  **/
 
-    import com.wuweibi.bullet.ByteUtils;
-    import com.wuweibi.bullet.protocol.MsgProxyHttp;
-    import com.wuweibi.bullet.utils.StringHttpUtils;
-    import io.netty.channel.ChannelHandlerContext;
-    import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
-    import java.io.ByteArrayOutputStream;
 
 public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
