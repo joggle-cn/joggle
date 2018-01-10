@@ -12,6 +12,9 @@
 
 	<bean class="com.wuweibi.bullet.utils.SpringUtils"></bean>
 
+	<!-- WebSocket链接池 -->
+	<bean class="com.wuweibi.bullet.conn.CoonPool"></bean>
+
 
 	<import resource="application-cache.xml" />
 	<import resource="spring-jdbc.xml" />

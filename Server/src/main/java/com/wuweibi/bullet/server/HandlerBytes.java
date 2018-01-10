@@ -5,6 +5,7 @@ package com.wuweibi.bullet.server;
 
 import com.wuweibi.bullet.ByteUtils;
 import com.wuweibi.bullet.Sequence;
+import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
@@ -107,27 +108,21 @@ public class HandlerBytes implements Runnable{
         try{
             synchronized (HandlerBytes.class){
                 // TODO 使用相关算法获取多个连接中的一个
+                CoonPool pool = SpringUtils.getBean(CoonPool.class);
 
+                BulletAnnotation client = pool.getByDeviceNo(deviceCode);
 
+                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                Session session = client.getSession();
 
-                for (BulletAnnotation client : BulletAnnotation.connections) {
-                    // 获取对应设备Id的链接
-                    if(client.getDeviceId().equals(deviceCode)){
-
-                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                        Session session = client.getSession();
-
-                        if(session.isOpen()){
-                            cache.put(seq, ctx);
-                            session.getBasicRemote().sendBinary(buf,true);
-
-                            return;
-                        }
-                    }
+                if (session.isOpen()){
+                    cache.put(seq, ctx);
+                    session.getBasicRemote().sendBinary(buf,true);
+                    return;
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         // 设备没有上线

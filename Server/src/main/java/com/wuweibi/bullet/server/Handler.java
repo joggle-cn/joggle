@@ -51,15 +51,18 @@ public class Handler implements Runnable{
                 byte[] results = ByteUtils.byteMerger(timebytes, bytes);
 
 
-                for (BulletAnnotation client : BulletAnnotation.connections) {
 
-                    ByteBuffer buf = ByteBuffer.wrap(results);
 
-                    client.getSession().getAsyncRemote().sendBinary(buf);
 
-                    System.out.println("发送消息个内网机器");
-
-                }
+//                for (BulletAnnotation client : BulletAnnotation.connections) {
+//
+//                    ByteBuffer buf = ByteBuffer.wrap(results);
+//
+//                    client.getSession().getAsyncRemote().sendBinary(buf);
+//
+//                    System.out.println("发送消息个内网机器");
+//
+//                }
             } catch (Exception e){
                 e.printStackTrace();
             }

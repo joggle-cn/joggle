@@ -17,6 +17,7 @@
 package com.wuweibi.bullet.websocket;
 
 import com.wuweibi.bullet.ByteUtils;
+import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.protocol.Message;
@@ -47,13 +48,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author marker
  * @version 1.0
  */
-@ServerEndpoint(value = "/tunnel/{deviceId}/{conn}")
+@ServerEndpoint(value = "/tunnel/{deviceId}/{connId}")
 public class BulletAnnotation {
+    /** 日志 */
     private Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
 
-    /**  */
-    public static final Set<BulletAnnotation> connections =
-            new CopyOnWriteArraySet<>();
     /** session */
     private Session session;
 
@@ -86,13 +85,15 @@ public class BulletAnnotation {
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(60000);
 
-        // 注册相关信息
-        connections.add(this);
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 
         deviceOnlineService.saveOrUpdateOnline(deviceId);
+
+        // 将链接添加到连接池
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        pool.addConnection(this);
 
     }
 
@@ -100,7 +101,9 @@ public class BulletAnnotation {
 
     @OnClose
     public void end() {
-        connections.remove(this);
+
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        pool.removeConnection(this);
 
         updateOutLine();
     }
@@ -146,7 +149,6 @@ public class BulletAnnotation {
                 ctx.close();
                 HandlerBytes.cache.remove(sequence);
                 logger.debug("count={}", HandlerBytes.cache.size());
-                System.out.println(HandlerBytes.cache.size());
             }
 
         }
@@ -187,9 +189,7 @@ public class BulletAnnotation {
      * 获取设备ID
      * @return
      */
-    public String getDeviceId(){
+    public String getDeviceNo() {
         return this.deviceId;
     }
-
-
 }

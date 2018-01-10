@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
@@ -35,6 +36,10 @@ import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
 @RestController
 @RequestMapping("/api/user")
 public class DeviceController {
+
+
+    @Autowired
+    private CoonPool coonPool;
 
 
     /** 设备管理 */
@@ -76,14 +81,14 @@ public class DeviceController {
         return MessageFactory.get(deviceList);
     }
 
+
+    /**
+     * 获取设备状态
+     * @param deviceCode
+     * @return
+     */
     private int getStatus(String deviceCode){
-        for (BulletAnnotation client : BulletAnnotation.connections) {
-            // 获取对应设备Id的链接
-            if(client.getDeviceId().equals(deviceCode)){
-                return 1;
-            }
-        }
-        return -1;
+        return coonPool.getDeviceStatus(deviceCode);
     }
 
 
