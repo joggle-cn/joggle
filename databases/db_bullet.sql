@@ -11,7 +11,7 @@
  Target Server Version : 50626
  File Encoding         : utf-8
 
- Date: 12/10/2017 13:52:36 PM
+ Date: 01/11/2018 23:53:41 PM
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,14 @@ CREATE TABLE `t_device` (
   `createTime` datetime DEFAULT NULL,
   `userId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `t_device`
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_device` VALUES ('1', '家里q', '000001', '2017-12-08 15:20:30', '1'), ('2', '公司机房', '000002', '2017-12-09 18:23:47', '1'), ('6', '家里的设备', '0000000113', '2017-12-10 11:46:50', '1'), ('7', 'default', '0001', '2017-12-10 14:09:12', '1');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `t_device_mapping`
@@ -44,7 +51,14 @@ CREATE TABLE `t_device_mapping` (
   `description` varchar(100) DEFAULT NULL,
   `userId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `t_device_mapping`
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_device_mapping` VALUES ('1', '1', 'www', '8082', '2017-12-08 16:10:18', '1', '111', '1'), ('4', '2', 'test1', '111', null, '1', '11', null), ('5', '2', 'test2', '11111', null, '1', '111123213213', null), ('10', '2', 'dsada', '23232', null, '1', '32323', '1'), ('11', '2', 'dsada1', '21213', null, '1', '2121', '1'), ('16', '6', 'test', '8080', null, '1', '网站', '1');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `t_device_online`
@@ -56,7 +70,14 @@ CREATE TABLE `t_device_online` (
   `updateTime` datetime DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `t_device_online`
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_device_online` VALUES ('1', '000004', '2017-12-09 19:43:09', '1'), ('2', '12345678', '2017-12-20 08:57:03', '-1'), ('4', '0000000113', '2018-01-11 23:53:06', '-1'), ('5', '0001', '2017-12-20 14:09:02', '1');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `t_user`
@@ -69,7 +90,14 @@ CREATE TABLE `t_user` (
   `pass` varchar(40) DEFAULT NULL,
   `agree` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `t_user`
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_user` VALUES ('1', 'admin@qq.com', 'zhangsan', '123', 'true'), ('2', '903595558@qq.com', null, '123', 'true');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `t_user_forget`
@@ -83,7 +111,15 @@ CREATE TABLE `t_user_forget` (
   `code` varchar(100) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `ip` varchar(100) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `t_user_forget`
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_user_forget` VALUES ('1', '2', '123', '2018-01-11 23:06:43', 'c6b0da83-00eb-487b-b10a-cbdde86acf6a', '1', '127.0.0.1', '903595558@qq.com'), ('3', '2', '123', '2018-01-11 23:31:16', '25b5b772-29ef-40dd-a584-568c2544101b', '1', '127.0.0.1', '903595558@qq.com'), ('4', '2', '1234', '2018-01-11 23:34:59', 'e613a677-275b-4437-8e89-e275a7216e02', '1', '127.0.0.1', '903595558@qq.com'), ('5', '2', '1234', '2018-01-11 23:38:07', '61e0788b-f87d-4a38-8c1d-b0916d13a11c', '1', '127.0.0.1', '903595558@qq.com');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
