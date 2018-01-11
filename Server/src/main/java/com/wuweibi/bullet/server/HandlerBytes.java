@@ -73,11 +73,15 @@ public class HandlerBytes implements Runnable{
 
             String host = StringHttpUtils.getHost(httpRequestStr);
 
+            // 获取二级域名
+            String sldomain = StringHttpUtils.getSecondLevelDomain(host);
+
+
             // 通过域名找到设备ID与映射端口
 
             DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
 
-            DeviceMappingDto mapping = deviceMappingService.getMapping(host);
+            DeviceMappingDto mapping = deviceMappingService.getMapping(sldomain);
             if(mapping == null){
                 sendMessage("sorry! device is not mapping info!");
                 return;

@@ -25,6 +25,7 @@ public class UserForget extends Model<UserForget> {
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	private Long userId;
+	private String email;
 	private String oldPass;
 	private Date createTime;
 	private String code;
@@ -86,6 +87,14 @@ public class UserForget extends Model<UserForget> {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override

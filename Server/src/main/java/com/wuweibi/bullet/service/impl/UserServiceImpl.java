@@ -6,6 +6,8 @@ import com.wuweibi.bullet.domain.UserApply;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.entity.UserForget;
+import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
 import com.wuweibi.bullet.service.UserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -29,7 +33,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private  UserMapper userMapper;
 
-    @Override
+
+    @Autowired
+    private UserForgetMapper userForgetMapper;
+
+    @Autowired
+    private MailSender mailSender;
+
+
+
+
+
     public MessageResult applyChangePass(String email, String url, String ip) {
 
         User user = new User();
@@ -45,38 +59,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 生成修改密码验证串,生命周期为30分钟.
         String code = UUID.randomUUID().toString();
 
-        UserApply apply = new UserApply();
+        UserForget apply = new UserForget();
         apply.setUserId(user.getId());
         apply.setEmail(email);
         apply.setOldPass(user.getPass());
         apply.setCreateTime(new Date());
         apply.setCode(code);
         apply.setIp(ip);
+        apply.setStatus(0);
 
 
         // 更新以前Email相关Code的status
-//        applyDao.updateEmailStatus(email);
-//
-//
-//        applyDao.save(apply);
+        userForgetMapper.updateEmailStatus(email);
 
-
-        // 判断是否手机
-
+        userForgetMapper.insert(apply);
 
 
 
         // 发送激活邮件
-//        Map<String,Object> params = new HashMap<>(1);
-//
-//        if(url.indexOf("http://faceinner.com") != -1){
-//            url = "https://faceinner.com";
-//        }
-//
-//        String forgetUrl = url +"/mobi/forget.html?code="+apply.getCode();
-//        params.put("url", forgetUrl);
+        Map<String,Object> params = new HashMap<>(1);
 
-//        mailSender.send(email, params, "forget_mail.ftl");
+        if(url.indexOf("http://faceinner.com") != -1){
+            url = "https://faceinner.com";
+        }
+
+        String forgetUrl = url +"#/forget?code="+apply.getCode();
+        params.put("url", forgetUrl);
+
+        mailSender.send(email, params, "forget_mail.ftl");
 
 
         // 发送密码修改链接到邮箱
@@ -86,19 +96,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public MessageResult changePass4Code(String code, String pass) {
-//        // 查询code信息
-//        UserApply userApply = applyDao.findByCode(code);
-//        if(userApply == null){//
-//            return MessageFactory.get(State.CodeInvalid);
-//        }
-//        long userId = userApply.getUserId();// 用户Id
-//        // 直接修改密码
-//        userDao.updatePass(userId, pass);
-//
-//        applyDao.updateStatus(code);
-//
-//        return MessageFactory.getOperationSuccess();
-        return null;
+        // 查询code信息
+        UserForget userApply = userForgetMapper.findByCode(code);
+        if(userApply == null){//
+            return MessageFactory.get(State.CodeInvalid);
+        }
+        long userId = userApply.getUserId();// 用户Id
+        // 直接修改密码
+        userMapper.updatePass(userId, pass);
+
+        userForgetMapper.updateStatus(code);
+
+        return MessageFactory.getOperationSuccess();
     }
 
     @Override

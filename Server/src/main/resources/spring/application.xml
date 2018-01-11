@@ -18,6 +18,7 @@
 
 	<import resource="application-cache.xml" />
 	<import resource="spring-jdbc.xml" />
+	<import resource="spring-mail.xml" />
 
 
 </beans>

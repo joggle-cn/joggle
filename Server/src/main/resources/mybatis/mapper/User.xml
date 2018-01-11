@@ -11,4 +11,15 @@
 		<result column="agree" property="agree" />
 	</resultMap>
 
+
+
+	<!-- 更新用户密码 -->
+	<update id="updatePass">
+		update t_user set
+		pass = #{pass}
+		where id = #{userId}
+	</update>
+
+
+
 </mapper>

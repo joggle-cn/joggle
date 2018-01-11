@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.mapper;
 
+import com.wuweibi.bullet.domain.UserApply;
 import com.wuweibi.bullet.entity.UserForget;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -13,4 +14,15 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface UserForgetMapper extends BaseMapper<UserForget> {
 
+
+
+    /**
+     * 更新Email状态
+     * */
+    void updateEmailStatus(String email);
+
+    UserForget findByCode(String code);
+
+
+    void updateStatus(String code);
 }

@@ -2,6 +2,7 @@ package com.wuweibi.bullet.mapper;
 
 import com.wuweibi.bullet.entity.User;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    void updatePass(
+            @Param("userId")  long userId,
+            @Param("pass")  String pass);
 }

@@ -28,6 +28,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: '/view/login/login.htm'
 		  , controllerUrl: '/view/login/login.js'
 		}))
+        /** 忘记密码 */
+        .when('/forget', router({
+            templateUrl: '/view/forget/forget.htm'
+            , controllerUrl: '/view/forget/forget.js'
+        }))
 		
 	
 		

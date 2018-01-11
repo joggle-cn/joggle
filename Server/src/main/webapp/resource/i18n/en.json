@@ -19,7 +19,9 @@
  	"user":{
 		"login": "Login",
 		"register": "Register",
-		"loginout": "Exit"
+		"loginout": "Exit",
+		"forget": "Submit",
+		"changepass": "Change Password"
 	},
  	"footer":{
 		"nav":{

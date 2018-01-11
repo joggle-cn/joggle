@@ -6,11 +6,40 @@
 	<resultMap id="BaseResultMap" type="com.wuweibi.bullet.entity.UserForget">
 		<id column="id" property="id" />
 		<result column="userId" property="userId" />
+		<result column="email" property="email" />
 		<result column="oldPass" property="oldPass" />
 		<result column="createTime" property="createTime" />
 		<result column="code" property="code" />
 		<result column="status" property="status" />
 		<result column="ip" property="ip" />
 	</resultMap>
+
+
+
+	<!-- 更新 -->
+	<update id="updateEmailStatus" parameterType="string">
+		update t_user_forget set
+		status = 1
+		where email = #{email}
+	</update>
+
+	<!-- 查询修改密码申请记录 -->
+	<select id="findByCode" resultMap="BaseResultMap" parameterType="string">
+		select * from t_user_forget
+		where  status = 0 and code = #{code}
+	</select>
+
+
+
+    <!-- 更新用户密码 -->
+    <update id="updateStatus" parameterType="string">
+        update t_user_forget set
+        status = 1
+        where code = #{code}
+    </update>
+
+
+
+
 
 </mapper>

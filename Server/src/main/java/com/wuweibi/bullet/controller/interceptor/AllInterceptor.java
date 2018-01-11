@@ -29,6 +29,9 @@ public class AllInterceptor implements HandlerInterceptor {
         "/api/user/login/"
         , "/api/login"
 		, "/api/user/loginout"
+		, "/api/user/forget"
+		, "/api/user/register"
+		, "/api/user/changepass"
     };
 	
 	

@@ -41,7 +41,7 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 				if($scope.user.pass && ($scope.user.pass == $scope.password2)){
 
 					faceinner.post(api['user.register'], $scope.user , function(result){
-						if(result.status){// 注册成功
+						if(result.status == 0){// 注册成功
                             alert("注册成功!");
 
                             // 登陆当前注册用户
@@ -51,7 +51,7 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 									window.location.href ='#/index';
 								}
 							});
-						} else{// 注册失败
+						} else {// 注册失败
 							$scope.$apply(function () {
 								var len = result.data.length;
 								for(var i=0; i<len; i++){

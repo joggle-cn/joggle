@@ -17,10 +17,10 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
                     // 加载用户登录信息
                     faceinner.get(api['user.login.info'], function(res){
                         if(res.status == 0){
-                            $rootScope.$apply(function() {
+                            $scope.$apply(function() {
                                 $rootScope.user = res.data;
                                 $rootScope.islogin = true;
-                                $location.path('/index').replace();;
+                                $location.path('/index').replace();
                             });
                         }
                     });

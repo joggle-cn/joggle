@@ -1,0 +1,168 @@
+<!--
+    @title 忘记密码界面
+    @author marker
+    @createTime 2016-08-15
+
+-->
+<div id="wrap-all">
+    <div id="main" class="inner">
+        <!-- // data-ng-controller="user_login_ctrl"_= -->
+        <div class="other-warp login-wrap">
+
+            <div class="single-panel clearfix">
+                <div class="single-panel-inner login-mini">
+                    <div class="single-panel-header">
+                        <h3 ng-show="!showChangePass">忘记密码？</h3>
+                        <h3 ng-show="showChangePass">修改密码</h3>
+                    </div>
+                    <div class="single-panel-body">
+                        <div class="single-panel-section">
+
+
+
+                            <form name="myForm" class="form-horizontal wt-form" ng-show="!showChangePass">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon icon-user"></i></span>
+                                        <input class="form-control" type="text" ng-model="email"
+                                               ng-focus="nameMsg=''" placeholder="邮箱地址"/>
+
+                                    </div>
+                                    <div class="errors">
+                                        <span ng-show="myForm.email.$dirty && myForm.email.$error.email"
+                                              class="error" translate=" ">请输入正确的邮箱地址</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button ng-click="submitRestPass()"
+
+                                            ng-disabled="myForm.$invalid" class="btn btn-success btn-lg btn-block"
+                                            data-loading-text="提交中..." ng-bind="res.t('user.forget')"></button>
+                                </div>
+
+                                <div class="" style="word-break: break-all">
+                                    提交申请后,将您的邮箱将受到来自master@faceinner.com得修改密码链接. 请注意查收.
+                                </div>
+
+                            </form>
+
+
+
+
+
+                            <!-- 修改密码 -->
+                            <form name="myForm2" class="form-horizontal wt-form" ng-show="showChangePass">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon icon-user"></i></span>
+                                        <input class="form-control"
+                                               type="password" name="pass" ng-model="user.pass" required
+                                               placeholder="新密码"/>
+
+                                    </div>
+                                    <div class="errors">
+                                        <span ng-show="myForm2.pass.$dirty && myForm2.pass.$error.required"
+                                              class="error" translate=" ">请输入新密码</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon icon-user"></i></span>
+                                        <input class="form-control"
+                                               type="password" name="password" ng-model="password" password required
+                                               placeholder="确认密码"/>
+
+                                    </div>
+
+                                    <div class="errors">
+                                        <span ng-show="myForm2.password.$dirty && myForm2.password.$error.password"
+                                          class="error" >两次密码不一致</span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button ng-click="changePassword()"
+                                            ng-disabled="myForm2.$invalid" class="btn btn-success btn-lg btn-block"
+                                            data-loading-text="提交中..." ng-bind="res.t('user.changepass')"></button>
+                                </div>
+
+
+
+                            </form>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+<!--
+<header class="demo-bar">
+    <h1>重置密码</h1>
+    <a class="btn-menu-bar btn-menu-list">
+        <i class="am-menu-toggle-icon am-icon-bars"></i>
+    </a>
+</header>
+
+
+<form name="myForm" class="am-form" ng-show="!showChangePass">
+    <fieldset>
+        <div class="am-form-group">
+            <label>邮箱地址</label>
+            <input type="text" name="email" ng-model="email" required email />
+            <div class="errors">
+                <span ng-show="myForm.email.$dirty && myForm.email.$error.email"
+                      class="error" translate=" ">请输入正确的邮箱地址</span>
+            </div>
+        </div>
+        <p>
+            <button ng-click="submitRestPass()"  ng-disabled="myForm.$invalid" class="am-btn am-btn-primary btn-login">提交申请</button>
+        </p>
+        <div class="" style="word-break: break-all">
+            提交申请后,将您的邮箱将受到来自master@faceinner.com得修改密码链接. 请注意查收.
+        </div>
+    </fieldset>
+</form>
+
+
+
+<form name="myForm2" class="am-form" ng-show="showChangePass">
+    <fieldset>
+        <div class="am-form-group">
+            <label>新密码</label>
+            <input type="password" name="pass" ng-model="user.pass" required />
+            <div class="errors">
+                <span ng-show="myForm2.pass.$dirty && myForm2.pass.$error.required"
+                      class="error" translate=" ">请输入新密码</span>
+            </div>
+        </div>
+        <div class="am-form-group">
+            <label>确认密码</label>
+            <input type="password" name="password" ng-model="password" password required>
+            <div class="errors">
+                <span ng-show="myForm2.password.$dirty && myForm2.password.$error.password"
+                  class="error" >两次密码不一致</span>
+            </div>
+        </div>
+        <p>
+            <button ng-click="changePassword()"  ng-disabled="myForm2.$invalid" class="am-btn am-btn-primary btn-login">修改密码</button>
+        </p>
+    </fieldset>
+</form>
+
+-->
