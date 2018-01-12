@@ -12,6 +12,9 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
+ *
+ * 代理Http请求信息
+ *
  * @author marker
  * @create 2017-12-07 下午1:13
  **/

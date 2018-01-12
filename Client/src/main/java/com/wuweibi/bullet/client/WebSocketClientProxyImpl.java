@@ -29,6 +29,10 @@ public class WebSocketClientProxyImpl implements WebSocketClientProxy {
 
     @Override
     public void send(byte[] results) {
-        this.session.getAsyncRemote().sendBinary(ByteBuffer.wrap(results));
+        try {
+            this.session.getBasicRemote().sendBinary(ByteBuffer.wrap(results),true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

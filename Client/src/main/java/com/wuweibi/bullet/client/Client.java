@@ -3,14 +3,10 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2017/11/22.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Timer;
 
@@ -68,7 +64,7 @@ public class Client {
     }
 
     @OnClose
-    public void onClose( Session session, CloseReason closeReason) throws InterruptedException {
+    public void onClose(Session session, CloseReason closeReason) throws InterruptedException {
         logger.error("{} {}", closeReason.toString(), "链接已关闭" );
         int id = connection.getId();
 

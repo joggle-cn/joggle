@@ -49,16 +49,16 @@ public class SocketUtils {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
 
         byte[] bytes;
-        int size = 0;
-        int count = 0;
+        int size  = 0;
         while ((size = socketChannel.read(buffer)) >= 0) {
             buffer.flip();
             bytes = new byte[size];
             buffer.get(bytes);
             baos.write(bytes);
             buffer.clear();
-            count++;
         }
+
+
 
         return baos.toByteArray();
     }

@@ -2,29 +2,30 @@ package com.wuweibi.bullet.client;/**
  * Created by marker on 2017/11/20.
  */
 
-import com.wuweibi.bullet.ByteUtils;
 import com.wuweibi.bullet.SocketUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
-import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
 /**
+ *
+ * 接收到请求
+ *
  * @author marker
  * @create 2017-11-20 下午1:02
  **/
-public class SocketThread extends Thread{
+public class SocketThread extends Thread {
+
+    /** 日志 */
     private Logger logger = LoggerFactory.getLogger(SocketThread.class);
 
     /** 客户端代理 */
@@ -55,10 +56,10 @@ public class SocketThread extends Thread{
         MsgProxyHttp msg = null;
         try {
             head.read(bis);//读取消息头
-            logger.info("{}", head.toString());
+            logger.debug("{}", head.toString());
 
             switch (head.getCommand()) {
-                case Message.Proxy_Http:// Bind响应命令
+                case Message.Proxy_Http: // HTTP代理请求
                     msg = new MsgProxyHttp(head);
                     msg.read(bis);
                 break;
@@ -69,7 +70,7 @@ public class SocketThread extends Thread{
 
 
         String host = msg.getServerAddr();
-        int  port   = msg.getPort();
+        int    port = msg.getPort();
         byte[] requestData = msg.getContent();
 
         SocketChannel socketChannel = null;
@@ -80,12 +81,12 @@ public class SocketThread extends Thread{
             socketChannel = SocketChannel.open(isa);
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
+
             ByteBuffer buffer = ByteBuffer.wrap(requestData);
             socketChannel.write(buffer);
             socketChannel.shutdownOutput();
 
         } catch (IOException e) {
-//            logger.error("", e);
             msg.setContent(getMessage(e.getMessage()));
         }
         // 处理响应
@@ -94,13 +95,16 @@ public class SocketThread extends Thread{
         try {
             bytesout = SocketUtils.receiveData(socketChannel);
             msg.setContent(bytesout);
+//            logger.debug("接收响应内容...||{}", new String(bytesout));
+
+
         } catch (IOException e) {
             msg.setContent(getMessage(e.getMessage()));
 
         } catch (NullPointerException e) {
             msg.setContent(getMessage("server "+msg.getServerAddr()+":"+msg.getPort()+" invoke faild!"));
         }
-        System.out.println("wlen=" + bytesout.length);
+        logger.debug("准备发送的内容数据 len={}", bytesout.length);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {

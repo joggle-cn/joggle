@@ -54,7 +54,7 @@ public class MsgHead {
 	}
 	
 	public String getSequence() {
-		return sequence1+""+sequence2;
+		return sequence1 + "" + sequence2;
 	}
 	
 	public long getSequence1() {

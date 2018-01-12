@@ -54,50 +54,46 @@ public class ApplicationInit  implements ApplicationContextAware {
 
 
 
-        new Thread(){
-            @Override
-            public void run() {
+        new Thread(() -> {
 
-                ServerBootstrap bootstrap = new ServerBootstrap();
-                NioEventLoopGroup boss = new NioEventLoopGroup(1);
-                NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
-                bootstrap.group(boss, work);
-                bootstrap.channel(NioServerSocketChannel.class);
+            ServerBootstrap bootstrap = new ServerBootstrap();
+            NioEventLoopGroup boss = new NioEventLoopGroup(1);
+            NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
+            bootstrap.group(boss, work);
+            bootstrap.channel(NioServerSocketChannel.class);
 
-                bootstrap.localAddress(port);
-                bootstrap.childHandler(new ChannelInitializer<Channel>() {
-                    @Override
-                    protected void initChannel(Channel ch) throws Exception {
+            bootstrap.localAddress(port);
+            bootstrap.childHandler(new ChannelInitializer<Channel>() {
+                @Override
+                protected void initChannel(Channel ch) throws Exception {
+                // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
+                ch.pipeline().addLast(new ByteArrayDecoder());
+                // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
+                ch.pipeline().addLast(new SimpleServerHandler());
 
-                    // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
-                    ch.pipeline().addLast(new ByteArrayDecoder());
-                    // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
-                    ch.pipeline().addLast(new SimpleServerHandler());
-
-                    }
-                }).option(ChannelOption.SO_BACKLOG, 128)
-                        .childOption(ChannelOption.SO_KEEPALIVE, true);;
-
-                try {
-                    // 开始绑定server,阻塞直到绑定成功
-                    ChannelFuture channelFuture = bootstrap.bind().sync();
-
-                    System.out.println(">server started");
-
-                    //阻塞直到关闭成功
-                    channelFuture.channel().closeFuture().sync();
-
-                    System.out.println(">server close");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    // 关闭资源,boss线程组及work线程组
-                    boss.shutdownGracefully();
-                    work.shutdownGracefully();
                 }
+            }).option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, false);;
 
+            try {
+                // 开始绑定server,阻塞直到绑定成功
+                ChannelFuture channelFuture = bootstrap.bind().sync();
+
+                System.out.println(">server started");
+
+                //阻塞直到关闭成功
+                channelFuture.channel().closeFuture().sync();
+
+                System.out.println(">server close");
+            } catch (InterruptedException e) {
+                logger.error("", e);
+            } finally {
+                // 关闭资源,boss线程组及work线程组
+                boss.shutdownGracefully();
+                work.shutdownGracefully();
             }
-        }.start();
+
+        }).start();
 
 
 

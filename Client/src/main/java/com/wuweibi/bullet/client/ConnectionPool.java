@@ -21,7 +21,7 @@ public class ConnectionPool {
     private Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
 
-    private int poolSize = 5;
+    private int poolSize = 1;
 
 
     private Properties config;

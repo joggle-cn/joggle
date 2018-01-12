@@ -3,11 +3,8 @@ package com.wuweibi.bullet.server;
  * Created by marker on 2017/11/19.
  */
 
-import com.wuweibi.bullet.ByteUtils;
-import com.wuweibi.bullet.Sequence;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
-import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.utils.SpringUtils;
@@ -20,8 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,11 +31,11 @@ import java.util.Map;
  * @create 2017-11-19 下午5:47
  **/
 public class HandlerBytes implements Runnable{
-
+    /** 日志 */
     private Logger logger = LoggerFactory.getLogger(HandlerBytes.class);
 
     /** 寄存存响应对象 */
-    public static Map<String, ChannelHandlerContext> cache = new HashMap<>();
+    public static Map<String, ChannelHandlerContext> cache = Collections.synchronizedMap(new HashMap<>());
 
 
     /**
@@ -51,9 +48,9 @@ public class HandlerBytes implements Runnable{
 
 
 
-    public HandlerBytes(ChannelHandlerContext ctx, byte[] result1) {
+    public HandlerBytes(ChannelHandlerContext ctx, byte[] result) {
         this.ctx = ctx;
-        this.result = result1;
+        this.result = result;
     }
 
 
@@ -103,27 +100,25 @@ public class HandlerBytes implements Runnable{
             resultBytes = outputStream.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
-
-        String seq = msgProxyHttp.getSequence();
+        // 生成的序号，以便在响应回来的时候找到对应的响应对象
+        String key = msgProxyHttp.getSequence();
 
 
         try{
-            synchronized (HandlerBytes.class){
-                // TODO 使用相关算法获取多个连接中的一个
-                CoonPool pool = SpringUtils.getBean(CoonPool.class);
+            // TODO 使用相关算法获取多个连接中的一个
+            CoonPool pool = SpringUtils.getBean(CoonPool.class);
+            BulletAnnotation client = pool.getByDeviceNo(deviceCode);
 
-                BulletAnnotation client = pool.getByDeviceNo(deviceCode);
+            Session session = client.getSession();
 
-                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                Session session = client.getSession();
+            ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                if (session.isOpen()){
-                    cache.put(seq, ctx);
-                    session.getBasicRemote().sendBinary(buf,true);
-                    return;
-                }
+            if (session.isOpen()){
+                cache.put(key, ctx);
+                session.getBasicRemote().sendBinary(buf,true);
+                return;
             }
         } catch (Exception e){
             logger.error("", e);

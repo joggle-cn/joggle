@@ -134,6 +134,8 @@ public class BulletAnnotation {
         String sequence =  msg.getSequence();
         byte[] responseData =  msg.getContent();
 
+        logger.debug("接收到内容数据准备响应，长度为:{}", responseData.length);
+
 
 
         synchronized (BulletAnnotation.class){
@@ -141,13 +143,16 @@ public class BulletAnnotation {
             ChannelHandlerContext ctx = HandlerBytes.cache.get(sequence);
 
             if(ctx != null){
-                // 在当前场景下，发送的数据必须转换成ByteBuf数组
-                ByteBuf encoded = ctx.alloc().buffer(responseData.length);
-                encoded.writeBytes(responseData);
-                ctx.write(encoded);
-                ctx.flush();
-                ctx.close();
-                HandlerBytes.cache.remove(sequence);
+                try {
+                    // 在当前场景下，发送的数据必须转换成ByteBuf数组
+                    ByteBuf encoded = ctx.alloc().buffer(responseData.length);
+                    encoded.writeBytes(responseData);
+                    ctx.writeAndFlush(encoded);
+
+
+                } finally {
+                    HandlerBytes.cache.remove(sequence);
+                }
                 logger.debug("count={}", HandlerBytes.cache.size());
             }
 
