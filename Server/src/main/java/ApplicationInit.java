@@ -4,6 +4,7 @@
 
 import com.wuweibi.bullet.server.Handler;
 import com.wuweibi.bullet.server.SimpleServerHandler;
+import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -19,7 +20,10 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -32,19 +36,18 @@ import java.nio.charset.StandardCharsets;
  * @author marker
  * @create 2017-11-19 下午5:44
  **/
-public class ApplicationInit implements ServletContextListener {
+public class ApplicationInit  implements ApplicationContextAware {
 
     private Logger logger = LoggerFactory.getLogger(ApplicationInit.class);
 
 
 
-//    @Value("#{bullet.server.port}")
-    private int port = 8081;
-
-
-
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+
+
+        int port = SpringUtils.getPropInt("bullet.server.port");
+
         logger.info("===========================================================");
         logger.info("Bullet Server Port={}", port);
         logger.info("===========================================================");
@@ -60,7 +63,8 @@ public class ApplicationInit implements ServletContextListener {
                 NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
                 bootstrap.group(boss, work);
                 bootstrap.channel(NioServerSocketChannel.class);
-                bootstrap.localAddress("localhost", port);
+
+                bootstrap.localAddress(port);
                 bootstrap.childHandler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
@@ -96,12 +100,8 @@ public class ApplicationInit implements ServletContextListener {
         }.start();
 
 
-    }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
+
 
     }
-
-
 }

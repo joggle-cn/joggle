@@ -4,6 +4,7 @@ package com.wuweibi.bullet.utils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,5 +79,26 @@ public class SpringUtils implements ApplicationContextAware {
             tag = false;
         }
         return tag;
+    }
+
+
+    /**
+     * 获取配置
+     * @param key key
+     * @return
+     */
+    public static String getProperty(String key){
+        Properties pro = getBean("configProperties");
+        return pro.getProperty(key);
+    }
+
+
+    /**
+     * 获取配置int
+     *
+     * @param key key
+     */
+    public static int getPropInt(String key) {
+        return Integer.valueOf(getProperty(key));
     }
 }

@@ -11,6 +11,7 @@
  	<cache:annotation-driven />
 
 	<bean class="com.wuweibi.bullet.utils.SpringUtils"></bean>
+	<bean class="ApplicationInit"></bean>
 
 	<!-- WebSocket链接池 -->
 	<bean class="com.wuweibi.bullet.conn.CoonPool"></bean>
