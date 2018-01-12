@@ -17,6 +17,7 @@
 
 
 	<import resource="application-cache.xml" />
+	<import resource="application-config.xml" />
 	<import resource="spring-jdbc.xml" />
 	<import resource="spring-mail.xml" />
 
