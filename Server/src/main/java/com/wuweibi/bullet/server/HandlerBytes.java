@@ -131,9 +131,11 @@ public class HandlerBytes implements Runnable{
             ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 //            System.out.println("==============================" + session.isOpen());
 
-            if (session.isOpen()){
-                session.getBasicRemote().sendBinary(buf);
-                return;
+            synchronized (session.getId()){
+                if (session.isOpen()){
+                    session.getBasicRemote().sendBinary(buf);
+                    return;
+                }
             }
         } catch (Exception e){
             logger.error("", e);

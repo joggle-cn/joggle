@@ -77,8 +77,7 @@ public class ApplicationInit  implements ApplicationContextAware {
             }).option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-                    .option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);;
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             try {
                 // 开始绑定server,阻塞直到绑定成功
