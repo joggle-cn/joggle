@@ -72,6 +72,7 @@ public class SocketThread extends Thread {
         String host = msg.getServerAddr();
         int    port = msg.getPort();
         byte[] requestData = msg.getContent();
+        logger.debug("{}", new String(requestData));
 
         SocketChannel socketChannel = null;
         // 代理请求

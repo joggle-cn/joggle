@@ -83,7 +83,7 @@ public final class CoonPool {
     public BulletAnnotation getByDeviceNo(String deviceNo) {
 
         List<BulletAnnotation> list = clientConnections.get(deviceNo);
-
+        if(list ==null) return null;
         int len = list.size(); // 总链接个数
         if (len == 0) {
             return null;

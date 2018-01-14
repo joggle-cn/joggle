@@ -14,6 +14,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
@@ -56,8 +57,8 @@ public class ApplicationInit  implements ApplicationContextAware {
 
         new Thread(() -> {
 
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            NioEventLoopGroup boss = new NioEventLoopGroup(1);
+            ServerBootstrap bootstrap = new ServerBootstrap();// 引导辅助程序
+            NioEventLoopGroup boss = new NioEventLoopGroup(1);// 通过nio方式来接收连接和处理连接
             NioEventLoopGroup work = new NioEventLoopGroup(2 * Runtime.getRuntime().availableProcessors());
             bootstrap.group(boss, work);
             bootstrap.channel(NioServerSocketChannel.class);
@@ -66,14 +67,18 @@ public class ApplicationInit  implements ApplicationContextAware {
             bootstrap.childHandler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel ch) throws Exception {
-                // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
-                ch.pipeline().addLast(new ByteArrayDecoder());
-                // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
+                    // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
+//                ch.pipeline().addLast(new ByteArrayDecoder());
+                    ch.pipeline().addLast(new HttpRequestDecoder());
+                    // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
                 ch.pipeline().addLast(new SimpleServerHandler());
 
                 }
             }).option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, false);;
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
+                    .option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);;
 
             try {
                 // 开始绑定server,阻塞直到绑定成功

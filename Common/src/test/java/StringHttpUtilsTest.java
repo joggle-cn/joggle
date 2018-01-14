@@ -19,9 +19,6 @@ public class StringHttpUtilsTest {
 
 
 
-        String host = StringHttpUtils.getHost(str);
-        System.out.println(host);
-
     }
 
 

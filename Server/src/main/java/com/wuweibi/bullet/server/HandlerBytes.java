@@ -12,6 +12,11 @@ import com.wuweibi.bullet.utils.StringHttpUtils;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.Headers;
+import io.netty.handler.codec.http.DefaultHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,11 +51,13 @@ public class HandlerBytes implements Runnable{
     /** 请求内容 */
     private byte[] result;
 
+    private HttpRequest request;
 
 
-    public HandlerBytes(ChannelHandlerContext ctx, byte[] result) {
+    public HandlerBytes(HttpRequest request, ChannelHandlerContext ctx) {
+        this.request = request;
         this.ctx = ctx;
-        this.result = result;
+
     }
 
 
@@ -66,9 +73,15 @@ public class HandlerBytes implements Runnable{
         byte[] resultBytes = new byte[0];
         MsgProxyHttp msgProxyHttp = null;
         try {
-            httpRequestStr = new String(result,"utf-8");
+            httpRequestStr = request.toString()+"\r\n\r\n";
+            int len = "DefaultHttpRequest(decodeResult: success, version: HTTP/1.1)\n".length();
+            System.out.println(len);
+            httpRequestStr = httpRequestStr.substring(len);
+            logger.debug("======================\n{}", httpRequestStr);
+            this.result = httpRequestStr.getBytes();
 
-            String host = StringHttpUtils.getHost(httpRequestStr);
+            // 获取请求的host
+            String host = request.headers().get(HttpHeaderNames.HOST);
 
             // 获取二级域名
             String sldomain = StringHttpUtils.getSecondLevelDomain(host);
@@ -90,6 +103,9 @@ public class HandlerBytes implements Runnable{
             String localHost = "localhost";
 
             msgProxyHttp = new MsgProxyHttp(localHost, port);
+
+            logger.debug("sequence={}", msgProxyHttp.getSequence());
+
             logger.info("{}",msgProxyHttp.getHead().toString());
             msgProxyHttp.setContent(result);
 
@@ -100,13 +116,14 @@ public class HandlerBytes implements Runnable{
             resultBytes = outputStream.toByteArray();
 
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error("req:"+new String(result), e);
         }
         // 生成的序号，以便在响应回来的时候找到对应的响应对象
-        String key = msgProxyHttp.getSequence();
+        String key = "";
 
 
         try{
+            key = msgProxyHttp.getSequence();
             // TODO 使用相关算法获取多个连接中的一个
             CoonPool pool = SpringUtils.getBean(CoonPool.class);
             BulletAnnotation client = pool.getByDeviceNo(deviceCode);
@@ -114,21 +131,23 @@ public class HandlerBytes implements Runnable{
             Session session = client.getSession();
 
             ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+//            System.out.println("==============================" + session.isOpen());
 
             if (session.isOpen()){
-                cache.put(key, ctx);
                 session.getBasicRemote().sendBinary(buf,true);
                 return;
             }
         } catch (Exception e){
             logger.error("", e);
+        } finally {
+            cache.put(key, ctx);
         }
 
         // 设备没有上线
         if(ctx != null){
-            sendMessage("sorry! device is not online!");
+            sendMessage("sorry! ChannelHandlerContext is null!");
         }
-
+        cache.remove(key);
 
 
 

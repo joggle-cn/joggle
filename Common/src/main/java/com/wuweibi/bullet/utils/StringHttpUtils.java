@@ -1,11 +1,8 @@
-package com.wuweibi.bullet.utils;/**
+package com.wuweibi.bullet.utils;
+/**
  * Created by marker on 2017/12/7.
  */
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,34 +13,6 @@ import java.util.regex.Pattern;
 public class StringHttpUtils {
 
 
-    /**
-     *
-     * @param httpRequestStr
-     * @return
-     */
-    public static String getHost(String httpRequestStr) {
-        ByteArrayInputStream bis = new ByteArrayInputStream(httpRequestStr.getBytes());
-        InputStreamReader isr = new InputStreamReader(bis);
-        BufferedReader br = new BufferedReader(isr);//此时获取到的bre就是整个文件的缓存流
-
-
-        try {
-            br.readLine();
-            String host = br.readLine();
-            host = host.split(": ")[1];
-            return host.split(":")[0];
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return "";
-    }
 
 
     /**
@@ -57,4 +26,6 @@ public class StringHttpUtils {
         matcher.find();
         return matcher.group(1);
     }
+
+
 }
