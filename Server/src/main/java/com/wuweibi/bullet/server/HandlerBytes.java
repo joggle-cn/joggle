@@ -74,9 +74,7 @@ public class HandlerBytes implements Runnable{
         MsgProxyHttp msgProxyHttp = null;
         try {
             httpRequestStr = request.toString()+"\r\n\r\n";
-            int len = "DefaultHttpRequest(decodeResult: success, version: HTTP/1.1)\n".length();
-            System.out.println(len);
-            httpRequestStr = httpRequestStr.substring(len);
+            httpRequestStr = httpRequestStr.substring(61);
             logger.debug("======================\n{}", httpRequestStr);
             this.result = httpRequestStr.getBytes();
 
@@ -134,7 +132,7 @@ public class HandlerBytes implements Runnable{
 //            System.out.println("==============================" + session.isOpen());
 
             if (session.isOpen()){
-                session.getBasicRemote().sendBinary(buf,true);
+                session.getBasicRemote().sendBinary(buf);
                 return;
             }
         } catch (Exception e){
