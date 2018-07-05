@@ -5,15 +5,11 @@ package com.wuweibi.bullet.server;
 
 
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,21 +31,12 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-
-
         try {
             if (msg instanceof HttpRequest) {
                 HttpRequest request = (HttpRequest) msg;
                 HandlerBytes handler = new HandlerBytes(request, ctx);
                 handler.run();
-
-
             }
-
-
-
-
-
         } finally {
 //            ReferenceCountUtil.release(msg);
         }

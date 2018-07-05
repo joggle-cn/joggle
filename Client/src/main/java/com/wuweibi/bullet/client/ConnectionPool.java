@@ -21,7 +21,7 @@ public class ConnectionPool {
     private Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
 
-    private int poolSize = 1;
+    private int poolSize = 8;
 
 
     private Properties config;
@@ -63,7 +63,7 @@ public class ConnectionPool {
                 Connection connection = new Connection(url2);
                 connection.setId(i);
 
-                Thread.sleep(1000L);
+                Thread.sleep(100L);
 
                 connection.open(); // 打开WebSocket链接
 

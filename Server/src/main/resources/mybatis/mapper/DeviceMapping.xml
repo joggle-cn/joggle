@@ -8,6 +8,7 @@
 		<result column="device_id" property="deviceId" />
 		<result column="domain" property="domain" />
 		<result column="port" property="port" />
+		<result column="host" property="host" />
 		<result column="createTime" property="createTime" />
 	</resultMap>
 

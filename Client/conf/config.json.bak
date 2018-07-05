@@ -1,5 +1,5 @@
 {
-  "api":"http://www.joggle.cn:8080",
-  "tunnel": "ws://www.joggle.cn:8080/tunnel",
-  "deviceId": "0001"
+  "api":"http://localhost:8082",
+  "tunnel": "ws://localhost:8082/tunnel",
+  "deviceId": "0000000113"
 }

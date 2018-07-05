@@ -16,15 +16,11 @@
  */
 package com.wuweibi.bullet.websocket;
 
-import com.wuweibi.bullet.ByteUtils;
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.server.HandlerBytes;
-import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.buffer.ByteBuf;
@@ -37,8 +33,6 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 
 /**
@@ -150,8 +144,10 @@ public class BulletAnnotation {
                 encoded.writeBytes(responseData);
                 ctx.writeAndFlush(encoded);
 
+
             } finally {
                 HandlerBytes.cache.remove(sequence);
+                ctx.close();
             }
             logger.debug("count={}", HandlerBytes.cache.size());
         }

@@ -9,13 +9,11 @@ import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringHttpUtils;
+import com.wuweibi.bullet.utils.StringUtils;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.Headers;
-import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,17 +70,18 @@ public class HandlerBytes implements Runnable{
         String httpRequestStr = null;
         byte[] resultBytes = new byte[0];
         MsgProxyHttp msgProxyHttp = null;
+        request.headers().set(HttpHeaderNames.CONNECTION, "close");// 不支持长链接
         try {
-            httpRequestStr = request.toString()+"\r\n\r\n";
+            httpRequestStr = request.toString() + "\n\r\n";
             httpRequestStr = httpRequestStr.substring(61);
             logger.debug("======================\n{}", httpRequestStr);
             this.result = httpRequestStr.getBytes();
 
             // 获取请求的host
-            String host = request.headers().get(HttpHeaderNames.HOST);
+            String domainHost = request.headers().get(HttpHeaderNames.HOST);
 
             // 获取二级域名
-            String sldomain = StringHttpUtils.getSecondLevelDomain(host);
+            String sldomain = StringHttpUtils.getSecondLevelDomain(domainHost);
 
 
             // 通过域名找到设备ID与映射端口
@@ -98,7 +97,13 @@ public class HandlerBytes implements Runnable{
             // 设备编码
             deviceCode = mapping.getDeviceCode();
             int port = mapping.getPort();
+            String host = mapping.getHost();
+
             String localHost = "localhost";
+            if(!StringUtils.isEmpty(host)){
+                localHost = host;
+            }
+
 
             msgProxyHttp = new MsgProxyHttp(localHost, port);
 

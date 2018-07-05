@@ -6,14 +6,9 @@ package com.wuweibi.bullet.client;
 
 import com.wuweibi.bullet.ConfigUtils;
 
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Timer;
 
 /**
  * 启动主要运行类
@@ -42,7 +37,7 @@ public class Main {
 
         // 保持不退出
         while (true){
-            Thread.sleep(3000000L);
+            Thread.sleep(1000L);
         }
 
     }

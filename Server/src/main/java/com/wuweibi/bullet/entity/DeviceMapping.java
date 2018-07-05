@@ -1,23 +1,24 @@
 package com.wuweibi.bullet.entity;
 
-import java.io.Serializable;
-
-import com.baomidou.mybatisplus.enums.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
- * 
+ *   设备映射
  * </p>
  *
  * @author marker
  * @since 2017-12-09
  */
+@Data
 @TableName("t_device_mapping")
 public class DeviceMapping extends Model<DeviceMapping> {
 
@@ -30,6 +31,13 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private String domain;
 	private Integer port;
 
+	/**
+	 * 服务器地址
+	 * （null 为本机）
+	 */
+    @TableField("host")
+	private String host;
+
 	private Long userId;
 
 	/** 协议 1 HTTP */
@@ -38,87 +46,14 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/** 备注 */
 	private String description;
 
+    /**
+     * 创建时间
+     */
 	private Date createTime;
 
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(Long deviceId) {
-		this.deviceId = deviceId;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	public Integer getPort() {
-		return port;
-	}
-
-	public void setPort(Integer port) {
-		this.port = port;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
-
-    public Integer getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(Integer protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-
     @Override
-	public String toString() {
-		return "DeviceMapping{" +
-			", id=" + id +
-			", deviceId=" + deviceId +
-			", domain=" + domain +
-			", port=" + port +
-			", createTime=" + createTime +
-			"}";
-	}
+    protected Serializable pkVal() {
+        return this.id;
+    }
 }

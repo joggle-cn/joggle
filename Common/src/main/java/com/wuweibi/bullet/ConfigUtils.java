@@ -26,6 +26,11 @@ public class ConfigUtils {
     /** 日志 */
     private static Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
 
+    /**
+     * 配置文件名称
+     */
+    public static final String CONFIG_FILE = "/config.json.bak";
+
     static JSONObject CONF ;
 
     static {
@@ -38,7 +43,7 @@ public class ConfigUtils {
 
         String result = "{}";
         try {
-            File file = new File(confDir + "/config.json");
+            File file = new File(confDir + CONFIG_FILE);
             logger.info("正在加载配置文件 ",file.getAbsoluteFile());
             InputStream inputStream = new FileInputStream(file);
 

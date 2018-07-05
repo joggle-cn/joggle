@@ -59,8 +59,12 @@ public class DeviceMappingController {
     }
 
 
-
-    // 保存数据
+    /**
+     * 保存数据
+     * @param entity
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @ResponseBody
     public Object save(
