@@ -67,7 +67,7 @@ public class ApplicationInit  implements ApplicationContextAware {
                 }
             }).option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+                    .childOption(ChannelOption.SO_KEEPALIVE, false);
 
             try {
                 // 开始绑定server,阻塞直到绑定成功

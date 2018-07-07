@@ -68,7 +68,7 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
                 this.request = (HttpRequest) msg;
 
                 // 篡改请求
-//                request.headers().set(HttpHeaderNames.CONNECTION, "close");// 不支持长链接
+                request.headers().set(HttpHeaderNames.CONNECTION, "close");// 不支持长链接
 
                 String httpRequestStr = request.toString() + "\n\r\n";
                 httpRequestStr = httpRequestStr.substring(61);
@@ -130,6 +130,10 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
 
+        if(request == null)
+            return;
+
+
         String deviceCode = "";
         // 解析http协议，获取域名
         byte[] resultBytes = new byte[0];
@@ -168,7 +172,7 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
             logger.debug("sequence={}", msgProxyHttp.getSequence());
 
-            logger.info("{}",msgProxyHttp.getHead().toString());
+            logger.info("{}", msgProxyHttp.getHead().toString());
             msgProxyHttp.setContent(requestStream.toByteArray());
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -178,7 +182,7 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
             resultBytes = outputStream.toByteArray();
 
         } catch (Exception e) {
-            logger.error("req:"+new String(result), e);
+            logger.error("req:"+new String(result == null?new byte[]{}: result), e);
         }
         // 生成的序号，以便在响应回来的时候找到对应的响应对象
         String key = "";
@@ -212,8 +216,6 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
         }
         HandlerBytes.cache.remove(key);
 
-
-
     }
 
     @Override
@@ -235,9 +237,9 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
     private void sendMessage(String msg){
         // 在当前场景下，发送的数据必须转换成ByteBuf数组
         ByteBuf encoded = ctx.alloc().buffer(1024);
-//        encoded.writeBytes("HTTP/1.1 200 OK\n".getBytes());
-//        encoded.writeBytes("Content-Type:text/html; charset:GBK".getBytes());
-//        encoded.writeBytes("\n\n".getBytes());
+        encoded.writeBytes("HTTP/1.1 200 OK\n".getBytes());
+        encoded.writeBytes("Content-Type:text/html; charset:GBK".getBytes());
+        encoded.writeBytes("\n\n".getBytes());
         encoded.writeBytes(msg.getBytes());
 
         ctx.writeAndFlush(encoded) //flush掉所有写回的数据

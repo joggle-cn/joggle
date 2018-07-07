@@ -2,13 +2,10 @@ package com.wuweibi.bullet.conn;/**
  * Created by marker on 2018/1/10.
  */
 
-import com.wuweibi.bullet.server.HandlerBytes;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.Session;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,16 +86,17 @@ public final class CoonPool {
             return null;
         }
 
+        return  list.get(0);
 
         // 计算命中的链接
-        Integer count = dataCount.get(deviceNo);
-        if(count == null){
-            count = 0;
-        }
-        int index = (count%len);
-        dataCount.put(deviceNo, index);
-        logger.debug("deviceNo[{}] 正在使用链接 Connection[{}]", deviceNo, index);
-        return list.get(index);
+//        Integer count = dataCount.get(deviceNo);
+//        if(count == null){
+//            count = 0;
+//        }
+//        int index = (count%len);
+//        dataCount.put(deviceNo, index);
+//        logger.debug("deviceNo[{}] 正在使用链接 Connection[{}]", deviceNo, index);
+//        return list.get(index);
 
     }
 

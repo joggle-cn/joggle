@@ -146,8 +146,8 @@ public class BulletAnnotation {
                 encoded.writeBytes(responseData);
                 ctx.writeAndFlush(encoded).addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
-                        if (!future.isSuccess()) {
-                            logger.debug("Failed to send a 413 Request Entity Too Large.", future.cause());
+                        if (!future.isSuccess()){
+                            logger.debug("Failed to send a 413 Request Entity Too Large. | {}", future.cause());
                             ctx.close();
                         }
                     }
