@@ -24,6 +24,8 @@ import com.wuweibi.bullet.server.HandlerBytes;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,12 +144,18 @@ public class BulletAnnotation {
                 // 在当前场景下，发送的数据必须转换成ByteBuf数组
                 ByteBuf encoded = ctx.alloc().buffer(responseData.length);
                 encoded.writeBytes(responseData);
-                ctx.writeAndFlush(encoded);
+                ctx.writeAndFlush(encoded).addListener(new ChannelFutureListener() {
+                    public void operationComplete(ChannelFuture future) throws Exception {
+                        if (!future.isSuccess()) {
+                            logger.debug("Failed to send a 413 Request Entity Too Large.", future.cause());
+                            ctx.close();
+                        }
+                    }
+                });
 
 
             } finally {
                 HandlerBytes.cache.remove(sequence);
-                ctx.close();
             }
             logger.debug("count={}", HandlerBytes.cache.size());
         }

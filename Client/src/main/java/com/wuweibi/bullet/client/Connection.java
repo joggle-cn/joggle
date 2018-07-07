@@ -85,7 +85,7 @@ public class Connection {
             logger.error(e.getMessage());
             // 等地啊3秒
             try {
-                Thread.sleep(30000L);
+                Thread.sleep(3000L);
             } catch (InterruptedException e1) {}
             if (count <= 20) { // 重试次数10次。
                 opeAngain();

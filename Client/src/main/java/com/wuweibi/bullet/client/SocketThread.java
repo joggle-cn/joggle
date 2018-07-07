@@ -53,7 +53,7 @@ public class SocketThread extends Thread {
         MsgProxyHttp msg = null;
         try {
             head.read(bis);//读取消息头
-            logger.debug("{}", head.toString());
+//            logger.debug("{}", head.toString());
 
             switch (head.getCommand()) {
                 case Message.Proxy_Http: // HTTP代理请求
@@ -72,6 +72,7 @@ public class SocketThread extends Thread {
         logger.debug("{}", new String(requestData));
 
 
+
         Socket socket = new Socket();
 
 
@@ -85,8 +86,6 @@ public class SocketThread extends Thread {
             OutputStream writer = socket.getOutputStream();
             writer.write(requestData);
             writer.flush();
-            //通过shutdownOutput高速服务器已经发送完数据，后续只能接受数据
-//            socket.shutdownOutput();
 
             InputStream inputStream = socket.getInputStream();
 
@@ -103,11 +102,11 @@ public class SocketThread extends Thread {
                 boolean hasData = false;
                 while ((tmp = inputStream.read()) != -1){
                     headLength++;
+                    os.write((byte)tmp);
                     if(tmp == '\n'){
                         hasData = true;
                         break;
                     }
-                    os.write((byte)tmp);
                 }
                 line = new String(os.toByteArray());
                 if (line.startsWith("Content-Length")) {
@@ -120,14 +119,10 @@ public class SocketThread extends Thread {
                 if (line.startsWith("Connection")) {
                     line = "Connection : close";
                 }
-                outputStream.write((line + "\n").getBytes());
-
-                System.out.println(line);
-                if("\r".equals(line)){
-                    outputStream.write("\r".getBytes());
+                outputStream.write((line).getBytes());
+                if("\r\n".equals(line)){
                     break;
                 }
-
 
                 if(!hasData){ // 没有读取到数据
                     break;
@@ -157,7 +152,6 @@ public class SocketThread extends Thread {
                 do {
                     int tmp = -1;
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
-                    boolean hasData = false;
                     while ((tmp = inputStream.read()) != -1) {
                         headLength++;
                         os.write((byte) tmp);
@@ -166,42 +160,66 @@ public class SocketThread extends Thread {
                         }
                     }
                     byte[] lineByte = os.toByteArray();
-                    String line1 = new String(lineByte);
-                    System.out.print(line1);
 
 
-                    // 判断是否读取到结束符号
                     byte[] lineTag;
+                    // 判断是否读取到结束符号
                     if(lineByte.length == 3){
                         lineTag = Arrays.copyOfRange(lineByte, lineByte.length - 3, lineByte.length );
-
                         byte[] endTag = new byte[]{(int) 48, (int) 13, (int) 10};
                         if (Arrays.equals(lineTag, endTag)) { //
 
-                            outputStream.write((int) 13);
-                            outputStream.write((int) 10);
+                            outputStream.write(lineTag);
+
+                            outputStream.write(inputStream.read());
+                            outputStream.write(inputStream.read());
                             break;
                         }
                     }
 
+                    if(lineByte.length < 2){
+                        continue;
+                    }
+                    outputStream.write(lineByte);
+                    lineTag = Arrays.copyOfRange(lineByte, 0, lineByte.length - 2);
+                    String line1 = new String(lineTag);
+//                    String line1 = new String(lineByte);
+//                    System.out.print(line1);
 
-                    // 判断一行数据
-                    if(lineByte.length > 2) {
-                        lineTag = Arrays.copyOfRange(lineByte, lineByte.length - 2, lineByte.length);
-                        byte[] aa = new byte[]{(int) 13, (int) 10};
-                        if (Arrays.equals(lineTag, aa)) { //
-                            System.out.println("行结束符");
-                            outputStream.write(lineByte);
+                    int len = Integer.valueOf(line1, 16);
+
+                    int totalLen = len + 2;
+                    byte[] buffer = new byte[totalLen];
+                    int nIdx = 0;
+                    int nReadLen = 0;
+                    while (nIdx < totalLen)  {
+                        nReadLen = inputStream.read(buffer,   nIdx, totalLen - nIdx);
+                        if (nReadLen > 0)  {
+                            nIdx = nIdx + nReadLen;
+                        } else  {
+                            break;
                         }
                     }
-                    try {
-                        Thread.sleep(10L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    outputStream.write(buffer);
+
+
+
+
+
                 } while ( true );
             }
-            msg.setContent(outputStream.toByteArray());
+
+
+
+
+            byte[] data =outputStream.toByteArray();
+//            FileOutputStream file = new FileOutputStream("./data.txt");
+//            file.write(data);
+//            file.flush();
+//            file.close();
+
+            logger.debug("响应得到数据的长度为：{}", data.length);
+            msg.setContent(data);
 
 
 

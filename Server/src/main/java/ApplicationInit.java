@@ -59,8 +59,10 @@ public class ApplicationInit  implements ApplicationContextAware {
                     // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
 //                ch.pipeline().addLast(new ByteArrayDecoder());
                     ch.pipeline().addLast(new HttpRequestDecoder());
+//                    .addLast();
                     // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
-                ch.pipeline().addLast(new SimpleServerHandler());
+                ch.pipeline()
+                        .addLast(new SimpleServerHandler());
 
                 }
             }).option(ChannelOption.SO_BACKLOG, 128)

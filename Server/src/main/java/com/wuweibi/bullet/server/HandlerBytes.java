@@ -14,7 +14,9 @@ import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.multipart.HttpPostStandardRequestDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +77,26 @@ public class HandlerBytes implements Runnable{
             httpRequestStr = request.toString() + "\n\r\n";
             httpRequestStr = httpRequestStr.substring(61);
             logger.debug("======================\n{}", httpRequestStr);
-            this.result = httpRequestStr.getBytes();
+
+
+
+            ByteArrayOutputStream outputStream1 = new ByteArrayOutputStream();
+            if(request.method().equals(HttpMethod.POST)){
+
+//                new DefaultLastHttpContent().content();
+
+
+                HttpPostStandardRequestDecoder post =  new HttpPostStandardRequestDecoder(request);
+
+//                post.get
+
+                byte[] data = post.getBodyHttpDatas().toString().getBytes();
+                outputStream1.write( httpRequestStr.getBytes());
+                outputStream1.write( data);
+
+            } else {
+                outputStream1.write( httpRequestStr.getBytes());
+            }
 
             // 获取请求的host
             String domainHost = request.headers().get(HttpHeaderNames.HOST);
@@ -110,7 +131,7 @@ public class HandlerBytes implements Runnable{
             logger.debug("sequence={}", msgProxyHttp.getSequence());
 
             logger.info("{}",msgProxyHttp.getHead().toString());
-            msgProxyHttp.setContent(result);
+            msgProxyHttp.setContent(outputStream1.toByteArray());
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
