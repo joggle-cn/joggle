@@ -212,7 +212,7 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
         // 设备没有上线
         if(ctx != null){
-            sendMessage("sorry! ChannelHandlerContext is null!");
+            sendMessage("sorry! 您的设备没有上线哦！");
         }
         HandlerBytes.cache.remove(key);
 
