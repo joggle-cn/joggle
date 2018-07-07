@@ -212,7 +212,7 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
         // 设备没有上线
         if(ctx != null){
-            sendMessage("sorry! 您的设备没有上线哦！");
+            sendMessage("sorry! your device not online！");
         }
         HandlerBytes.cache.remove(key);
 
