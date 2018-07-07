@@ -78,18 +78,18 @@ public class Connection {
         try {
             count++;
             logger.debug("Connection[{}] 第{}次尝试连接", id, count);
-            if (count <= 20){ // 重试次数10次。
-                this.open();
-            }
+
+            // 无限重试
+            open();
         } catch (Exception e) {
             logger.error(e.getMessage());
             // 等地啊3秒
             try {
                 Thread.sleep(3000L);
             } catch (InterruptedException e1) {}
-            if (count <= 20) { // 重试次数10次。
-                opeAngain();
-            }
+
+            opeAngain();
+        } finally {
         }
     }
 }
