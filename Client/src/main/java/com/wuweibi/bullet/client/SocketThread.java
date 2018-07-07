@@ -233,10 +233,10 @@ public class SocketThread extends Thread {
 
 
             byte[] data =outputStream.toByteArray();
-            FileOutputStream file = new FileOutputStream("./data.txt");
-            file.write(data);
-            file.flush();
-            file.close();
+//            FileOutputStream file = new FileOutputStream("./data.txt");
+//            file.write(data);
+//            file.flush();
+//            file.close();
 
             logger.debug("响应得到数据的长度为：{}", data.length);
             msg.setContent(data);
