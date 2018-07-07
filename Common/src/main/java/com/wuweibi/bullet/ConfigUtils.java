@@ -29,7 +29,7 @@ public class ConfigUtils {
     /**
      * 配置文件名称
      */
-    public static final String CONFIG_FILE = "/config.json.bak";
+    public static final String CONFIG_FILE = "/config.json";
 
     static JSONObject CONF ;
 
