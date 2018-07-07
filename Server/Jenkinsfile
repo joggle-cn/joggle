@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+   stages {
+           stage('Build') {
+               steps {
+                   echo "env: ${env.BRANCH_NAME}"
+                   echo "Building.."
+                   sh "/opt/maven/bin/mvn clean package -Dmaven.test.skip=true"
+               }
+           }
+           stage('Test') {
+               steps {
+                   echo "env: ${env.BRANCH_NAME}"
+                   echo 'Testing..'
+               }
+           }
+           stage('Deploy') {
+               steps {
+                   echo "env: ${env.BRANCH_NAME}"
+
+                   echo "bullet-server deploying...."
+                   sh '''
+                        echo "bullet-server uploading....."
+                        scp ./Server/target/Bullet.war root@39.106.111.199:/opt/tomcat8/webapps/ROOT.war
+                    '''
+
+               }
+           }
+       }
+}
