@@ -85,4 +85,10 @@
 
     </dependencies>
 
+    <modules>
+        <module>Common</module>
+        <module>Server</module>
+        <module>Client</module>
+    </modules>
+
 </project>
