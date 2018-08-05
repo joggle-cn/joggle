@@ -42,7 +42,9 @@
 		"password": "Password",
 		"password2": "Confirm Password",
 		"agree": "Agree",
-		"protocol": "《The application of Internet terms》"
+		"protocol": "《The application of Internet terms》",
+		"success": "Register Success!",
+		"alertAgreeService": "Register User Must Agree Service terms."
 	},
     "user3":{
         "greeting":"Welcome %1",

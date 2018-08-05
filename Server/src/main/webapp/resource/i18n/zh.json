@@ -46,7 +46,9 @@
 		"password": "密码",
 		"password2": "确认密码",
 		"agree": "同意",
-		"protocol": "《互联网应用使用条款》"
+		"protocol": "《互联网应用使用条款》",
+        "success": "注册成功！",
+		"alertAgreeService": "注册用户必须同意服务条款"
 	},
     "user3":{
         "greeting": "Welcome %1",

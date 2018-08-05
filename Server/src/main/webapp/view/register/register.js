@@ -42,7 +42,7 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 
 					faceinner.post(api['user.register'], $scope.user , function(result){
 						if(result.status == 0){// 注册成功
-                            alert("注册成功!");
+                            alert(res.t('register.success'));
 
                             // 登陆当前注册用户
                             faceinner.post(api['user.login'], $scope.user , function(result){
@@ -65,11 +65,8 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 							});
 						}
 
-
-
-
 					});
-				}else{ 
+				} else {
 					$scope.password2Msg = res.error(res.code.PasswordInputNotEquals);
 				}  
 					
@@ -112,7 +109,7 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 			}
 			
 			if(!$scope.user.agree){ 
-				alert("注册用户必须同意服务条款"); 
+				alert( res.t('register.alertAgreeService'));
 				$scope.isOk = false;
 			} 
 		};
