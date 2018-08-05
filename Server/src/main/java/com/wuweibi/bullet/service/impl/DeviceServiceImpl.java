@@ -20,7 +20,7 @@ import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements DeviceService {
 
     @Override
-    public void updateName(String id, String name) {
+    public void updateName(Long id, String name) {
 
         this.baseMapper.updateName(newMap(2)
                 .setParam("id",id)
@@ -29,7 +29,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public boolean exists(Long userId, String id) {
+    public boolean exists(Long userId, Long id) {
         return this.baseMapper.exists(newMap(2)
                 .setParam("userId",userId)
                 .setParam("id", id)

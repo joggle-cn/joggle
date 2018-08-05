@@ -10,13 +10,19 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
 	var callback = ["$scope", function ($scope) {
 
-        faceinner.get(api['user.device'], function(res){
-            if (res.status == 0) {
-                $scope.$apply(function() {
-                    $scope.list = res.data;
-                });
-            }
-        });
+
+
+
+	    function render(){
+            faceinner.get(api['user.device'], function(res){
+                if (res.status == 0) {
+                    $scope.$apply(function() {
+                        $scope.list = res.data;
+                    });
+                }
+            });
+        }
+        render();
 
         /**
          * 编辑设备
@@ -31,6 +37,29 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             });
 		}
 
+		/**
+         * 删除设备
+         */
+        $scope.delDevice = function(item){
+            $scope.item = item;
+            $("#delDevice").modal({
+                backdrop: false
+            });
+		}
+
+
+        /**
+         * 确认删除设备
+         */
+		$scope.confirmDeleteDevice = function(){
+            faceinner.delete(api['user.device'], $scope.item , function(res) {
+                if (res.status == 0) {
+                    $("#delDevice").modal('hide');
+                    render();
+                }
+            });
+        };
+
         /**
          * 保存
          */
@@ -40,7 +69,6 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                     $("#editDevice").modal('hide');
                 }
             });
-
         }
 
         /**

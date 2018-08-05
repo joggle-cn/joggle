@@ -19,7 +19,7 @@ public interface DeviceService extends IService<Device> {
      * @param id Id
      * @param name 名称
      */
-    void updateName(String id, String name);
+    void updateName(Long id, String name);
 
     /**
      * 判断用户是否存在设备
@@ -27,7 +27,7 @@ public interface DeviceService extends IService<Device> {
      * @param deviceId 设备ID
      * @return
      */
-    boolean exists(Long userId, String deviceId);
+    boolean exists(Long userId, Long deviceId);
 
 
     /**

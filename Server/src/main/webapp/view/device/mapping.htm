@@ -10,7 +10,7 @@
 				<a href="#/user/device" class="list-group-item active">
 					我的设备
 				</a>
-				<a href="#/user/archives" class="list-group-item">绑定设备</a>
+				<a href="#/user/device/bind" class="list-group-item">绑定设备</a>
 			</div>
 	  	</div>
 	  </div>
@@ -87,7 +87,8 @@
 						<label for="b" class="col-sm-2 control-label">协议</label>
 						<div class="col-sm-6">
                             <select class="form-control" ng-model="item.protocol" >
-                                <option value="1">HTTP1.1</option>
+                                <option value="1">HTTP</option>
+                                <option value="2">TCP</option>
                             </select>
 						</div>
                         <div class="col-sm-4"></div>

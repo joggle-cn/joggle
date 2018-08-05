@@ -1,9 +1,7 @@
-/**
+package com.wuweibi.bullet.tcp; /**
  * Created by marker on 2017/11/19.
  */
 
-import com.wuweibi.bullet.server.SimpleServerHandler;
-import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,7 +9,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
@@ -20,25 +17,31 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author marker
  * @create 2017-11-19 下午5:44
  **/
-public class ApplicationInit  implements ApplicationContextAware {
+public class TcpApplication implements ApplicationContextAware {
 
-    private Logger logger = LoggerFactory.getLogger(ApplicationInit.class);
+    private Logger logger = LoggerFactory.getLogger(TcpApplication.class);
 
+
+    public static Map<String, Channel> cache = new HashMap<>();
 
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
 
-        int port = SpringUtils.getPropInt("bullet.server.port");
+        int port = 8088;
 
         logger.info("===========================================================");
         logger.info("Bullet Server Port={}", port);
         logger.info("===========================================================");
+
 
 
 
@@ -51,26 +54,18 @@ public class ApplicationInit  implements ApplicationContextAware {
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.handler(new LoggingHandler(LogLevel.INFO));
 
-//            bootstrap.localAddress(port);
 
             bootstrap.childHandler(new ChannelInitializer<Channel>() {
                 @Override
                 protected void initChannel(Channel ch) throws Exception {
 
-
-
-                    // server端发送的是httpResponse，所以要使用HttpResponseEncoder进行编码
-//                ch.pipeline().addLast(new ByteArrayDecoder2());
-                    ch.pipeline().addLast(new HttpRequestDecoder());
-//                    .addLast();
-                    // server端接收到的是httpRequest，所以要使用HttpRequestDecoder进行解码
-                ch.pipeline()
-                        .addLast(new SimpleServerHandler());
+//                    ch.pipeline().addFirst(new BytesMetricsHandler());
+                ch.pipeline().addLast(new UserChannelHandler());
 
                 }
             }).option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
-                    .childOption(ChannelOption.SO_KEEPALIVE, false);
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             try {
                 // 开始绑定server,阻塞直到绑定成功
@@ -95,6 +90,15 @@ public class ApplicationInit  implements ApplicationContextAware {
 
 
 
+
+
+
+
+    }
+
+    public static void main(String[] args) {
+        TcpApplication application = new TcpApplication();
+        application.setApplicationContext(null);
 
     }
 }

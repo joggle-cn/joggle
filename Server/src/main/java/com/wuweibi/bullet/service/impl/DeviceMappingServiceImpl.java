@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.wuweibi.bullet.builder.MapBuilder;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -64,5 +65,12 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         dto.setHost(deviceMapping.getHost());
 
         return dto;
+    }
+
+    @Override
+    public void deleteByDeviceId(Long deviceId) {
+        this.baseMapper.deleteByMap(MapBuilder.newMap(1).setParam(
+                "device_id", deviceId
+        ).build());
     }
 }

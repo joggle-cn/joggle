@@ -38,4 +38,11 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     DeviceMappingDto getMapping(String host);
+
+
+    /**
+     * 根据设备Id 删除映射数据
+     * @param deviceId
+     */
+    void deleteByDeviceId(Long deviceId);
 }

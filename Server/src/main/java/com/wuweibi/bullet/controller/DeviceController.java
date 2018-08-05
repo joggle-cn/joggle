@@ -5,23 +5,20 @@ package com.wuweibi.bullet.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;
@@ -50,9 +47,11 @@ public class DeviceController {
     @Autowired
     private DeviceOnlineService deviceOnlineService;
 
+    @Autowired
+    private DeviceMappingService deviceMappingService;
+
 
     @RequestMapping(value = "/device/", method = RequestMethod.GET)
-    @ResponseBody
     public Object device(HttpServletRequest request ){
         Long userId = getUserId();
 
@@ -94,9 +93,8 @@ public class DeviceController {
 
     // 更新设备
     @RequestMapping(value = "/device/", method = RequestMethod.POST)
-    @ResponseBody
     public Object save(@RequestParam String name,
-                       @RequestParam String id,
+                       @RequestParam Long id,
                        HttpServletRequest request ){
         Long userId = getUserId(request);
 
@@ -105,11 +103,29 @@ public class DeviceController {
         if(status){
             deviceService.updateName(id, name);
         }
-
-
-
         return MessageFactory.getOperationSuccess();
     }
+
+
+    // 删除设备
+    @RequestMapping(value = "/device/", method = RequestMethod.DELETE)
+    public Object save(
+                       @RequestParam Long id,
+                       HttpServletRequest request ){
+        Long userId = getUserId(request);
+
+        // 校验设备是否是他的
+        boolean status = deviceService.exists(userId, id);
+        if(status){
+            // 删除映射
+            deviceMappingService.deleteByDeviceId(id);
+            deviceService.deleteById(id);
+
+
+        }
+        return MessageFactory.getOperationSuccess();
+    }
+
 
 
 
