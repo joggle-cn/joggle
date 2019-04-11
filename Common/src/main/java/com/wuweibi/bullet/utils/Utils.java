@@ -10,13 +10,6 @@ public class Utils {
 	public Utils() {
 	}
 
-//	public static void main(String args[]) {
-//		byte bb[] = { 64, 49, 0, 49, 49 };
-//		bb = Utils.IntToBytes4(1);
-//		for(byte a: bb){
-//			System.out.println(a);
-//		}
-//	}
 
 	public static String getString(byte bs[], int offset, int len) {
 		int i = 0;

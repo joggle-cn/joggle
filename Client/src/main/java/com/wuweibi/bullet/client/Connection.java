@@ -64,8 +64,15 @@ public class Connection {
      */
     public void open() throws Exception {
         Client client = new Client();
-        this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
-        client.setConnection(this);
+        try {
+            this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
+            client.setConnection(this);
+            count = 0; // 初始化链接次数。
+        } catch (Exception e){
+            logger.error("websocket connection faild! wait 10s try angain!");
+            Thread.sleep(10000L);
+            opeAngain();
+        }
 
     }
 

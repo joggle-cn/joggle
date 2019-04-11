@@ -96,9 +96,9 @@ public class TcpApplication implements ApplicationContextAware {
 
     }
 
-    public static void main(String[] args) {
-        TcpApplication application = new TcpApplication();
-        application.setApplicationContext(null);
-
-    }
+//    public static void main(String[] args) {
+//        TcpApplication application = new TcpApplication();
+//        application.setApplicationContext(null);
+//
+//    }
 }

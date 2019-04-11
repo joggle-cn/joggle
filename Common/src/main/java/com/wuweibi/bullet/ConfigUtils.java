@@ -56,6 +56,15 @@ public class ConfigUtils {
     }
 
 
+    public static String getClientProjectPath(){
+        String confDir = System.getProperty("java.bullet.home.dir");
+        if(StringUtils.isEmpty(confDir)){
+            confDir = "Client";
+        }
+
+        return confDir;
+    }
+
     /**
      * 通道地址
      * @return

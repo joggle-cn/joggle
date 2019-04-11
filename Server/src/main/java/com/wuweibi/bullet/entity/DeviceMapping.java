@@ -32,6 +32,12 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Integer port;
 
 	/**
+	 * 远端端口
+	 */
+    @TableField("remote_port")
+	private Integer remotePort;
+
+	/**
 	 * 服务器地址
 	 * （null 为本机）
 	 */

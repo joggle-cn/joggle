@@ -45,4 +45,12 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @param deviceId
      */
     void deleteByDeviceId(Long deviceId);
+
+
+    /**
+     * 根据设备ID获取设备编号
+     * @param deviceId
+     * @return
+     */
+    String getDeviceNo(Long deviceId);
 }

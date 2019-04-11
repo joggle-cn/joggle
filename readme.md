@@ -3,19 +3,27 @@
 基于Java实现，通过WebSocket全双工长连接技术，通过NIO接受HTTP请求，将请求信息通过WebSocket链接发送给链接的客户端。
 
 
+Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造轮子，在轮子的基础上做了优化，支持Server端Web管理。
 
-### 客户端编译
-编译公共库
+目前仅对Mac环境做了适配，需要其他环境替换bin/ngrok命令.
+
+### 编译Client & Server
+
+编译
 ```
-cd Common && mvn install
+mvn install
 ```
 
-编译客户端
+进入到bullet目录运行程序
 ```
-cd Client && mvn install
+cd Client
+
+./bin/bullet
+
 ```
 
 启动客户端
+
 ```
 ./bin/bullet
 ```

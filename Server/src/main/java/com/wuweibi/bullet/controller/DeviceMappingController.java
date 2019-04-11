@@ -1,10 +1,15 @@
 package com.wuweibi.bullet.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
@@ -33,6 +41,10 @@ public class DeviceMappingController {
     /** 端口映射服务 */
     @Autowired
     private DeviceMappingService deviceMappingService;
+
+
+    @Autowired
+    private CoonPool coonPool;
 
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
@@ -86,6 +98,37 @@ public class DeviceMappingController {
             status = deviceMappingService.insert(entity);
         }
         if(status){
+            // 发送绑定数据
+
+            String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
+            if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
+                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+
+
+                JSONObject data = (JSONObject)JSON.toJSON(entity);
+
+
+
+                MsgMapping msg = new MsgMapping(data.toJSONString());
+
+
+
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+                try {
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                    annotation.getSession().getBasicRemote().sendBinary(buf);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             return MessageFactory.getOperationSuccess();
         }
         return MessageFactory.getErrorMessage("服务器错误");

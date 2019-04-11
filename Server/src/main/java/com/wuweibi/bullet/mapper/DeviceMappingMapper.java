@@ -30,4 +30,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @return
      */
     boolean exists(Map<String, Object> build);
+
+    String selectDeviceNo(Long  deviceId);
+
 }

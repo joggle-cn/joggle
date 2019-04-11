@@ -1,12 +1,12 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wuweibi.bullet.builder.MapBuilder;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.DeviceMappingService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wuweibi.bullet.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,5 +72,12 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         this.baseMapper.deleteByMap(MapBuilder.newMap(1).setParam(
                 "device_id", deviceId
         ).build());
+    }
+
+    @Override
+    public String getDeviceNo(Long deviceId) {
+
+
+       return this.baseMapper.selectDeviceNo( deviceId );
     }
 }

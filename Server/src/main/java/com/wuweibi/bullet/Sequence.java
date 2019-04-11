@@ -11,10 +11,5 @@ public class Sequence {
 		}
 		return count++;
 	}
-	
-	public static void main(String[] args) {
-		while(true){
-			System.out.println(Sequence.next());
-		}
-	}
+
 }

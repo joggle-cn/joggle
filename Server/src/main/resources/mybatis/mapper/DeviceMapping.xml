@@ -21,4 +21,9 @@
 		select count(1) from t_device_mapping where id = #{id} and userId =#{userId}
 	</select>
 
+
+    <select id="selectDeviceNo" resultType="java.lang.String">
+		select deviceId  from t_device where id = #{deviceId}
+	</select>
+
 </mapper>

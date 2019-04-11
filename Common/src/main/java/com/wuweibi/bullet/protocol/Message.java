@@ -26,6 +26,9 @@ public abstract class Message {
 	public static final int ACTIVE_TEST    = 0x10000001;//链路测试命令
 	public static final int ACTIVE_TEST_RESP = 0x10000010;
 
+
+	public static final int NEW_MAPPING      = 0x6;
+
 	
 	
 	//消息头

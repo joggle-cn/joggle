@@ -1,0 +1,65 @@
+<configuration scan="false" scanPeriod="30 seconds">
+
+    <include resource="logback-common.xml"/>
+
+
+    <!--  -->
+
+    <logger name="org.springframework.web.servlet" level="INFO"/>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.hibernate.engine" level="INFO"/>
+    <logger name="org.apache.ibatis" level="debug"/>
+    <logger name="org.apache.ibatis.jdbc.SqlRunner" level="debug"/>
+    <logger name="org.apache.ibatis.transaction" level="INFO"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+    <logger name="org.activiti.engine" level="INFO"/>
+    <logger name="com.baidu.ueditor" level="debug"/>
+    <logger name="io.lettuce.core.protocol.CommandHandler" level="INFO"/>
+
+    <logger name="org.springframework.web" level="debug"></logger>
+    <logger name="org.springframework.data.redis" level="INFO"></logger>
+    <logger name="org.springframework.beans.factory.support" level="INFO"></logger>
+
+
+    <logger name="com.byit.drm.mapper" level="debug"></logger>
+    <logger name="com.xxl.job.core.thread" level="error"></logger>
+    <logger name="org.springframework.session.data.redis" level="error"></logger>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="DEBUG" />
+
+
+
+
+    <logger name="com.byit.common.sign" level="debug"></logger>
+
+    <springProfile name="!prod">
+        <!-- configuration to be enabled when the "production" profile is not active -->
+        <root level="debug">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="INFO-ROLLING"/>
+            <appender-ref ref="ERROR-ROLLING"/>
+            <appender-ref ref="DEBUG-ROLLING"/>
+        </root>
+
+
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="ERROR">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="INFO-ROLLING"/>
+            <appender-ref ref="ERROR-ROLLING"/>
+            <appender-ref ref="DEBUG-ROLLING"/>
+        </root>
+
+        <logger name="com.byit.drm.mapper" level="error"></logger>
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="ERROR" />
+        <logger name="org.springframework.amqp.rabbit" level="ERROR" />
+        <logger name="org.springframework.web.cors" level="ERROR" />
+        <logger name="com.baidu.ueditor" level="ERROR"/>
+
+    </springProfile>
+
+
+</configuration>

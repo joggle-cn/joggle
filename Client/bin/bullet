@@ -63,6 +63,6 @@ fi
 
 exec "$JAVA" \
 -Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
+-Djava.bullet.home.dir="$BULLER_CONF_DIR" \
 -classpath $CLASSPATH \
--jar $BULLET_HOME/lib/bullet-client.jar \
-$CLASS
+-jar $BULLET_HOME/lib/bullet-client.jar
