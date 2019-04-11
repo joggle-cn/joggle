@@ -7,6 +7,13 @@ Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造�
 
 目前仅对Mac环境做了适配，需要其他环境替换bin/ngrok命令.
 
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
+
+注意：拒绝996工作制公司请使用本项目。
+
+
+
 ### 编译Client & Server
 
 编译
