@@ -80,7 +80,7 @@ public class CommandThread extends Thread  {
 
 
 
-        command.append(projectPath).append("/conf/"+config.getDomain()+".yml -log="+config.getDomain()+".log start "+config.getDomain());
+        command.append(projectPath).append("/conf/"+config.getDomain()+".yml -log="+projectPath+"/logs/domain/"+config.getDomain()+".log start "+config.getDomain());
 
 
         try {
