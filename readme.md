@@ -14,6 +14,13 @@ Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造�
 
 
 
+### ngrok 编译
+
+http://www.yl-blog.com/article/608.html
+
+本项目需要手动编译对应平台ngrok命令替换项目中的ngrok命令。
+
+
 ### 编译Client & Server
 
 编译
