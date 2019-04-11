@@ -94,4 +94,25 @@ public class ConfigUtils {
         }
         return pro;
     }
+
+
+    /**
+     * 获取操作系统名称
+     * @return
+     */
+    public static String getOSName()  {
+        String osName = System.getProperty("os.name");
+        if (osName.startsWith("Windows"))
+            return "windows";
+        if ((osName.contains("SunOS")) || (osName.contains("Solaris")))
+            return "linux";
+        if (osName.contains("Mac"))
+            return "darwin";
+        if (osName.contains("FreeBSD"))
+             return "linux";
+        if (osName.startsWith("Linux")) {
+        return "linux";
+        }
+        return "linux";
+    }
 }

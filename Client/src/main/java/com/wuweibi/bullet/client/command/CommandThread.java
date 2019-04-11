@@ -49,7 +49,13 @@ public class CommandThread extends Thread  {
         this.mappingId = config.getId();
         // 解析为命令
         String projectPath = ConfigUtils.getClientProjectPath();
-        StringBuilder command = new StringBuilder(projectPath + "/bin/ngrok -config=");
+
+
+        String osName = ConfigUtils.getOSName();
+        log.debug("os name = {}", osName);
+
+
+        StringBuilder command = new StringBuilder(projectPath + "/bin/" + osName + "/ngrok -config=");
 
 
 
@@ -74,7 +80,7 @@ public class CommandThread extends Thread  {
 
 
 
-        command.append(projectPath).append("/conf/"+config.getDomain()+".yml start "+config.getDomain());
+        command.append(projectPath).append("/conf/"+config.getDomain()+".yml -log="+config.getDomain()+".log start "+config.getDomain());
 
 
         try {

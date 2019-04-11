@@ -1,6 +1,3 @@
-!!com.wuweibi.bullet.client.domain.NgrokConf
-server_addr: joggle.cn:8083
-trust_host_root_certs: 'false'
 tunnels:
   haha:
     proto: {http: 'localhost:80'}
@@ -8,3 +5,5 @@ tunnels:
   test:
     proto: {http: '192.168.88.50:8086'}
     subdomain: test
+server_addr: joggle.cn:8083
+trust_host_root_certs: 'false'
