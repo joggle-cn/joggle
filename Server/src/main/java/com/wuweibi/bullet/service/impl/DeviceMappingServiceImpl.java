@@ -11,6 +11,8 @@ import com.wuweibi.bullet.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 
 /**
@@ -79,5 +81,10 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
 
 
        return this.baseMapper.selectDeviceNo( deviceId );
+    }
+
+    @Override
+    public List<DeviceMapping> getAll() {
+        return this.baseMapper.selectList(null);
     }
 }

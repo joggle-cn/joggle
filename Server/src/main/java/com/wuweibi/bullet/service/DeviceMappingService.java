@@ -4,6 +4,8 @@ import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.baomidou.mybatisplus.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -53,4 +55,12 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     String getDeviceNo(Long deviceId);
+
+
+    /**
+     * 获取所有的映射数据
+     * @return
+     */
+    List<DeviceMapping> getAll();
+
 }

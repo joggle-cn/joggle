@@ -16,17 +16,23 @@
  */
 package com.wuweibi.bullet.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgHead;
+import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgProxyHttp;
 import com.wuweibi.bullet.server.HandlerBytes;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +40,10 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
 
 
 /**
@@ -84,12 +93,42 @@ public class BulletAnnotation {
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-
         deviceOnlineService.saveOrUpdateOnline(deviceId);
 
         // 将链接添加到连接池
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         pool.addConnection(this);
+
+        // 获取设备的配置数据,并将映射配置发送到客户端
+        DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
+
+        List<DeviceMapping> list = deviceMappingService.getAll();
+
+
+        for(DeviceMapping entity :list){
+            String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
+            if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
+
+
+                JSONObject data = (JSONObject) JSON.toJSON(entity);
+                MsgMapping msg = new MsgMapping(data.toJSONString());
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                    this.getSession().getBasicRemote().sendBinary(buf);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    IOUtils.closeQuietly(outputStream);
+                }
+            }
+
+        }
 
     }
 

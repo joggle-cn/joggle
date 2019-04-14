@@ -10,6 +10,7 @@ import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -106,16 +107,8 @@ public class DeviceMappingController {
 
 
                 JSONObject data = (JSONObject)JSON.toJSON(entity);
-
-
-
                 MsgMapping msg = new MsgMapping(data.toJSONString());
-
-
-
-
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
                 try {
                     msg.write(outputStream);
                     // 包装了Bullet协议的
@@ -126,6 +119,8 @@ public class DeviceMappingController {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    IOUtils.closeQuietly(outputStream);
                 }
             }
 
