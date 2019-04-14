@@ -1,0 +1,7 @@
+[Unit]
+Description=bullet service
+[Service]
+ExecStart=/opt/bullet/bin/bullet
+#Restart=on-failure
+[Install]
+WantedBy=multi-user.target

@@ -20,6 +20,8 @@
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
 
+#export JAVA_HOME=/opt/sdk/jdk1.8.0_201/
+#export BULLET_HOME=/opt/bullet
 
 
 
@@ -39,9 +41,20 @@ fi
 CLASS='com.wuweibi.bullet.client.Main'
 
 
-bin=`dirname "${BASH_SOURCE-$0}"`
-bin=`cd "$bin"; pwd`
-BULLET_HOME=`cd "."; pwd`
+
+
+
+
+if [ -x "$BULLET_HOME/bin/bullet" ]; then
+    BULLET_HOME=$BULLET_HOME
+else
+    bin=`dirname "${BASH_SOURCE-$0}"`
+    bin=`cd "$bin"; pwd`
+    BULLET_HOME=`cd "."; pwd`
+fi
+
+
+
 echo "Bullet当前工作目录: $BULLET_HOME"
 
 BULLER_CONF_DIR="$BULLET_HOME/conf"
