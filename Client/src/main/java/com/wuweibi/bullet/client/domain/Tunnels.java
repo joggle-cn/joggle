@@ -5,6 +5,8 @@ package com.wuweibi.bullet.client.domain;/**
 import lombok.Data;
 
 /**
+ *
+ *
  * @author marker
  * @create 2019-04-10 16:14
  **/
@@ -14,6 +16,7 @@ public class Tunnels {
     private String subdomain; // "haha"
     private Proto proto; //
     private Integer remote_port;
+    private String hostname; // hostname
 
 
 }

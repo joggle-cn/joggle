@@ -18,6 +18,7 @@ public class MappingInfo {
     private Long deviceId;
     private String domain;
     private Integer port;
+    private String hostname;
 
     /**
      * 远端端口
@@ -25,7 +26,7 @@ public class MappingInfo {
     private Integer remotePort;
 
     /**
-     * 服务器地址
+     * 服务器地址 内网IP
      * （null 为本机）
      */
     private String host;

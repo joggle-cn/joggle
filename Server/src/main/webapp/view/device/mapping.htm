@@ -27,14 +27,14 @@
 					  <th>序号</th>
 					  <th>域名</th>
 					  <th>协议</th>
-					  <th>端口</th>
+					  <th>服务器端口</th>
 					  <th width="200">操作</th>
 				  </tr>
 				  </thead>
 				  <tbody>
 				  <tr ng-repeat="item in list">
 					  <td>{{item.id}}</td>
-					  <td>{{item.domain}}</td>
+					  <td>{{showDomain(item)}}</td>
 					  <td>{{item.protocol | showProtocol}}</td>
 					  <td>{{item.port}}</td>
 					  <td>
@@ -74,8 +74,20 @@
                         <label for="b" class="col-sm-2 control-label">域名</label>
                         <div class="col-sm-6">
                             <div>
+                                <input ng-model="item.hostname" type="text" class="form-control"
+                                        ng-show="item.id"  >
+                                <input ng-model="item.hostname" type="text" class="form-control"
+                                       ng-show="!item.id">
+                            </div>
+                        </div>
+                        <div class="col-sm-4"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="b" class="col-sm-2 control-label">子域名</label>
+                        <div class="col-sm-6">
+                            <div>
                                 <input ng-model="item.domain" type="text" class="form-control"
-                                        ng-show="item.id" readonly>
+                                        ng-show="item.id"  >
                                 <input ng-model="item.domain" type="text" class="form-control"
                                        ng-show="!item.id">
                             </div>
@@ -94,7 +106,7 @@
                         <div class="col-sm-4"></div>
 					</div>
 					<div class="form-group">
-						<label for="b" class="col-sm-2 control-label">HOST</label>
+						<label for="b" class="col-sm-2 control-label">内网HOST</label>
 						<div class="col-sm-6">
 							<input type="text" ng-model="item.host"  class="form-control" placeholder="">
 						</div>
@@ -107,7 +119,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-show="item.protocol == 2">
 						<label for="b" class="col-sm-2 control-label">远端端口</label>
 						<div class="col-sm-6">
 							<input type="number" ng-model="item.remotePort"  class="form-control" id="" placeholder="">

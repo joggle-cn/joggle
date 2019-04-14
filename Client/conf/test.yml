@@ -2,7 +2,8 @@ tunnels:
   haha:
     proto: {http: 'localhost:80'}
     subdomain: haha
-  test:
+  mp_16:
+    hostname: ''
     proto: {http: '192.168.1.4:8080'}
     subdomain: test
 server_addr: joggle.cn:8083

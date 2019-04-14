@@ -28,6 +28,15 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
 
 
+        $scope.showDomain = function(item){
+            if(item.domain){
+                return item.domain;
+            }
+            if(item.hostname){
+               return item.hostname;
+            }
+
+        }
 
         /**
          * 编辑设备
@@ -64,6 +73,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 		        port : $scope.item.port,
 		        remotePort : $scope.item.remotePort,
                 host : $scope.item.host,
+                hostname : $scope.item.hostname,
                 deviceId: deviceId,
 		        description : $scope.item.description,
             }

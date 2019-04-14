@@ -67,6 +67,7 @@ public class CommandThread extends Thread  {
 
         Tunnels tunnels = new Tunnels();
         tunnels.setSubdomain(config.getDomain());
+        tunnels.setHostname(config.getHostname());
         Proto proto = new Proto();
         if(config.getProtocol() == 1){
             proto.setHttp(config.getHost()+':'+config.getPort());
@@ -76,16 +77,20 @@ public class CommandThread extends Thread  {
         }
         tunnels.setProto(proto);
 
-        testEntity.getTunnels().put(config.getDomain(), tunnels);
+
+        String mappingName = "mp_" + config.getId();
+
+        testEntity.getTunnels().put(mappingName, tunnels);
+
+        String projectName = config.getHostname() + config.getDomain();
 
 
-
-        command.append(projectPath).append("/conf/"+config.getDomain()+".yml -log="+projectPath+"/logs/domain/"+config.getDomain()+".log start "+config.getDomain());
+        command.append(projectPath).append("/conf/"+projectName+".yml -log="+projectPath+"/logs/domain/" + projectName + ".log start "+ mappingName);
 
 
         try {
 
-            File file= new File(projectPath + "/conf/" + config.getDomain()+".yml");
+            File file= new File(projectPath + "/conf/" + projectName + ".yml");
 
 
             String datajson =  JSON.toJSONString(testEntity);

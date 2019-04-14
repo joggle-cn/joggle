@@ -115,7 +115,7 @@ public class DeviceMappingController {
                     byte[] resultBytes = outputStream.toByteArray();
                     ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                    annotation.getSession().getBasicRemote().sendBinary(buf);
+                    annotation.getSession().getBasicRemote().sendBinary(buf,true);
 
                 } catch (IOException e) {
                     e.printStackTrace();

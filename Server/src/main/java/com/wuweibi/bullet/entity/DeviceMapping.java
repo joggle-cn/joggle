@@ -28,7 +28,9 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Long id;
 	@TableField("device_id")
 	private Long deviceId;
+
 	private String domain;
+
 	private Integer port;
 
 	/**
@@ -36,6 +38,11 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	 */
     @TableField("remote_port")
 	private Integer remotePort;
+	/**
+	 * hostname
+	 */
+    @TableField("hostname")
+	private String hostname;
 
 	/**
 	 * 服务器地址

@@ -54,7 +54,8 @@ define([
     app.filter('showProtocol',[function(){
         return function(protocol ){
             switch (protocol){
-                case 1 : return "HTTP1.1";
+                case 1 : return "HTTP";
+                case 2 : return "TCP";
                 default: return "-";
             }
             return "-";

@@ -281,7 +281,7 @@ public class SocketThread extends Thread {
                     System.out.println(msg2.getJson());
                     //   {"protocol":1,"port":8080,"domain":"test","host":"192.168.1.4","description":"GitLab","id":16,"deviceId":6,"userId":1}
 
-                    msg2.saveFile("./tmp.yml");
+//                    msg2.saveFile("./tmp.yml");
 
                     MappingInfo mappingInfo = JSON.parseObject(msg2.getJson(), MappingInfo.class);
 
