@@ -1,5 +1,5 @@
 <included>
-    <property name="PROJECT_HOME" value="./logs/" />
+    <property name="PROJECT_HOME" value="./logs/bullet/" />
     <property name="MAX_FILE_SIZE" value="300mb" />
     <property name="MAX_HISTORY" value="5" />
     <property name="MYBATIS_MAX_HISTORY" value="${MAX_HISTORY}" />

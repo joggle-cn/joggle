@@ -44,4 +44,12 @@ public class MappingInfo {
      */
     private Date createTime;
 
+
+    public String getHostname(){
+        if(this.hostname == null){
+            return "";
+        }
+        return this.hostname;
+    }
+
 }
