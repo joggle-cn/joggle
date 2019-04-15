@@ -22,7 +22,7 @@ pipeline {
                    echo "bullet-server deploying...."
                    sh '''
                         echo "bullet-server uploading....."
-                        scp ./Server/target/Bullet.war root@39.106.111.199:/opt/tomcat8/webapps/ROOT.war
+                        scp ./Server/target/server-1.0-SNAPSHOT.war root@39.106.111.199:/opt/tomcat8/webapps/ROOT.war
                     '''
 
                }
