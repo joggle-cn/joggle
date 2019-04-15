@@ -8,8 +8,10 @@ import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.MsgMapping;
+import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,7 @@ import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
  * @author marker
  * @since 2017-12-09
  */
+@Slf4j
 @Controller
 @RequestMapping("/api/user/device/mapping")
 public class DeviceMappingController {
@@ -56,7 +59,32 @@ public class DeviceMappingController {
         boolean status = deviceMappingService.exists(userId, id);
 
         if(status){
+
+            DeviceMapping entity = deviceMappingService.selectById(id);
+
             deviceMappingService.deleteById(id);
+
+            String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
+            if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
+                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+
+                JSONObject data = (JSONObject)JSON.toJSON(entity);
+                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                    annotation.getSession().getBasicRemote().sendBinary(buf,true);
+
+                } catch (IOException e) {
+                    log.error("", e);
+                } finally {
+                    IOUtils.closeQuietly(outputStream);
+                }
+            }
         }
         return MessageFactory.getOperationSuccess();
     }

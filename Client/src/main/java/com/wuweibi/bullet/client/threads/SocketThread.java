@@ -4,14 +4,11 @@ package com.wuweibi.bullet.client.threads;
  */
 
 import com.alibaba.fastjson.JSON;
-import com.wuweibi.bullet.client.websocket.WebSocketClientProxy;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
-import com.wuweibi.bullet.protocol.Message;
-import com.wuweibi.bullet.protocol.MsgHead;
-import com.wuweibi.bullet.protocol.MsgMapping;
-import com.wuweibi.bullet.protocol.MsgProxyHttp;
+import com.wuweibi.bullet.client.websocket.WebSocketClientProxy;
+import com.wuweibi.bullet.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,14 +50,23 @@ public class SocketThread extends Thread {
     public void run() {
         logger.debug("接收到服务器的转发请求信息！");
 
+
+        CommandThreadPool pool = SpringUtil.getBean(CommandThreadPool.class);
+
+
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         MsgHead head = new MsgHead();
-        MsgProxyHttp msg = null;
         try {
             head.read(bis);//读取消息头
 
             switch (head.getCommand()) {
-                case Message.Proxy_Http: // HTTP代理请求
+                case Message.NEW_UNMAPPING: // HTTP代理请求
+                    MsgUnMapping msg = new MsgUnMapping(head);
+                    msg.read(bis);
+                    String json = msg.getJson();
+                    MappingInfo info = JSON.parseObject(json, MappingInfo.class);
+                    Long mpId = info.getId();
+                    pool.killThread(mpId);
 
                     break;
 
@@ -68,18 +74,16 @@ public class SocketThread extends Thread {
 
                     logger.debug("新的映射请求。。");
 
-                    MsgMapping  msg2 = new MsgMapping(head);
+                    MsgMapping msg2 = new MsgMapping(head);
                     msg2.read(bis);
 
-                    System.out.println(msg2.getJson());
+//                    System.out.println(msg2.getJson());
                     //   {"protocol":1,"port":8080,"domain":"test","host":"192.168.1.4","description":"GitLab","id":16,"deviceId":6,"userId":1}
 
 
                     MappingInfo mappingInfo = JSON.parseObject(msg2.getJson(), MappingInfo.class);
 
 
-
-                    CommandThreadPool pool = SpringUtil.getBean(CommandThreadPool.class);
 
                     // 判断服务是否正在运转
                     Long mappingId = mappingInfo.getId();

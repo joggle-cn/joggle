@@ -28,6 +28,7 @@ public abstract class Message {
 
 
 	public static final int NEW_MAPPING      = 0x6;
+	public static final int NEW_UNMAPPING      = 0x60000001;
 
 	
 	

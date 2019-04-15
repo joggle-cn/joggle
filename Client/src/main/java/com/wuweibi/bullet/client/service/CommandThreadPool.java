@@ -62,4 +62,13 @@ public class CommandThreadPool {
 
         }
     }
+
+    /**
+     * 获取线程
+     * @param mappingId
+     * @return
+     */
+    public CommandThread getThread(Long mappingId) {
+        return cache.get(mappingId);
+    }
 }
