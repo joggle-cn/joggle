@@ -3,7 +3,7 @@ package com.wuweibi.bullet.client.service;
  * Created by marker on 2019/4/10.
  */
 
-import com.wuweibi.bullet.client.command.CommandThread;
+import com.wuweibi.bullet.client.threads.CommandThread;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

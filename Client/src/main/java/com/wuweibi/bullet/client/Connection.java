@@ -63,7 +63,7 @@ public class Connection {
      * 打开WebSocket链接
      */
     public void open() throws Exception {
-        Client client = new Client();
+        BulletClient client = new BulletClient();
         try {
             this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
             client.setConnection(this);

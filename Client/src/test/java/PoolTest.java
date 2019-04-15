@@ -3,16 +3,11 @@
  */
 
 import com.wuweibi.bullet.ConfigUtils;
-import com.wuweibi.bullet.client.Client;
 import com.wuweibi.bullet.client.ConnectionPool;
 import org.junit.Test;
 
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
