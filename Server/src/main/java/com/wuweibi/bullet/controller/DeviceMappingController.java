@@ -67,22 +67,23 @@ public class DeviceMappingController {
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
                 BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+                if(annotation != null){
+                    JSONObject data = (JSONObject)JSON.toJSON(entity);
+                    MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    try {
+                        msg.write(outputStream);
+                        // 包装了Bullet协议的
+                        byte[] resultBytes = outputStream.toByteArray();
+                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                JSONObject data = (JSONObject)JSON.toJSON(entity);
-                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                        annotation.getSession().getBasicRemote().sendBinary(buf,true);
 
-                    annotation.getSession().getBasicRemote().sendBinary(buf,true);
-
-                } catch (IOException e) {
-                    log.error("", e);
-                } finally {
-                    IOUtils.closeQuietly(outputStream);
+                    } catch (IOException e) {
+                        log.error("", e);
+                    } finally {
+                        IOUtils.closeQuietly(outputStream);
+                    }
                 }
             }
         }

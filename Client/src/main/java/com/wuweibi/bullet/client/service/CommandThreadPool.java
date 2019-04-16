@@ -63,6 +63,8 @@ public class CommandThreadPool {
         }
     }
 
+
+
     /**
      * 获取线程
      * @param mappingId
@@ -70,5 +72,18 @@ public class CommandThreadPool {
      */
     public CommandThread getThread(Long mappingId) {
         return cache.get(mappingId);
+    }
+
+    /**
+     * 关闭所有线程
+     */
+    public void killAll() {
+        CommandThread thread;
+        for(Map.Entry<Long, CommandThread> threadMap: cache.entrySet()){
+            thread = threadMap.getValue();
+
+            log.debug("close thread {} .... ", thread.getMappingId());
+            thread.interrupt();
+        }
     }
 }

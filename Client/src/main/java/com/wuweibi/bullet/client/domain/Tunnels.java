@@ -19,4 +19,16 @@ public class Tunnels {
     private String hostname; // hostname
 
 
+    /**
+     * http 访问时账号密码认证
+     *
+     *   auth: "user:secretpassword"
+     */
+    private String auth;
+
+    private String host_header;
+
+    private boolean bind_tls = false;
+
+
 }

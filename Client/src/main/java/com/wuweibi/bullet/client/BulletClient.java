@@ -3,6 +3,8 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2017/11/22.
  */
 
+import com.wuweibi.bullet.client.service.CommandThreadPool;
+import com.wuweibi.bullet.client.service.SpringUtil;
 import com.wuweibi.bullet.client.threads.HeartThread;
 import com.wuweibi.bullet.client.threads.SocketThread;
 import com.wuweibi.bullet.client.websocket.WebSocketClientProxyImpl;
@@ -77,6 +79,13 @@ public class BulletClient {
 
         logger.debug("Connection[{}] 正在检查链接配置...", id);
         if(connection != null){
+            // 关闭所有的线程
+
+            CommandThreadPool pool = SpringUtil.getBean(CommandThreadPool.class);
+
+            logger.debug("Connection[{}] 关闭所有的命令线程...", id);
+            pool.killAll();
+
             Thread.sleep(3000L);
             logger.debug("Connection[{}] 正在重启链接服务器...", id);
             connection.opeAngain();

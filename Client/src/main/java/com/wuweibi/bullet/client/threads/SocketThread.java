@@ -48,11 +48,7 @@ public class SocketThread extends Thread {
 
     @Override
     public void run() {
-        logger.debug("接收到服务器的转发请求信息！");
-
-
         CommandThreadPool pool = SpringUtil.getBean(CommandThreadPool.class);
-
 
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         MsgHead head = new MsgHead();
@@ -72,7 +68,6 @@ public class SocketThread extends Thread {
 
                 case Message.NEW_MAPPING: // 新的映射请求
 
-                    logger.debug("新的映射请求。。");
 
                     MsgMapping msg2 = new MsgMapping(head);
                     msg2.read(bis);

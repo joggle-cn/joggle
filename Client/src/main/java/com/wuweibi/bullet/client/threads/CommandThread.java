@@ -52,7 +52,7 @@ public class CommandThread extends Thread  {
 
 
         String osName = ConfigUtils.getOSName();
-        log.debug("os name = {}", osName);
+//        log.debug("os name = {}", osName);
 
 
         StringBuilder command = new StringBuilder(projectPath + "/bin/" + osName + "/ngrok -config=");
@@ -85,12 +85,12 @@ public class CommandThread extends Thread  {
         String projectName = config.getHostname() + config.getDomain();
 
 
-        command.append(projectPath).append("/conf/"+projectName+".yml -log="+projectPath+"/logs/domain/" + projectName + ".log start "+ mappingName);
+        command.append(projectPath).append("/conf/domain/"+projectName+".yml -log="+projectPath+"/logs/domain/" + projectName + ".log start "+ mappingName);
 
 
         try {
 
-            File file= new File(projectPath + "/conf/" + projectName + ".yml");
+            File file= new File(projectPath + "/conf/domain/" + projectName + ".yml");
 
 
             String datajson =  JSON.toJSONString(testEntity);
@@ -113,7 +113,7 @@ public class CommandThread extends Thread  {
 
     @Override
     public void run() {
-        log.debug("command run ....");
+        log.debug("run: {}", command);
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(command);

@@ -1,8 +1,4 @@
 server_addr: "joggle.cn:8083"
 trust_host_root_certs: false
-
-tunnels:
-  haha:
-    subdomain: "haha"
-    proto:
-      http: localhost:80
+web_addr: false
+console_ui: false
