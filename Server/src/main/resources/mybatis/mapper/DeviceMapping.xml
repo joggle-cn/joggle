@@ -10,6 +10,11 @@
 		<result column="port" property="port" />
 		<result column="host" property="host" />
 		<result column="createTime" property="createTime" />
+		<result column="protocol" property="protocol" />
+		<result column="description" property="description" />
+		<result column="userId" property="userId" />
+		<result column="remote_port" property="remotePort" />
+		<result column="hostname" property="hostname" />
 	</resultMap>
 
 
@@ -24,6 +29,25 @@
 
     <select id="selectDeviceNo" resultType="java.lang.String">
 		select deviceId  from t_device where id = #{deviceId}
+	</select>
+
+	<!--根据设备编号获取-->
+    <select id="selectListByDeviceNo" resultMap="BaseResultMap">
+	select
+        id,
+        device_id,
+        domain,
+        port,
+        host,
+        createTime,
+        protocol,
+        description,
+        userId,
+        remote_port,
+        hostname
+	 from t_device_mapping
+
+	where device_id in (select id from t_device where deviceId = #{deviceNo})
 	</select>
 
 </mapper>

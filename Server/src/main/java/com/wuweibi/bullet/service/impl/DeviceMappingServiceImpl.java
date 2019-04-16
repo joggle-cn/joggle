@@ -87,4 +87,9 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public List<DeviceMapping> getAll() {
         return this.baseMapper.selectList(null);
     }
+
+    @Override
+    public List<DeviceMapping> getDeviceAll(String deviceNo) {
+        return this.baseMapper.selectListByDeviceNo(deviceNo);
+    }
 }

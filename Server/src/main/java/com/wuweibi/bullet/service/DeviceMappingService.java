@@ -63,4 +63,11 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      */
     List<DeviceMapping> getAll();
 
+
+    /**
+     * 根据设备编号获取
+     * @param deviceNo 设备编号
+     * @return
+     */
+    List<DeviceMapping> getDeviceAll(String deviceNo);
 }

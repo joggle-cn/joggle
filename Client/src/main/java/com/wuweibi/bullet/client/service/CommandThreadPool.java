@@ -83,7 +83,7 @@ public class CommandThreadPool {
             thread = threadMap.getValue();
 
             log.debug("close thread {} .... ", thread.getMappingId());
-            thread.interrupt();
+            thread.stopThread();
         }
     }
 }

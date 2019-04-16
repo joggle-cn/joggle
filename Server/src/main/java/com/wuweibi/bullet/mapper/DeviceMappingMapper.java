@@ -3,6 +3,7 @@ package com.wuweibi.bullet.mapper;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,5 +33,13 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
     boolean exists(Map<String, Object> build);
 
     String selectDeviceNo(Long  deviceId);
+
+
+    /**
+     * 根据设备编号获取
+     * @param deviceNo 设备编号
+     * @return
+     */
+    List<DeviceMapping> selectListByDeviceNo(String deviceNo);
 
 }

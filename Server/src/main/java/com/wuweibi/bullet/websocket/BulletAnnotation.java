@@ -53,7 +53,7 @@ import java.util.List;
  * @author marker
  * @version 1.0
  */
-@ServerEndpoint(value = "/tunnel/{deviceId}/{connId}")
+@ServerEndpoint(value = "/tunnel/{deviceNo}/{connId}")
 public class BulletAnnotation {
     /** 日志 */
     private Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
@@ -65,7 +65,7 @@ public class BulletAnnotation {
     private int id;
 
     /**  设备ID  */
-    private String deviceId;
+    private String deviceNo;
 
 
     public BulletAnnotation() {
@@ -79,12 +79,12 @@ public class BulletAnnotation {
     @OnOpen
     public void start(Session session,
               // 设备ID
-              @PathParam("deviceId")String deviceId ,
+              @PathParam("deviceNo")String deviceNo ,
               // 链接ID
               @PathParam("connId")int connId
     ) {
         this.session  = session;
-        this.deviceId = deviceId;// 设备ID
+        this.deviceNo = deviceNo;// 设备ID
         this.id = connId;
 
         session.setMaxBinaryMessageBufferSize(101024000);
@@ -93,7 +93,7 @@ public class BulletAnnotation {
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        deviceOnlineService.saveOrUpdateOnline(deviceId);
+        deviceOnlineService.saveOrUpdateOnline(deviceNo);
 
         // 将链接添加到连接池
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
@@ -102,14 +102,11 @@ public class BulletAnnotation {
         // 获取设备的配置数据,并将映射配置发送到客户端
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
 
-        List<DeviceMapping> list = deviceMappingService.getAll();
+        List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
 
 
         for(DeviceMapping entity :list){
-            String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
-
-
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -219,7 +216,7 @@ public class BulletAnnotation {
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 
-        deviceOnlineService.updateOutLine(this.deviceId);
+        deviceOnlineService.updateOutLine(this.deviceNo);
     }
 
 
@@ -237,6 +234,19 @@ public class BulletAnnotation {
      * @return
      */
     public String getDeviceNo() {
-        return this.deviceId;
+        return this.deviceNo;
+    }
+
+    /**
+     * 服务器端主动关闭连接
+     */
+    public void stop() {
+        try {
+            this.session.close(
+                    new CloseReason(CloseReason.CloseCodes.SERVICE_RESTART,
+                            "重启设备！"));
+        } catch (IOException e) {
+            logger.error("", e);
+        }
     }
 }

@@ -14,6 +14,7 @@ import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -117,10 +118,15 @@ public class DeviceController {
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, id);
         if(status){
+            Device device = deviceService.selectById(id);
+
             // 删除映射
             deviceMappingService.deleteByDeviceId(id);
             deviceService.deleteById(id);
 
+            // 停止ws链接
+            BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceId());
+            bulletAnnotation.stop();
 
         }
         return MessageFactory.getOperationSuccess();

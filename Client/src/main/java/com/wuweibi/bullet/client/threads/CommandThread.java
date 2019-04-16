@@ -39,6 +39,9 @@ public class CommandThread extends Thread  {
     private Long mappingId;
 
 
+    private Process process = null;
+
+
     /**
      * 构造
      * @param config
@@ -83,18 +86,20 @@ public class CommandThread extends Thread  {
         testEntity.getTunnels().put(mappingName, tunnels);
 
         String projectName = config.getHostname() + config.getDomain();
+        String configPath = projectPath + "/conf/domain/";
+        String logsPath   = projectPath+"/logs/domain/";
+        new File(configPath).mkdirs();
+        new File(logsPath).mkdirs();
 
 
-        command.append(projectPath).append("/conf/domain/"+projectName+".yml -log="+projectPath+"/logs/domain/" + projectName + ".log start "+ mappingName);
+
+        command.append(configPath).append(projectName+".yml -log="+ logsPath + projectName + ".log start "+ mappingName);
 
 
         try {
 
-            File file= new File(projectPath + "/conf/domain/" + projectName + ".yml");
-
-
+            File file= new File(configPath + projectName + ".yml");
             String datajson =  JSON.toJSONString(testEntity);
-
 
             JSONObject data = JSON.parseObject(datajson);
 
@@ -102,7 +107,7 @@ public class CommandThread extends Thread  {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
 
@@ -114,17 +119,26 @@ public class CommandThread extends Thread  {
     @Override
     public void run() {
         log.debug("run: {}", command);
-        Process p = null;
         try {
-            p = Runtime.getRuntime().exec(command);
+            this.process = Runtime.getRuntime().exec(command);
+
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
     }
 
     public Long getMappingId(){
         return this.mappingId;
+    }
+
+
+    /**
+     * 停止线程
+     */
+    public void stopThread(){
+        this.interrupt();
+        this.process.destroy();
     }
 }
