@@ -53,6 +53,13 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , templateUrl: 'view/device/mapping.htm'
             , controllerUrl: 'view/device/mapping.js'
         }))
+
+        // 端口映射
+        .when('/system', router({
+            minTitle: "系统配置"
+            , templateUrl: 'view/system/system.htm'
+            , controllerUrl: 'view/system/system.js'
+        }))
 		
 		
 		.when('/register', router({

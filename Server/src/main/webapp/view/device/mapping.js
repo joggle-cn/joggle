@@ -11,6 +11,9 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
 
 	var callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
+        $scope.active = 'device';
+
+
         // 设备ID
         var deviceId = $routeParams.deviceId;
 

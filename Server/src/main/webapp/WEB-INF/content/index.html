@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="${url}/lib/font-awesome4/css/font-awesome.min.css" /> 
   	<link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/css/bootstrap.min.css" /> 
     <link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
     <link rel="stylesheet" type="text/css" href="${url}/lib/umeditor/themes/default/css/umeditor.css" />
     <link rel="stylesheet" type="text/css" href="${url}/css/main.css" />
 	
@@ -23,9 +24,7 @@
 	    <div class="navbar-header">
 	      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
 	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
+			  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 	      </button>
 	      <a target="_self" href="/" class="navbar-brand">Bullet</a>
 	    </div>
@@ -34,9 +33,12 @@
 	        <li>
 	          <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
 	        </li>
-	        <!--<li>-->
-	          <!--<a href="#/wishwall/index">心愿墙</a>-->
-	        <!--</li>-->
+	        <li>
+	          <a href="#/wishwall/index">心愿墙</a>
+	        </li>
+	        <li>
+	          <a href="#/system">系统配置</a>
+	        </li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	      	<li class="divider-vertical hidden-xs"></li>

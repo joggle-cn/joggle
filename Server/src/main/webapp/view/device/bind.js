@@ -11,6 +11,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 	var callback = ["$scope","$location","$interval", function ($scope, $location,$interval) {
 
 
+        $scope.active = 'bind';
 
         /**
          * 校验设备是否存在
