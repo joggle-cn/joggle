@@ -21,17 +21,18 @@ import java.util.Date;
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
     @Override
-    public void saveOrUpdateOnline(String deviceId) {
+    public void saveOrUpdateOnline(String deviceNo, String ip) {
 
         EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceId = {0}", deviceId);
+        ew.where("deviceId = {0}", deviceNo);
 
         int count = this.baseMapper.selectCount(ew);
 
         DeviceOnline deviceOnline = new DeviceOnline();
-        deviceOnline.setDeviceId(deviceId);
-        deviceOnline.setStatus(1);// 等待被绑定
+        deviceOnline.setDeviceId(deviceNo);
+        deviceOnline.setStatus(1);// 等待被绑定（在线)
         deviceOnline.setUpdateTime(new Date());
+        deviceOnline.setIntranetIp(ip); // 设置IP
 
         if(count > 0){
             this.baseMapper.update(deviceOnline, ew);

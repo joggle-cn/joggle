@@ -3,14 +3,20 @@ package com.wuweibi.bullet.domain.dto;/**
  */
 
 import com.wuweibi.bullet.entity.Device;
+import lombok.Data;
 
 /**
+ *
+ *
  * @author marker
  * @create 2017-12-10 下午1:32
  **/
+@Data
 public class DeviceDto extends Device {
 
     private int status;
+
+    private String intranetIp;
 
     public DeviceDto(Device device) {
         super();
@@ -20,11 +26,4 @@ public class DeviceDto extends Device {
         this.setDeviceId(device.getDeviceId());
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

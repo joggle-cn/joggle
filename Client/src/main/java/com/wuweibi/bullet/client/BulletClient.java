@@ -5,6 +5,7 @@ package com.wuweibi.bullet.client;
 
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
+import com.wuweibi.bullet.client.threads.BindIPThread;
 import com.wuweibi.bullet.client.threads.HeartThread;
 import com.wuweibi.bullet.client.threads.SocketThread;
 import com.wuweibi.bullet.client.websocket.WebSocketClientProxyImpl;
@@ -47,6 +48,11 @@ public class BulletClient {
         // 启动一个线程做心跳配置
         HeartThread task = new HeartThread(this);
         timer.schedule(task, 5000, 10000);
+
+        // 发送IP
+        BindIPThread task2 = new BindIPThread(this);
+        task2.start();
+
     }
 
 

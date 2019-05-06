@@ -1,13 +1,14 @@
 package com.wuweibi.bullet.entity;
 
-import java.io.Serializable;
-
-import com.baomidou.mybatisplus.enums.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @author marker
  * @since 2017-12-09
  */
+@Data
 @TableName("t_device_online")
 public class DeviceOnline extends Model<DeviceOnline> {
 
@@ -26,42 +28,27 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	private Long id;
 	private String deviceId;
 	private Date updateTime;
+
+    /**
+     *
+     */
 	private Integer status;
+	/**
+	 * 内网IP
+	 */
+    @TableField(value="intranetIp" )
+	private String intranetIp;
+
+    public DeviceOnline() {
+
+    }
+
+    public DeviceOnline(String deviceCode) {
+        this.deviceId = deviceCode;
+    }
 
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	@Override
+    @Override
 	protected Serializable pkVal() {
 		return this.id;
 	}

@@ -16,9 +16,10 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
 
     /**
      * 保存或更新为在线状态
-     * @param deviceId
+     * @param deviceNo
+     * @param ip
      */
-    void saveOrUpdateOnline(String deviceId);
+    void saveOrUpdateOnline(String deviceNo, String ip);
 
 
     /**

@@ -1,5 +1,7 @@
 package com.wuweibi.bullet.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,5 +23,24 @@ public class Tools {
 	 * */
 	public static long getCurrentSequenceDate(){
 		return Long.valueOf(Tools.sequenceDate.format(new Date()));
+	}
+
+
+	/**
+	 * 获取IP
+	 * @return
+	 */
+	public static String getIp() {
+		InetAddress addr = null;
+		try {
+			addr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			return "";
+		}
+		return addr.getHostAddress();
+
+//		System.out.println("Local HostAddress: "+);
+//		String hostname = addr.getHostName();
+//		System.out.println("Local host name: "+hostname);
 	}
 }

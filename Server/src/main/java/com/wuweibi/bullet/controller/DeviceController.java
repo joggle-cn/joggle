@@ -66,18 +66,22 @@ public class DeviceController {
 
         while (it.hasNext()){
             Device device = it.next();
+
             DeviceDto deviceDto = new DeviceDto(device);
             String deviceCode = device.getDeviceId();
 
             int status = getStatus(deviceCode);
             deviceDto.setStatus(status);
 
+            EntityWrapper EntityWrapper = new EntityWrapper<DeviceOnline>();
+            EntityWrapper.setEntity(new DeviceOnline(deviceCode));
+
+           DeviceOnline deviceOnline =  deviceOnlineService.selectOne( EntityWrapper);
+           if(deviceOnline != null){
+               deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
+           }
             deviceList.add(deviceDto);
         }
-
-
-
-
         return MessageFactory.get(deviceList);
     }
 

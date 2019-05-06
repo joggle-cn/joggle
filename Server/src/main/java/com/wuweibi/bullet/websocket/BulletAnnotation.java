@@ -20,10 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.protocol.Message;
-import com.wuweibi.bullet.protocol.MsgHead;
-import com.wuweibi.bullet.protocol.MsgMapping;
-import com.wuweibi.bullet.protocol.MsgProxyHttp;
+import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.server.HandlerBytes;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -90,10 +87,9 @@ public class BulletAnnotation {
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(60000);
 
-
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        deviceOnlineService.saveOrUpdateOnline(deviceNo);
+        deviceOnlineService.saveOrUpdateOnline(deviceNo, "");
 
         // 将链接添加到连接池
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
@@ -155,6 +151,17 @@ public class BulletAnnotation {
                     msg.read(bis);
                     ;break;
                 case Message.Heart:// 心跳消息
+                    return;
+                case Message.NEW_BINDIP:// IP
+                    MsgBindIP msg2 = new MsgBindIP(head);
+                    msg2.read(bis);
+
+                    // 更新设备状态
+                    DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+
+
+                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp());
+                    // 更新IP
                     return;
             }
         } catch (IOException e) {
