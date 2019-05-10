@@ -54,11 +54,12 @@ public class CommandThread extends Thread  {
         String projectPath = ConfigUtils.getClientProjectPath();
 
 
-        String osName = ConfigUtils.getOSName();
+        // 去除系统判定Ngrok命令太大了
+//        String osName = ConfigUtils.getOSName();
 //        log.debug("os name = {}", osName);
 
 
-        StringBuilder command = new StringBuilder(projectPath + "/bin/" + osName + "/ngrok -config=");
+        StringBuilder command = new StringBuilder(projectPath + "/bin/ngrok -config=");
 
 
 
