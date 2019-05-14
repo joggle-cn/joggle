@@ -120,7 +120,12 @@ public class BulletClient {
      * 获取 连接 ID
      * @return
      */
-    public int getId() {
-        return this.connection.getId();
+    public Integer getId() {
+        if(this.connection != null){
+            return this.connection.getId();
+        }else{
+            logger.error("{}", this.connection );
+        }
+        return null;
     }
 }

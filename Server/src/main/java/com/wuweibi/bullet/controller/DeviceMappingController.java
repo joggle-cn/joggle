@@ -133,7 +133,9 @@ public class DeviceMappingController {
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
                 BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
-
+                if(annotation == null){// 设备不在线
+                    return MessageFactory.get(State.DeviceNotOnline);
+                }
 
                 JSONObject data = (JSONObject)JSON.toJSON(entity);
                 MsgMapping msg = new MsgMapping(data.toJSONString());

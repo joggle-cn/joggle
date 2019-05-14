@@ -13,8 +13,11 @@ import lombok.Data;
 @Data
 public class Proto {
 
+    // 1
     private String http;
-
+    // 2
     private String tcp;
+    // 3
+    private String https;
 
 }

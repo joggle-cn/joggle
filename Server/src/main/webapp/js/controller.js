@@ -56,6 +56,7 @@ define([
             switch (protocol){
                 case 1 : return "HTTP";
                 case 2 : return "TCP";
+                case 3 : return "HTTPS";
                 default: return "-";
             }
             return "-";

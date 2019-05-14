@@ -29,7 +29,7 @@ public class Tunnels {
 
     private String host_header;
 
-    private boolean bind_tls = false;
+    private Boolean bind_tls = false;
 
 
 }

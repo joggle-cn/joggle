@@ -72,13 +72,15 @@ public class CommandThread extends Thread  {
         Tunnels tunnels = new Tunnels();
         tunnels.setSubdomain(config.getDomain());
         tunnels.setHostname(config.getHostname());
-        tunnels.setBind_tls(config.getBindTls());
         Proto proto = new Proto();
-        if(config.getProtocol() == 1){
+        if(config.getProtocol() == 1){// http
             proto.setHttp(config.getHost()+':'+config.getPort());
-        } else {
+            tunnels.setBind_tls(config.getBindTls());
+        } else if(config.getProtocol() == 2){ // tcp
             proto.setTcp(config.getHost()+':'+config.getPort());
             tunnels.setRemote_port(this.config.getRemotePort());
+        }else if(config.getProtocol() == 3) { // https
+            proto.setHttps(config.getHost()+':'+config.getPort());
         }
         tunnels.setProto(proto);
 
@@ -87,9 +89,9 @@ public class CommandThread extends Thread  {
 
         testEntity.getTunnels().put(mappingName, tunnels);
 
-        String projectName = config.getHostname() + config.getDomain();
+        String projectName = config.getHostname() + config.getProtocol() + config.getDomain();
         String configPath = projectPath + "/conf/domain/";
-        String logsPath   = projectPath+"/logs/domain/";
+        String logsPath   = projectPath + "/logs/domain/";
         new File(configPath).mkdirs();
         new File(logsPath).mkdirs();
 

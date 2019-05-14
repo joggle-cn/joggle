@@ -66,12 +66,13 @@
 						<div class="col-sm-6">
 							<select class="form-control" ng-model="item.protocol" >
 								<option value="1">HTTP</option>
+								<option value="3">HTTPS</option>
 								<option value="2">TCP</option>
 							</select>
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-                    <div class="form-group" ng-show="item.protocol == 1">
+                    <div class="form-group" ng-show="item.protocol == 1 || item.protocol == 3">
                         <label for="b" class="col-sm-2 control-label">域名</label>
                         <div class="col-sm-6">
                             <div>

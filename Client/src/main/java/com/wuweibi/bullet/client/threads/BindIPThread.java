@@ -38,7 +38,11 @@ public class BindIPThread extends Thread {
     @Override
     public void run() {
 
-        int id = client.getId();
+        Integer id = client.getId();
+        if(id == null){
+            logger.error("ClientId is ", id);
+        }
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         logger.info("Connection[{}] heart time={}", id, sdf.format(new Date()));
 

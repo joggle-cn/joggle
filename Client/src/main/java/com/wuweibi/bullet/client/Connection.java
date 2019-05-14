@@ -1,4 +1,5 @@
-package com.wuweibi.bullet.client;/**
+package com.wuweibi.bullet.client;
+/**
  * Created by marker on 2018/1/8.
  */
 
@@ -64,14 +65,17 @@ public class Connection {
      */
     public void open() throws Exception {
         BulletClient client = new BulletClient();
+
         try {
-            this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
             client.setConnection(this);
+            this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
             count = 0; // 初始化链接次数。
         } catch (Exception e){
             logger.error("websocket connection faild! wait 10s try angain!");
             Thread.sleep(10000L);
             opeAngain();
+        } finally {
+
         }
 
     }

@@ -106,6 +106,8 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
                     flushData();
                 } else if(res.status ==  200100){// 域名被绑定
                     alert(res.msg);
+                } else{
+                    alert(res.msg);
                 }
             });
 
