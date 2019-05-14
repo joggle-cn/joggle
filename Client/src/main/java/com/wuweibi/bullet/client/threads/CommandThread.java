@@ -72,6 +72,7 @@ public class CommandThread extends Thread  {
         Tunnels tunnels = new Tunnels();
         tunnels.setSubdomain(config.getDomain());
         tunnels.setHostname(config.getHostname());
+        tunnels.setBind_tls(config.getBindTls());
         Proto proto = new Proto();
         if(config.getProtocol() == 1){
             proto.setHttp(config.getHost()+':'+config.getPort());

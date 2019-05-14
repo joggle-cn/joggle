@@ -34,13 +34,13 @@
 	          <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
 	        </li>
 	        <li>
-	          <a href="#/wishwall/index">心愿墙</a>
+	          <!--<a href="#/wishwall/index">心愿墙</a>-->
 	        </li>
 	        <li>
 	          <a href="#/system">系统配置</a>
 	        </li>
 	      </ul>
-	      <ul class="nav navbar-nav navbar-right">
+	      <ul class="nav navbar-nav navbar-right" ng-controller="userController">
 	      	<li class="divider-vertical hidden-xs"></li>
 
 	      		<li ng-if="islogin">

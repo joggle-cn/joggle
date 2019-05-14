@@ -51,6 +51,10 @@ public class DeviceMapping extends Model<DeviceMapping> {
     @TableField("host")
 	private String host;
 
+
+	@TableField("bind_tls")
+	private Boolean bindTls;
+
 	private Long userId;
 
 	/** 协议 1 HTTP */

@@ -8,7 +8,7 @@
 define(['app','css!./login.css'], function (app) {// 加载依赖js,
 	
 	return ['$rootScope','$scope','$location','userService', '$AjaxService',
-	        function ($rootScope, $scope, $location, userService, $AjaxService) {
+	        function ($rootScope, $scope, $location, userService, $AjaxService, $session) {
 		// 登录操作
 		$scope.login = function(){
 			// 表单验证

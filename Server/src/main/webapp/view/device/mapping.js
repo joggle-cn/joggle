@@ -5,18 +5,15 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery'], function (app, $) {//加载依赖js,
+define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js,
 
 
 
 
 	var callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
         $scope.active = 'device';
-
-
         // 设备ID
         var deviceId = $routeParams.deviceId;
-
 
         function flushData(){
             faceinner.get(api['user.device.mapping'], {deviceId:deviceId}, function(res){
@@ -39,6 +36,9 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                return item.hostname;
             }
 
+
+
+
         }
 
         /**
@@ -49,6 +49,21 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             $("#addMapping").modal({
                 backdrop: false
             });
+            $('#addMapping').on('shown.bs.modal', function () {
+
+
+                $("#my-checkbox1").bootstrapSwitch({
+                    state: item.bindTls,
+                    onSwitchChange:function (event, state) {
+                        $scope.item.bindTls = state;
+                    }
+                });
+                $("#my-checkbox1").bootstrapSwitch('state', item.bindTls, true);
+            })
+
+
+
+
 		}
 
         /**
@@ -79,6 +94,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                 hostname : $scope.item.hostname,
                 deviceId: deviceId,
 		        description : $scope.item.description,
+		        bindTls : $scope.item.bindTls,
             }
 
 

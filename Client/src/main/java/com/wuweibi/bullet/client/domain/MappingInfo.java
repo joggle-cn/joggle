@@ -19,6 +19,7 @@ public class MappingInfo {
     private String domain;
     private Integer port;
     private String hostname;
+    private Boolean bindTls;
 
     /**
      * 远端端口

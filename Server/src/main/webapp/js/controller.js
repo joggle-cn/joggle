@@ -243,7 +243,7 @@ define([
 	 * (PC端) 用户控制器模块
 	 *
 	 */
-	.controller('userController', ['$scope', '$session' , '$location',function ($scope,$session, $location) {
+	.controller('userController', ['$scope', '$session' , '$location',function ($scope, $session, $location) {
 
 
 		// 初始化数据
@@ -257,8 +257,9 @@ define([
 			});
 		}
 
+        $scope.init();
 
-		/**
+        /**
 		 * 退出登录
 		 */
 		$scope.loginout = function(){

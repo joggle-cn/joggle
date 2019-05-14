@@ -62,7 +62,7 @@ define(['app','css!./video.css'], function (app) {// 加载依赖js,
              */
             var userId = $session.user.id;
 
-            var target = "wss://" + faceinner.getHost() +"/ws/video/" + userId;
+            var target = "ws://" + faceinner.getHost() +"/ws/video/" + userId;
             if ('WebSocket' in window) {
                 ws = new WebSocket(target);
             } else if ('MozWebSocket' in window) {
