@@ -58,7 +58,7 @@ public class CommandThreadPool {
             CommandThread commandThread = cache.get(mappingId);
 
             log.debug("killing thread {}", mappingId);
-            commandThread.interrupt();
+            commandThread.stopThread();
 
         }
     }
