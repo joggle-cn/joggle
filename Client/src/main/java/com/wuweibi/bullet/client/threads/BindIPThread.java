@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  *
@@ -42,22 +40,22 @@ public class BindIPThread extends Thread {
         if(id == null){
             logger.error("ClientId is ", id);
         }
+        String ip = Tools.getIp();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logger.info("Connection[{}] heart time={}", id, sdf.format(new Date()));
+        logger.info("Connection[{}] BindIp IP={}", id, ip);
 
         try {
             if(client.getSession().isOpen()){
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-                MsgBindIP msg = new MsgBindIP(Tools.getIp());
+                MsgBindIP msg = new MsgBindIP(ip);
                 msg.write(outputStream);
 
                 // 包装了Bullet协议的
                 byte[] resultBytes = outputStream.toByteArray();
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                client.getSession().getBasicRemote().sendBinary(buf, true);
+                client.getSession().getBasicRemote().sendBinary(buf);
             }
         } catch (IOException e) {
             logger.error("", e);

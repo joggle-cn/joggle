@@ -142,7 +142,9 @@ public class CommandThread extends Thread  {
      * 停止线程
      */
     public void stopThread(){
+        if(this.process != null) {
+            this.process.destroy();
+        }
         this.interrupt();
-        this.process.destroy();
     }
 }
