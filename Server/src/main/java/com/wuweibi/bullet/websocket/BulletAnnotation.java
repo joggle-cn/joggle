@@ -85,7 +85,7 @@ public class BulletAnnotation {
         this.id = connId;
 
         session.setMaxBinaryMessageBufferSize(101024000);
-        session.setMaxIdleTimeout(60000);
+        session.setMaxIdleTimeout(0);
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
@@ -112,10 +112,10 @@ public class BulletAnnotation {
                     byte[] resultBytes = outputStream.toByteArray();
                     ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                    this.getSession().getBasicRemote().sendBinary(buf);
+                    this.getSession().getAsyncRemote().sendBinary(buf);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("", e);
                 } finally {
                     IOUtils.closeQuietly(outputStream);
                 }
@@ -151,6 +151,19 @@ public class BulletAnnotation {
                     msg.read(bis);
                     ;break;
                 case Message.Heart:// 心跳消息
+//                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//                    try {
+//                        msg.write(outputStream);
+//                        // 包装了Bullet协议的
+//                        byte[] resultBytes = outputStream.toByteArray();
+//                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+//                        this.getSession().getAsyncRemote().sendBinary(buf);
+//                    } catch (IOException e) {
+//                        logger.error("", e);
+//                    } finally {
+//                        IOUtils.closeQuietly(outputStream);
+//                    }
+
                     return;
                 case Message.NEW_BINDIP:// IP
                     MsgBindIP msg2 = new MsgBindIP(head);
@@ -171,9 +184,9 @@ public class BulletAnnotation {
 
 
         String sequence = msg.getSequence();
-        logger.debug("sequence={}",sequence);
+        logger.debug("sequence={}", sequence);
 
-        byte[] responseData =  msg.getContent();
+        byte[] responseData = msg.getContent();
 
         logger.debug("接收到内容数据准备响应，长度为:{}", responseData.length);
 
