@@ -19,6 +19,8 @@ public class Connection {
 
     private Logger logger = LoggerFactory.getLogger(Connection.class);
 
+    private WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
     private String url;
 
     // WebSocket session
@@ -57,8 +59,6 @@ public class Connection {
         return id;
     }
 
-    WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-
 
     /**
      * 打开WebSocket链接
@@ -66,16 +66,34 @@ public class Connection {
     public void open() throws Exception {
         BulletClient client = new BulletClient();
 
-        try {
-            client.setConnection(this);
-            this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
-            count = 0; // 初始化链接次数。
-        } catch (Exception e){
-            logger.error("websocket connection faild! wait 10s try angain!");
-            Thread.sleep(10000L);
-            opeAngain();
-        } finally {
+        // while得作用是链接成功才会断开
+        while (true){
+            try {
+                client.setConnection(this);
+                this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
+                count = 0; // 初始化链接次数。
 
+                if(this.session.isOpen()){
+                    Thread.sleep(100L);
+                    break;
+                }
+            } catch (Exception e){
+                logger.error("websocket connection faild! wait 10s try angain! reason: {}", e.getMessage());
+                Thread.sleep(10000L);
+                // 如果已经链接过了的情况与Clouse冲突的，直接关闭返回
+                if(this.session != null) {
+                    if(!this.session.isOpen()){ // 关闭了
+                        this.session = null;
+                        logger.error("websocket connection closed!!!");
+                    }
+                }
+
+                count++;
+                logger.debug("Connection[{}] 第{}次尝试连接", id, count);
+
+            } finally {
+
+            }
         }
 
     }
@@ -89,18 +107,12 @@ public class Connection {
         try {
             count++;
             logger.debug("Connection[{}] 第{}次尝试连接", id, count);
-
             // 无限重试
             open();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            // 等地啊3秒
-            try {
-                Thread.sleep(3000L);
-            } catch (InterruptedException e1) {}
-
-            opeAngain();
         } finally {
+
         }
     }
 
