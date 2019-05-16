@@ -1,4 +1,4 @@
 {
-  "tunnel": "ws://localhost:8082/tunnel",
-  "deviceId": "0000000113"
+  "tunnel": "ws://joggle.cn:8081/tunnel",
+  "deviceId": "0000000114"
 }

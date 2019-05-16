@@ -74,7 +74,6 @@ public class Connection {
                 count = 0; // 初始化链接次数。
 
                 if(this.session.isOpen()){
-                    Thread.sleep(100L);
                     break;
                 }
             } catch (Exception e){

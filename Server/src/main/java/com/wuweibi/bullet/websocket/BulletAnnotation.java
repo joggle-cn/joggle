@@ -21,14 +21,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.*;
-import com.wuweibi.bullet.server.HandlerBytes;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.utils.SpringUtils;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +107,7 @@ public class BulletAnnotation {
                     byte[] resultBytes = outputStream.toByteArray();
                     ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                    this.getSession().getAsyncRemote().sendBinary(buf);
+                    this.getSession().getBasicRemote().sendBinary(buf);
 
                 } catch (IOException e) {
                     logger.error("", e);
@@ -149,7 +144,7 @@ public class BulletAnnotation {
                 case Message.Proxy_Http:// Bind响应命令
                     msg = new MsgProxyHttp(head);
                     msg.read(bis);
-                    ;break;
+                    break;
                 case Message.Heart:// 心跳消息
 //                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 //                    try {
@@ -179,41 +174,6 @@ public class BulletAnnotation {
             }
         } catch (IOException e) {
            logger.error("", e);
-        }
-
-
-
-        String sequence = msg.getSequence();
-        logger.debug("sequence={}", sequence);
-
-        byte[] responseData = msg.getContent();
-
-        logger.debug("接收到内容数据准备响应，长度为:{}", responseData.length);
-
-
-
-
-        ChannelHandlerContext ctx = HandlerBytes.cache.get(sequence);
-
-        if(ctx != null){
-            try {
-                // 在当前场景下，发送的数据必须转换成ByteBuf数组
-                ByteBuf encoded = ctx.alloc().buffer(responseData.length);
-                encoded.writeBytes(responseData);
-                ctx.writeAndFlush(encoded).addListener(new ChannelFutureListener() {
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        if (!future.isSuccess()){
-                            logger.debug("Failed to send a 413 Request Entity Too Large. | {}", future.cause());
-                            ctx.close();
-                        }
-                    }
-                });
-
-
-            } finally {
-                HandlerBytes.cache.remove(sequence);
-            }
-            logger.debug("count={}", HandlerBytes.cache.size());
         }
 
     }
