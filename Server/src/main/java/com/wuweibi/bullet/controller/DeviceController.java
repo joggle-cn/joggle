@@ -15,6 +15,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
  * @author marker
  * @create 2017-12-06 下午9:19
  **/
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 public class DeviceController {
@@ -128,9 +130,13 @@ public class DeviceController {
             deviceMappingService.deleteByDeviceId(id);
             deviceService.deleteById(id);
 
-            // 停止ws链接
-            BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceId());
-            bulletAnnotation.stop();
+            try {
+                // 停止ws链接
+                BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceId());
+                bulletAnnotation.stop();
+            } catch (Exception e){
+                log.error("{}", e.getMessage());
+            }
 
         }
         return MessageFactory.getOperationSuccess();
