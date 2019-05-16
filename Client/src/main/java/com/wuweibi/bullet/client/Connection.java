@@ -73,6 +73,8 @@ public class Connection {
                 this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
                 count = 0; // 初始化链接次数。
 
+
+                Thread.sleep(10000L);
                 if(this.session.isOpen()){
                     break;
                 }
