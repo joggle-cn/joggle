@@ -122,6 +122,14 @@ public class CommandThread extends Thread  {
 
         this.command = command.toString();
 
+
+        // 睡眠1秒保证文件被写入
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
