@@ -4,7 +4,6 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2019/4/10.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
@@ -41,7 +40,6 @@ public class Application implements CommandLineRunner {
 
 
         ConnectionPool pool = new ConnectionPool();
-        pool.setConfig(ConfigUtils.getProperties());
 
 
         // 启动线程池

@@ -78,4 +78,4 @@ exec "$JAVA" \
 -Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
 -Djava.bullet.home.dir="$BULLET_HOME" \
 -classpath $CLASSPATH \
--jar $BULLET_HOME/lib/bullet-client.jar
+-jar $BULLET_HOME/lib/bullet-client.jar --spring.profiles.active=prod

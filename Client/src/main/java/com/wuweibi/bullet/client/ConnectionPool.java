@@ -2,12 +2,12 @@ package com.wuweibi.bullet.client;/**
  * Created by marker on 2018/1/8.
  */
 
+import com.wuweibi.bullet.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  *
@@ -23,8 +23,6 @@ public class ConnectionPool {
 
     private int poolSize = 1;
 
-
-    private Properties config;
 
 
     private List<Connection> list = new ArrayList<>();
@@ -46,9 +44,9 @@ public class ConnectionPool {
      */
     public void startup(){
         // 通道服务器
-        String tunnel = this.config.getProperty("tunnel");
+        String tunnel = ConfigUtils.getTunnel();
         // 设备ID
-        String deviceId =  this.config.getProperty("deviceId");
+        String deviceId =  ConfigUtils.getDeviceId();
 
 
         String url = tunnel + "/" + deviceId;
@@ -76,11 +74,5 @@ public class ConnectionPool {
 
     }
 
-    public Properties getConfig() {
-        return config;
-    }
 
-    public void setConfig(Properties config) {
-        this.config = config;
-    }
 }

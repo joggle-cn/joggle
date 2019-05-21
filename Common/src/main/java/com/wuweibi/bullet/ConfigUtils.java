@@ -82,6 +82,18 @@ public class ConfigUtils {
         return CONF.getString("deviceId");
     }
 
+    /**
+     * 获取日志服务开启状态
+     * @return
+     */
+    public static Boolean getLogService() {
+        Boolean logService = CONF.getBoolean("logService");
+        if(logService == null){
+            return false;
+        }
+        return logService;
+    }
+
 
     /**
      * 获取配置对象

@@ -2,7 +2,6 @@
  * Created by marker on 2018/1/8.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.ConnectionPool;
 import org.junit.Test;
 
@@ -23,7 +22,6 @@ public class PoolTest {
 
 
         ConnectionPool pool = new ConnectionPool();
-        pool.setConfig(ConfigUtils.getProperties());
 
 
         // 启动线程池

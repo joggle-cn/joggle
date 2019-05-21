@@ -97,7 +97,12 @@ public class CommandThread extends Thread  {
 
 
 
-        command.append(configPath).append(projectName+".yml -log="+ logsPath + projectName + ".log start "+ mappingName);
+        command.append(configPath).append(projectName).append(".yml ");
+
+        if(ConfigUtils.getLogService()){// 开启日志
+            command.append("-log="+ logsPath + projectName + ".log");
+        }
+        command.append("start ").append(mappingName);
 
 
         try {
