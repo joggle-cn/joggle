@@ -183,7 +183,7 @@ public class BulletAnnotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-        logger.error("Chat Error: " + t.toString() );
+        logger.error("Bullet Client Error: " + t.toString() );
 
         updateOutLine();
     }

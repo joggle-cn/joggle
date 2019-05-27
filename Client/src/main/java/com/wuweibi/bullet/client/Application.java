@@ -36,11 +36,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-
-
-
         ConnectionPool pool = new ConnectionPool();
-
 
         // 启动线程池
         pool.startup();
@@ -48,9 +44,5 @@ public class Application implements CommandLineRunner {
         while (true){
             Thread.sleep(1000L);
         }
-
-
-
-
     }
 }
