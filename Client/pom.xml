@@ -63,17 +63,12 @@
         </dependency>
 
 
+        <!-- https://mvnrepository.com/artifact/org.glassfish.tyrus.bundles/tyrus-standalone-client -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <groupId>org.glassfish.tyrus.bundles</groupId>
+            <artifactId>tyrus-standalone-client</artifactId>
+            <version>1.15</version>
         </dependency>
-
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.glassfish.tyrus.bundles/tyrus-standalone-client &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.glassfish.tyrus.bundles</groupId>-->
-            <!--<artifactId>tyrus-standalone-client</artifactId>-->
-            <!--<version>1.15</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.java-websocket</groupId>
