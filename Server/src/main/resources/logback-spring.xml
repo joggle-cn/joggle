@@ -23,18 +23,18 @@
     </springProfile>
 
     <springProfile name="prod">
-        <root level="ERROR">
+        <root level="debug">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="INFO-ROLLING"/>
             <appender-ref ref="ERROR-ROLLING"/>
             <appender-ref ref="DEBUG-ROLLING"/>
         </root>
 
-        <logger name="com.byit.drm.mapper" level="error"></logger>
-        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="ERROR" />
-        <logger name="org.springframework.amqp.rabbit" level="ERROR" />
-        <logger name="org.springframework.web.cors" level="ERROR" />
-        <logger name="com.baidu.ueditor" level="ERROR"/>
+        <!--<logger name="com.byit.drm.mapper" level="error"></logger>-->
+        <!--<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="ERROR" />-->
+        <!--<logger name="org.springframework.amqp.rabbit" level="debug" />-->
+        <!--<logger name="org.springframework.web.cors" level="debug" />-->
+        <!--<logger name="com.baidu.ueditor" level="debug"/>-->
 
     </springProfile>
 

@@ -1,7 +1,8 @@
 [Unit]
 Description=bullet service
+After=network.target 
 [Service]
 ExecStart=/opt/bullet/bin/bullet
-#Restart=on-failure
+Restart=on-failure
 [Install]
 WantedBy=multi-user.target
