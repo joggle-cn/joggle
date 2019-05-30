@@ -1,14 +1,14 @@
 <configuration scan="false" scanPeriod="30 seconds">
 
+
+    <!-- 基础配置 -->
     <include resource="logback-common.xml"/>
 
+    <property name="PROJECT_HOME" value="${LOG_PATH}/server" />
 
-    <!--  -->
+    <!-- 文件输出 -->
+    <include resource="logback-fileout.xml"/>
 
-
-
-
-    <logger name="com.byit.common.sign" level="debug"></logger>
 
     <springProfile name="!prod">
         <!-- configuration to be enabled when the "production" profile is not active -->
