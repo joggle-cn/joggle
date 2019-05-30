@@ -41,7 +41,7 @@ public class AllInterceptor implements HandlerInterceptor {
 	 */
 	public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-		System.out.println(handler);
+//		System.out.println(handler);
 		HttpSession session = request.getSession(true);
 //		Object cookieDeceive = session.getAttribute(SessionAttr.CookieDeceive); 
 //		String id = session.getId();
@@ -128,9 +128,9 @@ public class AllInterceptor implements HandlerInterceptor {
 //		request.setAttribute(Var.WEB_APP_LANG, HttpUtils.getLanguage(request));// 网址路径
 //
 //
-		
-		// 打印请求参数
-		CodeHelper.printRequestParameter(request);
+//
+//		// 打印请求参数
+//		CodeHelper.printRequestParameter(request);
 		
 		
 	}

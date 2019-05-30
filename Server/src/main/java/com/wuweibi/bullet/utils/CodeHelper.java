@@ -1,8 +1,11 @@
 package com.wuweibi.bullet.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
+@Slf4j
 public class CodeHelper {
 
 	
@@ -15,13 +18,14 @@ public class CodeHelper {
 	 */
 	public static void printRequestParameter(HttpServletRequest request){
 		Enumeration<String> e = request.getParameterNames(); 
-		System.out.println("-------------------------------");
-		System.out.println(request.getRequestURI());
-		System.out.println("请求参数：");
+		log.debug("-------------------------------");
+        log.debug("uri: {}", request.getRequestURI());
+
 		while(e.hasMoreElements()) { 
 			String para = e.nextElement(); 
 			System.out.print(para + "=" + request.getParameter(para) +"\n");
 		}
+        log.debug("params：{}", request.getParameterMap() );
 		System.out.println("-------------------------------");
 	} 
 

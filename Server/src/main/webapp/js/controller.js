@@ -102,20 +102,7 @@ define([
 
 
 
-        /**
-         * 退出登录
-         */
-        $scope.loginout = function(){
-            faceinner.get(api['user.loginout'],function(res){
-                if(res.status == 0){
-                    $rootScope.$apply(function() {
-                        delete $rootScope.user;
-                        delete $rootScope.islogin;
-                        $location.path('/login');
-                    });
-                }
-            });
-        }
+
 
 
 	}])
@@ -244,7 +231,7 @@ define([
 	 * (PC端) 用户控制器模块
 	 *
 	 */
-	.controller('userController', ['$scope', '$session' , '$location',function ($scope, $session, $location) {
+	.controller('userController', ['$scope','$rootScope', '$session' , '$location',function ($scope, $rootScope, $session, $location) {
 
 
 		// 初始化数据
@@ -260,16 +247,21 @@ define([
 
         $scope.init();
 
+
         /**
-		 * 退出登录
-		 */
-		$scope.loginout = function(){
-			faceinner.get(api['user.loginout'],function(res){
-				if(res.status == 0){
-					window.location.href = '#/index';
-				}
-			});
-		}
+         * 退出登录
+         */
+        $scope.loginout = function(){
+            faceinner.get(api['user.loginout'],function(res){
+                if(res.status == 0){
+                    delete $rootScope.user;
+                    $rootScope.$apply(function() {
+                        $rootScope.islogin = false;
+                        window.location.href = '#/login';
+                    });
+                }
+            });
+        }
 
 
 
