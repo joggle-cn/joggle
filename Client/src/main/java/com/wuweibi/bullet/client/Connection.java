@@ -70,6 +70,8 @@ public class Connection {
         while (true){
             try {
                 client.setConnection(this);
+
+
                 this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
                 count = 0; // 初始化链接次数。
 

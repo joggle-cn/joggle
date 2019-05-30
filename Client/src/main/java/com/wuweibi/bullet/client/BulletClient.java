@@ -80,7 +80,9 @@ public class BulletClient {
         int id = connection.getId();
 
         logger.debug("Connection[{}] 正在取消心跳线程...", id);
-        timer.cancel();
+        if(timer != null){
+            timer.cancel();
+        }
 
 
         logger.debug("Connection[{}] 正在检查链接配置...", id);
