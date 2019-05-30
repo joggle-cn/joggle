@@ -3,6 +3,11 @@
 # Spring 配置
 #
 spring:
+  devtools:
+    restart:
+      enabled: false
+
+
   datasource:
     driverClassName : com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource

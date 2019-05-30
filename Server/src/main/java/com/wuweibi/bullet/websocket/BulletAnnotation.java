@@ -124,11 +124,11 @@ public class BulletAnnotation {
 
     @OnClose
     public void end() {
+        updateOutLine();
 
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         pool.removeConnection(this);
 
-        updateOutLine();
     }
 
 
@@ -185,8 +185,9 @@ public class BulletAnnotation {
     @OnError
     public void onError(Throwable t) throws Throwable {
         logger.error("Bullet Client Error: " + t.toString() );
-
-        updateOutLine();
+        if(t != null){
+            t.printStackTrace();
+        }
     }
 
 
