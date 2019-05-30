@@ -26,7 +26,9 @@ public class DeviceOnline extends Model<DeviceOnline> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
+	@TableField(value = "deviceId")
 	private String deviceId;
+	@TableField(value = "updateTime")
 	private Date updateTime;
 
     /**

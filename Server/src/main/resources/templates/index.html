@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="${lang}">
+  <head>
+    <title>Bullet</title>
+    <meta name="keywords" content="Bullet">
+    <meta name="description" content="Bullet">
+    <meta name="author" content="marker">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="${url}/lib/font-awesome4/css/font-awesome.min.css" /> 
+  	<link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/css/bootstrap.min.css" /> 
+    <link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="${url}/lib/bootstrap3/plugins/bootstrap-switch/css/bootstrap-switch.min.css" />
+    <link rel="stylesheet" type="text/css" href="${url}/lib/umeditor/themes/default/css/umeditor.css" />
+    <link rel="stylesheet" type="text/css" href="${url}/css/main.css" />
+	
+
+  </head>
+
+  <body ng-cloak>
+	<header  ng-controller="navController" class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+	        <span class="sr-only">Toggle navigation</span>
+			  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+	      </button>
+	      <a target="_self" href="/static" class="navbar-brand">Bullet</a>
+	    </div>
+	    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+	      <ul class="nav navbar-nav">
+	        <li>
+	          <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
+	        </li>
+	        <li>
+	          <!--<a href="#/wishwall/index">心愿墙</a>-->
+	        </li>
+	        <li>
+	          <a href="#/system">系统配置</a>
+	        </li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right" ng-controller="userController">
+	      	<li class="divider-vertical hidden-xs"></li>
+
+	      		<li ng-if="islogin">
+	      			<!--<div>-->
+	      				<!--<img style="height:50px;" src="" />-->
+	      				<!--<span style='color:#fff; margin-top: 10px;'></span> -->
+	      			<!--</div> -->
+	      		</li>
+	      		<li class="dropdown" ng-show="islogin">
+		          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+					  <span ng-bind="user.email"></span> <span class="caret"></span>
+				  </a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="#/user/profile" ng-bind="res.t('user.profile')"></a></li>
+		            <li><a href="#/user/device">我的设备</a></li>
+		            <li><a href="#/user/device/bind">绑定设备</a></li>
+		            <li class="divider"></li>
+		            <li><a ng-click="loginout()"><i class="fa fa-user"></i> <span ng-bind="res.t('user.loginout')"></span></a></li>
+		          </ul>
+		        </li>
+		      	<li ng-show="!islogin">
+		        	<a href="#/login"><i class="fa fa-user"></i> <span ng-bind="res.t('user.login')"></span></a>
+		        </li>
+		        <li ng-show="!islogin">
+		        	<a href="#/register"><i class="fa fa-user"></i> <span ng-bind="res.t('user.register')"></span></a>
+		        </li>
+	      </ul>
+	    </nav>
+	  </div>
+	</header>
+	
+    <div id="content" ng-view style="min-height:300px;"></div>
+
+
+
+
+
+<!-- 页尾 -->
+<div class="container">
+	<div class="language" ng-controller="languageController">
+	   	<a ng-click="change('en')">English</a>
+	   	<a ng-click="change('zh')">简体中文</a>
+	</div>
+</div>
+<div class="footerhr"></div>
+<footer class="container">
+    <p class="big"> 
+        <!--<a target="_self" href="/about.html" ng-bind="res.t('footer.nav.about')"></a>-->
+        <!--<a target="_self" href="/about/contact.html" ng-bind="res.t('footer.nav.contact')"></a> -->
+      	<!--&lt;!&ndash; <a target="_self" href="/about/works.html">工作机会</a>  &ndash;&gt;-->
+         <!--<a target="_self" href="/about/privacy.html" ng-bind="res.t('footer.nav.privacy')"></a>-->
+         <!--<a target="_self" href="/about/terms.html" ng-bind="res.t('footer.nav.terms')"></a> -->
+   		<!--<a target="_self" href="/about/feedback.html" ng-bind="res.t('footer.nav.feedback')"></a> -->
+   <!---->
+   <!---->
+    </p> 
+    <div class="text-center">
+        © 2014 - 2018 Bullet.com &nbsp;
+    </div>
+</footer>
+
+ 
+ 
+
+	<script type="text/javascript">
+	var lang = '${lang}';
+	window.UMEDITOR_HOME_URL = '${url!}/lib/umeditor/';
+	// lib/angular/i18n/angular-locale_${lang}.js
+	</script>
+ 	<script src="${url}/lib/require/require.js" data-main="${url}/js/main.js" type="text/javascript"></script>
+
+
+
+  </body>
+</html>

@@ -2,6 +2,7 @@ package com.wuweibi.bullet.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -24,9 +25,15 @@ public class UserForget extends Model<UserForget> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
+
+	@TableField(value = "userId")
 	private Long userId;
 	private String email;
+
+	@TableField(value = "oldPass")
 	private String oldPass;
+
+	@TableField(value = "createTime")
 	private Date createTime;
 	private String code;
 	private Integer status;

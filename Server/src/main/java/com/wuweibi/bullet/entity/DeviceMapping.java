@@ -55,6 +55,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	@TableField("bind_tls")
 	private Boolean bindTls;
 
+	@TableField("userId")
 	private Long userId;
 
 	/** 协议 1 HTTP */
@@ -66,6 +67,8 @@ public class DeviceMapping extends Model<DeviceMapping> {
     /**
      * 创建时间
      */
+
+	@TableField("createTime")
 	private Date createTime;
 
 

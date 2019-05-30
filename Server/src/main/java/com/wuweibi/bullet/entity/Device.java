@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -26,8 +27,11 @@ public class Device extends Model<Device> {
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	private String name;
+	@TableField(value = "deviceId")
 	private String deviceId;
+    @TableField(value = "createTime")
 	private Date createTime;
+    @TableField(value = "userId")
 	private Long userId;
 
 

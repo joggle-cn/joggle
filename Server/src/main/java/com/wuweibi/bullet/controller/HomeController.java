@@ -26,10 +26,6 @@ public class HomeController {
         request.setAttribute("lang", HttpUtils.getLanguage(request));// 网址路径
         User user = (User) session.getAttribute(SessionAttr.LOGIN_USER);
         request.setAttribute("user", user); //
-
-
-
-
 		return "index";
 	}
 

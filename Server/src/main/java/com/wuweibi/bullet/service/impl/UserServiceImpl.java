@@ -9,6 +9,7 @@ import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
+import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserForgetMapper userForgetMapper;
 
     @Autowired
-    private MailSender mailSender;
+    private MailService mailService;
 
 
 
@@ -86,7 +87,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String forgetUrl = url +"#/forget?code="+apply.getCode();
         params.put("url", forgetUrl);
 
-        mailSender.send(email, params, "forget_mail.ftl");
+        mailService.send(email, params, "forget_mail.ftl");
 
 
         // 发送密码修改链接到邮箱
