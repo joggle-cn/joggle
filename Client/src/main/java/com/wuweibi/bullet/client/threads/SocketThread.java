@@ -91,7 +91,10 @@ public class SocketThread extends Thread {
                         pool.push( new CommandThread(mappingInfo));
                     }
                     break;
+                case Message.Heart:// 心跳消息
+                    logger.debug("resave pong heard");
 
+                    break;
             }
         } catch (IOException e) {
             logger.error("", e);

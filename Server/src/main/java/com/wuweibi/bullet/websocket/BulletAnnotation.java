@@ -146,18 +146,19 @@ public class BulletAnnotation {
                     msg.read(bis);
                     break;
                 case Message.Heart:// 心跳消息
-//                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//                    try {
-//                        msg.write(outputStream);
-//                        // 包装了Bullet协议的
-//                        byte[] resultBytes = outputStream.toByteArray();
-//                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-//                        this.getSession().getAsyncRemote().sendBinary(buf);
-//                    } catch (IOException e) {
-//                        logger.error("", e);
-//                    } finally {
-//                        IOUtils.closeQuietly(outputStream);
-//                    }
+                    MsgHeart msgHeart = new MsgHeart(head);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    try {
+                        msgHeart.write(outputStream);
+                        // 包装了Bullet协议的
+                        byte[] resultBytes = outputStream.toByteArray();
+                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                        this.getSession().getBasicRemote().sendPong(buf);
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    } finally {
+                        IOUtils.closeQuietly(outputStream);
+                    }
 
                     return;
                 case Message.NEW_BINDIP:// IP
