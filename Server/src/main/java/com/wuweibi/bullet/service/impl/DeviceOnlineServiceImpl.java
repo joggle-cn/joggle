@@ -52,4 +52,11 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnline.setUpdateTime(new Date());
         this.baseMapper.update(deviceOnline, ew);
     }
+
+    @Override
+    public DeviceOnline selectByDeviceNo(String deviceNo) {
+        EntityWrapper entityWrapper = new EntityWrapper<DeviceOnline>();
+        entityWrapper.setEntity(new DeviceOnline(deviceNo));
+        return this.selectOne(entityWrapper);
+    }
 }

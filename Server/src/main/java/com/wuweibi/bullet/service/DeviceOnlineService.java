@@ -27,4 +27,6 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @param deviceId
      */
     void updateOutLine(String deviceId);
+
+    DeviceOnline selectByDeviceNo(String deviceNo);
 }

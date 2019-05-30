@@ -63,8 +63,9 @@ public final class CoonPool {
         String deviceNo = conn.getDeviceNo();
         connections.remove(conn);
 
-        List<BulletAnnotation> list = clientConnections.get(deviceNo);
-        list.remove(conn);
+//        List<BulletAnnotation> list = clientConnections.get(deviceNo);
+//        list.remove(conn);
+        clientConnections.remove(deviceNo); // 直接全部移除
     }
 
 

@@ -149,7 +149,7 @@ public class DeviceMappingController {
                     annotation.getSession().getBasicRemote().sendBinary(buf,true);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("", e);
                 } finally {
                     IOUtils.closeQuietly(outputStream);
                 }

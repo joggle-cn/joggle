@@ -70,15 +70,12 @@ public class DeviceController {
             Device device = it.next();
 
             DeviceDto deviceDto = new DeviceDto(device);
-            String deviceCode = device.getDeviceId();
+            String deviceNo = device.getDeviceId();
 
-            int status = getStatus(deviceCode);
+            int status = getStatus(deviceNo);
             deviceDto.setStatus(status);
 
-            EntityWrapper EntityWrapper = new EntityWrapper<DeviceOnline>();
-            EntityWrapper.setEntity(new DeviceOnline(deviceCode));
-
-           DeviceOnline deviceOnline =  deviceOnlineService.selectOne( EntityWrapper);
+           DeviceOnline deviceOnline =  deviceOnlineService.selectByDeviceNo( deviceNo);
            if(deviceOnline != null){
                deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
            }
