@@ -124,6 +124,7 @@ public class BulletAnnotation {
 
     @OnClose
     public void end() {
+
         updateOutLine();
 
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
@@ -195,6 +196,7 @@ public class BulletAnnotation {
      * 更新为离线状态
      */
     private void updateOutLine(){
+        logger.warn("数据库操作设备[{}]下线！", this.deviceNo);
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 

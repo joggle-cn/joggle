@@ -78,6 +78,8 @@ public class BulletClient {
     public void onClose(Session session, CloseReason closeReason) throws InterruptedException {
         logger.error("{} {}", closeReason.toString(), "链接已关闭" );
         int id = connection.getId();
+        CloseReason.CloseCode closeCode = closeReason.getCloseCode();
+
 
         logger.debug("Connection[{}] 正在取消心跳线程...", id);
         if(timer != null){
@@ -94,9 +96,12 @@ public class BulletClient {
             logger.debug("Connection[{}] 关闭所有的命令线程...", id);
             pool.killAll();
 
-            Thread.sleep(3000L);
-            logger.debug("Connection[{}] 正在重启链接服务器...", id);
-            connection.opeAngain();
+            // 不是正常关闭的情况 重新启动链接
+            if(!closeCode.equals(CloseReason.CloseCodes.NORMAL_CLOSURE)){
+                Thread.sleep(3000L);
+                logger.debug("Connection[{}] 正在重启链接服务器...", id);
+                connection.opeAngain();
+            }
         } else {
             logger.error("Connection[{}] 对象找不到！", id);
         }

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -71,6 +72,28 @@ public class ConnectionPool {
         } catch (Exception e) {
             logger.error("", e);
         }
+
+    }
+
+    /**
+     * 停止所有连接
+     *
+     */
+    public void stop(){
+
+        Iterator<Connection> it = list.iterator();
+        while (it.hasNext()){
+            Connection connection = it.next();
+
+            connection.stop();
+
+        }
+
+
+
+
+
+
 
     }
 

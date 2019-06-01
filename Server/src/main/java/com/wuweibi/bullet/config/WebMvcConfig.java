@@ -6,11 +6,9 @@ package com.wuweibi.bullet.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import org.apache.catalina.connector.Connector;
-import org.springframework.beans.factory.annotation.Value;
+import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
+import com.wuweibi.bullet.controller.interceptor.RequestParamsInterceptor;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -18,7 +16,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -122,6 +119,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    public HandlerInterceptor beanSignInterceptor(){
 //        return new SignInterceptor();
 //    }
+    @Bean
+    public RequestParamsInterceptor beanRequestParamsInterceptor(){
+        return new RequestParamsInterceptor();
+    }
+
+    @Bean
+    public AllInterceptor beanAllInterceptor(){
+        return new AllInterceptor();
+    }
 
 
     /**
@@ -133,8 +139,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // addPathPatterns 用于添加拦截规则, 这里假设拦截 /url 后面的全部链接
         // excludePathPatterns 用户排除拦截
 //        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
-//        registry.addInterceptor(beanSignInterceptor()).addPathPatterns("/app/api/**");
-//        registry.addInterceptor(authInterceptor()).addPathPatterns("/**");
+
+        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
     }
 
 //    @Bean

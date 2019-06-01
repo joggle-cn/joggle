@@ -6,9 +6,11 @@ package com.wuweibi.bullet.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -120,4 +122,14 @@ public class Connection {
     }
 
 
+    /**
+     * 停止运行
+     */
+    public void stop() {
+        try {
+            this.session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "客户端停止运行了！"));
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+    }
 }
