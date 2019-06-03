@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 /**
@@ -30,7 +32,7 @@ public class BulletClient {
     protected Logger logger = LoggerFactory.getLogger(BulletClient.class);
 
     /** 心跳定时器 */
-    protected Timer timer = new Timer();
+    protected Timer timer;
 
     /** 会话 */
     private Session session;
@@ -38,6 +40,14 @@ public class BulletClient {
     /** 链接 */
     private Connection connection;
 
+    static List<CloseReason.CloseCode> code ;
+
+    static{
+        code = new ArrayList<>();
+        code.add(CloseReason.CloseCodes.NORMAL_CLOSURE);
+        code.add(CloseReason.CloseCodes.CLOSED_ABNORMALLY);
+
+    }
 
 
     @OnOpen
@@ -47,6 +57,7 @@ public class BulletClient {
 
         // 启动一个线程做心跳配置
         HeartThread task = new HeartThread(this);
+        timer = new Timer();
         timer.schedule(task, 5000, 10000);
 
         // 发送IP
@@ -69,6 +80,8 @@ public class BulletClient {
         socketThread.start();
     }
 
+
+
     @OnError
     public void onError(Throwable t) {
         t.printStackTrace();
@@ -76,7 +89,7 @@ public class BulletClient {
 
     @OnClose
     public void onClose(Session session, CloseReason closeReason) throws InterruptedException {
-        logger.error("{} {}", closeReason.toString(), "链接已关闭" );
+        logger.error("{}", closeReason.toString() );
         int id = connection.getId();
         CloseReason.CloseCode closeCode = closeReason.getCloseCode();
 
@@ -97,7 +110,7 @@ public class BulletClient {
             pool.killAll();
 
             // 不是正常关闭的情况 重新启动链接
-            if(!closeCode.equals(CloseReason.CloseCodes.NORMAL_CLOSURE)){
+            if(!code.contains(closeCode)){
                 Thread.sleep(3000L);
                 logger.debug("Connection[{}] 正在重启链接服务器...", id);
                 connection.opeAngain();

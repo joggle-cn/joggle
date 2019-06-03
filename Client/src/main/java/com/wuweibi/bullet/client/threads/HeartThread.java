@@ -52,7 +52,7 @@ public class HeartThread extends TimerTask {
                 byte[] resultBytes = outputStream.toByteArray();
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-                client.getSession().getAsyncRemote().sendBinary(buf);
+                client.getSession().getBasicRemote().sendPing(buf);
             }
         } catch (IOException e) {
             logger.error("", e);

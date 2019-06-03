@@ -67,13 +67,11 @@ public class Connection {
      */
     public void open() throws Exception {
         BulletClient client = new BulletClient();
+        client.setConnection(this);
 
         // while得作用是链接成功才会断开
         while (true){
             try {
-                client.setConnection(this);
-
-
                 this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
                 count = 0; // 初始化链接次数。
 
@@ -83,6 +81,7 @@ public class Connection {
                     break;
                 }
             } catch (Exception e){
+                e.printStackTrace();
                 logger.error("websocket connection faild! wait 10s try angain! reason: {}", e.getMessage());
                 Thread.sleep(10000L);
                 // 如果已经链接过了的情况与Clouse冲突的，直接关闭返回

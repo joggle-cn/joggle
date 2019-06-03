@@ -1,5 +1,5 @@
 {
-  "tunnel": "ws://localhost:8081/tunnel",
+  "tunnel": "ws://192.168.88.176:8081/tunnel",
   "deviceId": "0000000113",
   "logService": false
 
