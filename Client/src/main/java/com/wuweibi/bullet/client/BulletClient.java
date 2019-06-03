@@ -45,7 +45,7 @@ public class BulletClient {
     static{
         code = new ArrayList<>();
         code.add(CloseReason.CloseCodes.NORMAL_CLOSURE);
-        code.add(CloseReason.CloseCodes.CLOSED_ABNORMALLY);
+//        code.add(CloseReason.CloseCodes.CLOSED_ABNORMALLY);
 
     }
 
