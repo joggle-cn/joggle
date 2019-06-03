@@ -27,6 +27,7 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -45,7 +46,7 @@ import java.util.List;
  * @author marker
  * @version 1.0
  */
-@ServerEndpoint(value = "/tunnel/{deviceNo}/{connId}")
+@ServerEndpoint(value = "/tunnel/{deviceNo}/{connId}" )
 public class BulletAnnotation {
     /** 日志 */
     private Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
@@ -59,6 +60,9 @@ public class BulletAnnotation {
     /**  设备ID  */
     private String deviceNo;
 
+
+    @Autowired
+    private CoonPool pool = SpringUtils.getBean(CoonPool.class);
 
     public BulletAnnotation() {
     }
@@ -87,7 +91,6 @@ public class BulletAnnotation {
         deviceOnlineService.saveOrUpdateOnline(deviceNo, "");
 
         // 将链接添加到连接池
-        CoonPool pool = SpringUtils.getBean(CoonPool.class);
         pool.addConnection(this);
 
         // 获取设备的配置数据,并将映射配置发送到客户端
@@ -187,7 +190,7 @@ public class BulletAnnotation {
     public void onError(Throwable t) throws Throwable {
         logger.error("Bullet Client Error: " + t.toString() );
         if(t != null){
-            t.printStackTrace();
+            logger.error("", t);
         }
     }
 

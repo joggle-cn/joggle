@@ -25,10 +25,10 @@ public final class CoonPool {
 
 
     /** 缓存全部链接 */
-    public static final Set<BulletAnnotation> connections = new CopyOnWriteArraySet<>();
+    public final Set<BulletAnnotation> connections = new CopyOnWriteArraySet<>();
 
     /** 根据客户端缓存链接 */
-    public static final Map<String, List<BulletAnnotation>> clientConnections = new ConcurrentHashMap<>();
+    public final Map<String, List<BulletAnnotation>> clientConnections = new ConcurrentHashMap<>();
 
 
     /**
