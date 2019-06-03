@@ -5,8 +5,6 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
@@ -14,6 +12,15 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  */
 @Configuration
 public class BeanConfig {
+
+
+    /**
+     * WebSocket链接池
+     */
+    @Bean
+    public SpringUtils beanSpringUtils(){
+        return new SpringUtils();
+    }
 
     /**
      * WebSocket链接池
@@ -24,13 +31,6 @@ public class BeanConfig {
     }
 
 
-    /**
-     * WebSocket链接池
-     */
-    @Bean
-    public SpringUtils beanSpringUtils(){
-        return new SpringUtils();
-    }
 
     @Bean
     public TaskExecutor beanTaskExecutor() {
