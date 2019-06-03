@@ -34,7 +34,7 @@
                 <configuration>
                     <fork>false</fork>
                     <!-- 你的启动类 -->
-                    <mainClass>com.wuweibi.bullet.client.Application</mainClass>
+                    <mainClass>com.wuweibi.bullet.client.ClientApplication</mainClass>
                 </configuration>
             </plugin>
 
