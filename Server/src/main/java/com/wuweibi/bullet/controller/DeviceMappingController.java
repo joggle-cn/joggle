@@ -145,7 +145,6 @@ public class DeviceMappingController {
                     // 包装了Bullet协议的
                     byte[] resultBytes = outputStream.toByteArray();
                     ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-
                     annotation.getSession().getBasicRemote().sendBinary(buf,true);
 
                 } catch (IOException e) {
