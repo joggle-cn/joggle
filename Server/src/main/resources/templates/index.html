@@ -18,8 +18,8 @@
 
   </head>
 
-  <body ng-cloak>
-	<header  ng-controller="navController" class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+  <body ng-cloak ng-controller="navController">
+	<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
 	  <div class="container">
 	    <div class="navbar-header">
 	      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -40,7 +40,7 @@
 	          <a href="#/system">系统配置</a>
 	        </li>
 	      </ul>
-	      <ul class="nav navbar-nav navbar-right" ng-controller="userController">
+	      <ul class="nav navbar-nav navbar-right" >
 	      	<li class="divider-vertical hidden-xs"></li>
 
 	      		<li ng-if="islogin">
@@ -99,6 +99,9 @@
     </p> 
     <div class="text-center">
         © 2014 - 2018 Bullet.com &nbsp;
+		<span ng-show="islogin">
+			<a href="#"> conn= <span ng-bind="user.connNums"></span></a>
+		</span>
     </div>
 </footer>
 

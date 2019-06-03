@@ -117,4 +117,13 @@ public final class CoonPool {
         }
         return -1;
     }
+
+
+    /**
+     * websoket链接数量
+     * @return
+     */
+    public Integer count() {
+        return connections.size();
+    }
 }

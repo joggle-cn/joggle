@@ -1,10 +1,13 @@
 package com.wuweibi.bullet.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.ResultMessage;
@@ -15,7 +18,6 @@ import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
-import com.wuweibi.bullet.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.Errors;
@@ -97,7 +99,8 @@ public class UserController {
 		return MessageFactory.getOperationSuccess();
 	}
 
-	
+    @Autowired
+    private CoonPool pool;
 	
 	/**
 	 * 获取登录的用户信息
@@ -110,7 +113,12 @@ public class UserController {
 		if(loginUser == null){
 			return MessageFactory.getUserNotLoginError();
 		}
-		return MessageFactory.get(loginUser);
+
+        JSONObject result = (JSONObject)JSON.toJSON(loginUser);
+        result.put("connNums", pool.count());
+
+
+		return MessageFactory.get(result);
 	}
 	
 	

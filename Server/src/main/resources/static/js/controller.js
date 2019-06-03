@@ -86,26 +86,49 @@ define([
 	 * $routeParams
 	 * */
 	// 到航控制器
-	app.controller('navController', ['$rootScope', '$scope','$location',function ($rootScope, $scope, $location) {
+	app.controller('navController', ['$rootScope','$session', '$scope','$location',function ($rootScope, $session, $scope, $location) {
 
 
 
-        // 加载用户登录信息
-        faceinner.get(api['user.login.info'], function(res){
-            if(res.status == 0){
-                $rootScope.$apply(function() {
-                    $rootScope.user = res.data;
-                    $rootScope.islogin = true;
-                });
-            }
-        });
+        // 初始化数据
+        $scope.init = function(){
+            faceinner.get(api['user.login.info'],function(res){
+                if(res.status == 0){
+                    $scope.user = res.data;
+                    $scope.islogin = true;
+                    $session.user = res.data;
+                }
+            });
+        }
+
+        $scope.init();
+
+
+        /**
+         * 退出登录
+         */
+        $scope.loginout = function(){
+            faceinner.get(api['user.loginout'],function(res){
+                if(res.status == 0){
+                    delete $rootScope.user;
+                    $rootScope.$apply(function() {
+                        $rootScope.islogin = false;
+                        window.location.href = '#/login';
+                    });
+                }
+            });
+        }
 
 
 
 
 
 
-	}])
+
+
+
+
+    }])
 
 
 
@@ -225,49 +248,6 @@ define([
 
 
 
-
-	/**
-	 *
-	 * (PC端) 用户控制器模块
-	 *
-	 */
-	.controller('userController', ['$scope','$rootScope', '$session' , '$location',function ($scope, $rootScope, $session, $location) {
-
-
-		// 初始化数据
-		$scope.init = function(){
-			faceinner.get(api['user.login.info'],function(res){
-				if(res.status == 0){
-					$scope.user = res.data;
-					$scope.islogin = true;
-                    $session.user = res.data;
-				}
-			});
-		}
-
-        $scope.init();
-
-
-        /**
-         * 退出登录
-         */
-        $scope.loginout = function(){
-            faceinner.get(api['user.loginout'],function(res){
-                if(res.status == 0){
-                    delete $rootScope.user;
-                    $rootScope.$apply(function() {
-                        $rootScope.islogin = false;
-                        window.location.href = '#/login';
-                    });
-                }
-            });
-        }
-
-
-
-
-
-	}]);
 
 
 
