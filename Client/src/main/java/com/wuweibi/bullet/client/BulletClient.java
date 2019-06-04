@@ -55,14 +55,18 @@ public class BulletClient {
         this.session = session;
         logger.debug("Connected to endpoint({}): successs!", session.getId());
 
-        // 启动一个线程做心跳配置
-        HeartThread task = new HeartThread(this);
-        timer = new Timer();
-        timer.schedule(task, 5000, 10000);
+        session.setMaxBinaryMessageBufferSize(101024000);
+        session.setMaxIdleTimeout(0);
 
         // 发送IP
         BindIPThread task2 = new BindIPThread(this);
         task2.start();
+
+
+        // 启动一个线程做心跳配置
+        HeartThread task = new HeartThread(this);
+        timer = new Timer();
+        timer.schedule(task, 5000, 10000);
 
     }
 

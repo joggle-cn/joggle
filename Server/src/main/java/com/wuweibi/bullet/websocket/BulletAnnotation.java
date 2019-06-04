@@ -236,4 +236,13 @@ public class BulletAnnotation {
             logger.error("", e);
         }
     }
+
+    /**
+     * 发送数据
+     * @param buf
+     * @throws IOException
+     */
+    public void sendBinary(ByteBuffer buf) throws IOException {
+        this.session.getBasicRemote().sendBinary(buf,true);
+    }
 }
