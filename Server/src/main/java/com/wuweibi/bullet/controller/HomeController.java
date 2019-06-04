@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
 	
-	@RequestMapping("/")
+	@RequestMapping("/test")
 	public String home(HttpServletRequest request, HttpSession session){
 		/* 基础信息收集 */
         request.setAttribute("url", HttpUtils.getRequestURL(request));// 网址路径

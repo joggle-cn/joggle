@@ -18,8 +18,9 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * 保存或更新为在线状态
      * @param deviceNo
      * @param ip
+     * @param mac
      */
-    void saveOrUpdateOnline(String deviceNo, String ip);
+    void saveOrUpdateOnline(String deviceNo, String ip, String mac);
 
 
     /**
@@ -29,4 +30,11 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
     void updateOutLine(String deviceId);
 
     DeviceOnline selectByDeviceNo(String deviceNo);
+
+    /**
+     * 是否存在设备
+     * @param deviceNo
+     * @return
+     */
+    boolean existsOnline(String deviceNo);
 }

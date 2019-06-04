@@ -34,6 +34,10 @@ public class Device extends Model<Device> {
     @TableField(value = "userId")
 	private Long userId;
 
+	@TableField(value = "intranet_ip")
+	private String intranetIp;
+	@TableField(value = "mac_addr")
+	private String macAddr;
 
     @Override
 	protected Serializable pkVal() {

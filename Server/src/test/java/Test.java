@@ -2,7 +2,7 @@
  * Created by marker on 2017/11/23.
  */
 
-import co.cask.http.NettyHttpService;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author marker
@@ -23,6 +23,12 @@ public class Test {
 
 // Start the HTTP service
 //        service.start();
+
+        String ip = "cff55eb03fd34667adf157ce62e8bb89";
+        JSONObject a = new JSONObject();
+        a.put("a",1);
+        a.put("b",2);
+        System.out.println( a.toJSONString());
 
     }
 }

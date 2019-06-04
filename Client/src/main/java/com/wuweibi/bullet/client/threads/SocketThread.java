@@ -4,6 +4,7 @@ package com.wuweibi.bullet.client.threads;
  */
 
 import com.alibaba.fastjson.JSON;
+import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
@@ -56,6 +57,21 @@ public class SocketThread extends Thread {
             head.read(bis);//读取消息头
 
             switch (head.getCommand()) {
+
+                case Message.DEVICE_NO: // 分配UUID
+                    MsgDeviceNo msgDeviceNo = new MsgDeviceNo(head);
+                    msgDeviceNo.read(bis);
+
+                    String deviceNo = msgDeviceNo.getDeviceNo();
+                    logger.error("================================================");
+                    logger.error("================ Device NO =====================");
+                    logger.error("=== {} ===", deviceNo);
+                    logger.error("================================================");
+
+                    ConfigUtils.setDeviceNo(deviceNo);
+                    ConfigUtils.store();
+
+                    break;
                 case Message.NEW_UNMAPPING: // HTTP代理请求
                     MsgUnMapping msg = new MsgUnMapping(head);
                     msg.read(bis);

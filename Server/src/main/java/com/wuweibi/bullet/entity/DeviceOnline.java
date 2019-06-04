@@ -26,10 +26,24 @@ public class DeviceOnline extends Model<DeviceOnline> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
-	@TableField(value = "deviceId")
-	private String deviceId;
+
+    /**
+     * 设备ID
+     */
+	@TableField(value = "deviceNo")
+	private String deviceNo;
+
+    /**
+     * 更新时间
+     */
 	@TableField(value = "updateTime")
 	private Date updateTime;
+
+    /**
+     * mac地址
+     */
+	@TableField(value = "mac_addr")
+	private String macAddr;
 
     /**
      *
@@ -45,8 +59,8 @@ public class DeviceOnline extends Model<DeviceOnline> {
 
     }
 
-    public DeviceOnline(String deviceCode) {
-        this.deviceId = deviceCode;
+    public DeviceOnline(String deviceNo) {
+        this.deviceNo = deviceNo;
     }
 
 
@@ -59,7 +73,7 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	public String toString() {
 		return "DeviceOnline{" +
 			", id=" + id +
-			", deviceId=" + deviceId +
+			", deviceNo=" + deviceNo +
 			", updateTime=" + updateTime +
 			", status=" + status +
 			"}";

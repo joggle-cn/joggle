@@ -156,7 +156,7 @@ public class DeviceController {
 
         EntityWrapper ew=new EntityWrapper();
         ew.setEntity(new DeviceOnline());
-        ew.where("deviceId = {0}", deviceId).andNew("status = {0}", 1).orderBy("updateTime", false);
+        ew.where("deviceNo = {0}", deviceId).andNew("status = {0}", 1).orderBy("updateTime", false);
 
         // 验证是否存在
         DeviceOnline deviceOnline = deviceOnlineService.selectOne(ew);
@@ -167,13 +167,14 @@ public class DeviceController {
                 return MessageFactory.get(State.DeviceIdBinded);
             }
 
-
             // 给当前用户存储最新的设备数据
             Device device = new Device();
             device.setDeviceId(deviceId);
             device.setUserId(userId);
             device.setCreateTime(new Date());
             device.setName("default");
+            device.setMacAddr(deviceOnline.getMacAddr());
+            device.setIntranetIp(deviceOnline.getIntranetIp());
 
             deviceService.insert(device);
 

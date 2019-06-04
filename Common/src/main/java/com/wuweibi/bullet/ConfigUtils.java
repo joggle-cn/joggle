@@ -4,13 +4,19 @@ package com.wuweibi.bullet;
  * Created by marker on 2017/12/6.
  */
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.utils.StringUtils;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.wuweibi.bullet.utils.FileTools;
+import com.wuweibi.bullet.utils.String2Utils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
@@ -31,26 +37,31 @@ public class ConfigUtils {
      */
     public static final String CONFIG_FILE = "/config.json";
 
+    public static String ConfDir;
+
     static JSONObject CONF ;
+
 
     static {
         // 获取配置文件路径
-        String confDir = System.getProperty("java.bullet.conf.dir");
-        System.out.println(confDir);
-        if(StringUtils.isEmpty(confDir)){
-            confDir = "Client/conf";
+        ConfDir = System.getProperty("java.bullet.conf.dir");
+        if(String2Utils.isEmpty(ConfDir)){
+            ConfDir = "Client/conf";
         }
 
         String result = "{}";
+        InputStream inputStream = null;
         try {
-            File file = new File(confDir + CONFIG_FILE);
+            File file = new File(ConfDir + CONFIG_FILE);
             logger.info("正在加载配置文件 ",file.getAbsoluteFile());
-            InputStream inputStream = new FileInputStream(file);
+            inputStream = new FileInputStream(file);
 
             result = IOUtils.toString(inputStream, "UTF-8");
             logger.debug("{}", result);
         } catch (IOException e) {
             logger.error("", e);
+        }finally {
+            IOUtils.closeQuietly(inputStream);
         }
         CONF = JSONObject.parseObject(result);
     }
@@ -58,10 +69,9 @@ public class ConfigUtils {
 
     public static String getClientProjectPath(){
         String confDir = System.getProperty("java.bullet.home.dir");
-        if(StringUtils.isEmpty(confDir)){
+        if(String2Utils.isEmpty(confDir)){
             confDir = "Client";
         }
-
         return confDir;
     }
 
@@ -75,11 +85,20 @@ public class ConfigUtils {
 
 
     /**
-     * 获取设备ID
+     * 获取设备编号
      * @return
      */
-    public static String getDeviceId() {
-        return CONF.getString("deviceId");
+    public static String getDeviceNo() {
+        return CONF.getString("deviceNo");
+    }
+
+
+    /**
+     * 设置设备编号
+     * @return
+     */
+    public static void setDeviceNo(String deviceNo) {
+        CONF.put("deviceNo", deviceNo);
     }
 
     /**
@@ -105,6 +124,23 @@ public class ConfigUtils {
             pro.setProperty(entry.getKey(), (String) entry.getValue());
         }
         return pro;
+    }
+
+
+    /**
+     * 保存配置
+     */
+    public static void store(){
+        File file = new File(ConfDir + CONFIG_FILE);
+        String jsonStr = JSON.toJSONString(CONF, SerializerFeature.PrettyFormat,
+                SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty,
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteNullListAsEmpty);
+        try {
+            FileTools.setFileContet(file, jsonStr , FileTools.FILE_CHARACTER_UTF8);
+        } catch (IOException e) {
+            logger.error("", e);
+        }
     }
 
 

@@ -23,14 +23,19 @@ public class MsgBindIP extends Message {
     // ip地址
     private String ip;
 
+    // mac 地址
+    private String mac;
+
+
 
     /**
      * 构造
      */
     public MsgBindIP(String ip) {
         super(Message.NEW_BINDIP);
-        int len = ip.getBytes().length;
-        getHead().setLength(super.getLength() + len);
+        // IP 20 位
+        // mac 17位
+        getHead().setLength(super.getLength() + 20 + 17);
         this.ip = ip;
     }
 
@@ -46,16 +51,30 @@ public class MsgBindIP extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
-        out.write(ip.getBytes());
+
+        // 写入IP地址
+        byte bs[] = new byte[20];
+        System.arraycopy(ip.getBytes(), 0, bs, 0, ip.getBytes().length);
+        out.write(bs);
+
+        // 写入mac地址
+        byte bs2[] = new byte[17];
+        System.arraycopy(mac.getBytes(), 0, bs2, 0, mac.getBytes().length);
+        out.write(bs2);
         out.flush();
     }
 
     @Override
     public void read(InputStream in) throws IOException {
-        int len = getLength() - 24;
-        byte bs[] = new byte[len];
+        // 读取ip
+        byte bs[] = new byte[20];
         in.read(bs);
-        this.ip = Utils.getString(bs, 0, len);
+        this.ip = Utils.getString(bs, 0, 20);
+
+        // 读取mac
+        bs = new byte[17];
+        in.read(bs);
+        this.mac = Utils.getString(bs, 0, 17);
     }
 
     public String getIp() {
@@ -64,5 +83,14 @@ public class MsgBindIP extends Message {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 }

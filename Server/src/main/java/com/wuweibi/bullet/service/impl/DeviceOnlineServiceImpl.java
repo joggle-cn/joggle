@@ -21,18 +21,19 @@ import java.util.Date;
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
     @Override
-    public void saveOrUpdateOnline(String deviceNo, String ip) {
+    public void saveOrUpdateOnline(String deviceNo, String ip, String mac) {
 
         EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceId = {0}", deviceNo);
+        ew.where("deviceNo = {0}", deviceNo);
 
         int count = this.baseMapper.selectCount(ew);
 
         DeviceOnline deviceOnline = new DeviceOnline();
-        deviceOnline.setDeviceId(deviceNo);
+        deviceOnline.setDeviceNo(deviceNo);
         deviceOnline.setStatus(1);// 等待被绑定（在线)
         deviceOnline.setUpdateTime(new Date());
-        deviceOnline.setIntranetIp(ip); // 设置IP
+        deviceOnline.setIntranetIp(ip); // ip
+        deviceOnline.setMacAddr(mac); // mac
 
         if(count > 0){
             this.baseMapper.update(deviceOnline, ew);
@@ -44,10 +45,10 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     @Override
     public void updateOutLine(String deviceId) {
         EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceId = {0}", deviceId);
+        ew.where("deviceNo = {0}", deviceId);
 
         DeviceOnline deviceOnline = new DeviceOnline();
-        deviceOnline.setDeviceId(deviceId);
+        deviceOnline.setDeviceNo(deviceId);
         deviceOnline.setStatus(-1);// 下线后的设备部可绑定
         deviceOnline.setUpdateTime(new Date());
         this.baseMapper.update(deviceOnline, ew);
@@ -58,5 +59,14 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         EntityWrapper entityWrapper = new EntityWrapper<DeviceOnline>();
         entityWrapper.setEntity(new DeviceOnline(deviceNo));
         return this.selectOne(entityWrapper);
+    }
+
+    @Override
+    public boolean existsOnline(String deviceNo) {
+        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
+        ew.where("deviceNo = {0}", deviceNo);
+        ew.where("status = {0}", 1);
+        int count =  this.selectCount(ew);
+        return count > 0;
     }
 }

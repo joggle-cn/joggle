@@ -38,9 +38,8 @@ public class HeartThread extends TimerTask {
     @Override
     public void run() {
 
-        int id = client.getId();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logger.info("Connection[{}] heart time={}", id, sdf.format(new Date()));
+        logger.info("Connection heart time={}", sdf.format(new Date()));
 
         try {
             if(client.getSession().isOpen()){

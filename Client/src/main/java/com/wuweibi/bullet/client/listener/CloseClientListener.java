@@ -22,7 +22,7 @@ public class CloseClientListener implements ApplicationListener<ContextClosedEve
     @Override
     public void onApplicationEvent(ContextClosedEvent contextClosedEvent) {
 
-        log.warn("项目停止中...");
+        log.warn("SpringBoot 停止运行中...");
         pool.stop();
 
 

@@ -29,7 +29,7 @@ public class Websocket2Test  {
         System.setProperty("java.bullet.conf.dir", "/WORK/git/Bullet/Client/conf");
 
 
-        String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceId();
+        String url = ConfigUtils.getTunnel() +"/"+ ConfigUtils.getDeviceNo();
         System.out.println(url);
 
         ConfigUtils.getProperties();

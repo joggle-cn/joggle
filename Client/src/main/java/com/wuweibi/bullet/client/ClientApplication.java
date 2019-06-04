@@ -39,7 +39,7 @@ public class ClientApplication implements CommandLineRunner {
         pool.startup();
         // 保持不退出
         while (true){
-            Thread.sleep(1000L);
+            Thread.sleep(10000L);
         }
     }
 }

@@ -6,7 +6,7 @@ package com.wuweibi.bullet.utils;/**
  * @author marker
  * @create 2017-12-24 下午1:37
  **/
-public class StringUtils {
+public class String2Utils {
 
 
     /**

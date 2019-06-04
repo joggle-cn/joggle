@@ -6,10 +6,7 @@ package com.wuweibi.bullet.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 
@@ -28,8 +25,8 @@ public class Connection {
     // WebSocket session
     private Session session;
 
-    /** 链接ID */
-    private int id;
+    private BulletClient client = new BulletClient();
+
 
 
     /** 重试链接次数 */
@@ -53,35 +50,22 @@ public class Connection {
     }
 
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
 
     /**
      * 打开WebSocket链接
      */
     public void open() throws Exception {
-        BulletClient client = new BulletClient();
         client.setConnection(this);
+        boolean status = true;
 
         // while得作用是链接成功才会断开
-        while (true){
+        while (status){
             try {
                 this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
                 count = 0; // 初始化链接次数。
-
-
-                Thread.sleep(10000L);
-                if(this.session.isOpen()){
-                    break;
-                }
-            } catch (Exception e){
-                e.printStackTrace();
+                status = false;
+            } catch (DeploymentException e){
+                logger.error("Websocket 链接失败！");
                 logger.error("websocket connection faild! wait 10s try angain! reason: {}", e.getMessage());
                 Thread.sleep(10000L);
                 // 如果已经链接过了的情况与Clouse冲突的，直接关闭返回
@@ -93,7 +77,12 @@ public class Connection {
                 }
 
                 count++;
-                logger.debug("Connection[{}] 第{}次尝试连接", id, count);
+                logger.debug("Connection 第{}次尝试连接",  count);
+
+
+            } catch (Exception e){
+                logger.error("", e);
+                Thread.sleep(10000L);
 
             } finally {
 
@@ -110,7 +99,7 @@ public class Connection {
     public void opeAngain() {
         try {
             count++;
-            logger.debug("Connection[{}] 第{}次尝试连接", id, count);
+            logger.debug("Connection 第{}次尝试连接", count);
             // 无限重试
             open();
         } catch (Exception e) {

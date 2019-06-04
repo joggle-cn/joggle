@@ -35,20 +35,18 @@ public class BindIPThread extends Thread {
 
     @Override
     public void run() {
+        String ip  = Tools.getIp();
+        String mac = Tools.getMACAddress();
 
-        Integer id = client.getId();
-        if(id == null){
-            logger.error("ClientId is ", id);
-        }
-        String ip = Tools.getIp();
-
-        logger.info("Connection[{}] BindIp IP={}", id, ip);
+        logger.info("Connection Bind ip={}", ip);
+        logger.info("Connection Bind mac={}", mac);
 
         try {
             if(client.getSession().isOpen()){
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
                 MsgBindIP msg = new MsgBindIP(ip);
+                msg.setMac(mac);
                 msg.write(outputStream);
 
                 // 包装了Bullet协议的

@@ -34,7 +34,7 @@ public final class CoonPool {
         if(bulletAnnotation != null){
             bulletAnnotation.stop();
         }
-        clientConnections.put(deviceNo, bulletAnnotation);
+        clientConnections.put(deviceNo, conn);
     }
 
 
@@ -69,6 +69,9 @@ public final class CoonPool {
      */
     public int getDeviceStatus(String deviceNo) {
         BulletAnnotation bulletAnnotation = this.clientConnections.get(deviceNo);
+        if(bulletAnnotation == null){
+            return -1;
+        }
         Session session = bulletAnnotation.getSession();
         return session.isOpen()? 1:-1;
     }

@@ -1,6 +1,5 @@
 {
-  "tunnel": "ws://192.168.88.176:8081/tunnel",
-  "deviceId": "0000000113",
-  "logService": false
-
+	"deviceNo":"e6460ae9ba154d65a26c550d6266c801",
+	"logService":false,
+	"tunnel":"ws://192.168.88.176:8081/tunnel"
 }

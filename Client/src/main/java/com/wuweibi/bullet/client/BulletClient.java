@@ -45,7 +45,6 @@ public class BulletClient {
     static{
         code = new ArrayList<>();
         code.add(CloseReason.CloseCodes.NORMAL_CLOSURE);
-//        code.add(CloseReason.CloseCodes.CLOSED_ABNORMALLY);
 
     }
 
@@ -53,7 +52,7 @@ public class BulletClient {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        logger.debug("Connected to endpoint({}): successs!", session.getId());
+        logger.debug("Connected to endpoint({}): conn successs", session.getId());
 
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(0);
@@ -94,33 +93,31 @@ public class BulletClient {
     @OnClose
     public void onClose(Session session, CloseReason closeReason) throws InterruptedException {
         logger.error("{}", closeReason.toString() );
-        int id = connection.getId();
         CloseReason.CloseCode closeCode = closeReason.getCloseCode();
 
-
-        logger.debug("Connection[{}] 正在取消心跳线程...", id);
+        logger.debug("Connection 正在取消心跳线程...");
         if(timer != null){
             timer.cancel();
         }
-
-
-        logger.debug("Connection[{}] 正在检查链接配置...", id);
         if(connection != null){
             // 关闭所有的线程
-
             CommandThreadPool pool = SpringUtil.getBean(CommandThreadPool.class);
-
-            logger.debug("Connection[{}] 关闭所有的命令线程...", id);
+            logger.debug("Connection 关闭所有的命令线程...");
             pool.killAll();
 
             // 不是正常关闭的情况 重新启动链接
             if(!code.contains(closeCode)){
                 Thread.sleep(3000L);
-                logger.debug("Connection[{}] 正在重启链接服务器...", id);
+                logger.debug("Connection 正在重启链接服务器...");
                 connection.opeAngain();
+            } else {
+                logger.error("========================================================");
+                logger.error("= 客户端启动失败!!! \t");
+                logger.error("= 请将deviceNo配置为\"null\"，以便服务器分配新的设备编号\t");
+                logger.error("========================================================");
             }
         } else {
-            logger.error("Connection[{}] 对象找不到！", id);
+            logger.error("Connection 对象找不到！");
         }
 
     }
@@ -140,16 +137,5 @@ public class BulletClient {
         return this.session;
     }
 
-    /**
-     * 获取 连接 ID
-     * @return
-     */
-    public Integer getId() {
-        if(this.connection != null){
-            return this.connection.getId();
-        }else{
-            logger.error("{}", this.connection );
-        }
-        return null;
-    }
+
 }

@@ -10,10 +10,7 @@ import java.io.OutputStream;
  * */
 public abstract class Message {
 
-	public static final int CONNECT        = 0x1;
-
-
-
+	public static final int DEVICE_NO        = 0x8;
 	public static final int CONNECT_RESP   = 0x80000001;
 	public static final int Proxy_Http      = 0x2;
 	public static final int TERMINATE_RESP = 0x80000002;

@@ -9,6 +9,9 @@ server:
 # Spring 配置
 #
 spring:
+  http:
+    encoding:
+      force: true
   profiles:
     active: dev
   application:
