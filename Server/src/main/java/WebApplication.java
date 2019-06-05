@@ -3,6 +3,7 @@
  */
 
 import com.wuweibi.bullet.listener.CloseServerListener;
+import com.wuweibi.bullet.listener.StartedServerListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -35,7 +36,8 @@ public class WebApplication  {
      */
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(WebApplication.class);
-        app.addListeners(new CloseServerListener());
+        app.addListeners(new StartedServerListener(),
+                new CloseServerListener());
         app.run(args);
     }
 

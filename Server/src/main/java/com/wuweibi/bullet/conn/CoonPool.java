@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -83,5 +84,13 @@ public final class CoonPool {
      */
     public Integer count() {
         return clientConnections.size();
+    }
+
+    public void stop() {
+        Set<String> sets = clientConnections.keySet();
+        for(String key : sets){
+            BulletAnnotation bulletAnnotation = clientConnections.get(key);
+            bulletAnnotation.stop();
+        }
     }
 }

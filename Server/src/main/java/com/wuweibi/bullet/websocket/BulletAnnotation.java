@@ -234,9 +234,11 @@ public class BulletAnnotation {
     private void updateOutLine(){
         logger.warn("数据库操作设备[{}]下线！", this.deviceNo);
         // 更新设备状态
-        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+        try {
+            DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+            deviceOnlineService.updateOutLine(this.deviceNo);
 
-        deviceOnlineService.updateOutLine(this.deviceNo);
+        } catch (Exception e){  }
     }
 
 
