@@ -3,6 +3,7 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2017/11/22.
  */
 
+import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
 import com.wuweibi.bullet.client.threads.BindIPThread;
@@ -56,6 +57,13 @@ public class BulletClient {
 
         session.setMaxBinaryMessageBufferSize(101024000);
         session.setMaxIdleTimeout(0);
+
+        // 等待5秒再启动线程
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            logger.error("", e);
+        }
 
         // 发送IP
         BindIPThread task2 = new BindIPThread(this);
@@ -114,7 +122,15 @@ public class BulletClient {
                 logger.error("========================================================");
                 logger.error("= 客户端启动失败!!! \t");
                 logger.error("= 请将deviceNo配置为\"null\"，以便服务器分配新的设备编号\t");
+                logger.error("= 修改配置文件您不必重启应用，程序会自动重新加载配置信息的.\t");
                 logger.error("========================================================");
+                logger.debug("等待30秒再次请求链接...");
+                Thread.sleep(30000L);
+
+                logger.debug("重新加载一次配置信息...");
+                ConfigUtils.reload();
+
+                connection.opeAngain();
             }
         } else {
             logger.error("Connection 对象找不到！");

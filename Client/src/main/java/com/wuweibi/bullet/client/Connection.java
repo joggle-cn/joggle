@@ -3,6 +3,7 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2018/1/8.
  */
 
+import com.wuweibi.bullet.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,6 @@ public class Connection {
 
     private WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 
-    private String url;
 
     // WebSocket session
     private Session session;
@@ -32,13 +32,9 @@ public class Connection {
     /** 重试链接次数 */
     private int count = 0;
 
-    public Connection(Session session) {
-        this.session = session;
-    }
+    public Connection() {  }
 
-    public Connection(String url) {
-        this.url = url;
-    }
+
 
 
     /**
@@ -60,12 +56,22 @@ public class Connection {
 
         // while得作用是链接成功才会断开
         while (status){
+
+            String tunnel = ConfigUtils.getTunnel();// 通道服务器
+            String deviceNo =  ConfigUtils.getDeviceNo(); // 设备ID
+
+            String url = tunnel + "/" + deviceNo;
+
+            // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
+
+            logger.info("websocket to {}", url);
+
+
             try {
-                this.session = container.connectToServer(client, new URI(this.url)); // 连接会话
+                this.session = container.connectToServer(client, new URI(url)); // 连接会话
                 count = 0; // 初始化链接次数。
                 status = false;
             } catch (DeploymentException e){
-                logger.error("Websocket 链接失败！");
                 logger.error("websocket connection faild! wait 10s try angain! reason: {}", e.getMessage());
                 Thread.sleep(10000L);
                 // 如果已经链接过了的情况与Clouse冲突的，直接关闭返回

@@ -4,7 +4,6 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2018/1/8.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,20 +36,9 @@ public class ConnectionPool {
      * 启动连接池
      */
     public void startup(){
-        // 通道服务器
-        String tunnel = ConfigUtils.getTunnel();
-        // 设备ID
-        String deviceNo =  ConfigUtils.getDeviceNo();
-
-
-        String url = tunnel + "/" + deviceNo;
 
         try {
-                // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
-
-            logger.info("websocket to {}", url);
-
-            Connection connection = new Connection(url);
+            Connection connection = new Connection();
 
             Thread.sleep(100L);
 

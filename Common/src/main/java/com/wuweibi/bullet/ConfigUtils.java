@@ -43,27 +43,8 @@ public class ConfigUtils {
 
 
     static {
-        // 获取配置文件路径
-        ConfDir = System.getProperty("java.bullet.conf.dir");
-        if(String2Utils.isEmpty(ConfDir)){
-            ConfDir = "Client/conf";
-        }
-
-        String result = "{}";
-        InputStream inputStream = null;
-        try {
-            File file = new File(ConfDir + CONFIG_FILE);
-            logger.info("正在加载配置文件 ",file.getAbsoluteFile());
-            inputStream = new FileInputStream(file);
-
-            result = IOUtils.toString(inputStream, "UTF-8");
-            logger.debug("{}", result);
-        } catch (IOException e) {
-            logger.error("", e);
-        }finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-        CONF = JSONObject.parseObject(result);
+        logger.debug("准备初始化配置资源...");
+        reload();
     }
 
 
@@ -143,6 +124,33 @@ public class ConfigUtils {
         }
     }
 
+
+    /**
+     * 重新加载配置资源
+     */
+    public static void reload(){
+        // 获取配置文件路径
+        ConfDir = System.getProperty("java.bullet.conf.dir");
+        if(String2Utils.isEmpty(ConfDir)){
+            ConfDir = "Client/conf";
+        }
+
+        String result = "{}";
+        InputStream inputStream = null;
+        try {
+            File file = new File(ConfDir + CONFIG_FILE);
+            logger.info("正在加载配置文件 ",file.getAbsoluteFile());
+            inputStream = new FileInputStream(file);
+
+            result = IOUtils.toString(inputStream, "UTF-8");
+            logger.debug("{}", result);
+        } catch (IOException e) {
+            logger.error("", e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        CONF = JSONObject.parseObject(result);
+    }
 
     /**
      * 获取操作系统名称
