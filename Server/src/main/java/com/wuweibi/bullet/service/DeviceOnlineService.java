@@ -37,4 +37,10 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @return
      */
     boolean existsOnline(String deviceNo);
+
+    /**
+     * 所有设备下线
+     */
+    void allDownNow();
+
 }

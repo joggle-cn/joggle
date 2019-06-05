@@ -13,4 +13,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface DeviceOnlineMapper extends BaseMapper<DeviceOnline> {
 
+    /**
+     * 更新所有设备状态为下线
+     */
+    void updateStatusDown();
+
 }

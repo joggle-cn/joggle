@@ -69,4 +69,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         int count =  this.selectCount(ew);
         return count > 0;
     }
+
+    @Override
+    public void allDownNow() {
+        this.baseMapper.updateStatusDown();
+    }
 }

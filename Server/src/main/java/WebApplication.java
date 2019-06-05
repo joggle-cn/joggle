@@ -2,7 +2,7 @@
  * Created by marker on 2019/4/10.
  */
 
-import org.springframework.boot.CommandLineRunner;
+import com.wuweibi.bullet.listener.CloseServerListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,7 +34,9 @@ public class WebApplication  {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(WebApplication.class, args);
+        SpringApplication app = new SpringApplication(WebApplication.class);
+        app.addListeners(new CloseServerListener());
+        app.run(args);
     }
 
 }

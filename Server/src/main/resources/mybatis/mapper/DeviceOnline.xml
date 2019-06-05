@@ -5,9 +5,14 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.wuweibi.bullet.entity.DeviceOnline">
 		<id column="id" property="id" />
-		<result column="deviceId" property="deviceId" />
+		<result column="deviceNo" property="deviceNo" />
 		<result column="updateTime" property="updateTime" />
 		<result column="status" property="status" />
 	</resultMap>
+
+	<!--更新所有设备状态-->
+    <update id="updateStatusDown">
+		update t_device_online set status=-1 where 1=1
+	</update>
 
 </mapper>
