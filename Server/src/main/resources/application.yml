@@ -21,6 +21,8 @@ spring:
   devtools:
     restart:
       enabled: true
+      #需要实时更新的目录
+      additional-paths: resources/**,static/**,templates/**
 
   freemarker:
     templateLoaderPath: classpath:/templates
@@ -80,3 +82,10 @@ management:
 logging:
   config: 'classpath:logback-spring.xml'
 # 设定ftl文件路径
+
+
+
+# 微信配置
+weixin:
+  appId: wxc8e74d5165c333e6
+  appSecret: a33692209929308c336b167ba226785a

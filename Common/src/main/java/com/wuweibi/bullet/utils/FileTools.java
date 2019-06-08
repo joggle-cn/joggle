@@ -42,9 +42,9 @@ public class FileTools {
 	 * @param character 字符编码 
 	 * @throws IOException 
 	 * */
-	public static final void setFileContet(File filePath, String content, String character) throws IOException{
+	public static final void setFileContet(String filePath, String content, String character) throws IOException{
 		FileTools.setContent(filePath, content, character);
-	}	
+	}
 	
 	
 	
@@ -71,15 +71,16 @@ public class FileTools {
 	}
 	
 	//内部处理文件保存
-	private static void setContent(File filePath, String content, String character) throws FileNotFoundException, UnsupportedEncodingException{
-		PrintWriter __pw = new PrintWriter(filePath, character);
+	private static void setContent(String filePath, String content, String character) throws IOException {
+		new File(filePath).createNewFile();
+	    PrintWriter __pw = new PrintWriter(filePath, character);
 		__pw.write(content); __pw.close();
 	}
 	
 	/**
 	 * 根据路径删除指定的目录或文件，无论存在与否
 	 * 
-	 * @param sPath
+	 * @param delFolder
 	 *            要删除的目录或文件
 	 * @return 删除成功返回 true，否则返回 false。
 	 */
@@ -100,7 +101,7 @@ public class FileTools {
 	/**
 	 * 删除单个文件
 	 * 
-	 * @param sPath
+	 * @param delFile
 	 *            被删除文件的文件名
 	 * @return 单个文件删除成功返回true，否则返回false
 	 */
@@ -115,7 +116,7 @@ public class FileTools {
 	/**
 	 * 删除目录（文件夹）以及目录下的文件
 	 * 
-	 * @param sPath
+	 * @param dirFile
 	 *            被删除目录的文件路径
 	 * @return 目录删除成功返回true，否则返回false
 	 */
@@ -259,8 +260,8 @@ public class FileTools {
 	
 	/**
 	 * 解压文件流操作操作
-	 * @param ZipFile 
-	 * @param ZipEntry entry
+	 * @param zipFile  a
+	 * @param entry entry
 	 * @param path 解压路径
 	 * */
 	private static void writeFileByZipEntry(ZipFile zipFile,ZipEntry entry, String path)
@@ -294,7 +295,7 @@ public class FileTools {
 		File file = new File(langfile);
 		file.getParentFile().mkdirs();// 如果文件夹不存在则创建
 		String content = getFileContet(new File(defaultfile), FileTools.FILE_CHARACTER_UTF8);
-		setFileContet(file, content, FileTools.FILE_CHARACTER_UTF8);
+		setFileContet(langfile, content, FileTools.FILE_CHARACTER_UTF8);
 	}
 
 

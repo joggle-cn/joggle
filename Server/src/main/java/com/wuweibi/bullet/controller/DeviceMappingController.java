@@ -7,6 +7,7 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -129,6 +130,8 @@ public class DeviceMappingController {
         }
         if(status){
             // 发送绑定数据
+            int mappingStatus = entity.getStatus();
+
 
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
@@ -138,7 +141,16 @@ public class DeviceMappingController {
                 }
 
                 JSONObject data = (JSONObject)JSON.toJSON(entity);
-                MsgMapping msg = new MsgMapping(data.toJSONString());
+
+                Message msg;
+
+                if(mappingStatus == 1) { // 启用映射
+                    msg = new MsgMapping(data.toJSONString());
+                } else {
+                    log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
+                    msg = new MsgUnMapping(data.toJSONString());
+                }
+
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 try {
                     msg.write(outputStream);
@@ -153,6 +165,7 @@ public class DeviceMappingController {
                 } finally {
                     IOUtils.closeQuietly(outputStream);
                 }
+
             }
 
             return MessageFactory.getOperationSuccess();

@@ -1,4 +1,4 @@
 server_addr: "joggle.cn:8083"
-trust_host_root_certs: false
+trust_host_root_certs: true
 web_addr: false
 console_ui: false

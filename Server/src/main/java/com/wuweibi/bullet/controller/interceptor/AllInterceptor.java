@@ -2,12 +2,10 @@ package com.wuweibi.bullet.controller.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.wuweibi.bullet.alias.SessionAttr;
-import com.wuweibi.bullet.alias.Var;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
-import com.wuweibi.bullet.entity.User;
-import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.jwt.domain.JwtSession;
+import com.wuweibi.bullet.jwt.utils.JWTUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -32,6 +30,7 @@ public class AllInterceptor implements HandlerInterceptor {
 		, "/api/user/forget"
 		, "/api/user/register"
 		, "/api/user/changepass"
+		, "/api/weixin/bind"
     };
 	
 	
@@ -89,11 +88,19 @@ public class AllInterceptor implements HandlerInterceptor {
 		if(uri.startsWith("/api/")){// 调用的 API
 			Object user = session.getAttribute(SessionAttr.LOGIN_USER);
 
-//			if(md5.equals(cookieDeceive)){
-                if(user != null){
-                    return true; // 已经登录可以正常调用
-                }
-//			}
+			if(user != null){
+				return true; // 已经登录可以正常调用
+			}
+			String jwtToken = request.getHeader("Authorization");
+
+			JwtSession jwtSession = JWTUtil.getSession(jwtToken);
+
+			if(jwtSession!= null && jwtSession.isLogin()){
+				return true;
+			}
+
+
+
 			MessageResult msg = MessageFactory.getUserNotLoginError();
 			String str = JSON.toJSONString(msg, false);
             response.setContentType("application/json;charset=utf-8");

@@ -47,7 +47,8 @@
         hostname
 	 from t_device_mapping
 
-	where device_id in (select id from t_device where deviceId = #{deviceNo})
+	where status=1 and device_id in (select id from t_device where deviceId = #{deviceNo})
+
 	</select>
 
 </mapper>

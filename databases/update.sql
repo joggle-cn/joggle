@@ -19,3 +19,10 @@ ALTER TABLE  `t_device` ADD COLUMN `mac_addr` varchar(20) COMMENT 'mac地址' AF
 
 
 ALTER TABLE `t_device` CHANGE COLUMN `intranetIp` `intranet_ip` varchar(30) DEFAULT NULL COMMENT '内网IP';
+
+
+
+-- 2019年6月4日
+ALTER TABLE `t_user` ADD COLUMN `icon` varchar(255) COMMENT '头像' AFTER `agree`;
+ALTER TABLE `t_device_mapping` ADD COLUMN `status` int COMMENT '映射状态 （1、启用；0、停用)' AFTER `tls_key`, AUTO_INCREMENT=6;
+update t_device_mapping set status = 1

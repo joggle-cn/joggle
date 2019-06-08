@@ -112,13 +112,14 @@ public class ConfigUtils {
      * 保存配置
      */
     public static void store(){
-        File file = new File(ConfDir + CONFIG_FILE);
+        String fileName = ConfDir + CONFIG_FILE;
+        File file = new File(fileName);
         String jsonStr = JSON.toJSONString(CONF, SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.WriteNullListAsEmpty);
         try {
-            FileTools.setFileContet(file, jsonStr , FileTools.FILE_CHARACTER_UTF8);
+            FileTools.setFileContet(fileName, jsonStr , FileTools.FILE_CHARACTER_UTF8);
         } catch (IOException e) {
             logger.error("", e);
         }

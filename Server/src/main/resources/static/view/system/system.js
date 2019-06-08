@@ -12,9 +12,6 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
         $scope.active = 'system';
 
 
-
-        $("[name='my-checkbox']").bootstrapSwitch();
-
         /**
          * 弹框退出
          */

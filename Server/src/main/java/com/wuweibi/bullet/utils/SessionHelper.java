@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.utils;
 
-import com.wuweibi.bullet.alias.Var;
+import com.wuweibi.bullet.jwt.domain.JwtSession;
+import com.wuweibi.bullet.jwt.utils.JWTUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -41,9 +42,20 @@ public class SessionHelper {
             if(userId != null){
                 return userId;
             }
+
+            // JWT验证
+            String jwtToken = req.getHeader("Authorization");
+
+            JwtSession jwtSession = JWTUtil.getSession(jwtToken);
+
+            if(jwtSession.isLogin()){
+                return jwtSession.userId();
+            }
+
+
         } catch (Exception e) {
             logger.error("", e);
         }
-        return -1L;
+        return null;
     }
 }

@@ -102,7 +102,7 @@ public class BulletAnnotation {
             logger.warn("{} 设备已经在线", this.deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
             try {
-                this.session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "在线的设备编号已经被绑定"));
+                this.session.close(new CloseReason(CloseReason.CloseCodes.NOT_CONSISTENT, "在线的设备编号已经被绑定"));
             } catch (IOException e) {
                 logger.error("", e);
             }

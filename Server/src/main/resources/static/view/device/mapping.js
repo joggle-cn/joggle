@@ -15,6 +15,13 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
         // 设备ID
         var deviceId = $routeParams.deviceId;
 
+
+
+
+        $("[name='my-checkbox']").bootstrapSwitch();
+
+
+
         function flushData(){
             faceinner.get(api['user.device.mapping'], {deviceId:deviceId}, function(res){
                 if (res.status == 0) {
@@ -27,7 +34,11 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
         flushData();
 
 
-
+        /**
+         * 展示域名
+         * @param item
+         * @returns {*|string}
+         */
         $scope.showDomain = function(item){
             if(item.domain){
                 return item.domain;
@@ -35,10 +46,19 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
             if(item.hostname){
                return item.hostname;
             }
+        }
 
-
-
-
+        /**
+         * 展示映射状态
+         * @param item
+         * @returns {*|string}
+         */
+        $scope.showStatus = function(item){
+            if(item.status == 1){
+                return '启用';
+            }else{
+                return '-';
+            }
         }
 
         /**
@@ -53,12 +73,12 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
 
 
                 $("#my-checkbox1").bootstrapSwitch({
-                    state: item.bindTls,
+                    state: item.status,
                     onSwitchChange:function (event, state) {
-                        $scope.item.bindTls = state;
+                        $scope.item.status = state;
                     }
                 });
-                $("#my-checkbox1").bootstrapSwitch('state', item.bindTls, true);
+                $("#my-checkbox1").bootstrapSwitch('state', item.status, true);
             })
 
 
@@ -94,7 +114,7 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
                 hostname : $scope.item.hostname,
                 deviceId: deviceId,
 		        description : $scope.item.description,
-		        bindTls : $scope.item.bindTls,
+                status : $scope.item.status?1:0,
             }
 
 

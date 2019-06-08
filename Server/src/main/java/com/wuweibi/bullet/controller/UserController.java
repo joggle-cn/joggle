@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
-import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
@@ -17,6 +16,7 @@ import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.SessionHelper;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -108,14 +108,18 @@ public class UserController {
 	@RequestMapping(value="/login/info", method=RequestMethod.GET) 
 	public MessageResult loginInfo(
 			HttpSession session){
+		Long userId = SessionHelper.getUserId();
+
 		// 验证邮箱正确性
-		User loginUser = (User)session.getAttribute(SessionAttr.LOGIN_USER);
-		if(loginUser == null){
+		if(userId == null){
 			return MessageFactory.getUserNotLoginError();
 		}
+		User user = userService.selectById(userId);
+		user.setPass(null);
 
-        JSONObject result = (JSONObject)JSON.toJSON(loginUser);
-        result.put("connNums", pool.count());
+		JSONObject result = (JSONObject)JSON.toJSON(user);
+
+		result.put("connNums", pool.count());
 
 
 		return MessageFactory.get(result);

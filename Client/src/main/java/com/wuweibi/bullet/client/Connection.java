@@ -57,7 +57,7 @@ public class Connection {
         // while得作用是链接成功才会断开
         while (status){
 
-            String tunnel = ConfigUtils.getTunnel();// 通道服务器
+            String tunnel   = ConfigUtils.getTunnel();// 通道服务器
             String deviceNo =  ConfigUtils.getDeviceNo(); // 设备ID
 
             String url = tunnel + "/" + deviceNo;

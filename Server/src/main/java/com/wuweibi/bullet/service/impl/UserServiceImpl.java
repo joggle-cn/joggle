@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.domain.UserApply;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
@@ -11,7 +11,6 @@ import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,4 +131,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return MessageCode.login_err_email;
     }
+
+
 }

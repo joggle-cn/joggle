@@ -55,6 +55,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	@TableField("bind_tls")
 	private Boolean bindTls;
 
+
 	@TableField("userId")
 	private Long userId;
 
@@ -64,6 +65,10 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/** 备注 */
 	private String description;
 
+    /**
+     * 映射状态 （1、启用；0、停用)
+     * */
+    private Integer status;
     /**
      * 创建时间
      */

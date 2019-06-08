@@ -41,12 +41,11 @@ public class BulletClient {
     /** 链接 */
     private Connection connection;
 
-    static List<CloseReason.CloseCode> code ;
+    static List<CloseReason.CloseCode> code = new ArrayList<>();
 
     static{
-        code = new ArrayList<>();
         code.add(CloseReason.CloseCodes.NORMAL_CLOSURE);
-
+        code.add(CloseReason.CloseCodes.NOT_CONSISTENT);
     }
 
 
@@ -114,11 +113,11 @@ public class BulletClient {
             pool.killAll();
 
             // 不是正常关闭的情况 重新启动链接
-            if(!code.contains(closeCode)){
+            if(!code.contains(closeCode)){// 除了1000 、1007 以外的 执行
                 Thread.sleep(3000L);
                 logger.debug("Connection 正在重启链接服务器...");
                 connection.opeAngain();
-            } else {
+            } else if(CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeCode)) {// 由于设备编号的关闭
                 logger.error("========================================================");
                 logger.error("= 客户端启动失败!!! \t");
                 logger.error("= 请将deviceNo配置为\"null\"，以便服务器分配新的设备编号\t");
@@ -131,6 +130,11 @@ public class BulletClient {
                 ConfigUtils.reload();
 
                 connection.opeAngain();
+            } else { //
+                logger.warn("========================================================");
+                logger.warn("= 正常关闭应用!!! \t");
+                logger.warn("========================================================");
+
             }
         } else {
             logger.error("Connection 对象找不到！");

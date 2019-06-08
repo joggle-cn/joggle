@@ -19,6 +19,7 @@ public class Tunnels {
     private String hostname; // hostname
 
 
+    private Boolean inspect = false;
 
     /**
      * http 访问时账号密码认证
@@ -27,9 +28,11 @@ public class Tunnels {
      */
     private String auth;
 
+
     private String host_header;
 
     private Boolean bind_tls = false;
+
 
 
 }

@@ -51,7 +51,7 @@ public class MessageFactory {
 	 * @param e 错误消息内容
 	 * @return
 	 */
-	public static Object getExceptionMessage(Exception e) {
+	public static MessageResult getExceptionMessage(Exception e) {
 		return new MessageResult(false, e.getMessage());
 	}
 	

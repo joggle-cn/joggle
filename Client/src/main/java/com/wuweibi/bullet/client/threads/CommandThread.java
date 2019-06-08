@@ -52,6 +52,15 @@ public class CommandThread extends Thread  {
         this.mappingId = config.getId();
         // 解析为命令
         String projectPath = ConfigUtils.getClientProjectPath();
+        // 生成文件目录
+        String configPath = projectPath + "/conf/domain/";
+        String logsPath   = projectPath + "/logs/domain/";
+        new File(configPath).mkdirs();
+        new File(logsPath).mkdirs();
+
+
+        String projectName = config.getHostname() + config.getProtocol() + config.getDomain();
+
 
 
         // 去除系统判定Ngrok命令太大了
@@ -79,7 +88,7 @@ public class CommandThread extends Thread  {
         } else if(config.getProtocol() == 2){ // tcp
             proto.setTcp(config.getHost()+':'+config.getPort());
             tunnels.setRemote_port(this.config.getRemotePort());
-        }else if(config.getProtocol() == 3) { // https
+        } else if(config.getProtocol() == 3) { // https
             proto.setHttps(config.getHost()+':'+config.getPort());
         }
         tunnels.setProto(proto);
@@ -89,11 +98,6 @@ public class CommandThread extends Thread  {
 
         testEntity.getTunnels().put(mappingName, tunnels);
 
-        String projectName = config.getHostname() + config.getProtocol() + config.getDomain();
-        String configPath = projectPath + "/conf/domain/";
-        String logsPath   = projectPath + "/logs/domain/";
-        new File(configPath).mkdirs();
-        new File(logsPath).mkdirs();
 
 
 
