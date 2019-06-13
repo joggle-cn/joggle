@@ -59,8 +59,6 @@ public class BulletAnnotation {
     // 设备状态
     private boolean deviceStatus = false;
 
-    /** ID */
-    private int id;
 
     /**  设备ID  */
     private String deviceNo;
@@ -108,7 +106,7 @@ public class BulletAnnotation {
             }
             return;
         }
-
+        // 设备在线
         deviceOnlineService.saveOrUpdateOnline(this.deviceNo, "", "");
         this.deviceStatus = true;
 
@@ -165,6 +163,7 @@ public class BulletAnnotation {
             updateOutLine();
             CoonPool pool = SpringUtils.getBean(CoonPool.class);
             pool.removeConnection(this);
+            this.deviceStatus = false;
         }
     }
 
@@ -225,6 +224,7 @@ public class BulletAnnotation {
         if(t != null){
             logger.error("", t);
         }
+        end();
     }
 
 
