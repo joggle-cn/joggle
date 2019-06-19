@@ -93,4 +93,14 @@ public final class CoonPool {
             bulletAnnotation.stop();
         }
     }
+
+
+    /**
+     * 判断是否存在
+     * @param deviceNo
+     * @return
+     */
+    public boolean exists(String deviceNo) {
+        return clientConnections.containsKey(deviceNo);
+    }
 }

@@ -96,7 +96,8 @@ public class BulletAnnotation {
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        if(deviceOnlineService.existsOnline(this.deviceNo )){// 设备已经存在线列表里了
+
+        if(pool.exists(this.deviceNo)){
             logger.warn("{} 设备已经在线", this.deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
             try {
