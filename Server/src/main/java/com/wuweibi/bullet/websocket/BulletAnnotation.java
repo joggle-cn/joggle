@@ -163,8 +163,8 @@ public class BulletAnnotation {
         if(this.deviceStatus){ // 正常设备才能移除
             updateOutLine();
             CoonPool pool = SpringUtils.getBean(CoonPool.class);
-            pool.removeConnection(this);
             this.deviceStatus = false;
+            pool.removeConnection(this);
         }
     }
 
