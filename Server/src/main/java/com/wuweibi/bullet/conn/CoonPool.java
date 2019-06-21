@@ -47,7 +47,6 @@ public final class CoonPool {
         if(conn != null){
             String deviceNo = conn.getDeviceNo();
             clientConnections.remove(deviceNo); // 直接全部移除
-
             conn.stop();
         }
     }

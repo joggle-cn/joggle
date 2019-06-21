@@ -11,18 +11,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
+ * 服务器端
  *
  * @author marker
  * @create 2019-04-10 09:50
  **/
-
-
 @SpringBootConfiguration
 @Configuration
 @ComponentScan({
         "com.wuweibi.bullet",
-        "com.wuweibi.bullet.controller",
 })
 @EnableAutoConfiguration
 public class WebApplication  {

@@ -93,7 +93,9 @@ public class JWTUtil {
     public static JwtSession getSession(String token) {
 //        Subject subject = SecurityUtils.getSubject();
 //        String token = subject.getPrincipal().toString();
-
+        if(null == token){
+            return null;
+        }
         try {
             DecodedJWT jwt = JWT.decode(token);
 
