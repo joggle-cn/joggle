@@ -35,7 +35,7 @@ public class BindIPThread extends Thread {
 
     @Override
     public void run() {
-        String ip  = Tools.getIp();
+        String ip  = Tools.getInnetIp();
         String mac = Tools.getMACAddress();
 
         logger.info("Connection Bind ip={}", ip);
