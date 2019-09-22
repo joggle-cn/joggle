@@ -4,6 +4,8 @@ package com.wuweibi.bullet.protocol;
  */
 
 import com.wuweibi.bullet.utils.Utils;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +18,8 @@ import java.io.OutputStream;
  * @author marker
  * @create 2017-12-07 下午1:13
  **/
+@Data
+@Slf4j
 public class MsgBindIP extends Message {
 
 
@@ -51,6 +55,7 @@ public class MsgBindIP extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
+        log.debug("send {}",this.toString());
 
         // 写入IP地址
         byte bs[] = new byte[20];
@@ -77,6 +82,7 @@ public class MsgBindIP extends Message {
         bs = new byte[17];
         in.read(bs);
         this.mac = Utils.getString(bs, 0, 17);
+        log.debug("reciver {}", this.toString());
     }
 
     public String getIp() {

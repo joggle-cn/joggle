@@ -172,8 +172,7 @@ public class Tools {
                     break;
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("widnows方式未获取到网卡地址");
         }
         finally {
