@@ -43,4 +43,5 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      */
     void allDownNow();
 
+    void saveOrUpdateOnlineStatus(String deviceNo);
 }

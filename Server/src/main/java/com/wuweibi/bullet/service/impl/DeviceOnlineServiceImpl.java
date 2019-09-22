@@ -74,4 +74,21 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     public void allDownNow() {
         this.baseMapper.updateStatusDown();
     }
+
+    @Override
+    public void saveOrUpdateOnlineStatus(String deviceNo) {
+        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
+        ew.where("deviceNo = {0}", deviceNo);
+        int count = this.baseMapper.selectCount(ew);
+        DeviceOnline deviceOnline = new DeviceOnline();
+        deviceOnline.setDeviceNo(deviceNo);
+        deviceOnline.setStatus(1);// 等待被绑定（在线)
+        deviceOnline.setUpdateTime(new Date());
+
+        if(count > 0){
+            this.baseMapper.update(deviceOnline, ew);
+        }else{// save
+            this.baseMapper.insert(deviceOnline);
+        }
+    }
 }

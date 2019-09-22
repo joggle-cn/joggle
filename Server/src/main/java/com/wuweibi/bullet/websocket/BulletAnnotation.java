@@ -108,7 +108,7 @@ public class BulletAnnotation {
             return;
         }
         // 设备在线
-        deviceOnlineService.saveOrUpdateOnline(this.deviceNo, "", "");
+        deviceOnlineService.saveOrUpdateOnlineStatus(this.deviceNo);
         this.deviceStatus = true;
 
 
