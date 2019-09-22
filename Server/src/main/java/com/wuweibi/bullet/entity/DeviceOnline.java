@@ -52,7 +52,7 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	/**
 	 * 内网IP
 	 */
-    @TableField(value="intranetIp" )
+    @TableField(value="intranet_ip" )
 	private String intranetIp;
 
     public DeviceOnline() {

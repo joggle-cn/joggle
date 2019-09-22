@@ -106,7 +106,7 @@ public class CommandThread extends Thread  {
         if(ConfigUtils.getLogService()){// 开启日志
             command.append("-log="+ logsPath + projectName + ".log");
         }
-        command.append("start ").append(mappingName);
+        command.append(" start ").append(mappingName);
 
 
         try {

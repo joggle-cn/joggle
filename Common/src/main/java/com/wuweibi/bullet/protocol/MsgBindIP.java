@@ -54,7 +54,9 @@ public class MsgBindIP extends Message {
 
         // 写入IP地址
         byte bs[] = new byte[20];
-        System.arraycopy(ip.getBytes(), 0, bs, 0, ip.getBytes().length);
+        int len = ip.getBytes().length;
+
+        System.arraycopy(ip.getBytes(), 0, bs, 0, len);
         out.write(bs);
 
         // 写入mac地址

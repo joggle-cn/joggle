@@ -13,7 +13,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://bullet-server:3306/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
-    password: bullet123.
+    password: ${MYSQL_PASSWORD:123456}
     initialSize: 5
     minIdle: 5
     maxActive: 20
