@@ -1,10 +1,7 @@
 <div style="margin-top:30px; "></div>
 <div class="container"> 
 	<div class="row">
-	  <div class="col-xs-3">
-		  <div ng-include="'view/nav/nav-left.htm'" ></div>
-	  </div>
-	  <div class="col-xs-9 ">
+	  <div class="col-xs-12">
 	  	<div class="panel panel-primary">
 	      <div class="panel-heading">
 	        <h3 class="panel-title">设备端口映射</h3>
@@ -15,24 +12,30 @@
 				  <thead>
 				  <tr>
 					  <th>序号</th>
-					  <th>域名</th>
-					  <th>协议</th>
-					  <th>服务器端口</th>
+					  <th>外网地址</th>
+					  <th>内网服务</th>
                       <th>状态</th>
-					  <th width="200">操作</th>
+                      <th>备注</th>
+					  <th width="140">操作</th>
 				  </tr>
 				  </thead>
 				  <tbody>
 				  <tr ng-repeat="item in list">
 					  <td>{{item.id}}</td>
-					  <td>{{showDomain(item)}}</td>
-					  <td>{{item.protocol | showProtocol}}</td>
-					  <td>{{item.port}}</td>
-                      <td>{{showStatus(item)}}</td>
+					  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
+					  <td>
+                          <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
+                          <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
+					  </td>
+                      <td>
+						  <span class="label label-success" ng-if="item.status == 1">启用</span>
+						  <span class="" ng-if="item.status != 1"> - </span>
+					  </td>
+					  <td>{{item.description}}</td>
 					  <td>
 
                           <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
-						  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+						  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
 						  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
 					  </td>
 				  </tr>

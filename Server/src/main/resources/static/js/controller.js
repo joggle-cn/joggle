@@ -54,9 +54,9 @@ define([
     app.filter('showProtocol',[function(){
         return function(protocol ){
             switch (protocol){
-                case 1 : return "HTTP";
-                case 2 : return "TCP";
-                case 3 : return "HTTPS";
+                case 1 : return "http";
+                case 2 : return "tcp";
+                case 3 : return "https";
                 default: return "-";
             }
             return "-";

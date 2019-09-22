@@ -5,6 +5,8 @@ package com.wuweibi.bullet.domain.dto;/**
 import com.wuweibi.bullet.entity.Device;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  *
  *
@@ -18,12 +20,18 @@ public class DeviceDto extends Device {
 
     private String intranetIp;
 
+    /**
+     * 状态更新时间
+     */
+    private Date onlineTime;
+
     public DeviceDto(Device device) {
         super();
         this.setName(device.getName());
         this.setCreateTime(device.getCreateTime());
         this.setId(device.getId());
         this.setDeviceId(device.getDeviceId());
+
     }
 
 }

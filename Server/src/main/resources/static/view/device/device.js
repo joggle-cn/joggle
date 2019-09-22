@@ -20,6 +20,11 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                 if (res.status == 0) {
                     $scope.$apply(function() {
                         $scope.list = res.data;
+                        $.each($scope.list,function(i,item){
+
+                            item.onlineTimeStr = (new Date(item.onlineTime))
+                                .format("yyyy-MM-dd hh:mm:ss");
+                        });
                     });
                 }
             });

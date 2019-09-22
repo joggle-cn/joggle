@@ -1,10 +1,7 @@
 <div style="margin-top:30px; "></div>
 <div class="container"> 
 	<div class="row">
-	  <div class="col-xs-3">
-	  	<div ng-include="'view/nav/nav-left.htm'" ></div>
-	  </div>
-	  <div class="col-xs-9 ">
+	  <div class="col-xs-12">
 
 	  	<div class="panel panel-primary">
 	      <div class="panel-heading">
@@ -18,6 +15,8 @@
 					  <th>序号</th>
 					  <th>设备名称</th>
 					  <th>设备标识</th>
+					  <th>IP地址</th>
+					  <th>上线时间</th>
 					  <th>状态</th>
 					  <th width="200">操作</th>
 				  </tr>
@@ -27,6 +26,8 @@
 					  <td>{{item.id}}</td>
 					  <td>{{item.name}}</td>
 					  <td>{{item.deviceId}}</td>
+					  <td>{{item.intranetIp}}</td>
+					  <td>{{item.onlineTimeStr}}</td>
 					  <td>
 						<span class="label label-success" ng-if="item.status == 1">在线</span>
 						<span class="label label-default" ng-if="item.status != 1">离线</span>

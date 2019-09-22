@@ -54,6 +54,11 @@ public class DeviceController {
     private DeviceMappingService deviceMappingService;
 
 
+    /**
+     * 设备列表
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/device/", method = RequestMethod.GET)
     public Object device(HttpServletRequest request ){
         Long userId = getUserId();
@@ -78,6 +83,7 @@ public class DeviceController {
            DeviceOnline deviceOnline =  deviceOnlineService.selectByDeviceNo( deviceNo);
            if(deviceOnline != null){
                deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
+               deviceDto.setOnlineTime(deviceOnline.getUpdateTime());
            }
             deviceList.add(deviceDto);
         }
