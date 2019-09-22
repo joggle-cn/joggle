@@ -15,4 +15,9 @@
 		update t_device_online set status=-1 where 1=1
 	</update>
 
+
+    <update id="updateStatus">
+		update t_device_online set status=1, updateTime=sysdate() where deviceNo=#{deviceNo}
+	</update>
+
 </mapper>

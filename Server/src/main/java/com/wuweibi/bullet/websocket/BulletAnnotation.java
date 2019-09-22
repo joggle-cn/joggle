@@ -83,7 +83,7 @@ public class BulletAnnotation {
         this.session  = session;
         this.deviceNo = deviceNo;
 
-        session.setMaxBinaryMessageBufferSize(101024000);
+        session.setMaxBinaryMessageBufferSize(1024000);
         session.setMaxIdleTimeout(0);
 
         if(StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)){ //如果是首次链接
@@ -212,6 +212,8 @@ public class BulletAnnotation {
             }
         } catch (IOException e) {
            logger.error("", e);
+        } finally {
+            IOUtils.closeQuietly(bis);
         }
 
     }

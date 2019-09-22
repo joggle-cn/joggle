@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 /**
  *
- *
+ * Ngrok命令线程
  *
  * @author marker
  * @create 2019-04-10 12:50
@@ -97,8 +97,6 @@ public class CommandThread extends Thread  {
         String mappingName = "mp_" + config.getId();
 
         testEntity.getTunnels().put(mappingName, tunnels);
-
-
 
 
         command.append(configPath).append(projectName).append(".yml ");

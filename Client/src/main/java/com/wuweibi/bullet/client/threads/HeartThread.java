@@ -5,6 +5,7 @@ package com.wuweibi.bullet.client.threads;
 
 import com.wuweibi.bullet.client.BulletClient;
 import com.wuweibi.bullet.protocol.MsgHeart;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +42,10 @@ public class HeartThread extends TimerTask {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         logger.info("Connection heart time={}", sdf.format(new Date()));
 
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             if(client.getSession().isOpen()){
                 MsgHeart msgHeart = new MsgHeart();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 msgHeart.write(outputStream);
 
                 // 包装了Bullet协议的
@@ -55,6 +56,8 @@ public class HeartThread extends TimerTask {
             }
         } catch (IOException e) {
             logger.error("", e);
+        }finally {
+            IOUtils.closeQuietly(outputStream);
         }
 
 

@@ -86,7 +86,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnline.setUpdateTime(new Date());
 
         if(count > 0){
-            this.baseMapper.update(deviceOnline, ew);
+            this.baseMapper.updateStatus(deviceNo);
         }else{// save
             this.baseMapper.insert(deviceOnline);
         }

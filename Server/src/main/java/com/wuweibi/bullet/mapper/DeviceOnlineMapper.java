@@ -18,4 +18,10 @@ public interface DeviceOnlineMapper extends BaseMapper<DeviceOnline> {
      */
     void updateStatusDown();
 
+    /**
+     * 更新状态
+     * @param deviceOnline
+     */
+    void updateStatus(String deviceOnline);
+
 }

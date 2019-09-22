@@ -48,6 +48,7 @@ public class DeviceOnline extends Model<DeviceOnline> {
     /**
      *
      */
+	@TableField(value="status" )
 	private Integer status;
 	/**
 	 * 内网IP
