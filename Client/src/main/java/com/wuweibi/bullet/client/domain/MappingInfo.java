@@ -19,6 +19,12 @@ public class MappingInfo {
     private String domain;
     private Integer port;
     private String hostname;
+
+    /**
+     * 基础认证
+     * "demo:secret"
+     */
+    private String auth;
     private Boolean bindTls;
 
     /**

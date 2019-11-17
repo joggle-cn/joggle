@@ -10,13 +10,16 @@ import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.domain.NgrokConf;
 import com.wuweibi.bullet.client.domain.Proto;
 import com.wuweibi.bullet.client.domain.Tunnels;
+import com.wuweibi.bullet.utils.FileTools;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+
+import static com.wuweibi.bullet.ConfigUtils.getClientProjectPath;
 
 /**
  *
@@ -51,7 +54,7 @@ public class CommandThread extends Thread  {
 
         this.mappingId = config.getId();
         // 解析为命令
-        String projectPath = ConfigUtils.getClientProjectPath();
+        String projectPath = getClientProjectPath();
         // 生成文件目录
         String configPath = projectPath + "/conf/domain/";
         String logsPath   = projectPath + "/logs/domain/";
@@ -73,9 +76,17 @@ public class CommandThread extends Thread  {
 
 
         Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass().getResourceAsStream("/conf/ngrok.yml");
 
-        NgrokConf testEntity = yaml.loadAs(inputStream, NgrokConf.class);//如果读入Map,这里可以是Mapj接口,默认实现为LinkedHashMap
+        String configYmlFile = projectPath + "/conf/ngrok.yml";
+
+        String ymlText = "";
+        try {
+            ymlText = FileTools.getFileContet(new File(configYmlFile), FileTools.FILE_CHARACTER_UTF8);
+        } catch (IOException e) {
+            log.error("", e);
+        }
+
+        NgrokConf testEntity = yaml.loadAs(ymlText, NgrokConf.class);//如果读入Map,这里可以是Mapj接口,默认实现为LinkedHashMap
 
 
         Tunnels tunnels = new Tunnels();
@@ -91,7 +102,17 @@ public class CommandThread extends Thread  {
         } else if(config.getProtocol() == 3) { // https
             proto.setHttps(config.getHost()+':'+config.getPort());
         }
+
+
+        // 配置简单认证
+        if(config.getProtocol() == 3 || config.getProtocol() == 1){
+            if(StringUtils.isNotBlank(config.getAuth())){
+                tunnels.setAuth(config.getAuth());
+            }
+        }
+
         tunnels.setProto(proto);
+
 
 
         String mappingName = "mp_" + config.getId();

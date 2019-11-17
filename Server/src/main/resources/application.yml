@@ -15,7 +15,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: bullet
+    name: Bullet
     admin:
       enabled: true
   devtools:
@@ -35,7 +35,38 @@ spring:
     requestContextAttribute: request
     suffix: .html
 
-
+  mail:
+    host: smtp.exmail.qq.com
+    port: 25
+    username: ${BULLET_MAIL_USERNAME:notice@wuweibi.com}
+    password: ${BULLET_MAIL_PASSWORD:123456}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: false
+      mail.smtp.starttls.required: false
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.writetimeout: 5000
+  # 数据库配置
+  datasource:
+    driverClassName : com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://bullet-server:3306/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: ${BULLET_MYSQL_USERNAME:root}
+    password: ${BULLET_MYSQL_PASSWORD:123456}
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 mybatis-plus:
   # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
   # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
@@ -82,6 +113,7 @@ management:
 logging:
   config: 'classpath:logback-spring.xml'
 # 设定ftl文件路径
+
 
 
 

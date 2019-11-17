@@ -1,8 +1,8 @@
 server_addr: "joggle.cn:8083"
 trust_host_root_certs: false
+use_insecure_skip_verify: false
+use_client_crt_path: ./conf/cert/ngrokroot.crt
+web_addr: false
+console_ui: false
 
 tunnels:
-  haha:
-    subdomain: "haha"
-    proto:
-      http: localhost:80

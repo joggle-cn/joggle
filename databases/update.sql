@@ -25,4 +25,8 @@ ALTER TABLE `t_device` CHANGE COLUMN `intranetIp` `intranet_ip` varchar(30) DEFA
 -- 2019年6月4日 (线上已更新)
 ALTER TABLE `t_user` ADD COLUMN `icon` varchar(255) COMMENT '头像' AFTER `agree`;
 ALTER TABLE `t_device_mapping` ADD COLUMN `status` int COMMENT '映射状态 （1、启用；0、停用)' AFTER `tls_key`, AUTO_INCREMENT=6;
-update t_device_mapping set status = 1
+update t_device_mapping set status = 1;
+
+
+-- 2019年11月17日 marker  新增基础认证
+ALTER TABLE `t_device_mapping` ADD COLUMN `auth` varchar(100) COMMENT '基础认证' AFTER `status`;

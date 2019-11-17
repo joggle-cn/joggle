@@ -45,6 +45,13 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private String hostname;
 
 	/**
+	 * 简单认证
+	 * "demo:secret"
+	 */
+	@TableField("auth")
+	private String auth;
+
+	/**
 	 * 服务器地址
 	 * （null 为本机）
 	 */

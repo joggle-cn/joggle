@@ -23,7 +23,7 @@
     </springProfile>
 
     <springProfile name="prod">
-        <root level="ERROR">
+        <root level="debug">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="INFO-ROLLING"/>
             <appender-ref ref="ERROR-ROLLING"/>

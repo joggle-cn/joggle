@@ -5,6 +5,7 @@ package com.wuweibi.bullet.client.domain;
 
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,8 +17,22 @@ public class NgrokConf {
 
 
     private String server_addr;
-    private String trust_host_root_certs;
 
-    private Map<String, Tunnels> tunnels;
+    /**
+     * 信任根证书（不用自己的）
+     */
+    private boolean trust_host_root_certs;
+    /**
+     * 跳过证书验证
+     */
+    private boolean use_insecure_skip_verify;
+    /**
+     * 使用客户端证书路径
+     */
+    private String use_client_crt_path;
+    private boolean web_addr;
+    private boolean console_ui;
+
+    private Map<String, Tunnels> tunnels = new HashMap<>(0);
 
 }

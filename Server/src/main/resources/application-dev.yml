@@ -4,35 +4,8 @@
 #
 spring:
   datasource:
-    driverClassName : com.mysql.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://localhost:3307/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: root
-    password: 123
-    initialSize: 5
-    minIdle: 5
-    maxActive: 20
-    maxWait: 60000
-    timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    poolPreparedStatements: true
-    maxPoolPreparedStatementPerConnectionSize: 20
-    filters: stat,wall,log4j
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    username: ${BULLET_MYSQL_USERNAME:root}
+    password: ${BULLET_MYSQL_PASSWORD:123456}
 
-  mail:
-    host: smtp.mxhichina.com
-    port: 25
-    username: mailbox@ipaul.top
-    password: 1qaz!QAZ
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: false
-      mail.smtp.starttls.required: false
-      mail.smtp.connectiontimeout: 5000
-      mail.smtp.writetimeout: 5000
 

@@ -19,10 +19,10 @@
 
 	<!--邮件发送实现类 -->
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${mail.host}" />
-		<property name="port" value="${mail.port}" />
-		<property name="username" value="${mail.username}" />
-		<property name="password" value="${mail.password}" />
+		<property name="host" value="${spring.mail.host}" />
+		<property name="port" value="${spring.mail.port}" />
+		<property name="username" value="${spring.mail.username}" />
+		<property name="password" value="${spring.mail.password}" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.auth">true</prop>
@@ -30,7 +30,7 @@
 		</property>
 	</bean>
 	<bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="${mail.username}" />
+		<property name="from" value="${spring.mail.username}" />
 		<property name="subject" value="通知" />
 	</bean>
 	

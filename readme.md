@@ -3,6 +3,13 @@
 基于Java实现，通过WebSocket全双工长连接技术，通过NIO接受HTTP请求，将请求信息通过WebSocket链接发送给链接的客户端。
 
 
+### Bullet 特性
+
+- 1、断连重试机制，链接断后间隔10s尝试连接；
+- 2、真真意义的反向代理，长连接反向请求；
+- 3、支持Http、Https协议、TCP/IP协议；
+- 4、基于Ngrok实现保证请求响应数据的安全性，Ngrok内部通过rsa算法加密；
+
 ![image](docs/images/WX20190411-102621.png)
 
 Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造轮子，在轮子的基础上做了优化，支持Server端Web管理。
@@ -73,10 +80,3 @@ java -Djava.security.egd=file:/dev/./urandom -jar target/server-1.0-SNAPSHOT.jar
 
 5、使用域名泛解析到服务器IP。
 
-
-### Bullet 特性
-
-1、断粮重试机制，链接断后间隔10s尝试连接；
-2、真真意义的反向代理，长连接反向请求；
-3、支持Http、Https协议、TCP/IP协议；
-4、基于Ngrok实现保证请求响应数据的安全性，Ngrok内部通过rsa算法加密；

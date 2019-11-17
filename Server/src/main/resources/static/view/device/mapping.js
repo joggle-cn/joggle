@@ -112,6 +112,7 @@ define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js
 		        remotePort : $scope.item.remotePort,
                 host : $scope.item.host,
                 hostname : $scope.item.hostname,
+                auth : $scope.item.auth,
                 deviceId: deviceId,
 		        description : $scope.item.description,
                 status : $scope.item.status?1:0,
