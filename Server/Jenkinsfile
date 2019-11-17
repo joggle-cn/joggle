@@ -21,10 +21,10 @@ pipeline {
 
                    echo "bullet-server deploying...."
                    sh '''
-                        ssh root@39.96.2.253 "docker stop springboot-prod"
+                        ssh root@joggle.cn "docker stop springboot-prod"
                         echo "bullet-server uploading....."
-                        scp ./Server/target/server-1.0-SNAPSHOT.jar root@39.96.2.253:/opt/data/springboot/prod/app.jar
-                        ssh root@39.96.2.253 "docker restart springboot-prod"
+                        scp ./Server/target/server-1.0-SNAPSHOT.jar root@joggle.cn:/opt/data/springboot/prod/app.jar
+                        ssh root@joggle.cn "docker restart springboot-prod"
                     '''
 
                }
