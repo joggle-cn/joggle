@@ -6,6 +6,6 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3307/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: ${BULLET_MYSQL_USERNAME:root}
-    password: ${BULLET_MYSQL_PASSWORD:123456}
+    password: ${BULLET_MYSQL_PASSWORD:123}
 
 

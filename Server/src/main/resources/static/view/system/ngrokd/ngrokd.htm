@@ -1,0 +1,52 @@
+<div style="margin-top:30px; "></div>
+<div class="container"> 
+	<div class="row">
+	  <div class="col-xs-3">
+		  <div ng-include="'view/nav/nav-system-left.htm'" ></div>
+	  </div>
+	  <div class="col-xs-9 ">
+	  	<div class="panel panel-primary">
+	      <div class="panel-heading">
+	        <h3 class="panel-title">Ngrok服务</h3>
+	      </div>
+	      <div class="panel-body">
+
+			  <form class="form-horizontal">
+				  <div class="form-group">
+					  <label class="col-sm-2 control-label" >状态</label>
+					  <div class="col-sm-10">
+                          <div style="margin-top: 6px">{{install}}</div>
+					  </div>
+				  </div>
+				  <div class="form-group">
+					  <label class="col-sm-2 control-label" >证书路径</label>
+					  <div class="col-sm-10">
+						  <input type="text" ng-model="user.certPath" class="form-control" placeholder="请输入证书路径">
+					  </div>
+				  </div>
+				  <div class="form-group">
+					  <label class="col-sm-2 control-label" >私钥路径</label>
+					  <div class="col-sm-10">
+						  <input type="text" ng-model="user.privateCertPath" class="form-control" placeholder="请输入私钥路径">
+					  </div>
+				  </div>
+
+				  <div class="form-group">
+					  <div class="col-sm-offset-2 col-sm-10">
+						  <button ng-click="installNgrokd()" type="submit" class="btn btn-default">安装Ngrok服务</button>
+					  </div>
+				  </div>
+			  </form>
+
+	        
+	        
+	        
+	      </div>
+	    </div>
+	  
+	  
+	  
+	  </div>
+	 	
+	</div>
+</div>

@@ -5,10 +5,17 @@
 server:
   port: 8081
   session-timeout: 30
+
+
+
+
+
 #
 # Spring 配置
 #
 spring:
+  thymeleaf:
+    cache: false
   http:
     encoding:
       force: true
@@ -21,8 +28,8 @@ spring:
   devtools:
     restart:
       enabled: true
-      #需要实时更新的目录
-      additional-paths: resources/**,static/**,templates/**
+      # 需要实时更新的目录
+      additional-paths: src/main/java
 
   freemarker:
     templateLoaderPath: classpath:/templates
@@ -101,12 +108,6 @@ mybatis-plus:
 
 
 
-security:
-  basic:
-    enabled: false
-management:
-  security:
-    enabled: false
 
 
 # log config
@@ -121,3 +122,6 @@ logging:
 weixin:
   appId: wxc8e74d5165c333e6
   appSecret: a33692209929308c336b167ba226785a
+
+bullet:
+  ngrokd:${BULLET_NGROKD_HOME:/opt/ngrok}

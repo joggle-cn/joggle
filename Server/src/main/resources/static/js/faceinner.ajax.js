@@ -33,6 +33,8 @@ var faceinner = {
                 var len = res.data.length;
                 for (var i = 0; i < len; i++) {
                     var item = res.data[i];
+
+                    $scope[item.field+'Msg'] = item.msg;
                     var input = $("input[name=" + item.field+"]");
                     input.css("border-color", 'red');
                     input.on('keyup',function(){
@@ -40,11 +42,12 @@ var faceinner = {
                         $('#error_'+item.field).remove();
                     });
                     var errorsEl = input.next();
-                    if($('#error_'+item.field).length == 0){
-                        errorsEl.append(
-                            '<span id="error_'+item.field+'" class="error" >'+item.msg+'</span>');
-                    }
+                    errorsEl.append(
+                        '<span id="error_'+item.field+'" class="error" >'+item.msg+'</span>');
                 }
+
+
+
             });
         }
 

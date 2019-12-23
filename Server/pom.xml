@@ -76,11 +76,14 @@
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
+        <!-- springboot 热部署 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatisplus-spring-boot-starter</artifactId>

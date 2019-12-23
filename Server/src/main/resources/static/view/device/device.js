@@ -19,8 +19,10 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             faceinner.get(api['user.device'], function(res){
                 if (res.status == 0) {
                     $scope.$apply(function() {
+                        // res.data = res.data.concat(res.data);
+
                         $scope.list = res.data;
-                        $.each($scope.list,function(i,item){
+                        $.each($scope.list, function(i,item){
 
                             item.onlineTimeStr = (new Date(item.onlineTime))
                                 .format("yyyy-MM-dd hh:mm:ss");

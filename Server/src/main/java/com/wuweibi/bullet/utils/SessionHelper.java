@@ -48,8 +48,8 @@ public class SessionHelper {
 
             JwtSession jwtSession = JWTUtil.getSession(jwtToken);
 
-            if(jwtSession.isLogin()){
-                return jwtSession.userId();
+            if(null != jwtSession){
+                return jwtSession.isLogin()?jwtSession.userId():null;
             }
 
 

@@ -60,7 +60,14 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , templateUrl: 'view/system/system.htm'
             , controllerUrl: 'view/system/system.js'
         }))
-		
+
+        // ngrokd服务
+        .when('/system/ngrokd', router({
+            minTitle: "Ngrok服务"
+            , templateUrl: 'view/system/ngrokd/ngrokd.htm'
+            , controllerUrl: 'view/system/ngrokd/ngrokd.js'
+        }))
+
 		
 		.when('/register', router({
 			templateUrl: 'view/register/register.htm'

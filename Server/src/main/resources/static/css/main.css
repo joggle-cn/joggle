@@ -1,6 +1,6 @@
 
 body{
-	font-family: "微软雅黑"	
+	font-family: "PingFang SC", "微软雅黑", "Microsoft YaHei", Helvetica, "Helvetica Neue", Tahoma, Arial, sans-serif
 }
 a{font-size: 13px;}
 
@@ -23,24 +23,44 @@ a{font-size: 13px;}
 
 .bs-docs-nav .navbar-header .navbar-brand{
 	font-size: 18px;
+	color: #fff;
 }
 .bs-docs-nav{
-	background: #101010;
-	margin-bottom:0px; 
+	background: #4CAF50;
+	margin-bottom:0px;
+	box-shadow: 0 4px 8px 0 rgba(7, 17, 27, 0.1);
 }
-.bs-docs-nav a{
-	color: #E0E0E0; font-size: 14px;
+.bs-docs-nav .navbar-nav>li>a{
+	color: #fff; font-size: 14px;
+	text-shadow: none;
 }
-.bs-docs-nav .nav>li>a:hover, .nav>li>a:focus{
-	background: #000;
-}
-.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
-	 background-color: #000000;
+.bs-docs-nav .nav>li>a:hover, .nav>li>a:focus, .bs-docs-nav .nav>li>a:hover, .nav>li>a:active{
+	background: #49a44d;
 }
 
 
-
-
+.bs-docs-nav .dropdown.open{
+	background: white;
+}
+.bs-docs-nav .dropdown.open > a{
+	background: white;
+	color: #000 !important;
+}
+.bs-docs-nav .dropdown.open > a:hover{
+	background: white !important;
+}
+.bs-docs-nav .dropdown-menu{
+	border: 0;
+	width: 210px;
+	font-size: 16px;
+}
+.bs-docs-nav .dropdown-menu>li>a {
+	font-size: 14px;
+	padding: 10px 20px;
+}
+.bs-docs-nav .dropdown-menu>li>a>i{
+	margin-right: 8px;
+}
 
 
 

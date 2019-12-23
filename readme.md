@@ -79,4 +79,3 @@ java -Djava.security.egd=file:/dev/./urandom -jar target/server-1.0-SNAPSHOT.jar
 ```
 
 5、使用域名泛解析到服务器IP。
-

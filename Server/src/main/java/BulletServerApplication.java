@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
         "com.wuweibi.bullet",
 })
 @EnableAutoConfiguration
-public class WebApplication  {
+public class BulletServerApplication  {
 
 
 
@@ -32,10 +32,12 @@ public class WebApplication  {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        SpringApplication app = new SpringApplication(WebApplication.class);
-        app.addListeners(new StartedServerListener(),
+        SpringApplication app = new SpringApplication(BulletServerApplication.class);
+        app.addListeners(
+                new StartedServerListener(),
                 new CloseServerListener());
         app.run(args);
+        System.out.printf("========");
     }
 
 }
