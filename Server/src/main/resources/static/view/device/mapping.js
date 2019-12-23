@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery', 'bootstrap-switch'], function (app, $) {//加载依赖js,
+define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, $) {//加载依赖js,
 
 
 

@@ -1,7 +1,9 @@
 package com.wuweibi.bullet.config;
 
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.filter.CrossDomainFilter;
 import com.wuweibi.bullet.utils.SpringUtils;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -39,6 +41,18 @@ public class BeanConfig {
         taskExecutor.setMaxPoolSize(10);
         taskExecutor.setQueueCapacity(25);
         return taskExecutor;
+    }
+
+
+
+    @Bean
+    public FilterRegistrationBean FilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CrossDomainFilter());//添加过滤器
+        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+        registration.setName("CrossDomainFilter");//设置优先级
+        registration.setOrder(1);//设置优先级
+        return registration;
     }
 
 

@@ -18,7 +18,7 @@ define([
 
 
 	// 加载国际化文件
-	$.getScript('/lib/angular/i18n/angular-locale_'+lang+'.js');
+	$.getScript('lib/angular/i18n/angular-locale_'+lang+'.js');
 	
 
 	

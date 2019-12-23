@@ -11,7 +11,7 @@
 
 var faceinner = {
     /** 服务器地址 */
-    server: '',
+    server: 'http://localhost:8081',
 
 
     errorfunc : function(state){
@@ -73,7 +73,11 @@ var faceinner = {
             data: data ,
             dataType: "json",
             success:func,
-            error: faceinner.errorfunc
+            error: faceinner.errorfunc,
+            crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            },
         }
         if(func === undefined){
             delete options.data;
@@ -103,7 +107,11 @@ var faceinner = {
             data: data ,
             dataType: "json",
             success:func,
-            error: faceinner.errorfunc
+            error: faceinner.errorfunc,
+            crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            },
         }
         if(func === undefined){
             delete options.data;
@@ -131,7 +139,8 @@ var faceinner = {
             data: data ,
             dataType: "json",
             success:func,
-            error: faceinner.errorfunc
+            error: faceinner.errorfunc,
+            crossDomain: true,
         }
         if(func === undefined){
             delete options.data;

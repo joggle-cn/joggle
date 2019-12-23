@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery'], function (app, $) {//加载依赖js,
+define(['app','jquery', 'css!./device.css'], function (app, $) {//加载依赖js,
 
 
 	var callback = ["$scope", function ($scope) {

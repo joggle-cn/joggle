@@ -297,7 +297,7 @@ return angular.module('app.services', [])
 		data: {},
 		config: {
 			language: 'zh',
-			path : '/resource/i18n/'
+			path : 'resource/i18n/'
 		},
 		init: function(){
 			var lang = this.config.language;
@@ -337,7 +337,7 @@ return angular.module('app.services', [])
 	};
 	
 	// 初始化错误码绑定
-	$http.get('/resource/code/code.json')
+	$http.get('resource/code/code.json')
 		.success(function(json){// success 
 			data.code = json; 
 		}

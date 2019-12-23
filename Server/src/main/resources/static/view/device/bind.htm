@@ -1,43 +1,43 @@
 <div style="margin-top:30px; "></div>
-<div class="container"> 
-	<div class="row">
-        <div class="col-xs-3">
-            <div ng-include="'view/nav/nav-left.htm'" ></div>
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <blockquote>
+                <p>设备绑定</p>
+            </blockquote>
         </div>
-        <div class="col-xs-9 ">
-
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">绑定设备</h3>
-                </div>
-                <div class="panel-body">
-                  <style>
-                      .progress{
-                       margin-bottom: 10px;
-                      }
-                  </style>
-
-                  <div style="max-width: 450px; margin: 100px auto ">
-                      <div class="input-group">
-                          <input type="text" ng-model="deviceId" class="form-control" aria-label="Text input with multiple buttons">
-                          <div class="input-group-btn">
-                              <button id="bindButton" ng-click="validate()" type="button" class="btn btn-default">绑定设备</button>
-                          </div>
-                      </div>
-                      <div style="padding-top: 20px;">
-                          <div class="progress" id="progress-bar" style="visibility: hidden;">
-                              <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
-                                   style="width: 45%; ">
-                                  <span class="sr-only">45% Complete</span>
-                              </div>
-                          </div>
-                          <p style="text-align: center;" ng-bind="info">正在为链接校验服务器...</p>
-                      </div>
+    </div>
 
 
+
+    <div class="row">
+        <div class="col-xs-12">
+          <style>
+              .progress{
+               margin-bottom: 10px;
+              }
+          </style>
+
+          <div style="max-width: 450px; margin: 100px auto ">
+              <div class="input-group">
+                  <input type="text" ng-model="deviceId" class="form-control" aria-label="Text input with multiple buttons">
+                  <div class="input-group-btn">
+                      <button id="bindButton" ng-click="validate()" type="button" class="btn btn-default">绑定设备</button>
                   </div>
-                </div>
-            </div>
+              </div>
+              <div style="padding-top: 20px;">
+                  <div class="progress" id="progress-bar" style="visibility: hidden;">
+                      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
+                           style="width: 45%; ">
+                          <span class="sr-only">45% </span>
+                      </div>
+                  </div>
+                  <p style="text-align: center;" ng-bind="info">正在为链接校验服务器...</p>
+              </div>
+
+
+          </div>
       </div>
 	 	
 	</div>

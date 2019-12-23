@@ -29,7 +29,7 @@ spring:
     restart:
       enabled: true
       # 需要实时更新的目录
-      additional-paths: src/main/java
+      #additional-paths: src/main/java
 
   freemarker:
     templateLoaderPath: classpath:/templates

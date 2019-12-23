@@ -1,44 +1,3 @@
-<style>
-	.device .item-text{
-		margin-bottom: 4px;
-		white-space: nowrap;
-	}
-	.device .item-wrap{
-		border: 1px #ccc solid;
-		padding: 10px 20px;
-		overflow: hidden;
-		height: 90px;
-		margin-bottom: 20px;
-		display: block;
-		color:#000;
-		border-radius: 6px;
-	}
-
-	.device .item-wrap:hover{
-		cursor: pointer;
-		background: #efefef;
-		border: 1px #4CAF50 solid;
-	}
-	.device .item-icon {
-		font-size: 80px; color:#383838; position: absolute;
-		top: -3px;
-	}
-	.device .item-status.label-success{
-		background: #0de216;
-	}
-	.device .item-status{
-		display: block;
-		background: #ffe300;
-		width: 7px;
-		height: 7px;
-		z-index: 999;
-		position: absolute;
-		right: 11px;
-		top: 8px;
-		border-radius: 4px;
-	}
-
-</style>
 <div style="margin-top:30px; "></div>
 <div class="container device">
 
@@ -68,7 +27,7 @@
 			<a class="item-wrap" href="#/user/device/{{item.id}}/mapping">
 				<div class="row">
 					<div class="col-xs-4">
-						<div style="position: relative">
+						<div class="item-server">
 							<i class="fa fa-server item-icon"></i>
 							<span class="item-status label-success" ng-if="item.status == 1"></span>
 							<span class="item-status label-default" ng-if="item.status != 1"></span>

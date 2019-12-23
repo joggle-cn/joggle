@@ -2,6 +2,22 @@ pipeline {
     agent any
 
    stages {
+           stage('FixApiIP') {
+                  steps {
+                      echo "env: ${env.BRANCH_NAME}"
+                      echo 'Deploying....'
+                      sh '''
+
+                         if [ "$BRANCH_NAME"  = "prod" ];then
+                            sed -ie 's/http://localhost:8081//g' static/lib/common.lib.js
+                         fi
+
+                         # echo "修改版本号 $VERSION ";
+                         # sed -ie "s/dev-version/$VERSION/g" static/lib/common.lib.js
+
+                      '''
+                  }
+              }
            stage('Build') {
                steps {
                    echo "env: ${env.BRANCH_NAME}"

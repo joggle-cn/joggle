@@ -10,7 +10,7 @@
  * @type {{baseUrl: string, paths: {jquery: string, bootstrap: string, angular: string, x18n: string, angular-animate: string, angular-route: string, angularAMD: string, webchat: string, umeditor: string, umeditorConfig: string, handlebars: string, loading: string, amazeui: string, app: string, moudleRouter: string, moudleServices: string, moudleController: string, moudleFilters: string, moudleDirectives: string, ajax: string, api: string}, map: {*: {css: string}}, shim: {angular: {exports: string}, angularAMD: {deps: string[]}, bootstrap: {deps: string[]}, angular-route: {deps: string[], exports: string}, angular-animate: {deps: string[], exports: string}, loading: {deps: string[]}, umeditor: {deps: string[]}}, deps: string[]}}
  */
 var options = {
-	baseUrl: '/', //js文件存放的路径 
+	baseUrl: './', //js文件存放的路径
     paths: {//配置加载路径
           'jquery': 'lib/jquery/jquery-1.10.2.min'
         , 'bootstrap': 'lib/bootstrap3/js/bootstrap.min'

@@ -25,8 +25,8 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 		// 登录
 		.when('/login', router({
 			minTitle: "登录",
-			templateUrl: '/view/login/login.htm'
-		  , controllerUrl: '/view/login/login.js'
+			templateUrl: 'view/login/login.htm'
+		  , controllerUrl: 'view/login/login.js'
 		}))
         /** 忘记密码 */
         .when('/forget', router({
