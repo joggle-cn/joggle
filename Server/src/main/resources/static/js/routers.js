@@ -76,8 +76,8 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 		
 		/* 用户路由  */ 
 		.when('/user/profile', router({
-			templateUrl: '/template/user/profile.htm'
-		  , controllerUrl: '/js/controllers/user/profile.js'
+			templateUrl: 'template/user/profile.htm'
+		  , controllerUrl: 'js/controllers/user/profile.js'
 		}))
 		.when('/user/archives', router({
 			templateUrl: '/template/user/archives.htm' 

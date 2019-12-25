@@ -61,7 +61,7 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
 
 
         DeviceMappingDto dto = new DeviceMappingDto();
-        dto.setDeviceCode(device.getDeviceId());
+        dto.setDeviceCode(device.getDeviceNo());
         dto.setPort(deviceMapping.getPort());
         dto.setProtocol(deviceMapping.getProtocol());
         dto.setHost(deviceMapping.getHost());

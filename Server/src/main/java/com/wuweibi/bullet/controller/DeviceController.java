@@ -5,11 +5,14 @@ package com.wuweibi.bullet.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.builder.MapBuilder;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -75,7 +78,7 @@ public class DeviceController {
             Device device = it.next();
 
             DeviceDto deviceDto = new DeviceDto(device);
-            String deviceNo = device.getDeviceId();
+            String deviceNo = device.getDeviceNo();
 
             int status = getStatus(deviceNo);
             deviceDto.setStatus(status);
@@ -135,7 +138,7 @@ public class DeviceController {
 
             try {
                 // 停止ws链接
-                BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceId());
+                BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceNo());
                 bulletAnnotation.stop();
             } catch (Exception e){
                 log.error("{}", e.getMessage());
@@ -175,7 +178,7 @@ public class DeviceController {
 
             // 给当前用户存储最新的设备数据
             Device device = new Device();
-            device.setDeviceId(deviceId);
+            device.setDeviceNo(deviceId);
             device.setUserId(userId);
             device.setCreateTime(new Date());
             device.setName("default");
@@ -200,6 +203,54 @@ public class DeviceController {
         JSONObject result = new JSONObject();
         result.put("uuid", uuid);
         return result;
+    }
+
+
+    /**
+     * 获取设备信息
+     * @param request
+     * @param deviceId
+     * @return
+     */
+    @RequestMapping(value = "/device/info", method = RequestMethod.GET)
+    @ResponseBody
+    public Object device(HttpServletRequest request, @RequestParam Long deviceId){
+        Long userId = getUserId(request);
+
+
+        MapBuilder mapBuilder = newMap(3);
+
+        // 设备信息
+        Device device = deviceService.selectById(deviceId);
+
+
+        EntityWrapper<DeviceMapping> entityWrapper = new EntityWrapper();
+        entityWrapper.where("userId={0} and device_id={1} and protocol=2", userId, deviceId);
+        List<DeviceMapping> portList = deviceMappingService.selectList(entityWrapper);
+
+        entityWrapper = new EntityWrapper();
+        entityWrapper.where("userId={0} and device_id={1} and protocol!=2", userId, deviceId);
+        List<DeviceMapping> domainList = deviceMappingService.selectList(entityWrapper);
+
+
+        mapBuilder.setParam("deviceInfo", device);
+
+        mapBuilder.setParam("features", newMap(4)
+                .setParam("domainCount", domainList.size())
+                .setParam("portCount", portList.size())
+                .setParam("lineName", "成都")
+                .setParam("broadband", "10MB")
+                .build());
+
+        // 端口
+        mapBuilder.setParam("portList", portList);
+        // 域名
+        mapBuilder.setParam("domainList", domainList);
+
+
+
+
+        return MessageFactory.get(  mapBuilder.build());
     }
 
 

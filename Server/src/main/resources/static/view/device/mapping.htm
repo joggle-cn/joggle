@@ -24,19 +24,19 @@
 				</div>
 				<div class="col-xs-9" >
 					<div class="row">
-						<div class="col-sm-6 ">别名：设备A</div>
-						<div class="col-sm-6 ">编码：213213213</div>
+						<div class="col-sm-6 ">别名：{{deviceInfo.name}}</div>
+						<div class="col-sm-6 ">编码：{{deviceInfo.deviceNo}}</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-6">地址：192.168.1.1</div>
+						<div class="col-sm-6">地址：{{deviceInfo.intranetIp}}</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-sm-4">
-			<a class="btn">解绑设备</a>
-			<a class="btn">设备规则</a>
-			<a class="btn">编辑设备</a>
+			<a class="btn btn-default"  ng-click="delDevice(deviceInfo)">解绑设备</a>
+			<a class="btn btn-default">设备规则</a>
+			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
 		</div>
 	</div>
 
@@ -46,25 +46,25 @@
 		<div class="col-xs-3">
 			<div class="device-feature-item">
 				<h5>线路</h5>
-				<p>成都</p>
+				<p>{{features.lineName}}</p>
 			</div>
 		</div>
 		<div class="col-xs-3">
 			<div class="device-feature-item">
 				<h5>域名</h5>
-				<p>3个</p>
+				<p>{{features.domainCount}}个</p>
 			</div>
 		</div>
 		<div class="col-xs-3">
 			<div class="device-feature-item">
 				<h5>端口</h5>
-				<p>3个</p>
+				<p>{{features.portCount}}个</p>
 			</div>
 		</div>
 		<div class="col-xs-3">
 			<div class="device-feature-item">
 				<h5>宽带</h5>
-				<p>1MB</p>
+				<p>{{features.broadband}}</p>
 			</div>
 		</div>
 	</div>
@@ -72,58 +72,98 @@
 
 	<hr>
 
+	<!-- 端口映射 -->
+	<div class="row">
+		<div class="col-xs-12">
+			<blockquote>
+				<p>端口映射</p>
+			</blockquote>
+		</div>
+	</div>
 	<div class="row">
 	  <div class="col-xs-12">
-	  	<div class="panel panel-primary">
-	      <div class="panel-heading">
-	        <h3 class="panel-title">设备端口映射</h3>
-	      </div>
-	      <div class="panel-body">
+		  <table class="table table-hover">
+			  <thead>
+			  <tr>
+				  <th>序号</th>
+				  <th>外网地址</th>
+				  <th>内网服务</th>
+				  <th>状态</th>
+				  <th>备注</th>
+				  <th width="140">操作</th>
+			  </tr>
+			  </thead>
+			  <tbody>
+			  <tr ng-repeat="item in portList">
+				  <td>{{item.id}}</td>
+				  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
+				  <td>
+					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
+					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
+				  </td>
+				  <td>
+					  <span class="label label-success" ng-if="item.status == 1">启用</span>
+					  <span class="" ng-if="item.status != 1"> - </span>
+				  </td>
+				  <td>{{item.description}}</td>
+				  <td>
 
-			  <table class="table table-hover">
-				  <thead>
-				  <tr>
-					  <th>序号</th>
-					  <th>外网地址</th>
-					  <th>内网服务</th>
-                      <th>状态</th>
-                      <th>备注</th>
-					  <th width="140">操作</th>
-				  </tr>
-				  </thead>
-				  <tbody>
-				  <tr ng-repeat="item in list">
-					  <td>{{item.id}}</td>
-					  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
-					  <td>
-                          <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
-                          <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
-					  </td>
-                      <td>
-						  <span class="label label-success" ng-if="item.status == 1">启用</span>
-						  <span class="" ng-if="item.status != 1"> - </span>
-					  </td>
-					  <td>{{item.description}}</td>
-					  <td>
-
-                          <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
-						  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
-						  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
-					  </td>
-				  </tr>
-				  </tbody>
-			  </table>
-	      </div>
-	    </div>
-
-
-		  <div>
-			  <a ng-click="addMapping({status:true})" class="btn btn-default">添加端口映射</a>
-
-		  </div>
-	  
+					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
+					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
+				  </td>
+			  </tr>
+			  </tbody>
+		  </table>
 	  </div>
 	 	
+	</div>
+	<!-- 域名映射 -->
+
+	<div class="row">
+		<div class="col-xs-12">
+			<blockquote>
+				<p>域名映射</p>
+			</blockquote>
+		</div>
+	</div>
+	<div class="row">
+	  <div class="col-xs-12">
+		  <table class="table table-hover">
+			  <thead>
+			  <tr>
+				  <th>序号</th>
+				  <th>外网地址</th>
+				  <th>内网服务</th>
+				  <th>状态</th>
+				  <th>备注</th>
+				  <th width="140">操作</th>
+			  </tr>
+			  </thead>
+			  <tbody>
+			  <tr ng-repeat="item in domainList">
+				  <td>{{item.id}}</td>
+				  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
+				  <td>
+					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
+					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
+				  </td>
+				  <td>
+					  <span class="label label-success" ng-if="item.status == 1">启用</span>
+					  <span class="" ng-if="item.status != 1"> - </span>
+				  </td>
+				  <td>{{item.description}}</td>
+				  <td>
+					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
+					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
+				  </td>
+			  </tr>
+			  </tbody>
+		  </table>
+
+	  </div>
+
 	</div>
 </div>
 
@@ -228,4 +268,87 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+<!-- 编辑弹出框 -->
+<div id="editDevice" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">编辑设备</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="a" class="col-sm-2 control-label">设备名称</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceInfo.name" class="form-control" id="a" placeholder="名称">
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="b" class="col-sm-2 control-label">设备标识</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceInfo.deviceNo"  class="form-control"   placeholder="设备设备标识" readonly>
+						</div>
+
+						<div class="col-sm-4">
+							<!--<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>-->
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="d" class="col-sm-2 control-label">设备IP</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceInfo.intranetIp" ng-readonly=""  class="form-control"  id="d" placeholder="设备无IP" readonly>
+						</div>
+
+						<div class="col-sm-4">
+							<!--<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>-->
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="c" class="col-sm-2 control-label">创建时间</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceInfo.createTimeStr"  class="form-control" id="c" readonly>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="saveDevice()" class="btn btn-default">保 存</a>
+				<a ng-click="exitDevice()"  class="btn btn-default">取 消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 删除弹出框确认 -->
+<div id="delDevice" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">消息提示</h4>
+			</div>
+			<div class="modal-body">
+				确定要解绑该设备？
+			</div>
+			<div class="modal-footer">
+				<a ng-click="confirmDeleteDevice()" class="btn btn-default">确 定</a>
+				<a class="btn btn-default" data-dismiss="modal">取 消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

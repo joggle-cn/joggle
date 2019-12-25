@@ -20,6 +20,12 @@
 		where id = #{userId}
 	</update>
 
+	<!-- 更新登录时间-->
+    <update id="updateLoginTime" parameterType="java.lang.Long">
+		update t_user set
+			loginTime = now()
+		where id = #{userId}
+	</update>
 
 
 </mapper>

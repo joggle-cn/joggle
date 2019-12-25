@@ -18,6 +18,7 @@ import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SessionHelper;
 import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.Errors;
@@ -120,6 +121,11 @@ public class UserController {
 		JSONObject result = (JSONObject)JSON.toJSON(user);
 
 		result.put("connNums", pool.count());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		result.put("loginTime", sdf.format(user.getLoginTime()));
+		result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
 
 
 		return MessageFactory.get(result);

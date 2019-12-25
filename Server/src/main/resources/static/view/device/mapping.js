@@ -23,10 +23,13 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
 
 
         function flushData(){
-            faceinner.get(api['user.device.mapping'], {deviceId:deviceId}, function(res){
+            faceinner.get(api['user.device.info'], {deviceId:deviceId}, function(res){
                 if (res.status == 0) {
                     $scope.$apply(function() {
-                        $scope.list = res.data;
+                        $scope.deviceInfo = res.data.deviceInfo;
+                        $scope.features = res.data.features;
+                        $scope.portList = res.data.portList;
+                        $scope.domainList = res.data.domainList;
                     });
                 }
             });
@@ -80,10 +83,6 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
                 });
                 $("#my-checkbox1").bootstrapSwitch('state', item.status, true);
             })
-
-
-
-
 		}
 
         /**
@@ -140,6 +139,65 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
 		$scope.exit = function(){
             $("#addMapping").modal('hide');
         }
+
+
+
+
+        /**
+         * 编辑设备
+         */
+        $scope.editDevice = function(item){
+
+            item.createTimeStr = (new Date(item.createTime))
+                .format("yyyy-MM-dd hh:mm:ss");
+
+            $("#editDevice").modal({
+                backdrop: false
+            });
+        }
+
+        /**
+         * 弹框退出
+         */
+        $scope.exitDevice = function(){
+            $("#editDevice").modal('hide');
+        }
+        /**
+         * 保存Device
+         */
+        $scope.saveDevice = function(){
+            faceinner.post(api['user.device'], $scope.deviceInfo , function(res) {
+                if (res.status == 0) {
+                    $("#editDevice").modal('hide');
+                }
+            });
+        }
+
+
+
+
+        /**
+         * 删除设备
+         */
+        $scope.delDevice = function(item){
+            $scope.item = item;
+            $("#delDevice").modal({
+                backdrop: false
+            });
+        }
+
+
+        /**
+         * 确认删除设备
+         */
+        $scope.confirmDeleteDevice = function(){
+            faceinner.delete(api['user.device'], $scope.deviceInfo , function(res) {
+                if (res.status == 0) {
+                    $("#delDevice").modal('hide');
+                   window.history.back();
+                }
+            });
+        };
 		 
 		 
  	}];

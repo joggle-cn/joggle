@@ -30,3 +30,8 @@ update t_device_mapping set status = 1;
 
 -- 2019年11月17日 marker  新增基础认证
 ALTER TABLE `t_device_mapping` ADD COLUMN `auth` varchar(100) COMMENT '基础认证' AFTER `status`;
+
+-- 2019年12月24日 marker 新增登录时间字段
+ALTER TABLE `t_user` ADD COLUMN `loginTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间' AFTER `icon`;
+
+ALTER TABLE `t_user` ADD COLUMN `balance` decimal(10,2) DEFAULT 0 COMMENT '余额' AFTER `loginTime`;

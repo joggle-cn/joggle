@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>
@@ -30,8 +32,23 @@ public class User extends Model<User> {
 	private String pass;
 	private String agree;
 
+	/**
+	 * 头像
+	 */
 	@TableField("icon")
 	private String icon;
+
+	/**
+	 * 登录时间
+	 */
+	@TableField("loginTime")
+	private Date loginTime;
+
+	/**
+	 * 余额
+	 */
+	@TableField("balance")
+	private BigDecimal balance;
 
 
 

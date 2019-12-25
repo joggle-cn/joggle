@@ -17,4 +17,11 @@ public interface UserMapper extends BaseMapper<User> {
     void updatePass(
             @Param("userId")  long userId,
             @Param("pass")  String pass);
+
+
+    /**
+     * 更新登录时间
+     * @param userId
+     */
+    void updateLoginTime(Long userId);
 }

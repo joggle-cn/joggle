@@ -28,7 +28,9 @@ public class Device extends Model<Device> {
 	private Long id;
 	private String name;
 	@TableField(value = "deviceId")
-	private String deviceId;
+	private String deviceNo;
+
+
     @TableField(value = "createTime")
 	private Date createTime;
     @TableField(value = "userId")
@@ -49,7 +51,7 @@ public class Device extends Model<Device> {
 		return "Device{" +
 			", id=" + id +
 			", name=" + name +
-			", deviceId=" + deviceId +
+			", deviceNo=" + deviceNo +
 			", createTime=" + createTime +
 			", userId=" + userId +
 			"}";

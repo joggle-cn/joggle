@@ -141,6 +141,9 @@ var faceinner = {
             success:func,
             error: faceinner.errorfunc,
             crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            },
         }
         if(func === undefined){
             delete options.data;

@@ -125,6 +125,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(user != null){
             String userPass = user.getPass();
             if(userPass != null && userPass.equals(pass)){
+
+                this.baseMapper.updateLoginTime(user.getId());
+
                 return MessageCode.login_suc_user;
             }
             return MessageCode.login_err_pass;

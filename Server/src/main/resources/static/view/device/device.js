@@ -69,23 +69,8 @@ define(['app','jquery', 'css!./device.css'], function (app, $) {//加载依赖js
             });
         };
 
-        /**
-         * 保存
-         */
-		$scope.save = function(){
-            faceinner.post(api['user.device'], $scope.item , function(res) {
-                if (res.status == 0) {
-                    $("#editDevice").modal('hide');
-                }
-            });
-        }
 
-        /**
-         * 弹框退出
-         */
-		$scope.exit = function(){
-            $("#editDevice").modal('hide');
-        }
+
 		 
 		 
  	}];

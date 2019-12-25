@@ -19,6 +19,7 @@ public class DeviceDto extends Device {
     private int status;
 
     private String intranetIp;
+    private String deviceId;
 
     /**
      * 状态更新时间
@@ -30,7 +31,7 @@ public class DeviceDto extends Device {
         this.setName(device.getName());
         this.setCreateTime(device.getCreateTime());
         this.setId(device.getId());
-        this.setDeviceId(device.getDeviceId());
+        this.setDeviceId(device.getDeviceNo());
 
     }
 
