@@ -3,6 +3,7 @@ package com.wuweibi.bullet.controller;
  * Created by marker on 2017/12/6.
  */
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -222,7 +223,15 @@ public class DeviceController {
 
         // 设备信息
         Device device = deviceService.selectById(deviceId);
+        DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(device.getDeviceNo());
+        JSONObject deviceInfo = (JSONObject) JSON.toJSON(device);
 
+        if(deviceOnline != null){
+            deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
+            deviceInfo.put("status", deviceOnline.getStatus());
+        } else {
+            deviceInfo.put("status", -1);
+        }
 
         EntityWrapper<DeviceMapping> entityWrapper = new EntityWrapper();
         entityWrapper.where("userId={0} and device_id={1} and protocol=2", userId, deviceId);
@@ -233,7 +242,7 @@ public class DeviceController {
         List<DeviceMapping> domainList = deviceMappingService.selectList(entityWrapper);
 
 
-        mapBuilder.setParam("deviceInfo", device);
+        mapBuilder.setParam("deviceInfo", deviceInfo);
 
         mapBuilder.setParam("features", newMap(4)
                 .setParam("domainCount", domainList.size())

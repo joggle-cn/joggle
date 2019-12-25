@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *  在线设备表
  * </p>
  *
  * @author marker
@@ -46,20 +46,28 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	private String macAddr;
 
     /**
-     *
+     * 在线状态 -1 不在线  1在线
      */
 	@TableField(value="status" )
 	private Integer status;
+
 	/**
 	 * 内网IP
 	 */
     @TableField(value="intranet_ip" )
 	private String intranetIp;
 
-    public DeviceOnline() {
 
-    }
+	/**
+	 * 默认构造
+	 */
+	public DeviceOnline() {  }
 
+
+	/**
+	 * 构造
+	 * @param deviceNo
+	 */
     public DeviceOnline(String deviceNo) {
         this.deviceNo = deviceNo;
     }

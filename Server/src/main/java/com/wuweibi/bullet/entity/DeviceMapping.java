@@ -79,9 +79,14 @@ public class DeviceMapping extends Model<DeviceMapping> {
     /**
      * 创建时间
      */
-
 	@TableField("createTime")
 	private Date createTime;
+
+	/**
+	 * 服务通道ID
+	 */
+	@TableField("server_tunnel_id")
+	private Long serverTunnelId;
 
 
     @Override

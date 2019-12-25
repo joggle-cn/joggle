@@ -35,3 +35,8 @@ ALTER TABLE `t_device_mapping` ADD COLUMN `auth` varchar(100) COMMENT '基础认
 ALTER TABLE `t_user` ADD COLUMN `loginTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间' AFTER `icon`;
 
 ALTER TABLE `t_user` ADD COLUMN `balance` decimal(10,2) DEFAULT 0 COMMENT '余额' AFTER `loginTime`;
+
+
+-- 2019年12月25日 marker 新增服务通道表
+ALTER TABLE `t_device_mapping` ADD COLUMN `server_tunnel_id` bigint COMMENT '服务通道ID' AFTER `auth`;
+update t_device_mapping set server_tunnel_id = 1;

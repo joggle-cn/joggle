@@ -18,8 +18,8 @@
 				<div class="col-xs-3">
 					<div class="item-server">
 						<i class="fa fa-server item-icon"></i>
-						<span class="item-status label-success" ng-if="item.status == 1"></span>
-						<span class="item-status label-default" ng-if="item.status != 1"></span>
+						<span class="item-status label-success" ng-if="deviceInfo.status == 1"></span>
+						<span class="item-status label-default" ng-if="deviceInfo.status != 1"></span>
 					</div>
 				</div>
 				<div class="col-xs-9" >
@@ -95,8 +95,8 @@
 			  </thead>
 			  <tbody>
 			  <tr ng-repeat="item in portList">
-				  <td>{{item.id}}</td>
-				  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
+				  <td>{{$index+1}}</td>
+				  <td>tcp://joggle.cn:{{item.remotePort}}</td>
 				  <td>
 					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
 					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
@@ -119,7 +119,6 @@
 	 	
 	</div>
 	<!-- 域名映射 -->
-
 	<div class="row">
 		<div class="col-xs-12">
 			<blockquote>
@@ -142,8 +141,12 @@
 			  </thead>
 			  <tbody>
 			  <tr ng-repeat="item in domainList">
-				  <td>{{item.id}}</td>
-				  <td>{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn</td>
+				  <td>{{$index+1}}</td>
+				  <td>
+					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn">
+					  {{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn
+					  </a>
+				  </td>
 				  <td>
 					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
 					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
@@ -208,9 +211,9 @@
                         <div class="col-sm-6">
                             <div>
                                 <input ng-model="item.domain" type="text" class="form-control"
-                                        ng-show="item.id"  >
+                                        ng-show="item.id"  readonly>
                                 <input ng-model="item.domain" type="text" class="form-control"
-                                       ng-show="!item.id">
+                                       ng-show="!item.id" readonly>
                             </div>
                         </div>
                         <div class="col-sm-4"></div>
