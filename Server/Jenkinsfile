@@ -9,7 +9,7 @@ pipeline {
                       sh '''
 
                          if [ "$BRANCH_NAME"  = "prod" ];then
-                            sed -ie 's/http://localhost:8081//g' src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/http:\\/\\/localhost:8081//g' src/main/resources/static/js/faceinner.ajax.js
                          fi
 
                          # echo "修改版本号 $VERSION ";
