@@ -1,13 +1,20 @@
 package com.wuweibi.bullet.controller;
 
 import com.wuweibi.bullet.alias.SessionAttr;
+import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.utils.HttpUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.GET;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -15,7 +22,7 @@ import javax.servlet.http.HttpSession;
  * @author marker
  * @version 1.0
  */
-@Controller
+@RestController
 public class HomeController {
 
 	
@@ -29,4 +36,15 @@ public class HomeController {
 		return "index";
 	}
 
+
+    /**
+     * 初始化接口
+     * @return
+     */
+	@GetMapping("/api/init")
+	public MessageResult init(){
+        Map map = new HashMap(3);
+        map.put("domain", "joggle.cn");
+		return MessageFactory.get(map);
+	}
 }

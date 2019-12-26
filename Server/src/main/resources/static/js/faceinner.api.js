@@ -10,6 +10,7 @@
 
 var api = {
 
+    "init": '/api/init',
     /* 忘记密码 */
     "user.forget": '/api/user/forget',
 
@@ -44,6 +45,9 @@ var api = {
     "user.device.validate": '/api/user/device/validate',
     "user.device.mapping": '/api/user/device/mapping/',
     "system.ngrokd.check": '/api/system/ngrokd/check',
+
+    /* 用户域名与端口 */
+    "user.domain": '/api/user/domain/',
 
 
 

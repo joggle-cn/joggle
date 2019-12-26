@@ -1,0 +1,64 @@
+
+.domain .item-text{
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+.domain .item-wrap{
+    border: 1px #ccc solid;
+    padding: 10px 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: block;
+    color:#000;
+    border-radius: 6px;
+}
+
+.domain .item-wrap:hover{
+    background: #fff;
+    border: 1px #4CAF50 solid;
+}
+.domain .item-server{
+    position: relative;
+    margin: 0 auto;
+    height: 66px;
+    width: 80px;
+}
+.domain .item-icon {
+    font-size: 80px; color:#383838;
+    position: absolute;
+    top: -3px;
+}
+.domain .item-status.label-success{
+    background: #0de216;
+}
+.domain .item-status{
+    display: block;
+    background: #ffe300;
+    width: 7px;
+    height: 7px;
+    z-index: 999;
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    border-radius: 4px;
+}
+
+
+
+
+.domain .device-feature-item{
+    border:1px #ccc  solid;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.domain .device-feature-item p{
+    color: #929292;
+}
+.domain  .domain_leftline{
+
+    background: #eee;
+    width: 12px;
+    height: 20px;
+    display: inline-block;
+}

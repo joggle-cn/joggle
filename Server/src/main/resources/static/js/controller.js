@@ -94,9 +94,19 @@ define([
         $scope.init = function(){
             faceinner.get(api['user.login.info'],function(res){
                 if(res.status == 0){
-                    $scope.user = res.data;
-                    $scope.islogin = true;
+                    $rootScope.user = res.data;
+                    $rootScope.islogin = true;
                     $session.user = res.data;
+                }
+            });
+
+
+            // 加载系统初始化信息
+            faceinner.get(api['init'], function(res){
+                if(res.status == 0){
+                    $rootScope.$apply(function() {
+                        $rootScope.config = res.data;
+                    });
                 }
             });
         }
@@ -186,6 +196,12 @@ define([
 					$scope.user = res.results;
 					$scope.islogin = true;
 					//$session.user = res.results;
+				}
+			});
+			// 加载系统初始化信息
+			faceinner.get(api['init'], function(res){
+				if(res.status == 0){
+                    $rootScope.init = res.data;
 				}
 			});
 		}

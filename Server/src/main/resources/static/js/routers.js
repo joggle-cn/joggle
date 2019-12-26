@@ -54,7 +54,19 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , controllerUrl: 'view/device/mapping.js'
         }))
 
-        // 端口映射
+		// 我的域名
+		.when('/user/domain', router({
+			minTitle: "我的域名"
+			, templateUrl: 'view/domain/domain.htm'
+			, controllerUrl: 'view/domain/domain.js'
+		}))
+		.when('/user/domain/pay', router({
+			minTitle: "支付"
+			, templateUrl: 'view/pay/pay.htm'
+			, controllerUrl: 'view/pay/pay.js'
+		}))
+
+        // 系统配置
         .when('/system', router({
             minTitle: "系统配置"
             , templateUrl: 'view/system/system.htm'
