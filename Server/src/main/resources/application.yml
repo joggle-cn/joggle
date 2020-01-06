@@ -4,7 +4,6 @@
 #
 server:
   port: 8081
-  session-timeout: 30
 
 
 
@@ -14,6 +13,12 @@ server:
 # Spring 配置
 #
 spring:
+  security:
+    basic:
+      enabled: false
+    oauth2:
+      jwt:
+        signingKey: ${BULLET_SIGNNING_KEY:123456}
   thymeleaf:
     cache: false
   http:
@@ -29,7 +34,7 @@ spring:
     restart:
       enabled: true
       # 需要实时更新的目录
-      #additional-paths: src/main/java
+      additional-paths: src/main/java
 
   freemarker:
     templateLoaderPath: classpath:/templates
@@ -60,7 +65,7 @@ spring:
     url: jdbc:mysql://bullet-server:3306/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: ${BULLET_MYSQL_USERNAME:root}
     password: ${BULLET_MYSQL_PASSWORD:123456}
-    initialSize: 5
+    initialSize: 10
     minIdle: 5
     maxActive: 20
     maxWait: 60000
@@ -115,6 +120,11 @@ logging:
   config: 'classpath:logback-spring.xml'
 # 设定ftl文件路径
 
+#网关白名单，无需要签权url
+gate:
+  ignore:
+    authentication:
+      startWith: /oauth,/api/open,/logout,/druid
 
 
 

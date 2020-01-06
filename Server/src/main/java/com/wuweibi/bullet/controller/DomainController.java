@@ -3,32 +3,23 @@ package com.wuweibi.bullet.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.builder.MapBuilder;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.entity.Device;
-import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.entity.DeviceOnline;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
-import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
 
 /**
@@ -64,8 +55,11 @@ public class DomainController {
      * 我的域名列表
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Object device(){
-        Long userId = getUserId();
+    public Object device( @JwtUser Session session){
+        if(session.isNotLogin()){
+            return Result.fail(AuthErrorType.INVALID_LOGIN);
+        }
+        Long userId = session.getUserId();
         List<JSONObject> list = domainService.getListByUserId(userId);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

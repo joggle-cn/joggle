@@ -6,15 +6,19 @@ package com.wuweibi.bullet.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.builder.MapBuilder;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.DeviceOnline;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -24,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -42,30 +47,31 @@ import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
 public class DeviceController {
 
 
-    @Autowired
+
+    @Resource
     private CoonPool coonPool;
 
 
     /** 设备管理 */
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
 
-    @Autowired
+    @Resource
     private DeviceOnlineService deviceOnlineService;
 
-    @Autowired
+    @Resource
     private DeviceMappingService deviceMappingService;
 
 
     /**
      * 设备列表
-     * @param request
      * @return
      */
     @RequestMapping(value = "/device/", method = RequestMethod.GET)
-    public Object device(HttpServletRequest request ){
-        Long userId = getUserId();
+    public Object device(@JwtUser Session session){
+
+        Long userId = session.getUserId();
 
         List<Device> list  =deviceService.selectByMap(newMap(1)
                 .setParam("userId", userId)
@@ -121,12 +127,15 @@ public class DeviceController {
     }
 
 
-    // 删除设备
+    /**
+     * 删除设备
+     * @return
+     */
     @RequestMapping(value = "/device/", method = RequestMethod.DELETE)
-    public Object save(
+    public Object save(@JwtUser Session session,
                        @RequestParam Long id,
                        HttpServletRequest request ){
-        Long userId = getUserId(request);
+        Long userId = session.getUserId();
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, id);
@@ -150,21 +159,22 @@ public class DeviceController {
     }
 
 
-
-
-    // 设备校验
+    /**
+     * 设备校验
+     * @return
+     */
     @RequestMapping(value = "/device/validate", method = RequestMethod.GET)
     @ResponseBody
-    public Object validate(String deviceId,  HttpServletRequest request){
-        Long userId = getUserId(request);
+    public Result validate(@JwtUser Session session, String deviceId,  HttpServletRequest request){
+        Long userId = session.getUserId();
 
         // 没有输入设备ID
         if(StringUtils.isEmpty(deviceId)){
-            return MessageFactory.get(State.DeviceNotInput);
+            return Result.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
 
-        EntityWrapper ew=new EntityWrapper();
+        EntityWrapper ew = new EntityWrapper();
         ew.setEntity(new DeviceOnline());
         ew.where("deviceNo = {0}", deviceId).andNew("status = {0}", 1).orderBy("updateTime", false);
 
@@ -174,7 +184,7 @@ public class DeviceController {
             // 验证是否绑定
             boolean isBinded = deviceService.existsDevice(deviceId);
             if(isBinded){
-                return MessageFactory.get(State.DeviceIdBinded);
+                return Result.fail(SystemErrorType.DEVICE_OTHER_BIND);
             }
 
             // 给当前用户存储最新的设备数据
@@ -188,10 +198,9 @@ public class DeviceController {
 
             deviceService.insert(device);
 
-
-            return MessageFactory.getOperationSuccess();
+            return Result.success();
         }
-        return MessageFactory.get(State.DeviceNotOnline);
+        return Result.fail(SystemErrorType.DEVICE_NOT_ONLINE);
     }
 
 
@@ -215,8 +224,12 @@ public class DeviceController {
      */
     @RequestMapping(value = "/device/info", method = RequestMethod.GET)
     @ResponseBody
-    public Object device(HttpServletRequest request, @RequestParam Long deviceId){
-        Long userId = getUserId(request);
+    public Object device(HttpServletRequest request, @RequestParam Long deviceId,
+                         @JwtUser Session session){
+        if(session.isNotLogin()){
+            return Result.fail(AuthErrorType.INVALID_LOGIN);
+        }
+        Long userId = session.getUserId();
 
 
         MapBuilder mapBuilder = newMap(3);

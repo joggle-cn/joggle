@@ -1,9 +1,9 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.service.DeviceService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import static com.wuweibi.bullet.builder.MapBuilder.newMap;

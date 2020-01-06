@@ -79,7 +79,7 @@
 						<li><a href="#/user/device/bind">
 							<i class="fa fa-magnet"></i>  <span>绑定设备</span></a></li>
 						<li>
-							<a href="#/system"><i class="fa fa-cog"></i><span>系统配置</span></a>
+							<a href="#/system"><i class="fa fa-cog"></i> <span>系统配置</span></a>
 						</li>
 						<li class="divider"></li>
 						<li><a ng-click="loginout()"><i class="fa fa-power-off"></i> <span ng-bind="res.t('user.loginout')"></span></a></li>
@@ -122,7 +122,7 @@
 	   <!---->
 		</p>
 		<div class="text-center">
-			© 2014 - 2020 www.joggle.cn
+			© 2014 - 2020 www.{{config.domain}}
 			<span ng-show="islogin">
 				<a href="#"> conn= <span ng-bind="user.connNums"></span></a>
 			</span>

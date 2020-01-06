@@ -9,14 +9,14 @@
 
 
 
-var faceinner = {
+let faceinner = {
     /** 服务器地址 */
     server: 'http://localhost:8081',
 
 
     errorfunc : function(state){
         console.log(state);
-        alert(state.statusText);
+        // alert(state.statusText);
     },
 
 
@@ -67,7 +67,7 @@ var faceinner = {
      * @param funcerror 调用失败函数
      */
     get: function(url, data, func, funcerror){
-        var options = {
+        let options = {
             url: faceinner.server + url ,
             type: 'get',
             data: data ,
@@ -88,6 +88,12 @@ var faceinner = {
         }
 
 
+        if(localStorage.token){
+            options.headers ={
+                'Authorization': 'Bearer ' + localStorage.token,
+            }
+        }
+
         $.ajax(options);
     },
 
@@ -101,7 +107,7 @@ var faceinner = {
      * @param func 回调函数
      */
     post: function(url, data, func){
-        var options = {
+        let options = {
             url: faceinner.server + url ,
             type: 'post',
             data: data ,
@@ -116,6 +122,15 @@ var faceinner = {
         if(func === undefined){
             delete options.data;
             options.success = data;
+        }
+        if(url != '/oauth/token'){
+
+
+            if(localStorage.token){
+                options.headers ={
+                    'Authorization': 'Bearer ' + localStorage.token,
+                }
+            }
         }
         $.ajax(options);
     },
@@ -133,9 +148,9 @@ var faceinner = {
             data = {}
         }
         data._method = "DELETE";
-        var options = {
+        let options = {
             url: faceinner.server + url  ,
-            type: 'POST',
+            type: 'DELETE',
             data: data ,
             dataType: "json",
             success:func,
@@ -149,6 +164,15 @@ var faceinner = {
             delete options.data;
             options.success = data;
         }
+
+        if(url != '/oauth/token'){
+            if(localStorage.token){
+                options.headers ={
+                    'Authorization': 'Bearer ' + localStorage.token,
+                }
+            }
+        }
+
         $.ajax(options);
     },
 

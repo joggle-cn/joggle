@@ -2,17 +2,12 @@ package com.wuweibi.bullet.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.Domain;
-import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DomainMapper;
-import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
 
 /**
  * <p>

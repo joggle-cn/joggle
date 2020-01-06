@@ -10,17 +10,17 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
+import javax.annotation.Resource;
+
 /**
+ * WebSocket 配置
  *
- *
+ * @author marker
  * Created by Administrator on 2019/5/30.
  */
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig {
-
-    @Autowired
-    private SpringUtils springUtils;
 
 
     @Bean
@@ -29,10 +29,22 @@ public class WebSocketConfig {
     }
 
 
+    /**
+     * Bullet WebSocket接口
+     * @return
+     */
     @Bean
     public BulletAnnotation serverEndpointBulletAnnotation() {
         return new BulletAnnotation();
     }
+
+
+
+    /**
+     * Video WebSocket接口
+     * @return
+     */
+    @Deprecated
     @Bean
     public VideoAnnotation serverEndpointVideoAnnotation() {
         return new VideoAnnotation();

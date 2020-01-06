@@ -41,17 +41,17 @@
 
 
 
-    <logger name="org.springframework.web.servlet" level="INFO"/>
-    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.web.servlet" level="debug"/>
+    <logger name="org.springframework" level="debug"/>
     <logger name="org.springframework.web" level="debug"></logger>
     <logger name="org.springframework.data.redis" level="INFO"></logger>
-    <logger name="org.springframework.beans.factory.support" level="INFO"></logger>
+    <logger name="org.springframework.beans.factory.support" level="debug"></logger>
 
     <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="DEBUG" />
 
 
     <logger name="org.springframework.web.cors" level="ERROR" />
-    <logger name="org.mybatis.spring" level="INFO" />
+    <logger name="org.mybatis.spring" level="ERROR" />
     <logger name="org.mybatis.spring.transaction" level="INFO" />
 
 

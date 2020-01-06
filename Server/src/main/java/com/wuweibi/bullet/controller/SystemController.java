@@ -4,7 +4,7 @@ import com.wuweibi.bullet.config.BulletConfig;
 import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
-import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -29,10 +30,11 @@ import java.util.Date;
 @RequestMapping("/api/system")
 public class SystemController {
 
-	@Autowired private UserService userService;
+	@Resource
+    private OauthUserService oauthUserService;
 
 
-	@Autowired
+	@Resource
     private BulletConfig bulletConfig;
 	
 	@InitBinder  

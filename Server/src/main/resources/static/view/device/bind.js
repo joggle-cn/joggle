@@ -22,7 +22,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             $("#progress-bar").css({visibility:"visible"});
             faceinner.get(api['user.device.validate'], {deviceId: $scope.deviceId}, function(res) {
 
-                if (res.status == 0) {
+                if (res.code == 'S00') {
                     $scope.$apply(function(){
                         $("#progress-bar .progress-bar").removeClass("progress-bar-danger");
                         $("#progress-bar .progress-bar").addClass("progress-bar-success");

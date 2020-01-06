@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.service;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
-import com.baomidou.mybatisplus.service.IService;
 
 /**
  * <p>

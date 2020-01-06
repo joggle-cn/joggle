@@ -37,7 +37,9 @@ public class BulletServerApplication  {
                 new StartedServerListener(),
                 new CloseServerListener());
         app.run(args);
-        System.out.printf("========");
+        System.out.println("======================================");
+        System.out.println("========  Bullet Server ==============");
+        System.out.println("======================================");
     }
 
 }

@@ -18,7 +18,10 @@ import org.springframework.context.annotation.Configuration;
 //@ComponentScan({
 //    "com.byit.drm.mapper",
 //})
-@MapperScan("com.wuweibi.bullet.mapper*")/** Mapper扫描 */
+@MapperScan({
+        "com.wuweibi.bullet.mapper*",
+        "com.wuweibi.bullet.oauth2.dao*",
+})/** Mapper扫描 */
 public class MapperConfig {
 
 

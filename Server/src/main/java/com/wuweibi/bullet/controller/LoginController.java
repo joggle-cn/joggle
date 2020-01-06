@@ -8,7 +8,8 @@ import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.domain.params.LoginParam;
 import com.wuweibi.bullet.entity.User;
-import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.oauth2.domain.OauthUser;
+import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.utils.SessionHelper;
 import com.wuweibi.bullet.validation.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ import java.util.Date;
 @RequestMapping("/api")
 public class LoginController {
 
-	@Autowired private UserService userService;
+	@Autowired private OauthUserService oauthUserService;
 	
 	/** 消息通知 */
 //	@Autowired private NoticeService noticeService;
@@ -68,10 +69,10 @@ public class LoginController {
 		String email = user.getName();
 		
 		
-		int code = userService.login(email, user.getPass());
+		int code = oauthUserService.login(email, user.getPass());
 		switch (code) { 
 		case MessageCode.login_suc_user:
-			User loginUser = userService.getByEmail(email);
+			OauthUser loginUser = oauthUserService.getByEmail(email);
 			session.setAttribute(SessionAttr.LOGIN_USER , loginUser);
 			session.setAttribute(SessionHelper.USER_ID, loginUser.getId());
 			

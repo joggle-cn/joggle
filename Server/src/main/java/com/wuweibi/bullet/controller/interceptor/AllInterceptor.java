@@ -4,126 +4,69 @@ import com.alibaba.fastjson.JSON;
 import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.jwt.domain.JwtSession;
 import com.wuweibi.bullet.jwt.utils.JWTUtil;
+import com.wuweibi.bullet.oauth2.service.AuthenticationService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.Writer;
+
 
 
 public class AllInterceptor implements HandlerInterceptor {
-	
-	/** 日志记录器 */ 
-	protected Logger logger = LoggerFactory.getLogger(getClass()); 
-	
 
-    /** 不需要登录的接口 */
-	static String[] NotLoginUrls = new String[]{
-        "/api/user/login/"
-        , "/api/login"
-		, "/api/user/loginout"
-		, "/api/user/forget"
-		, "/api/user/register"
-		, "/api/user/changepass"
-		, "/api/weixin/bind"
-    };
-	
-	
+	/**
+	 * 响应编码
+	 */
+	public static final String encoding = "UTF-8";
+	/**
+	 * 日志记录器
+	 */
+	protected Logger logger = LoggerFactory.getLogger(getClass()); 
+
 	/**
 	 * 预处理
 	 * （验证API接口是否登录）
 	 */
 	public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
-//		System.out.println(handler);
-		HttpSession session = request.getSession(true);
-//		Object cookieDeceive = session.getAttribute(SessionAttr.CookieDeceive); 
-//		String id = session.getId();
-//		String ip = HttpUtils.getRemoteHost(request);
-//		System.out.println(id+"-"+ip);
-//		String md5 = MD5.getMD5Code(id+"-"+ip);
 
-
-//		User user = (User) session.getAttribute(SessionAttr.LOGIN_USER);
-//        if(user != null){
-//            long userId = user.getId();
-//            request.setAttribute(Var.UserId, userId);
-//        }
-		
-		
-		String uri = request.getRequestURI();
-	 
-		
-//		// 需要邀请验证
-//		if(uri.startsWith("/verify/one/yaoqing")){
-//			return true;
-//		}else{
-//			if(!uri.startsWith("/api/")) {
-//				Cookie c = CookieUtil.getCookie(request, "yqcode");
-//				if(c == null){
-//					response.sendRedirect("/verify/one/yaoqing.rain");
-//					return false;
-//				}
-//			}
-//		}
-//		
-//
-        // 验证不需要登录的接口
         String url = request.getRequestURI().toString();
-        for (String string : NotLoginUrls) {
-            if (url.contains(string)) {
-                return true;
-            }
-        }
 
+        // 验证权限
+		AuthenticationService authenticationService = SpringUtils.getBean(AuthenticationService.class);
 
-
-
-		// 安全防护
-		if(uri.startsWith("/api/")){// 调用的 API
-			Object user = session.getAttribute(SessionAttr.LOGIN_USER);
-
-			if(user != null){
-				return true; // 已经登录可以正常调用
-			}
-			String jwtToken = request.getHeader("Authorization");
-
-			JwtSession jwtSession = JWTUtil.getSession(jwtToken);
-
-			if(jwtSession!= null && jwtSession.isLogin()){
-				return true;
-			}
-
-
-
-			MessageResult msg = MessageFactory.getUserNotLoginError();
-			String str = JSON.toJSONString(msg, false);
-            response.setContentType("application/json;charset=utf-8");
-			response.getWriter().write(str);
-			logger.warn("_User Not Login! {}", str);
-			return false;
+		// 开放接口校验
+		if (authenticationService.ignoreAuthentication(url)) {
+			return true;
 		}
-//		
-//		// 老师学生Web
-//		if(uri.startsWith("/teacher")|| uri.startsWith("/student")){
-//			Object user = session.getAttribute(SessionAttr.LOGIN_USER); 
-//			if(md5.equals(cookieDeceive)){
-//				if(user != null){
-//					return true; // 已经登录可以正常调用  
-//				}  
-//			}
-//			response.sendRedirect("/login.rain"); 
-//			return false;
-//		} 
-		return true;
+
+		// 接口权限校验
+		Result result = authenticationService.hasPermission(request);
+		if(result.isSuccess()){
+			return true;
+		}
+
+
+		// 无权限 返回请登录
+
+		renderJson(result);
+		return false;
 	}
-	
-	
+
+
 	/** 处理请求 */
 	public void postHandle(HttpServletRequest request,
                            HttpServletResponse response, Object handler,
@@ -149,4 +92,26 @@ public class AllInterceptor implements HandlerInterceptor {
 		
 	}
 
+
+
+	/**
+	 * 警告信息
+	 * @throws IOException
+	 */
+	private void renderJson(Result result) throws IOException {
+
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes()).getRequest();
+		HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes()).getResponse();
+
+
+		request.setCharacterEncoding(encoding);
+		response.setCharacterEncoding(encoding);
+		response.setContentType("application/json;charset=UTF-8");
+		Writer writer = response.getWriter();
+		writer.write(JSON.toJSONString(result));
+		writer.flush();
+		writer.close();
+	}
 }

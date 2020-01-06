@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.service;
 
-import com.wuweibi.bullet.entity.UserForget;
 import com.baomidou.mybatisplus.service.IService;
+import com.wuweibi.bullet.entity.UserForget;
 
 /**
  * <p>

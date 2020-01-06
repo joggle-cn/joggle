@@ -93,17 +93,18 @@ define([
         // 初始化数据
         $scope.init = function(){
             faceinner.get(api['user.login.info'],function(res){
-                if(res.status == 0){
+                if(res.code == 'S00'){
                     $rootScope.user = res.data;
                     $rootScope.islogin = true;
                     $session.user = res.data;
                 }
+                $rootScope.$apply();
             });
 
 
             // 加载系统初始化信息
             faceinner.get(api['init'], function(res){
-                if(res.status == 0){
+                if(res.code == 'S00'){
                     $rootScope.$apply(function() {
                         $rootScope.config = res.data;
                     });
@@ -192,7 +193,7 @@ define([
 
 			// 加载用户登录信息
 			faceinner.get(api['user.login.info'], function(res){
-				if(res.status == 0){
+				if(res.code == 'S00'){
 					$scope.user = res.results;
 					$scope.islogin = true;
 					//$session.user = res.results;
@@ -200,7 +201,7 @@ define([
 			});
 			// 加载系统初始化信息
 			faceinner.get(api['init'], function(res){
-				if(res.status == 0){
+				if(res.code == 'S00'){
                     $rootScope.init = res.data;
 				}
 			});

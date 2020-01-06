@@ -31,7 +31,7 @@ import java.util.UUID;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
 
     @Autowired
@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserForget apply = new UserForget();
         apply.setUserId(user.getId());
         apply.setEmail(email);
-        apply.setOldPass(user.getPass());
+        apply.setOldPass(user.getPassword());
         apply.setCreateTime(new Date());
         apply.setCode(code);
         apply.setIp(ip);
@@ -123,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public int login(String email, String pass) {
         User user = getByEmail(email);
         if(user != null){
-            String userPass = user.getPass();
+            String userPass = user.getPassword();
             if(userPass != null && userPass.equals(pass)){
 
                 this.baseMapper.updateLoginTime(user.getId());

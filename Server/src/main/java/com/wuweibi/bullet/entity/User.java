@@ -13,14 +13,14 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *    用户模型
  * </p>
  *
  * @author marker
  * @since 2017-12-08
  */
 @Data
-@TableName("t_user")
+@TableName("t_sys_users")
 public class User extends Model<User> {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +29,7 @@ public class User extends Model<User> {
 	private Long id;
 	private String email;
 	private String nickname;
-	private String pass;
+	private String password;
 	private String agree;
 
 	/**
@@ -58,14 +58,4 @@ public class User extends Model<User> {
 		return this.id;
 	}
 
-	@Override
-	public String toString() {
-		return "User{" +
-			", id=" + id +
-			", email=" + email +
-			", nickname=" + nickname +
-			", pass=" + pass +
-			", agree=" + agree +
-			"}";
-	}
 }

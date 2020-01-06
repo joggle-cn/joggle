@@ -12,8 +12,7 @@ define(['app'], function (app) {//加载依赖js,
 
         // 加载用户登录信息
         faceinner.get(api['user.login.info'], function(res){
-            if(res.status == 100011){ // 没有登录
-
+            if(res.code == '040006'){ // 没有登录
                 window.location.href='#/login';
             }
         });

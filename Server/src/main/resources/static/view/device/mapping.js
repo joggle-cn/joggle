@@ -10,11 +10,14 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
 
 
 
-	var callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
+	let callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
         $scope.active = 'device';
         // 设备ID
-        var deviceId = $routeParams.deviceId;
+        let deviceId = $routeParams.deviceId;
 
+        $scope.features = {
+            lineName: '-',
+        }
 
 
 

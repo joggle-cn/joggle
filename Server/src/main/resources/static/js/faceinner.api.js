@@ -8,9 +8,11 @@
 
 
 
-var api = {
+let api = {
 
-    "init": '/api/init',
+    /** 初始化数据  */
+    "init": '/api/open/init',
+
     /* 忘记密码 */
     "user.forget": '/api/user/forget',
 
@@ -22,6 +24,9 @@ var api = {
 
     /* 登录接口 */
     "user.login": '/api/login',
+
+    /** 获取Token */
+    "user.token": '/oauth/token',
 
 
 

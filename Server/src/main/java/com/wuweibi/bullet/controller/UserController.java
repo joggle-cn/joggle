@@ -6,14 +6,19 @@ import com.qq.connect.QQConnectException;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.ResultMessage;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SessionHelper;
@@ -21,6 +26,7 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +46,8 @@ import java.util.Date;
 @RequestMapping("/api/user")
 public class UserController {
 
-	@Autowired private UserService userService;
+	@Autowired
+    private UserService userService;
 
 	
 	@InitBinder  
@@ -50,7 +57,7 @@ public class UserController {
 		dateFormat.setLenient(false);  
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
 		
-		binder.setValidator(new UserValidator()); //添加一个spring自带的validator
+//		binder.setValidator(new UserValidator()); //添加一个spring自带的validator
 	}
 
 
@@ -107,16 +114,17 @@ public class UserController {
 	 * 获取登录的用户信息
 	 */
 	@RequestMapping(value="/login/info", method=RequestMethod.GET) 
-	public MessageResult loginInfo(
-			HttpSession session){
-		Long userId = SessionHelper.getUserId();
+	public Result loginInfo(  @JwtUser Session session ){
+
+		if(session.isNotLogin()){
+			return Result.fail(AuthErrorType.INVALID_LOGIN);
+		}
+
+		Long userId = session.getUserId();
 
 		// 验证邮箱正确性
-		if(userId == null){
-			return MessageFactory.getUserNotLoginError();
-		}
 		User user = userService.selectById(userId);
-		user.setPass(null);
+		user.setPassword(null);
 
 		JSONObject result = (JSONObject)JSON.toJSON(user);
 
@@ -128,7 +136,7 @@ public class UserController {
 		result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
 
 
-		return MessageFactory.get(result);
+		return Result.success(result);
 	}
 	
 	

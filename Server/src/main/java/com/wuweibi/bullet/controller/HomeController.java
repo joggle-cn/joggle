@@ -4,9 +4,13 @@ import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.utils.HttpUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,14 +41,22 @@ public class HomeController {
 	}
 
 
+	/**
+	 * 接口资源管理器
+	 */
+	@Autowired
+	ResourceManager resourceManager;
+
     /**
      * 初始化接口
      * @return
      */
-	@GetMapping("/api/init")
-	public MessageResult init(){
+	@GetMapping("/api/open/init")
+	public Result init(){
         Map map = new HashMap(3);
         map.put("domain", "joggle.cn");
-		return MessageFactory.get(map);
+			resourceManager.loadResource();
+		return Result.success(map);
 	}
+
 }

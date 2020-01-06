@@ -81,7 +81,7 @@ public class WeixinAccountServiceImpl extends ServiceImpl<WeixinAccountMapper, W
 
 
                 // 生成Session信息
-                String token = JWTUtil.sign(user.getPass(), JwtSession.builder().userId(user.getId()));
+                String token = JWTUtil.sign(user.getPassword(), JwtSession.builder().userId(user.getId()));
 
 
                 account.setJwtToken(token);
