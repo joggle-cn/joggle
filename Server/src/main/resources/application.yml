@@ -124,7 +124,7 @@ logging:
 gate:
   ignore:
     authentication:
-      startWith: /oauth,/api/open,/logout,/druid
+      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template
 
 
 
