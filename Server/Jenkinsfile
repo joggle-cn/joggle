@@ -37,10 +37,13 @@ pipeline {
 
                    echo "bullet-server deploying...."
                    sh '''
-                        ssh root@joggle.cn "docker stop springboot-prod"
-                        echo "bullet-server uploading....."
-                        scp ./Server/target/server-1.0-SNAPSHOT.jar root@joggle.cn:/opt/data/springboot/prod/app.jar
-                        ssh root@joggle.cn "docker restart springboot-prod"
+                        echo "bullet-server uploading to tmp file ....."
+
+                        scp ./Server/target/server-1.0-SNAPSHOT.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+
+                        echo "bullet-server restart ....."
+
+                        ssh root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
                     '''
 
                }
