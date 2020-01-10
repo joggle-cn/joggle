@@ -53,6 +53,8 @@ let api = {
 
     /* 用户域名与端口 */
     "user.domain": '/api/user/domain/',
+    "user.domain.info": '/api/user/domain/info',
+    "user.domain.calculate": '/api/user/domain/calculate',
 
 
 

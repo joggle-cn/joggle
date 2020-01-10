@@ -8,8 +8,11 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.business.OrderPayBiz;
+import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DomainService;
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -75,6 +79,49 @@ public class DomainController {
         return MessageFactory.get(list);
     }
 
+
+    /**
+     * 获取我的域名信息
+     */
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public Object getInfo(@JwtUser Session session, @RequestParam Long domainId){
+
+        Long userId = session.getUserId();
+
+        // 检查是否该用户的域名
+        if(!domainService.checkDomain(userId, domainId)){
+            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+        Domain domain = domainService.selectById(domainId);
+
+        return Result.success(domain);
+    }
+
+
+    @Resource
+    private OrderPayBiz orderPayBiz;
+
+
+    /**
+     * 计算价格
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/calculate", method = RequestMethod.POST)
+    public Object getInfo(@JwtUser Session session,
+                          @RequestParam Integer time, // 3w
+                          @RequestParam Long domainId){
+
+        Long userId = session.getUserId();
+
+        // 检查是否该用户的域名
+        if(!domainService.checkDomain(userId, domainId)){
+            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+
+
+        return orderPayBiz.calculate(domainId, time);
+    }
 
 
 

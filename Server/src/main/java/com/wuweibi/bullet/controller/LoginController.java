@@ -7,7 +7,6 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.domain.params.LoginParam;
-import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.utils.SessionHelper;

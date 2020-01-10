@@ -14,7 +14,6 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

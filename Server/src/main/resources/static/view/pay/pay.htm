@@ -1,5 +1,5 @@
 <div style="margin-top:30px; "></div>
-<div class="container">
+<div class="container domain-pay">
 
     <div class="row">
         <div class="col-xs-12">
@@ -13,28 +13,72 @@
         <div class="col-md-6">
 			<form class="form-horizontal">
 				<div class="form-group">
-					<label class="col-sm-3" style="text-align: right"><span>域名</span>:</label>
+					<label class="col-sm-3" style="text-align: right">
+						<span ng-show="data.type == 2">域名:</span>
+						<span ng-show="data.type == 1">端口:</span>
+					</label>
 					<div class="col-sm-9">
-						<div type="email" ng-bind="user.email"
-							 placeholder="{{res.t('register.email')}}"></div>
+						<div>
+							{{data.type == 2? data.domain +'.' + config.domain:  data.domain}}
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right"><span>类型</span>:</label>
 					<div class="col-sm-9">
-						<div type="text" ng-bind="user.nickname" ></div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-3" style="text-align: right">时间:</label>
-					<div class="col-sm-9">
-						<div type="text" ng-bind="user.balance" ></div>
+						<div ng-bind="data.typeName" ></div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">价格:</label>
 					<div class="col-sm-9">
-						<div type="text" ng-bind="user.balance" ></div>
+						<div>
+							{{data.salesPrice}} 元/天
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">时间:</label>
+					<div class="col-sm-9">
+						<div style="position: relative;  top: -6px;">
+							<div class="radio radio-success radio-inline">
+								<input id="inlineTimeRadio1" type="radio" value="7" name="payTime" checked ng-model="payTime">
+								<label for="inlineTimeRadio1">1周</label>
+							</div>
+							<div class="radio radio-success radio-inline">
+								<input id="inlineTimeRadio2" type="radio" value="30" name="payTime" ng-model="payTime">
+								<label for="inlineTimeRadio2">1月</label>
+							</div>
+							<div class="radio radio-success radio-inline">
+								<input id="inlineTimeRadio3" type="radio" value="90" name="payTime" ng-model="payTime">
+								<label for="inlineTimeRadio3">3月</label>
+							</div>
+							<div class="radio radio-success radio-inline">
+								<input id="inlineTimeRadio4" type="radio" value="180" name="payTime" ng-model="payTime">
+								<label for="inlineTimeRadio4">6月</label>
+							</div>
+							<div class="radio radio-success radio-inline">
+								<input id="inlineTimeRadio5" type="radio" value="360" name="payTime" ng-model="payTime">
+								<label for="inlineTimeRadio5">12月</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">到期时间:</label>
+					<div class="col-sm-9">
+						<div>
+							{{dueTime | showDate}}
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">支付金额:</label>
+					<div class="col-sm-9">
+						<div>
+							{{payMoney}} 元
+						</div>
 					</div>
 				</div>
 
@@ -47,7 +91,7 @@
 								<label for="inlineRadio1">余额支付</label>
 							</div>
 							<div class="radio radio-success radio-inline">
-								<input type="radio" id="inlineRadio2" value="option2" name="radioInline">
+								<input type="radio" id="inlineRadio2" value="option2" disabled name="radioInline">
 								<label for="inlineRadio2">微信支付</label>
 							</div>
 						</div>

@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * 系统错误定义
+ * 业务错误代码
+ *
  * @author marker
  */
 @Getter
@@ -20,6 +22,12 @@ public enum SystemErrorType implements ErrorType {
     DEVICE_INPUT_NUMBER("100001", "请输入设备编码"),
     DEVICE_OTHER_BIND("100002", "设备已经被其他账号绑定"),
     DEVICE_NOT_ONLINE("100003", "设备不在线"),
+
+
+    /**
+     * 1001域名相关
+      */
+    DOMAIN_NOT_FOUND("100100", "域名找不到"),
 
 
 

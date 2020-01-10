@@ -56,10 +56,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private ResourceManager resourceManager;
 
 
-    /**
-     * Authorization认证开头是"bearer "
-     */
-    private static final int BEARER_BEGIN_INDEX = 7;
 
     /**
      * jwt token 密钥，主要用于token解析，签名验证

@@ -3,7 +3,6 @@ package com.wuweibi.bullet.controller.validator;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.utils.SpringUtils;
-import com.wuweibi.bullet.utils.Utils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

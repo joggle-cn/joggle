@@ -24,4 +24,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     public List<JSONObject> getListByUserId(Long userId) {
         return this.baseMapper.selectByUserId(userId);
     }
+
+    @Override
+    public boolean checkDomain(Long userId, Long domainId) {
+        return this.baseMapper.existDomainUserId(userId, domainId);
+    }
 }

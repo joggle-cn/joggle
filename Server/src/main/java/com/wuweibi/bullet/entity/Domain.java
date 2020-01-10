@@ -9,7 +9,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -83,6 +82,19 @@ public class Domain extends Model<Domain> {
     @Override
 	protected Serializable pkVal() {
 		return this.id;
+	}
+
+
+	/**
+	 * 获取TypeName
+	 * @return
+	 */
+	public String getTypeName(){
+    	switch (this.type){
+			case 1: return "端口";
+			case 2: return "域名";
+		}
+		return "-";
 	}
 
 }

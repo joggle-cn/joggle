@@ -15,13 +15,10 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 /** 扫描有注解的包 */
-//@ComponentScan({
-//    "com.byit.drm.mapper",
-//})
 @MapperScan({
-        "com.wuweibi.bullet.mapper*",
-        "com.wuweibi.bullet.oauth2.dao*",
-})/** Mapper扫描 */
+    "com.wuweibi.bullet.mapper*",
+    "com.wuweibi.bullet.oauth2.dao*",
+})
 public class MapperConfig {
 
 

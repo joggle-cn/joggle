@@ -6,7 +6,6 @@ package com.wuweibi.bullet.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.builder.MapBuilder;
 import com.wuweibi.bullet.conn.CoonPool;
@@ -24,7 +23,6 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 

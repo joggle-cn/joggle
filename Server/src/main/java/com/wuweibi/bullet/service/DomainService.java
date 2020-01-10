@@ -19,8 +19,16 @@ public interface DomainService extends IService<Domain> {
 
     /**
      * 根据用户ID查询归属域名
-     * @param userId
+     * @param userId 用户ID
      * @return
      */
     List<JSONObject> getListByUserId(Long userId);
+
+    /**
+     * 检查域名是否和用户绑定
+     * @param userId 用户ID
+     * @param domainId 域名ID
+     * @return
+     */
+    boolean checkDomain(Long userId, Long domainId);
 }

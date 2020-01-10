@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AuthenticationService {
 
+    /**
+     * Authorization认证开头是"bearer "
+     */
+    int BEARER_BEGIN_INDEX = 7;
+
 
     /**
      * 校验权限
@@ -24,10 +29,20 @@ public interface AuthenticationService {
     boolean decide(HttpServletRequest authRequest);
 
 
+    /**
+     * 获取Jwt对象
+     * @param authentication
+     * @return
+     */
     Jwt getJwt(String authentication);
 
 
-    public Result hasPermission(HttpServletRequest request);
+    /**
+     * 判断是否有权限
+     * @param request
+     * @return
+     */
+    Result hasPermission(HttpServletRequest request);
 
 
     /**

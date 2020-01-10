@@ -119,9 +119,10 @@ define([
          * 退出登录
          */
         $scope.loginout = function(){
-            faceinner.get(api['user.loginout'],function(res){
-                if(res.status == 0){
+            faceinner.post(api['user.loginout'],function(res){
+                if(res.code == 'S00'){
                     delete $rootScope.user;
+                    localStorage.token = null;
                     $rootScope.$apply(function() {
                         $rootScope.islogin = false;
                         window.location.href = '#/login';

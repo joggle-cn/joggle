@@ -5,7 +5,6 @@ import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;

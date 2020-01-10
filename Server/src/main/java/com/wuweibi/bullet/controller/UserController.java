@@ -9,7 +9,6 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
-import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
@@ -18,19 +17,21 @@ import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
-import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
-import com.wuweibi.bullet.utils.SessionHelper;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
@@ -174,20 +175,25 @@ public class UserController {
 		
 		return new ResultMessage(false,"操作失败");
 	}
-	
-	
-	
+
+
+
+	@Resource()
+	ConsumerTokenServices consumerTokenServices;
+
+
 	/**
 	 * 注销操作
 	 */
-	@RequestMapping(value="/loginout", method=RequestMethod.GET) 
-	public MessageResult loginout(HttpServletRequest request){
-		HttpSession session = request.getSession(false);
-		if(session != null){
-			session.invalidate();
+	@RequestMapping(value="/loginout", method=RequestMethod.POST)
+	public Result loginout(HttpServletRequest request){
+		String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
+		String tokenValue = StringUtils.substring(authentication, AuthenticationService.BEARER_BEGIN_INDEX);
+		if(consumerTokenServices.revokeToken(tokenValue)){
+			return Result.success();
+		}else{
+			return Result.fail(AuthErrorType.INVALID_REQUEST);
 		}
-		return MessageFactory.getOperationSuccess(); 
-		 
 	}
 
 

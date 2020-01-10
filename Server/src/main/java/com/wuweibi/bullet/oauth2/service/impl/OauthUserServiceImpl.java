@@ -2,21 +2,10 @@ package com.wuweibi.bullet.oauth2.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
-import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain.message.MessageResult;
-import com.wuweibi.bullet.entity.UserForget;
-import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.oauth2.dao.OauthUserMapper;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * <p>
