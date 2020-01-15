@@ -79,6 +79,7 @@ public class AuthenticationServerConfig extends AuthorizationServerConfigurerAda
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+
         // 支持将client参数放在header或body中
         oauthServer.allowFormAuthenticationForClients();
         //允许所有资源服务器访问公钥端点（/oauth/token_key）

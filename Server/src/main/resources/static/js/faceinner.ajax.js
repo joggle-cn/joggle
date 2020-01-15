@@ -88,7 +88,7 @@ let faceinner = {
         }
 
 
-        if(localStorage.token){
+        if(localStorage.token && localStorage.token != 'null'){
             options.headers ={
                 'Authorization': 'Bearer ' + localStorage.token,
             }
@@ -126,7 +126,7 @@ let faceinner = {
         if(url != '/oauth/token'){
 
 
-            if(localStorage.token){
+            if(localStorage.token && localStorage.token != 'null'){
                 options.headers ={
                     'Authorization': 'Bearer ' + localStorage.token,
                 }
@@ -166,7 +166,7 @@ let faceinner = {
         }
 
         if(url != '/oauth/token'){
-            if(localStorage.token){
+            if(localStorage.token && localStorage.token != 'null'){
                 options.headers ={
                     'Authorization': 'Bearer ' + localStorage.token,
                 }

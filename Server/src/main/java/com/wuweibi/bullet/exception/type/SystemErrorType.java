@@ -22,6 +22,7 @@ public enum SystemErrorType implements ErrorType {
     DEVICE_INPUT_NUMBER("100001", "请输入设备编码"),
     DEVICE_OTHER_BIND("100002", "设备已经被其他账号绑定"),
     DEVICE_NOT_ONLINE("100003", "设备不在线"),
+    DEVICE_NOT_EXIST("100004", "设备不存在"),
 
 
     /**

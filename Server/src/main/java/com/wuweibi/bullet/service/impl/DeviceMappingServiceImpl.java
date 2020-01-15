@@ -92,4 +92,9 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public List<DeviceMapping> getDeviceAll(String deviceNo) {
         return this.baseMapper.selectListByDeviceNo(deviceNo);
     }
+
+    @Override
+    public boolean existsDomainId(Long deviceId, Long domainId) {
+        return  this.baseMapper.existsDomainId(deviceId, domainId);
+    }
 }

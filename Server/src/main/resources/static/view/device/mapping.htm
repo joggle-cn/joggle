@@ -34,8 +34,9 @@
 			</div>
 		</div>
 		<div class="col-sm-4">
-			<a class="btn btn-default"  ng-click="delDevice(deviceInfo)">解绑设备</a>
+			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
 			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
+			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
 		</div>
 	</div>
 
@@ -109,7 +110,7 @@
 
 					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
 					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
-					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
+					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
 				  </td>
 			  </tr>
 			  </tbody>
@@ -158,7 +159,7 @@
 				  <td>
 					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
 					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
-					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">删除</a>
+					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
 				  </td>
 			  </tr>
 			  </tbody>
@@ -276,6 +277,63 @@
 
 
 
+<!-- 绑定域名弹框 -->
+<div id="bindDomainDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">绑定域名/端口</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">域名/端口</label>
+						<div class="col-sm-6">
+							<select class="form-control" ng-model="selectDomainId" ng-options="item.id as item.domain for item in domainNoBindList">
+
+							</select>
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="deviceBindDomain()" class="btn btn-default">确认绑定</a>
+				<a ng-click="closeBindDomain()"  class="btn btn-default">取消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 删除弹出框确认 -->
+<div id="delDevice" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">消息提示</h4>
+			</div>
+			<div class="modal-body">
+				确定要解绑该设备？
+			</div>
+			<div class="modal-footer">
+				<a ng-click="confirmDeleteDevice()" class="btn btn-default">确 定</a>
+				<a class="btn btn-default" data-dismiss="modal">取 消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
 <!-- 编辑弹出框 -->
 <div id="editDevice" class="modal fade">
 	<div class="modal-dialog">
@@ -289,7 +347,7 @@
 					<div class="form-group">
 						<label for="a" class="col-sm-2 control-label">设备名称</label>
 						<div class="col-sm-6">
-							<input type="text" ng-model="deviceInfo.name" class="form-control" id="a" placeholder="名称">
+							<input type="text" ng-model="deviceInfo.name" class="form-control" placeholder="名称">
 						</div>
 						<div class="col-sm-4">
 
@@ -330,26 +388,6 @@
 			<div class="modal-footer">
 				<a ng-click="saveDevice()" class="btn btn-default">保 存</a>
 				<a ng-click="exitDevice()"  class="btn btn-default">取 消</a>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
-<!-- 删除弹出框确认 -->
-<div id="delDevice" class="modal fade">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">消息提示</h4>
-			</div>
-			<div class="modal-body">
-				确定要解绑该设备？
-			</div>
-			<div class="modal-footer">
-				<a ng-click="confirmDeleteDevice()" class="btn btn-default">确 定</a>
-				<a class="btn btn-default" data-dismiss="modal">取 消</a>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

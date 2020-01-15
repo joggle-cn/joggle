@@ -41,7 +41,15 @@ public class Device extends Model<Device> {
 	@TableField(value = "mac_addr")
 	private String macAddr;
 
-    @Override
+
+	/**
+	 * 服务通道ID
+	 */
+	@TableField("server_tunnel_id")
+	private Long serverTunnelId;
+
+
+	@Override
 	protected Serializable pkVal() {
 		return this.id;
 	}

@@ -14,7 +14,7 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
         $scope.active = 'device';
         // 设备ID
         let deviceId = $routeParams.deviceId;
-
+        $scope.domainNoBindList = [];
         $scope.features = {
             lineName: '-',
         }
@@ -89,17 +89,15 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
 		}
 
         /**
-         * 删除
+         * 删除设备与域名的映射关系
          * @param id
          */
 		$scope.delMapping = function(id, $index){
-
             faceinner.delete(api['user.device.mapping'], {id:id} , function(res) {
                 if (res.status == 0) {
                     flushData();
                 }
             });
-
         }
 
         /**
@@ -160,6 +158,53 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
         }
 
         /**
+         * 绑定域名弹框
+         */
+        $scope.bindDomainDialog = function(item){
+            faceinner.get(api['user.domain.nobind'], {}, function(res){
+                if (res.code == 'S00') {
+                    $scope.$apply(function() {
+                        $scope.domainNoBindList = res.data;
+                    });
+                }
+            });
+
+            $("#bindDomainDialog").modal({
+                backdrop: false
+            });
+        }
+        /**
+         * 关闭绑定域名弹框
+         */
+        $scope.closeBindDomain = function(){
+            $("#bindDomainDialog").modal('hide');
+        }
+
+
+        /**
+         * 设备绑定域名
+         */
+        $scope.deviceBindDomain = function(){
+            if(!$scope.selectDomainId){
+                return;
+            }
+            let params = {
+                deviceId: $scope.deviceInfo.id,
+                domainId: $scope.selectDomainId,
+            }
+
+            faceinner.post(api['user.domain.bind.device'], params , function(res) {
+                if (res.code == 'S00') {
+                    $("#bindDomainDialog").modal('hide');
+                    flushData(); // 刷新数据
+
+                    delete $scope.selectDomainId;
+                }
+            });
+        }
+
+
+        /**
          * 弹框退出
          */
         $scope.exitDevice = function(){
@@ -188,7 +233,6 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
                 backdrop: false
             });
         }
-
 
         /**
          * 确认删除设备

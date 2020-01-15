@@ -31,4 +31,12 @@ public interface DomainService extends IService<Domain> {
      * @return
      */
     boolean checkDomain(Long userId, Long domainId);
+
+
+    /**
+     * 获取未绑定的域名列表
+     * @param userId 用户ID
+     * @return
+     */
+    List<JSONObject> getListNotBindByUserId(Long userId);
 }

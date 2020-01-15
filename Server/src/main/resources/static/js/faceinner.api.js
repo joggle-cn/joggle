@@ -55,6 +55,8 @@ let api = {
     "user.domain": '/api/user/domain/',
     "user.domain.info": '/api/user/domain/info',
     "user.domain.calculate": '/api/user/domain/calculate',
+    "user.domain.nobind": '/api/user/domain/nobind',
+    "user.domain.bind.device": '/api/user/domain/bind',
 
 
 

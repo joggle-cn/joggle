@@ -24,6 +24,11 @@ public class DeviceMapping extends Model<DeviceMapping> {
 
     private static final long serialVersionUID = 1L;
 
+    public static final int PROTOCOL_HTTP  = 1;
+    public static final int PROTOCOL_TCP   = 2;
+    public static final int PROTOCOL_HTTPS = 3;
+
+
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	@TableField("device_id")
@@ -32,6 +37,13 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private String domain;
 
 	private Integer port;
+
+
+	/**
+	 * 域名或端口ID
+	 */
+	@TableField("domain_id")
+	private Long domainId;
 
 	/**
 	 * 远端端口

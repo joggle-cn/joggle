@@ -29,4 +29,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     public boolean checkDomain(Long userId, Long domainId) {
         return this.baseMapper.existDomainUserId(userId, domainId);
     }
+
+    @Override
+    public List<JSONObject> getListNotBindByUserId(Long userId) {
+        return this.baseMapper.selectListNotBindByUserId(userId);
+    }
 }

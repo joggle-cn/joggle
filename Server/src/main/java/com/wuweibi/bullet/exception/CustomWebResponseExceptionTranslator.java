@@ -2,12 +2,14 @@ package com.wuweibi.bullet.exception;
 
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 
+@Slf4j
 public class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
 
     @Override
@@ -28,6 +30,7 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
                     .body("dsadsaddsadsad");
 
         } else if(e instanceof InsufficientAuthenticationException) {
+            log.warn("", e);
             return ResponseEntity
                     .status(200).body(Result.fail(AuthErrorType.INVALID_LOGIN));
         } else {

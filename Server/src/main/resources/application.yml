@@ -32,7 +32,7 @@ spring:
       enabled: true
   devtools:
     restart:
-      enabled: true
+      enabled: false
       # 需要实时更新的目录
       additional-paths: src/main/java
 

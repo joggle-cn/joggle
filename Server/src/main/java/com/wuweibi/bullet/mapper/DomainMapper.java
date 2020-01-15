@@ -34,4 +34,13 @@ public interface DomainMapper extends BaseMapper<Domain> {
      */
     @Select("select count(1) from t_domain where id = #{domainId} and user_id = #{userId}")
     boolean existDomainUserId(@Param("userId") Long userId, @Param("domainId") Long domainId);
+
+
+    /**
+     * 获取未绑定的域名列表
+     * @param userId 用户ID
+     * @return
+     */
+    @Select("select id,domain, type from t_domain where id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})")
+    List<JSONObject> selectListNotBindByUserId(Long userId);
 }

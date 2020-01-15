@@ -70,4 +70,12 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     List<DeviceMapping> getDeviceAll(String deviceNo);
+
+    /**
+     * 判断域名是否被绑定
+     * @param deviceId 设备ID
+     * @param domainId 域名ID
+     * @return
+     */
+    boolean existsDomainId(Long deviceId, Long domainId);
 }

@@ -40,3 +40,11 @@ ALTER TABLE `t_user` ADD COLUMN `balance` decimal(10,2) DEFAULT 0 COMMENT '余�
 -- 2019年12月25日 marker 新增服务通道表
 ALTER TABLE `t_device_mapping` ADD COLUMN `server_tunnel_id` bigint COMMENT '服务通道ID' AFTER `auth`;
 update t_device_mapping set server_tunnel_id = 1;
+
+
+-- 2020年1月14日 marker 新增domain_id
+
+ALTER TABLE `t_device_mapping` ADD COLUMN `domain_id` bigint COMMENT '域名ID' AFTER `server_tunnel_id`;
+
+-- 2020年1月15日 marker 新增设备通道
+ALTER TABLE `t_device` ADD COLUMN `server_tunnel_id` bigint NOT NULL COMMENT '设备通道' AFTER `mac_addr`;

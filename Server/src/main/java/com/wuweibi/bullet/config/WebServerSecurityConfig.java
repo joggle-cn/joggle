@@ -43,6 +43,7 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.httpBasic().disable();
         http.authorizeRequests()
             .antMatchers("/oauth/token", "/actuator/**", "/logout").permitAll()
+            .antMatchers("/api/open").permitAll()
 
             .anyRequest().permitAll()
 

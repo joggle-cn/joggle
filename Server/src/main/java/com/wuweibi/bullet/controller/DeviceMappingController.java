@@ -4,7 +4,9 @@ package com.wuweibi.bullet.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.Message;
@@ -52,10 +54,14 @@ public class DeviceMappingController {
     private CoonPool coonPool;
 
 
+    /**
+     * 删除映射关系
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     @ResponseBody
-    public Object delete(HttpServletRequest request,@RequestParam Long id){
-        Long userId = getUserId(request);
+    public Object delete(@JwtUser Session session, @RequestParam Long id){
+        Long userId = session.getUserId();
 
         boolean status = deviceMappingService.exists(userId, id);
 
