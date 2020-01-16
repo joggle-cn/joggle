@@ -98,8 +98,7 @@
 				  <td>{{$index+1}}</td>
 				  <td>tcp://joggle.cn:{{item.remotePort}}</td>
 				  <td>
-					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
-					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
+					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
 				  </td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
@@ -108,7 +107,7 @@
 				  <td>{{item.description}}</td>
 				  <td>
 
-					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+					  <a ng-click="addMapping(item, 1)" class="btn btn-info">编辑</a>
 					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
 				  </td>
@@ -148,8 +147,7 @@
 					  </a>
 				  </td>
 				  <td>
-					  <span ng-if="item.protocol == 1 || item.protocol == 2 ">{{item.host}}:{{item.port}}</span>
-					  <span ng-if="item.protocol == 3">tcp://{{item.host}}:{{item.port}}</span>
+					  <span ng-if="item.protocol == 1 || item.protocol == 3 ">{{item.host}}:{{item.port}}</span>
 				  </td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
@@ -157,7 +155,7 @@
 				  </td>
 				  <td>{{item.description}}</td>
 				  <td>
-					  <a ng-click="addMapping(item)" class="btn btn-info">编辑</a>
+					  <a ng-click="addMapping(item,2)" class="btn btn-info">编辑</a>
 					  <!--<a ng-click="addMapping(item)" class="btn btn-info">编辑</a>-->
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
 				  </td>
@@ -186,22 +184,22 @@
 					<div class="form-group">
 						<label for="b" class="col-sm-2 control-label">协议</label>
 						<div class="col-sm-6">
-							<select class="form-control" ng-model="item.protocol" >
-								<option value="1">HTTP</option>
-								<option value="3">HTTPS</option>
-								<option value="2">TCP</option>
+							<select class="form-control" ng-model="entity.protocol" >
+								<option value="1" ng-if="entity.type == 2">HTTP</option>
+								<option value="3" ng-if="entity.type == 2">HTTPS</option>
+								<option value="2" ng-if="entity.type == 1">TCP</option>
 							</select>
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-                    <div class="form-group" ng-show="item.protocol == 1 || item.protocol == 3">
+                    <div class="form-group" ng-show="entity.protocol == 1 || entity.protocol == 3">
                         <label for="b" class="col-sm-2 control-label">域名</label>
                         <div class="col-sm-6">
                             <div>
-                                <input ng-model="item.hostname" type="text" class="form-control"
-                                        ng-show="item.id"  >
-                                <input ng-model="item.hostname" type="text" class="form-control"
-                                       ng-show="!item.id">
+                                <input ng-model="entity.hostname" type="text" class="form-control"
+                                        ng-show="entity.id"  >
+                                <input ng-model="entity.hostname" type="text" class="form-control"
+                                       ng-show="!entity.id">
                             </div>
                         </div>
                         <div class="col-sm-4"></div>
@@ -210,10 +208,10 @@
                         <label for="b" class="col-sm-2 control-label" >子域名</label>
                         <div class="col-sm-6">
                             <div>
-                                <input ng-model="item.domain" type="text" class="form-control"
-                                        ng-show="item.id"  readonly>
-                                <input ng-model="item.domain" type="text" class="form-control"
-                                       ng-show="!item.id" readonly>
+                                <input ng-model="entity.domain" type="text" class="form-control"
+                                        ng-show="entity.id"  readonly>
+                                <input ng-model="entity.domain" type="text" class="form-control"
+                                       ng-show="!entity.id" readonly>
                             </div>
                         </div>
                         <div class="col-sm-4"></div>
@@ -221,43 +219,43 @@
 					<div class="form-group">
 						<label for="b" class="col-sm-2 control-label">内网HOST</label>
 						<div class="col-sm-6">
-							<input type="text" ng-model="item.host"  class="form-control" placeholder="">
+							<input type="text" ng-model="entity.host"  class="form-control" placeholder="">
 						</div>
                         <div class="col-sm-4"></div>
 					</div>
 					<div class="form-group">
 						<label for="b" class="col-sm-2 control-label">端口</label>
 						<div class="col-sm-6">
-							<input type="number" ng-model="item.port"  class="form-control" id="b" placeholder="">
+							<input type="number" ng-model="entity.port"  class="form-control" id="b" placeholder="">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group" ng-show="item.protocol == 2">
+					<div class="form-group" ng-show="entity.protocol == 2">
 						<label for="b" class="col-sm-2 control-label">远端端口</label>
 						<div class="col-sm-6">
-							<input type="number" ng-model="item.remotePort"  class="form-control" id="" placeholder="">
+							<input type="number" ng-model="entity.remotePort"  class="form-control" id="" placeholder="">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group" ng-show="item.protocol == 1 || item.protocol == 3">
+					<div class="form-group" ng-show="entity.protocol == 1 || entity.protocol == 3">
 						<label for="b" class="col-sm-2 control-label">简单认证</label>
 						<div class="col-sm-6">
-							<input type="text" ng-model="item.auth"  class="form-control" placeholder="user:password">
+							<input type="text" ng-model="entity.auth"  class="form-control" placeholder="user:password">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
 					<div class="form-group">
 						<label for="b" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-6">
-                            <textarea class="form-control" ng-model="item.description" rows="3"></textarea>
+                            <textarea class="form-control" ng-model="entity.description" rows="3"></textarea>
 						</div>
                         <div class="col-sm-4"></div>
 					</div>
                     <div class="form-group">
-                        <label for="my-checkbox1" class="col-sm-2 control-label" >状态</label>
+                        <label for="stautsCheckbox" class="col-sm-2 control-label" >状态</label>
                         <div class="col-sm-10">
-                            <div class="switch" data-animated="true">
-                                <input id="my-checkbox1" name="my-checkbox1" type="checkbox" checked />
+                            <div class="switch">
+                                <input id="stautsCheckbox" type="checkbox" checked />
                             </div>
                         </div>
                     </div>
@@ -345,9 +343,9 @@
 
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label for="a" class="col-sm-2 control-label">设备名称</label>
+						<label for="deviceName" class="col-sm-2 control-label">设备名称</label>
 						<div class="col-sm-6">
-							<input type="text" ng-model="deviceInfo.name" class="form-control" placeholder="名称">
+							<input id="deviceName" type="text" ng-model="deviceInfo.name" class="form-control" placeholder="名称">
 						</div>
 						<div class="col-sm-4">
 

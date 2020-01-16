@@ -28,10 +28,10 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
     /**
      * 判断用户是否拥有映射数据
      * @param userId
-     * @param id
+     * @param mappingId
      * @return
      */
-    boolean exists(Long userId, Long id);
+    boolean exists(Long userId, Long mappingId);
 
 
     /**

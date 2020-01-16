@@ -53,7 +53,8 @@ define([
      */
     app.filter('showProtocol',[function(){
         return function(protocol ){
-            switch (protocol){
+            let protocolInt = parseInt(protocol);
+            switch (protocolInt){
                 case 1 : return "http";
                 case 2 : return "tcp";
                 case 3 : return "https";

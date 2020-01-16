@@ -70,21 +70,23 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
         /**
          * 编辑设备
          */
-        $scope.addMapping = function(item){
-            $scope.item = item;
+        $scope.addMapping = function(item, type){
+            item.type = type;
+            $scope.entity = item;
+
             $("#addMapping").modal({
                 backdrop: false
             });
             $('#addMapping').on('shown.bs.modal', function () {
 
 
-                $("#my-checkbox1").bootstrapSwitch({
-                    state: item.status,
+                $("#stautsCheckbox").bootstrapSwitch({
+                    state: $scope.entity.status,
                     onSwitchChange:function (event, state) {
-                        $scope.item.status = state;
+                        $scope.entity.status = state;
                     }
                 });
-                $("#my-checkbox1").bootstrapSwitch('state', item.status, true);
+                $("#stautsCheckbox").bootstrapSwitch('state', $scope.entity.status, true);
             })
 		}
 
@@ -105,28 +107,26 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
          */
 		$scope.save = function(){
 		    var params = {
-		        id : $scope.item.id,
-		        domain : $scope.item.domain,
-                protocol : $scope.item.protocol,
-		        port : $scope.item.port,
-		        remotePort : $scope.item.remotePort,
-                host : $scope.item.host,
-                hostname : $scope.item.hostname,
-                auth : $scope.item.auth,
+		        id : $scope.entity.id,
+		        domain : $scope.entity.domain,
+                protocol : $scope.entity.protocol,
+		        port : $scope.entity.port,
+		        remotePort : $scope.entity.remotePort,
+                host : $scope.entity.host,
+                hostname : $scope.entity.hostname,
+                auth : $scope.entity.auth,
                 deviceId: deviceId,
-		        description : $scope.item.description,
-                status : $scope.item.status?1:0,
+		        description : $scope.entity.description,
+                status : $scope.entity.status?1:0,
             }
 
 
 
 
             faceinner.post(api['user.device.mapping'],params , function(res) {
-                if (res.status == 0) {
+                if (res.code == 'S00') {
                     $("#addMapping").modal('hide');
                     flushData();
-                } else if(res.status ==  200100){// 域名被绑定
-                    alert(res.msg);
                 } else{
                     alert(res.msg);
                 }
