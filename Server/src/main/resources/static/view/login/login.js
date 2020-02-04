@@ -22,22 +22,23 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
 
 			// 表单验证
 			faceinner.post(api['user.token'], params , function(res){
-
-				localStorage.token = res.access_token;
-
-
 				console.log(res);
 
-				// 加载用户登录信息
-				faceinner.get(api['user.login.info'], function(res){
-					if(res.code == 'S00'){
-						$scope.$apply(function() {
-							$rootScope.user = res.data;
-							$rootScope.islogin = true;
-							$location.path('/index').replace();
-						});
-					}
-				});
+				if(res.access_token){
+					localStorage.token = res.access_token;
+					// 加载用户登录信息
+					faceinner.get(api['user.login.info'], function(res){
+						if(res.code == 'S00'){
+							$scope.$apply(function() {
+								$rootScope.user = res.data;
+								$rootScope.islogin = true;
+								$location.path('/index').replace();
+							});
+						}
+					});
+				}else{
+					alert(res.msg);
+				}
 				// faceinner.handleFieldError($scope, res);
 			});
 		 }; 

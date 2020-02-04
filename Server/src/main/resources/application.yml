@@ -28,8 +28,6 @@ spring:
     active: dev
   application:
     name: Bullet
-    admin:
-      enabled: true
   devtools:
     restart:
       enabled: false

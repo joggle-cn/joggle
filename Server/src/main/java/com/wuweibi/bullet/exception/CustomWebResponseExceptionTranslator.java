@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 
@@ -16,10 +17,15 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
     public ResponseEntity translate(Exception e) {
 
         if(e instanceof OAuth2Exception){
+            log.warn("", e);
             OAuth2Exception oAuth2Exception = (OAuth2Exception) e;
+            if(oAuth2Exception instanceof InvalidGrantException){
+                return ResponseEntity
+                        .status(200).body(Result.fail(AuthErrorType.ACCOUNT_PASSWORD_ERROR));
+            }
             return ResponseEntity
-                    .status(200)
-                    .body("dsadsad");
+                    .status(200).body(Result.fail(oAuth2Exception));
+
         } else if(e instanceof InternalAuthenticationServiceException){
             InternalAuthenticationServiceException ex = (InternalAuthenticationServiceException)e;
 
