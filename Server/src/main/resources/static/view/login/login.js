@@ -26,6 +26,8 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
 
 				if(res.access_token){
 					localStorage.token = res.access_token;
+					localStorage.tokenExpires = res.expires_in; // 有效期 单位：秒
+					localStorage.tokenTime = new Date().getTime(); // 当前时间
 					// 加载用户登录信息
 					faceinner.get(api['user.login.info'], function(res){
 						if(res.code == 'S00'){

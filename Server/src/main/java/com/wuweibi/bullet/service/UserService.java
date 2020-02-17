@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.service.IService;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  *  服务类
@@ -50,4 +52,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     int login(String email, String pass);
+
+    /**
+     * 更新用户余额
+     * @param userId 用户Id
+     * @param payMoney 支付金额
+     * @return
+     */
+    boolean updateBalance(Long userId, BigDecimal payMoney);
 }

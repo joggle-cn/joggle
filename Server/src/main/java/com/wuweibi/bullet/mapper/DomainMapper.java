@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.Domain;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,4 +45,12 @@ public interface DomainMapper extends BaseMapper<Domain> {
      */
     @Select("select id,domain, type from t_domain where id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})")
     List<JSONObject> selectListNotBindByUserId(Long userId);
+
+    /**
+     * 更新域名有效期
+     * @param domainId
+     * @param dueTime
+     */
+    @Update("update t_domain set due_time = #{dueTime} where id = #{domainId}")
+    void updateDueTime(@Param("domainId") Long domainId, @Param("dueTime") Date dueTime);
 }

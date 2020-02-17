@@ -39,4 +39,12 @@ public interface DomainService extends IService<Domain> {
      * @return
      */
     List<JSONObject> getListNotBindByUserId(Long userId);
+
+
+    /**
+     * 更新域名有效期
+     * @param domainId
+     * @param dueTime
+     */
+    void updateDueTime(Long domainId, Long dueTime);
 }

@@ -3,11 +3,14 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.wuweibi.bullet.business.OrderPayBiz;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -63,5 +66,26 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 .setParam("payMoney",  StringUtil.roundHalfUp(payPrice))
                 .setParam("dueTime",  calendar.getTime().getTime())
                 .build());
+    }
+
+    @Autowired
+    private UserService userService;
+
+
+    @Override
+    @Transactional
+    public Result balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime) {
+        if(payMoney == null){
+            return Result.fail(SystemErrorType.PAY_MONEY_NOT_NULL);
+        }
+
+        // 扣减余额
+        boolean status = userService.updateBalance(userId, payMoney.negate());
+        if(status){
+            domainService.updateDueTime(domainId, dueTime);
+            return Result.success();
+        }else{
+            return Result.fail(SystemErrorType.PAY_MONEY_BALANCE_NOT_ENOUGH);
+        }
     }
 }

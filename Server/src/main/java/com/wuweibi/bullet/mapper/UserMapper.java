@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -36,4 +39,13 @@ public interface UserMapper extends BaseMapper<User> {
             " FROM t_sys_users WHERE username = #{username} or mobile = #{username} limit 1")
     User getByUsername(String username);
 
+
+    /**
+     * 更新用户余额
+     * @param userId 用户ID
+     * @param payMoney 操作金额
+     * @return
+     */
+    @Update("update t_sys_users set balance = balance + #{payMoney} where id = #{userId} and ((balance + #{payMoney}) >= 0)")
+    boolean updateBalance(Long userId, BigDecimal payMoney);
 }

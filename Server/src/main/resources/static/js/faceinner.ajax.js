@@ -86,17 +86,33 @@ let faceinner = {
         if(funcerror){
             options.error = funcerror;
         }
-
-
-        if(localStorage.token && localStorage.token != 'null'){
-            options.headers ={
-                'Authorization': 'Bearer ' + localStorage.token,
-            }
-        }
+        // 处理Token
+        this.progressToken(options);
 
         $.ajax(options);
     },
 
+
+    /**
+     * 处理Token
+     * @param options
+     */
+    progressToken : function(options){
+        if(localStorage.token && localStorage.token != 'null'){
+            let tokenTime    = parseInt(localStorage.tokenTime);
+            let tokenExpires = parseInt(localStorage.tokenExpires);
+            let curTime      = new Date().getTime();
+
+            let tmp = (curTime - tokenTime)/1000; // 转换为秒
+            if(tmp < tokenExpires){ // 没过期
+                options.headers ={
+                    'Authorization': 'Bearer ' + localStorage.token,
+                }
+            } else {
+                alert('登录过期了, 请重新登录！');
+            }
+        }
+    },
 
 
     /**
@@ -125,12 +141,8 @@ let faceinner = {
         }
         if(url != '/oauth/token'){
 
-
-            if(localStorage.token && localStorage.token != 'null'){
-                options.headers ={
-                    'Authorization': 'Bearer ' + localStorage.token,
-                }
-            }
+            // 处理Token
+            this.progressToken(options);
         }
         $.ajax(options);
     },
@@ -165,13 +177,8 @@ let faceinner = {
             options.success = data;
         }
 
-        if(url != '/oauth/token'){
-            if(localStorage.token && localStorage.token != 'null'){
-                options.headers ={
-                    'Authorization': 'Bearer ' + localStorage.token,
-                }
-            }
-        }
+        // 处理Token
+        this.progressToken(options);
 
         $.ajax(options);
     },

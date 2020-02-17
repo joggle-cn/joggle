@@ -33,6 +33,14 @@ public enum SystemErrorType implements ErrorType {
 
 
 
+    /**
+     * 1002 支付相关
+      */
+    PAY_MONEY_NOT_NULL("100200", "支付金额不能为空"),
+    PAY_MONEY_BALANCE_NOT_ENOUGH("100201", "支付余额不足"),
+
+
+
 
     ;
 

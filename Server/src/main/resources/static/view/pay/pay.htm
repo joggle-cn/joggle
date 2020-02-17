@@ -97,6 +97,16 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right"> </label>
+					<div class="col-sm-9">
+						<div>
+							您的余额：{{user.balance}} 元
+						</div>
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">服务协议:</label>
 					<div class="col-sm-9">
@@ -106,7 +116,7 @@
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right" ></label>
 					<div class="col-sm-9">
-						<a class="btn btn-success" href="#"  >下单支付</a>
+						<a class="btn btn-success" ng-click="pay()" >下单支付</a>
 					</div>
 				</div>
 			</form>

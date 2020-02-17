@@ -8,7 +8,7 @@
 define(['app','jquery', 'css!./domain.css'], function (app, $) {//加载依赖js,
 
 
-	var callback = ["$scope","$routeParams",  function ($scope, $routeParams) {
+	var callback = ["$scope","$routeParams",'$location',  function ($scope, $routeParams, $location) {
 
         $scope.active = 'domain';
         $scope.payMoney = 0;
@@ -71,6 +71,29 @@ define(['app','jquery', 'css!./domain.css'], function (app, $) {//加载依赖js
                 backdrop: false
             });
 		}
+
+
+        /**
+         * 调用支付
+         */
+		$scope.pay = function(){
+
+            let params = {
+                time: $scope.payTime,
+                domainId: $scope.domainId,
+                payType: 1,
+            }
+            faceinner.post(api["user.domain.pay"], params, function(res){
+                if (res.code == 'S00') {
+                    alert('支付成功');
+
+                    window.location.href = '#/user/domain/';
+                }
+            });
+
+
+
+        }
  	}];
 	
 

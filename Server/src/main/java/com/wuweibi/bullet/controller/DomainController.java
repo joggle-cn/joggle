@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -118,7 +119,7 @@ public class DomainController {
      * @return
      */
     @RequestMapping(value = "/calculate", method = RequestMethod.POST)
-    public Object getInfo(@JwtUser Session session,
+    public Object calculate(@JwtUser Session session,
                           @RequestParam Integer time, // 3w
                           @RequestParam Long domainId){
 
@@ -134,6 +135,42 @@ public class DomainController {
     }
 
 
+
+    /**
+     * 支付接口
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/pay", method = RequestMethod.POST)
+    public Object pay(@JwtUser Session session,
+                      @RequestParam(defaultValue = "1") Integer payType, // 3w
+                      @RequestParam Integer time, // 3w
+                      @RequestParam Long domainId){
+
+        Long userId = session.getUserId();
+
+        // 检查是否该用户的域名
+        if(!domainService.checkDomain(userId, domainId)){
+            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+
+
+        Result result = orderPayBiz.calculate(domainId, time);
+
+        if(result.isSuccess()){
+            BigDecimal payMoney = result.getDataMapAsBigDecimal("payMoney");
+            Long  dueTime   = result.getDataMapAsLong("dueTime");
+            switch (payType){
+                case 1:
+                    orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
+                    break;
+            }
+
+        }
+
+
+        return result;
+    }
 
 
     /**

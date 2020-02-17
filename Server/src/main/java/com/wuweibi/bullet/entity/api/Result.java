@@ -8,8 +8,10 @@ import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 
 
 /**
@@ -190,5 +192,40 @@ public class Result<T> {
     @JsonIgnore
     public boolean isFail() {
         return !isSuccess();
+    }
+
+    /**
+     * 获取Map值
+     * @param key key
+     * @return
+     */
+    public String getDataMapAsString(String key) {
+        if(this.data instanceof HashMap){
+            return (String) ((HashMap) this.data).get(key);
+        }
+        return null;
+    }
+
+    /**
+     * 获取Map值
+     * @param key key
+     * @return
+     */
+    public Long getDataMapAsLong(String key) {
+        if(this.data instanceof HashMap){
+            return (Long) ((HashMap) this.data).get(key);
+        }
+        return null;
+    }
+    /**
+     * 获取Map值
+     * @param key key
+     * @return
+     */
+    public BigDecimal getDataMapAsBigDecimal(String key) {
+        if(this.data instanceof HashMap){
+            return new BigDecimal((String)((HashMap) this.data).get(key));
+        }
+        return null;
     }
 }

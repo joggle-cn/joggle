@@ -7,6 +7,7 @@ import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.service.DomainService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,5 +34,10 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public List<JSONObject> getListNotBindByUserId(Long userId) {
         return this.baseMapper.selectListNotBindByUserId(userId);
+    }
+
+    @Override
+    public void updateDueTime(Long domainId, Long dueTime) {
+        this.baseMapper.updateDueTime(domainId, new Date(dueTime));
     }
 }

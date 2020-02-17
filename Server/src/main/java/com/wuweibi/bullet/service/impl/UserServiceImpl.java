@@ -14,6 +14,7 @@ import com.wuweibi.bullet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,6 +134,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return MessageCode.login_err_pass;
         }
         return MessageCode.login_err_email;
+    }
+
+    @Override
+    public boolean updateBalance(Long userId, BigDecimal payMoney) {
+        return this.baseMapper.updateBalance(userId, payMoney);
     }
 
 
