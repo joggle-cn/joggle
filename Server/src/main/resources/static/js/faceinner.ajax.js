@@ -109,7 +109,7 @@ let faceinner = {
                     'Authorization': 'Bearer ' + localStorage.token,
                 }
             } else {
-                alert('登录过期了, 请重新登录！');
+                console.log('登录过期了, 请重新登录！');
             }
         }
     },
