@@ -10,6 +10,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.wuweibi.bullet.utils.FileTools;
 import com.wuweibi.bullet.utils.String2Utils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,13 @@ public class ConfigUtils {
      * @return
      */
     public static String getDeviceNo() {
+        // 优先读取环境变量的设备编码
+        String deviceNo = System.getProperty("BULLET_DEVICE_NO");
+        if(StringUtils.isNotBlank(deviceNo)){
+            logger.debug("读取到环境变量，不采用配置 env deviceNo={}", deviceNo);
+            return deviceNo;
+        }
+        // 读取Bullet配置文件设备信息
         return CONF.getString("deviceNo");
     }
 

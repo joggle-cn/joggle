@@ -20,7 +20,61 @@
 ### 后台运行方式
 
 
+### docker版客户端镜像构建
 
+1、首先使用mvn打包bullet-client.jar，拷贝到lib目录中。
+
+
+
+2、构建Docker镜像。
+```
+docker build \
+--build-arg VERSION=0.0.1 \
+-t wuweiit/bullet-client:0.0.1 .
+```
+
+4、快速运行Bullet客户端容器
+
+```
+docker run --rm --name=bullet-client \
+-e BULLET_DEVICE_NO='e6460ae9ba154d65a26c550d6266c801' \
+wuweiit/bullet-client:0.0.1
+```
+
+5、将Bullet配置文件映射出来，自定义配置。
+
+
+```
+docker run --name=bullet-client \
+-v /opt/bullet/conf/config.json:/opt/bullet/conf/config.json \
+-e BULLET_DEVICE_NO=e6460ae9ba154d65a26c550d6266c801 \
+wuweiit/bullet-client:0.0.1
+```
+
+
+### docker-compose 编排
+
+```
+version: '2'
+services:
+    bullet-client:
+      image: 'wuweiit/bullet-client:0.0.1'
+      restart: always
+      volumes:
+        - /opt/bullet/conf/config.json:/opt/bullet/conf/config.json
+
+```
+
+配置文件`/opt/bullet/conf/config.json` 内容
+```
+{
+	"deviceNo":"",
+	"logService":true,
+	"tunnel":"ws://joggle.cn:8081/tunnel"
+}
+```
+
+tunnel 需要自己部署服务端。
 
 
 

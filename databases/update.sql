@@ -10,8 +10,6 @@ ADD COLUMN `bind_tls`  int(1) NULL AFTER `hostname`;
 
 
 
--- 2019年6月4日 更新(线上已更新)
-
 ALTER TABLE `t_device_online` CHANGE COLUMN `deviceId` `deviceNo` varchar(255) NOT NULL COMMENT '设备编号';
 ALTER TABLE `t_device_online` ADD COLUMN `mac_addr` varchar(20) COMMENT 'Mac地址' AFTER `intranetIp`;
 ALTER TABLE  `t_device_online` CHANGE COLUMN `intranetIp` `intranetIp` varchar(100) DEFAULT NULL COMMENT '内网IP';
@@ -22,7 +20,6 @@ ALTER TABLE `t_device` CHANGE COLUMN `intranetIp` `intranet_ip` varchar(30) DEFA
 
 
 
--- 2019年6月4日 (线上已更新)
 ALTER TABLE `t_user` ADD COLUMN `icon` varchar(255) COMMENT '头像' AFTER `agree`;
 ALTER TABLE `t_device_mapping` ADD COLUMN `status` int COMMENT '映射状态 （1、启用；0、停用)' AFTER `tls_key`, AUTO_INCREMENT=6;
 update t_device_mapping set status = 1;
@@ -48,3 +45,5 @@ ALTER TABLE `t_device_mapping` ADD COLUMN `domain_id` bigint COMMENT '域名ID' 
 
 -- 2020年1月15日 marker 新增设备通道
 ALTER TABLE `t_device` ADD COLUMN `server_tunnel_id` bigint NOT NULL COMMENT '设备通道' AFTER `mac_addr`;
+
+-- 2019年6月4日 (线上已更新)

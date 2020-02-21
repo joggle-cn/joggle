@@ -56,6 +56,7 @@ cd Client
 ./bin/bullet
 ```
 
+具体参考文档：[《客户端Readme.md》](Client/readme.md)
 
 ### 服务端安装
 

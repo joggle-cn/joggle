@@ -33,6 +33,6 @@ public class NgrokConf {
     private boolean web_addr;
     private boolean console_ui;
 
-    private Map<String, Tunnels> tunnels = new HashMap<>(0);
+    private Map<String, Tunnels> tunnels = new HashMap<>(10);
 
 }
