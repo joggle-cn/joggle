@@ -21,6 +21,7 @@
 		"login": "Login",
 		"register": "Register",
 		"loginout": "Exit",
+		"profile": "My Profile",
 		"forget": "Submit",
 		"changepass": "Change Password"
 	},

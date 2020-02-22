@@ -1,11 +1,74 @@
 <!-- Docs page layout -->
-<div class="bs-docs-header" id="content">
+<div class="" id="index">
+    <div class="jumbotron masthead">
+        <div class="container">
+            <h1>Bullet</h1>
+            <h2 class="site-title" ng-bind="res.t('home.banner.title')"></h2>
+            <p class="masthead-button-links">
+                <a class="btn btn-lg btn-primary btn-shadow" href="https://help.joggle.cn/" target="_blank"  >立即阅读Bullet文档</a>
+            </p>
+            <p class="masthead-links">
+                <a href="https://v2.bootcss.com/" >免费、开源、多租户、多协议支持、跨平台</a>
+            </p>
+        </div>
+    </div>
+
+
+    <div class="container index-textcenter">
+        <h2 class="index-bullet-title">什么是Bullet？</h2>
+        <p class="lead">Bullet 是一个开放式内网穿透工具, 用于快速、便捷切换网络的路由器，它能帮助开发者实现内网调试，开发者与开发者之间的联调等工作。更能实现轻量级的网站应用，满足这些您只需要在您的电脑部署一个Bullet 客户端即可触手可及。</p>
+
+        <hr class="half-rule">
+
+        <div class="row index-textcenter">
+            <div class="col-sm-3">
+                <div class="index-icon">
+                    <img src="./resource/images/icon/icon1.png" alt="Sass and Less support" class="img-responsive">
+                </div>
+                <h3>免费、开源</h3>
+                <p>您可以通过github下载最新的源代码</p>
+            </div>
+            <div class="col-sm-3">
+                <div class="index-icon">
+                    <img src="./resource/images/icon/icon2.png" alt="Responsive across devices" class="img-responsive">
+                </div>
+                <h3>灵活配置</h3>
+                <p>Bullet Server提供强大的映射配置功能</p>
+            </div>
+            <div class="col-sm-3">
+                <div class="index-icon">
+                    <img src="./resource/images/icon/icon3.png" alt="Components" class="img-responsive">
+                </div>
+                <h3>多租户支持</h3>
+                <p>采用Saas平台架构</p>
+            </div>
+            <div class="col-sm-3">
+                <div class="index-icon">
+                    <img src="./resource/images/icon/icon4.png" alt="Components" class="img-responsive">
+                </div>
+                <h3>多协议支持</h3>
+                <p>支持TCP、HTTP、HTTPS等协议</p>
+            </div>
+        </div>
+
+        <hr class="half-rule">
+
+        <p class="lead">Bullet 是完全开源的。它的代码托管、开发、维护都依赖 GitHub 平台。</p>
+        <a href="https://github.com/wuweiit/Bullet" class="btn btn-outline btn-lg">查看 GitHub 项目主页</a>
+    </div>
+
+
+
   <div class="container">
-    <h1 ng-bind="res.t('home.banner.title')"></h1>
-    <p ng-bind="res.t('home.banner.desc')"></p>
+
+
+
+
+
+
     <p>
-    	<a href="#/user/device" ng-show="user" class="btn btn-default" ng-bind="res.t('home.btn.device')"></a>
-    	<a href="#/user/domain" ng-show="user" class="btn btn-default" ng-bind="res.t('home.btn.domain')"></a>
+<!--    	<a href="#/user/device" ng-show="user" class="btn btn-default" ng-bind="res.t('home.btn.device')"></a>-->
+<!--    	<a href="#/user/domain" ng-show="user" class="btn btn-default" ng-bind="res.t('home.btn.domain')"></a>-->
     	<!--<a href="#/flashchat/index" class="btn btn-default" ng-bind="res.t('home.btn.flashchat')"></a>-->
     	<!--<a href="#/wishwall/build" class="btn btn-default" ng-bind="res.t('home.btn.wishwall')"></a>-->
         <!--<a href="#/app/video/index" class="btn btn-default" ng-bind="res.t('home.btn.onlinevideo')"></a>-->
