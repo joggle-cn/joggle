@@ -47,5 +47,5 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     @Update("update t_sys_users set balance = balance + #{payMoney} where id = #{userId} and ((balance + #{payMoney}) >= 0)")
-    boolean updateBalance(Long userId, BigDecimal payMoney);
+    boolean updateBalance(@Param("userId") Long userId, @Param("payMoney")  BigDecimal payMoney);
 }
