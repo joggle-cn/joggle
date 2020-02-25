@@ -21,7 +21,13 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 	        templateUrl: 'view/home/index.htm'
 	      , controllerUrl: 'view/home/index.js'
 		}))
-	
+		// 主页
+		.when('/about', router({
+			templateUrl: 'view/about/about.htm'
+			, controllerUrl: 'view/about/about.js'
+		}))
+
+
 		// 登录
 		.when('/login', router({
 			minTitle: "登录",
