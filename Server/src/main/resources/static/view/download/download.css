@@ -1,0 +1,62 @@
+
+
+#download{
+    background: #F5F5F5;
+}
+#download .about-banner {
+    padding: 30px 0;
+}
+
+#download .masthead-button-links{
+
+    margin-top: 30px;
+}
+
+#download .masthead-links a{
+    color:#ffffff
+
+}
+#download .index-bullet-title{
+    margin: 60px 0px 20px 0;
+}
+#download .index-bullet-desc{
+    color: grey;
+}
+#download .index-textcenter{
+    text-align: center;
+}
+#download .index-textcenter-bg{
+    background: white;
+    padding: 40px 0;
+}
+#download .index-icon{
+    width: 100px;
+    margin: 0 auto;
+    font-size: 5em;
+    color: #353535;
+}
+#download .download-item a{
+    background: #ffffff;
+    border-radius: 0;
+    color: green;
+    border-color: green;
+}
+#download .download-item a:hover{
+    color: white;
+    background: green;
+    text-shadow: none;
+
+}
+
+#download .banner-text{
+    margin-top: 80px;
+}
+#download .download-banner{
+    background-image: url(../../resource/images/about/banner-download.jpg);
+}
+#download .min-banner {
+    height: 280px;
+    background-position: top center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+}
