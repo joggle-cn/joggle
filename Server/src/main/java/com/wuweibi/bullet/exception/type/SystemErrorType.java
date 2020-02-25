@@ -30,6 +30,7 @@ public enum SystemErrorType implements ErrorType {
       */
     DOMAIN_NOT_FOUND("100100", "域名找不到"),
     DOMAIN_IS_OTHER_BIND("100101", "域名已经被使用"),
+    DOMAIN_IS_NOT_SUPPORT_ORDER("100102", "不支持续费"),
 
 
 

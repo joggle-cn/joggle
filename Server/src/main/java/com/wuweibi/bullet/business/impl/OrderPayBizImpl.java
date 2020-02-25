@@ -41,11 +41,11 @@ public class OrderPayBizImpl implements OrderPayBiz {
         Domain domain = domainService.selectById(domainId);
         // 校验域名是否存在
         if(domain == null){
-            return Result.fail();
+            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
         if(domain.getDueTime() == null){
-            return Result.fail();
+            return Result.fail(SystemErrorType.DOMAIN_IS_NOT_SUPPORT_ORDER);
         }
 
         // 计算价格

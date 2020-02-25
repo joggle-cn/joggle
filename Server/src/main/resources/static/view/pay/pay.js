@@ -86,8 +86,9 @@ define(['app','jquery', 'css!./domain.css'], function (app, $) {//加载依赖js
             faceinner.post(api["user.domain.pay"], params, function(res){
                 if (res.code == 'S00') {
                     alert('支付成功');
-
                     window.location.href = '#/user/domain/';
+                }else{ //错误提示
+                    alert(res.msg);
                 }
             });
 
