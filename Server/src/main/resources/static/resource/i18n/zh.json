@@ -2,7 +2,9 @@
 	"home":{
 		"nav":{
 			"index": "首页",
-			"topic": "话题"
+			"download": "下载中心",
+			"about": "关于我们",
+			"help": "帮助中心"
 		},
 		"btn":{
 			"flashchat": "闪聊模式",

@@ -1,7 +1,10 @@
 {	
 	"home":{
 		"nav":{
-			"index": "Home"
+			"index": "Home",
+			"download": "Download",
+			"about": "About",
+			"help": "Help"
 		},
 		"btn":{
 			"flashchat": "Flash Chat",
