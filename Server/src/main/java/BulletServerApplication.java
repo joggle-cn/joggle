@@ -4,6 +4,7 @@
 
 import com.wuweibi.bullet.listener.CloseServerListener;
 import com.wuweibi.bullet.listener.StartedServerListener;
+import com.wuweibi.bullet.ngrokd.NgrokdThread;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -40,6 +41,9 @@ public class BulletServerApplication  {
         System.out.println("======================================");
         System.out.println("========  Bullet Server ==============");
         System.out.println("======================================");
+
+        // 启动ngrokd线程
+        new NgrokdThread().start();
     }
 
 }

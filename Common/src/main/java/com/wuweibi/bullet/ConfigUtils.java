@@ -49,6 +49,10 @@ public class ConfigUtils {
     }
 
 
+    /**
+     * 获取客户端路径
+     * @return
+     */
     public static String getClientProjectPath(){
         String confDir = System.getProperty("java.bullet.home.dir");
         if(String2Utils.isEmpty(confDir)){
