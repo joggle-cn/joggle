@@ -93,6 +93,17 @@ define([
 
         // 初始化数据
         $scope.init = function(){
+
+            // 加载系统初始化信息
+            faceinner.get(api['init'], function(res){
+                if(res.code == 'S00'){
+                    $rootScope.$apply(function() {
+                        $rootScope.config = res.data;
+                    });
+                }
+            });
+
+
             faceinner.get(api['user.login.info'],function(res){
                 if(res.code == 'S00'){
                     $rootScope.user = res.data;
@@ -103,14 +114,6 @@ define([
             });
 
 
-            // 加载系统初始化信息
-            faceinner.get(api['init'], function(res){
-                if(res.code == 'S00'){
-                    $rootScope.$apply(function() {
-                        $rootScope.config = res.data;
-                    });
-                }
-            });
         }
 
         $scope.init();

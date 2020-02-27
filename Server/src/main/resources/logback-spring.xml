@@ -42,7 +42,7 @@
 
 
     <logger name="org.springframework.web.servlet" level="debug"/>
-    <logger name="org.springframework" level="debug"/>
+    <logger name="org.springframework" level="info"/>
     <logger name="org.springframework.web" level="debug"></logger>
     <logger name="org.springframework.data.redis" level="INFO"></logger>
     <logger name="org.springframework.beans.factory.support" level="debug"></logger>

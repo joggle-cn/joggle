@@ -1,9 +1,12 @@
 
 package com.wuweibi.bullet.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import javax.annotation.Resource;
+import javax.annotation.Resources;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +28,7 @@ public class SpringUtils implements ApplicationContextAware {
 	 * 实现ApplicationContextAware接口的context注入函数, 将其存入静态变量.
 	 */
 	@Override
+	@Resource
 	public void setApplicationContext(ApplicationContext applicationContext) {
 		SpringUtils.applicationContext = applicationContext;
 	}

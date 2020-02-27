@@ -6,12 +6,16 @@
  * @type {{}}
  */
 
-
+// 读取服务器地址
+var server = 'http://localhost:8081';
+if(window.SERVER_URL){ // 如果配置了
+    server = window.SERVER_URL;
+}
 
 
 let faceinner = {
     /** 服务器地址 */
-    server: 'http://localhost:8081',
+    server: server,
 
 
     errorfunc : function(state){

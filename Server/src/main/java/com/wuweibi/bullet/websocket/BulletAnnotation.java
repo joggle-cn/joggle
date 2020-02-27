@@ -64,8 +64,6 @@ public class BulletAnnotation {
     private String deviceNo;
 
 
-    @Autowired
-    private CoonPool pool = SpringUtils.getBean(CoonPool.class);
 
     public BulletAnnotation() {
     }
@@ -97,6 +95,7 @@ public class BulletAnnotation {
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 
+         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         if(pool.exists(this.deviceNo)){
             logger.warn("{} 设备已经在线", this.deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
@@ -165,6 +164,7 @@ public class BulletAnnotation {
             updateOutLine();
         }
         this.deviceStatus = false;
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
         pool.removeConnection(this);
     }
 
@@ -227,6 +227,7 @@ public class BulletAnnotation {
         if(t != null){
             logger.error("", t);
         }
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
         pool.removeConnection(this);
         this.deviceStatus = false;
     }

@@ -32,5 +32,8 @@ public class StartedServerListener implements ApplicationListener<ContextStarted
 
         CoonPool coonPool = SpringUtils.getBean(CoonPool.class);
         coonPool.stop();
+
+
+
     }
 }

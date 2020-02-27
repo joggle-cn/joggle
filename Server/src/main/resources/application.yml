@@ -35,7 +35,7 @@ spring:
       additional-paths: src/main/java
 
   freemarker:
-    templateLoaderPath: classpath:/templates
+    templateLoaderPath: classpath:/static
     cache: false
     charset: UTF-8
     checkTemplateLocation: true

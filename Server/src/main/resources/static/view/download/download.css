@@ -29,6 +29,9 @@
     background: white;
     padding: 40px 0;
 }
+#download .index-icon img{
+    width: 86px;
+}
 #download .index-icon{
     width: 100px;
     margin: 0 auto;

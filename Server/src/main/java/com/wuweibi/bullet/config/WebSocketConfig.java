@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.config;
 
-import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import com.wuweibi.bullet.websocket.VideoAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
