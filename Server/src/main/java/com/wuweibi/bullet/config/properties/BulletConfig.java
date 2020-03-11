@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.config;
+package com.wuweibi.bullet.config.properties;
 /**
  * Created by marker on 2018/7/5.
  */

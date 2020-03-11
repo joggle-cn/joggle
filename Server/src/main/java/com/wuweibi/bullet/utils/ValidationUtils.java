@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.validation;
+package com.wuweibi.bullet.utils;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

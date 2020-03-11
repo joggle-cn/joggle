@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 
 /**
- * 权限服务
+ * 权限验证服务
  *
  * @author marker
  */
@@ -52,6 +52,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private ResourceService resourceService;
 
 
+    /**
+     * 接口资源管理器
+     */
     @javax.annotation.Resource
     private ResourceManager resourceManager;
 

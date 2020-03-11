@@ -60,6 +60,17 @@ public class ConfigUtils {
         }
         return confDir;
     }
+    /**
+     * 获取客户端路径
+     * @return
+     */
+    public static String getServerProjectPath(){
+        String confDir = System.getProperty("java.bullet.home.dir");
+        if(String2Utils.isEmpty(confDir)){
+            confDir = "Server";
+        }
+        return confDir;
+    }
 
     /**
      * 通道地址

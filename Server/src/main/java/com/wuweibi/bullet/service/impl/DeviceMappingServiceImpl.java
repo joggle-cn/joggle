@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.wuweibi.bullet.builder.MapBuilder;
+import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
+import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.config;
+package com.wuweibi.bullet.config.security;
 
 import com.google.common.collect.Lists;
 import com.wuweibi.bullet.exception.CustomWebResponseExceptionTranslator;
@@ -54,7 +54,7 @@ import java.util.List;
  */
 @Configuration
 @EnableAuthorizationServer
-public class AuthenticationServerConfig extends AuthorizationServerConfigurerAdapter {
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Resource(name="authenticationManagerBean")
     private AuthenticationManager authenticationManager;

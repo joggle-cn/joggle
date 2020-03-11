@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.builder;
+package com.wuweibi.bullet.core.builder;
 
 import java.util.Map;
 

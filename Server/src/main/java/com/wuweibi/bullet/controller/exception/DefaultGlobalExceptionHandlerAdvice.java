@@ -1,6 +1,7 @@
-package com.wuweibi.bullet.exception;
+package com.wuweibi.bullet.controller.exception;
 
 import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
+/**
+ * MVC控制器异常拦截处理
+ * @author marker
+ */
 @Slf4j
 @RestControllerAdvice
 public class DefaultGlobalExceptionHandlerAdvice {

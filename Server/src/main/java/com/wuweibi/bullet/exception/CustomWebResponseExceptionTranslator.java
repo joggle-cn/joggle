@@ -10,6 +10,11 @@ import org.springframework.security.oauth2.common.exceptions.InvalidGrantExcepti
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 
+
+/**
+ * 异常翻译
+ * @author marker
+ */
 @Slf4j
 public class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
 

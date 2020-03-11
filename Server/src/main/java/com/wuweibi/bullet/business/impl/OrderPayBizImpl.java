@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
+import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 
 /**

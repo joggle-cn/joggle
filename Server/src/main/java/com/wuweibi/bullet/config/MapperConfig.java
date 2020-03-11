@@ -9,26 +9,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Mybatis MapperConfig
  *
  * @author marker
  * @create 2018-03-07 下午1:58
  **/
 @Configuration
-/** 扫描有注解的包 */
 @MapperScan({
     "com.wuweibi.bullet.mapper*",
     "com.wuweibi.bullet.oauth2.dao*",
 })
 public class MapperConfig {
-
-
-    /**
-     * 日志
-     */
-//    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-
-
 
     /**
      *  mybatis-plus分页插件

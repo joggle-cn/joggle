@@ -25,8 +25,6 @@ import java.util.List;
  * @author marker
  * @create 2018-03-16 上午11:19
  **/
-
-
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebMvcConfig implements WebMvcConfigurer {

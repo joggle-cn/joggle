@@ -24,9 +24,6 @@ import java.util.Map;
  */
 @Slf4j
 @Configuration
-@ComponentScan(value = {
-        "com.wuweibi.bullet.oauth2"
-})
 public class BeanConfig {
 
 

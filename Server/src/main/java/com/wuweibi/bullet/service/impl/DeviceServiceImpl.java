@@ -6,7 +6,7 @@ import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.service.DeviceService;
 import org.springframework.stereotype.Service;
 
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
+import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
  * <p>

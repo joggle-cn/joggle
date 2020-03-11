@@ -10,7 +10,7 @@ import com.wuweibi.bullet.domain.params.LoginParam;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.utils.SessionHelper;
-import com.wuweibi.bullet.validation.ValidationUtils;
+import com.wuweibi.bullet.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.Errors;

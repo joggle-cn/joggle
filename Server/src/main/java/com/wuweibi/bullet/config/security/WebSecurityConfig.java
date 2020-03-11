@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.config;
+package com.wuweibi.bullet.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,11 @@ import javax.naming.Name;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * userDetailsService
+     */
     @Resource(name="userDetailsService")
     private UserDetailsService userDetailsService;
 

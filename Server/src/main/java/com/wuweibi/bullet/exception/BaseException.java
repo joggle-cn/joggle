@@ -4,6 +4,11 @@ import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.Getter;
 
+
+/**
+ * 基础自定义异常
+ * @author marker
+ */
 @Getter
 public class BaseException extends RuntimeException {
     /**

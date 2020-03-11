@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 
 import static com.wuweibi.bullet.ConfigUtils.getClientProjectPath;
+import static com.wuweibi.bullet.ConfigUtils.getServerProjectPath;
 
 /**
  *
@@ -27,12 +28,6 @@ public class NgrokdThread extends Thread  {
     private String command;
 
 
-    /**
-     * 唯一ID
-     */
-    private Long mappingId;
-
-
     private Process process = null;
 
 
@@ -43,7 +38,7 @@ public class NgrokdThread extends Thread  {
 
 
         // 解析为命令
-        String projectPath = getClientProjectPath();
+        String projectPath = getServerProjectPath();
 
         log.debug("BulletServer项目路径：{}", projectPath);
 
@@ -81,10 +76,6 @@ public class NgrokdThread extends Thread  {
             log.error("", e);
         }
 
-    }
-
-    public Long getMappingId(){
-        return this.mappingId;
     }
 
 

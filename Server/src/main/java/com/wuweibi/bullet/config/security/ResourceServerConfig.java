@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.config;
+package com.wuweibi.bullet.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

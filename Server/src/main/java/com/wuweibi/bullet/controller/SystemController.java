@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.controller;
 
-import com.wuweibi.bullet.config.BulletConfig;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.controller.validator.UserValidator;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;

@@ -20,13 +20,9 @@ public class JwtSession implements Serializable {
 
 
     /**
-     *
+     * userId
      */
     private Long userId;
-
-
-
-
 
 
     /**

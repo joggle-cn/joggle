@@ -24,7 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import static com.wuweibi.bullet.builder.MapBuilder.newMap;
+import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
  * <p>
