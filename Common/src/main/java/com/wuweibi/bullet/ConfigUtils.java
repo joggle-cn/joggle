@@ -61,7 +61,7 @@ public class ConfigUtils {
         return confDir;
     }
     /**
-     * 获取客户端路径
+     * 获取客服务器端路径
      * @return
      */
     public static String getServerProjectPath(){
@@ -94,6 +94,21 @@ public class ConfigUtils {
         }
         // 读取Bullet配置文件设备信息
         return CONF.getString("deviceNo");
+    }
+
+
+    /**
+     * 获取BulletDomain 一级域名配置
+     *
+     * @return
+     */
+    public static String getBulletDomain(){
+        String bulletDomain = System.getProperty("BULLET_DOMAIN");
+        if(StringUtils.isNotBlank(bulletDomain)){
+            logger.debug("读取env BULLET_DOMAIN={}", bulletDomain);
+            return bulletDomain;
+        }
+        return "joggle.cn";
     }
 
 

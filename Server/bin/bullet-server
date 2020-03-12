@@ -78,6 +78,5 @@ exec "$JAVA" \
 -Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
 -Djava.bullet.home.dir="$BULLET_HOME" \
 -Djava.security.egd=file:/dev/./urandom \
--DBULLET_DEVICE_NO=$BULLET_DEVICE_NO \
 -classpath $CLASSPATH \
 -jar $BULLET_HOME/lib/bullet-server.jar --spring.profiles.active=prod

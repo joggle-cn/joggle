@@ -12,8 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 
-import static com.wuweibi.bullet.ConfigUtils.getClientProjectPath;
-import static com.wuweibi.bullet.ConfigUtils.getServerProjectPath;
+import static com.wuweibi.bullet.ConfigUtils.*;
 
 /**
  *
@@ -39,6 +38,7 @@ public class NgrokdThread extends Thread  {
 
         // 解析为命令
         String projectPath = getServerProjectPath();
+        String domain = getBulletDomain();
 
         log.debug("BulletServer项目路径：{}", projectPath);
 
@@ -47,14 +47,14 @@ public class NgrokdThread extends Thread  {
         String fullchainPath = projectPath + "/conf/fullchain.pem";
         String ngrokdLogPath = projectPath + "/logs/ngrokd.log";
 
-        this.command = projectPath + "/bin/ngrokd " +
-            "-tlsKey=" + privkeyPath + " " +
-            "-tlsCrt=" + fullchainPath + " " +
-            "-domain=joggle.cn " +
-            "-httpAddr=:80 " +
-            "-httpsAddr=:443 " +
-            "-log=" + ngrokdLogPath + " " +
-            "-tunnelAddr=:8083"  ;
+        this.command = projectPath + "/bin/ngrokd" +
+            " -tlsKey=" + privkeyPath +
+            " -tlsCrt=" + fullchainPath +
+            " -domain=" + domain +
+            " -httpAddr=:80" +
+            " -httpsAddr=:443" +
+            " -log=" + ngrokdLogPath +
+            " -tunnelAddr=:8083";
 
 //        StringBuilder command = new StringBuilder(projectPath + "/bin/ngrokd -config=");
 //

@@ -74,6 +74,18 @@ services:
 }
 ```
 
+配置文件`/opt/bullet/conf/ngrok.yml` 内容
+```
+server_addr: "joggle.cn:8083"
+trust_host_root_certs: false
+use_insecure_skip_verify: false
+use_client_crt_path: /Users/marker/WORK/git/Bullet/Client/conf/cert/ngrokroot.crt
+web_addr: false
+console_ui: false
+
+```
+以上两个配置文件，改为自己的域名。
+
 tunnel 需要自己部署服务端。
 
 
