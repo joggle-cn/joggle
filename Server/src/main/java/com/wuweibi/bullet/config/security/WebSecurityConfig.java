@@ -43,7 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();// 允许跨域
 
         http.csrf().disable();
-//        http.httpBasic().disable();
+        // 关闭HTTP Basic认证
+        http.httpBasic().disable();
+
         http.authorizeRequests()
             .antMatchers("/oauth/token", "/actuator/**", "/logout").permitAll()
             .antMatchers("/api/open").permitAll()
