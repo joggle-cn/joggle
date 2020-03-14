@@ -11,6 +11,7 @@ import lombok.Getter;
  */
 @Getter
 public class BaseException extends RuntimeException {
+
     /**
      * 异常对应的错误类型
      */
@@ -23,16 +24,28 @@ public class BaseException extends RuntimeException {
         this.errorType = SystemErrorType.SYSTEM_ERROR;
     }
 
+    /**
+     * 基础异常ErrorType转换
+     * @param errorType
+     */
     public BaseException(ErrorType errorType) {
         super(errorType.getMsg());
         this.errorType = errorType;
     }
 
+    /**
+     * 基础异常ErrorType转换
+     * @param errorType
+     */
     public BaseException(ErrorType errorType, String message) {
         super(message);
         this.errorType = errorType;
     }
 
+    /**
+     * 基础异常ErrorType转换
+     * @param errorType
+     */
     public BaseException(ErrorType errorType, String message, Throwable cause) {
         super(message, cause);
         this.errorType = errorType;

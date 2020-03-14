@@ -7,7 +7,7 @@
  */
 
 // 读取服务器地址
-let server = 'http://localhost:8081';
+let server = 'http://192.168.1.107:8081';
 if(window.SERVER_URL && window.SERVER_URL != '${url}'){ // 如果配置了
     server = window.SERVER_URL;
 }
@@ -19,7 +19,6 @@ let faceinner = {
 
     errorfunc : function(state){
         console.log(state);
-        // alert(state.statusText);
     },
 
 
@@ -131,21 +130,23 @@ let faceinner = {
             type: 'post',
             data: data ,
             dataType: "json",
-            success:func,
+            success: func,
             error: faceinner.errorfunc,
-            crossDomain: true,
-            xhrFields: {
-                withCredentials: true
-            },
+            // crossDomain: true,
+            // xhrFields: {
+            //     withCredentials: true
+            // },
         }
         if(func === undefined){
             delete options.data;
             options.success = data;
         }
-        if(url != '/oauth/token'){
-
-            // 处理Token
-            this.progressToken(options);
+        if (url != '/oauth/token') {// 非登录接口
+            this.progressToken(options);// 处理Token
+        } else {// 登录接口，加入客户端Authorization头
+            options.headers = {
+                'Authorization': 'Basic Y2xpZW50X2FwcDpwYXNzd29yZA==',
+            }
         }
         $.ajax(options);
     },

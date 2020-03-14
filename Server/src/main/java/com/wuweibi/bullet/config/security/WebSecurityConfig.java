@@ -49,42 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name="userDetailsService")
     private UserDetailsService userDetailsService;
 
-
-    /**
-     * SpringSecurity会自动寻找name=corsConfigurationSource的Bean
-     * @return
-     */
-    @Bean
-    public UrlBasedCorsConfigurationSource newUrlBasedCorsConfigurationSource(){
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.setMaxAge(Duration.ofDays(30));
-
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource =
-                new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return urlBasedCorsConfigurationSource;
-    }
-
-
-//    @Bean
-//    public CorsFilter ds(){
-//        CorsFilter corsFilter = new CorsFilter(newUrlBasedCorsConfigurationSource());
-//        return corsFilter;
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ;// 允许跨域
-
-
         // 关闭HTTP Basic认证
         http.httpBasic().disable();
-        http.cors().and()
-            .csrf().disable()
+
+        // 允许跨域
+        http.cors()
+            .and().csrf().disable()
             .authorizeRequests()
             //处理跨域请求中的Preflight请求
             .antMatchers(HttpMethod.OPTIONS).permitAll()
