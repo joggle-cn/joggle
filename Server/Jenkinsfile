@@ -39,7 +39,7 @@ pipeline {
                    sh '''
                         echo "bullet-server uploading to tmp file ....."
 
-                        scp ./Server/target/server-1.0-SNAPSHOT.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+                        scp ./Server/target/bullet-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
 
                         echo "bullet-server restart ....."
 
