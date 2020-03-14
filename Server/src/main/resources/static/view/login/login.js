@@ -15,8 +15,6 @@ define(['app','css!./login.css'], function (app) {// 加载依赖js,
 				username: $scope.user.name,
 				password: $scope.user.pass,
 				grant_type: 'password',
-				client_id: 'manager',
-				client_secret: 'password'
 			}
 
 

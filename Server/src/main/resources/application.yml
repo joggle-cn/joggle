@@ -14,8 +14,6 @@ server:
 #
 spring:
   security:
-    basic:
-      enabled: false
     oauth2:
       jwt:
         signingKey: ${BULLET_SIGNNING_KEY:123456}
@@ -23,7 +21,7 @@ spring:
     cache: false
   http:
     encoding:
-      force: true
+      force: on
   profiles:
     active: dev
   application:
@@ -38,7 +36,7 @@ spring:
     templateLoaderPath: classpath:/static
     cache: false
     charset: UTF-8
-    checkTemplateLocation: true
+    checkTemplateLocation: on
     contentType: text/html
     exposeRequestAttributes: false
     exposeSessionAttributes: false
@@ -103,7 +101,7 @@ mybatis-plus:
     #自定义填充策略接口实现
     #meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: on
     cache-enabled: false
     #配置JdbcTypeForNull
     jdbc-type-for-null: 'null'

@@ -12,6 +12,7 @@
 		    "onlinevideo":"Online Video",
 			"device": "My Devices",
 			"domain": "My Domains",
+			"devicebind": "Bind Device",
 			"download":"Download Client"
 			
 		},

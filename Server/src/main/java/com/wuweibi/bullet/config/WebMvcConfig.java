@@ -3,39 +3,51 @@ package com.wuweibi.bullet.config;
  * Created by marker on 2018/3/16.
  */
 
+import com.alibaba.druid.support.http.StatViewServlet;
+import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
 import com.wuweibi.bullet.controller.interceptor.RequestParamsInterceptor;
+import com.wuweibi.bullet.filter.CrossDomainFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- *
- *
+ * WebMvcConfig
  *
  * @author marker
  * @create 2018-03-16 上午11:19
  **/
+@Slf4j
 @Configuration
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebMvcConfig implements WebMvcConfigurer {
 
 
-
+    /**
+     * MVC跨域配置
+     * @param registry
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+
+
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 
@@ -96,21 +108,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //
 //
 //
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authenticationProvider(authenticationProvider())
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/**").permitAll()
-//                .antMatchers(HttpMethod.POST, "/**").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/**").permitAll()
-//                .antMatchers(HttpMethod.DELETE, "/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .httpBasic();
-//    }
+
 
 
 //    /**
@@ -175,5 +173,47 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        return connector;
 //    }
 
+
+    /**
+     * 专门用于
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean FilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CrossDomainFilter());
+        registration.addUrlPatterns("/oauth/*"); // oauth token
+        registration.setName("CrossDomainFilter");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);//设置最高优先级
+        return registration;
+    }
+
+
+    @Bean
+    public FilterRegistrationBean WebStatFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new WebStatFilter());//添加过滤器
+        registration.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+        registration.setName("WebStatFilter");//设置优先级
+        return registration;
+    }
+
+    @Bean
+    public ServletRegistrationBean druidServlet() {
+        log.info("init Druid Servlet Configuration ");
+        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+        servletRegistrationBean.setServlet(new StatViewServlet());
+        servletRegistrationBean.addUrlMappings("/druid/*");
+        Map<String, String> initParameters = new HashMap<String, String>();
+        initParameters.put("loginUsername", "admin");// 用户名
+        initParameters.put("loginPassword", "123456");// 密码
+        initParameters.put("resetEnable", "false");// 禁用HTML页面上的“Reset All”功能
+//        initParameters.put("allow", ""); // IP白名单 (没有配置或者为空，则允许所有访问)
+        //initParameters.put("deny", "192.168.20.38");// IP黑名单 (存在共同时，deny优先于allow)
+        servletRegistrationBean.setInitParameters(initParameters);
+
+        return servletRegistrationBean;
+    }
 
 }

@@ -78,10 +78,11 @@
 							<i class="fa fa-server"></i>  <span ng-bind="res.t('home.btn.domain')"></span>
 						</a></li>
 						<li><a href="#/user/device/bind">
-							<i class="fa fa-magnet"></i>  <span>绑定设备</span></a></li>
-						<li>
-							<a href="#/system"><i class="fa fa-cog"></i> <span>系统配置</span></a>
+							<i class="fa fa-magnet"></i>  <span ng-bind="res.t('home.btn.devicebind')"></span></a>
 						</li>
+<!--						<li>-->
+<!--							<a href="#/system"><i class="fa fa-cog"></i> <span>系统配置</span></a>-->
+<!--						</li>-->
 						<li class="divider"></li>
 						<li><a ng-click="loginout()"><i class="fa fa-power-off"></i> <span ng-bind="res.t('user.loginout')"></span></a></li>
 					  </ul>

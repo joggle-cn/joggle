@@ -7,6 +7,7 @@ import com.wuweibi.bullet.listener.StartedServerListener;
 import com.wuweibi.bullet.ngrokd.NgrokdThread;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Bullet服务器端
@@ -14,7 +15,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author marker
  * @create 2019-04-10 09:50
  **/
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages={
+            "com.wuweibi.bullet.config"
+        }
+)
 public class BulletServerApplication  {
 
 
