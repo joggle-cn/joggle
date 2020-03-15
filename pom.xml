@@ -84,9 +84,10 @@
     </dependencies>
 
     <modules>
-        <module>Common</module>
-        <module>Server</module>
-        <module>Client</module>
+        <module>bullet-common</module>
+        <module>bullet-server</module>
+        <module>bullet-client</module>
+        <module>bullet-codemaker</module>
     </modules>
 
 </project>

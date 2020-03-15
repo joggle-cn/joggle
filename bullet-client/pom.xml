@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.wuweibi.bullet</groupId>
-    <artifactId>client</artifactId>
+    <artifactId>bullet-client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -58,7 +58,7 @@
     <dependencies>
         <dependency>
             <groupId>com.wuweibi.bullet</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>bullet-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

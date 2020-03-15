@@ -26,7 +26,16 @@ Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造�
 
 ![image](docs/images/WX20190603-173120.png)
 
+### Bullet 项目结构
 
+
+|目录 |说明|
+|:---- |----   |
+| bullet-common  | 公共模块，包含加密、日志配置、Bullet协议、Builer结构 |
+| bullet-client | Bullet客户端代理程序，主要控制Ngrok客户端协同操作| 
+| bullet-server | Server端为服务端主控程序，提供系列接口供Web前端页面调用，控制Client操作Ngrok客户端| 
+| bullet-codemaker | 本人比较懒，用的Mybatis-Plus生成代码| 
+  
 
 ### ngrok 客户端与服务端 编译
 

@@ -62,6 +62,8 @@ public class NgrokdThread extends Thread  {
     }
 
 
+
+
     @Override
     public void run() {
         log.debug("run: {}", command);
