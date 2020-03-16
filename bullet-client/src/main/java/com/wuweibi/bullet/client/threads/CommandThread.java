@@ -5,11 +5,11 @@ package com.wuweibi.bullet.client.threads;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.domain.NgrokConf;
 import com.wuweibi.bullet.client.domain.Proto;
 import com.wuweibi.bullet.client.domain.Tunnels;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.FileTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.wuweibi.bullet.ConfigUtils.getClientProjectPath;
+import static com.wuweibi.bullet.client.utils.ConfigUtils.getClientProjectPath;
 
 /**
  *

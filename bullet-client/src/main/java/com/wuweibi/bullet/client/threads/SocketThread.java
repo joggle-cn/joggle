@@ -4,10 +4,10 @@ package com.wuweibi.bullet.client.threads;
  */
 
 import com.alibaba.fastjson.JSON;
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import com.wuweibi.bullet.client.websocket.WebSocketClientProxy;
 import com.wuweibi.bullet.protocol.*;
 import org.slf4j.Logger;

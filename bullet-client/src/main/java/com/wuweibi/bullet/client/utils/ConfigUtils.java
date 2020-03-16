@@ -1,4 +1,4 @@
-package com.wuweibi.bullet;
+package com.wuweibi.bullet.client.utils;
 
 /**
  * Created by marker on 2017/12/6.
@@ -56,18 +56,7 @@ public class ConfigUtils {
     public static String getClientProjectPath(){
         String confDir = System.getProperty("java.bullet.home.dir");
         if(String2Utils.isEmpty(confDir)){
-            confDir = "Client";
-        }
-        return confDir;
-    }
-    /**
-     * 获取客服务器端路径
-     * @return
-     */
-    public static String getServerProjectPath(){
-        String confDir = System.getProperty("java.bullet.home.dir");
-        if(String2Utils.isEmpty(confDir)){
-            confDir = "Server";
+            confDir = "bullet-client";
         }
         return confDir;
     }
@@ -171,7 +160,7 @@ public class ConfigUtils {
         // 获取配置文件路径
         ConfDir = System.getProperty("java.bullet.conf.dir");
         if(String2Utils.isEmpty(ConfDir)){
-            ConfDir = "Client/conf";
+            ConfDir = "bullet-client/conf";
         }
 
         String result = "{}";

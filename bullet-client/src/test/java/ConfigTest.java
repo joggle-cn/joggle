@@ -2,8 +2,8 @@
  * Created by marker on 2017/12/6.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.domain.NgrokConf;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 

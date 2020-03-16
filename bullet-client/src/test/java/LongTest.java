@@ -2,7 +2,6 @@
  * Created by marker on 2017/12/6.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.utils.Utils;
 import org.junit.Test;
 

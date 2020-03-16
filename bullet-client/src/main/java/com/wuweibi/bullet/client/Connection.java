@@ -3,7 +3,7 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2018/1/8.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

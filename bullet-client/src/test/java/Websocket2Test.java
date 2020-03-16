@@ -2,8 +2,8 @@
  * Created by marker on 2017/11/19.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.BulletClient;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import org.junit.Test;
 
 import javax.websocket.ContainerProvider;

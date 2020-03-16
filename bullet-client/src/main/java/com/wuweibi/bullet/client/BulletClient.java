@@ -3,12 +3,12 @@ package com.wuweibi.bullet.client;
  * Created by marker on 2017/11/22.
  */
 
-import com.wuweibi.bullet.ConfigUtils;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
 import com.wuweibi.bullet.client.threads.BindIPThread;
 import com.wuweibi.bullet.client.threads.HeartThread;
 import com.wuweibi.bullet.client.threads.SocketThread;
+import com.wuweibi.bullet.client.utils.ConfigUtils;
 import com.wuweibi.bullet.client.websocket.WebSocketClientProxyImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

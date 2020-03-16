@@ -38,7 +38,7 @@ docker build \
 ```
 docker run --rm --name=bullet-client \
 -e BULLET_DEVICE_NO='e6460ae9ba154d65a26c550d6266c801' \
-wuweiit/bullet-client:0.0.1
+wuweiit/bullet-client:0.0.2
 ```
 
 5、将Bullet配置文件映射出来，自定义配置。
