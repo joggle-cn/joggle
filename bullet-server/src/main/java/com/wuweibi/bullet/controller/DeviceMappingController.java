@@ -61,8 +61,8 @@ public class DeviceMappingController {
         boolean status = deviceMappingService.exists(userId, id);
         if(status){
 
-            DeviceMapping entity = deviceMappingService.selectById(id);
-            deviceMappingService.deleteById(id);
+            DeviceMapping entity = deviceMappingService.getById(id);
+            deviceMappingService.removeById(id);
 
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
@@ -99,7 +99,7 @@ public class DeviceMappingController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object device(@JwtUser Session session,@RequestParam Long deviceId){
         Long userId = session.getUserId();
-        return MessageFactory.get(deviceMappingService.selectByMap(newMap(2)
+        return MessageFactory.get(deviceMappingService.listByMap(newMap(2)
                 .setParam("userId", userId)
                 .setParam("device_id", deviceId)
                 .build()));
@@ -116,7 +116,7 @@ public class DeviceMappingController {
         Long userId = session.getUserId();
         entity.setUserId(userId);
 
-        DeviceMapping deviceMapping = deviceMappingService.selectById(entity.getId());
+        DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
         entity.setDomainId(deviceMapping.getDomainId());
 
         // 验证设备映射是自己的
@@ -134,7 +134,7 @@ public class DeviceMappingController {
                 return Result.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
             }
 
-            status = deviceMappingService.insert(entity);
+            status = deviceMappingService.save(entity);
         }
         if(status){
             // 发送绑定数据

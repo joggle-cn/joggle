@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.oauth2.domain;
 
-import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.wuweibi.bullet.common.domain.BasePo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

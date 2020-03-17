@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.Device;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.Map;
 

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -47,12 +48,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     public MessageResult applyChangePass(String email, String url, String ip) {
 
-        User user = new User();
-        user.setEmail(email);
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("email", email);
+
 
 
         // 验证是否存在
-        user = this.baseMapper.selectOne(user);
+        User user = this.baseMapper.selectOne(ew);
         if(user == null){// 邮箱账号不存在
             return MessageFactory.get(State.RegEmailNotExist);
         }
@@ -113,11 +115,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getByEmail(String email) {
-        User user = new User();
-        user.setEmail(email);
+
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("email", email);
 
         // 验证是否存在
-        return this.baseMapper.selectOne(user);
+        return this.baseMapper.selectOne(ew);
     }
 
     @Override

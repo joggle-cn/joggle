@@ -75,6 +75,8 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+# mybatis-plus 配置信息
 mybatis-plus:
   # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
   # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
@@ -97,7 +99,6 @@ mybatis-plus:
     #逻辑删除配置（下面3个配置）
     logic-delete-value: 1
     logic-not-delete-value: 0
-    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
     #自定义填充策略接口实现
     #meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
   configuration:

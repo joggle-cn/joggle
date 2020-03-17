@@ -6,7 +6,7 @@
 	<resultMap id="BaseResultMap" type="com.wuweibi.bullet.entity.Device">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
-		<result column="deviceId" property="deviceId" />
+		<result column="deviceId" property="deviceNo" />
 		<result column="createTime" property="createTime" />
 		<result column="userId" property="userId" />
 	</resultMap>

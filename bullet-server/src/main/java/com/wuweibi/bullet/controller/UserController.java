@@ -104,7 +104,7 @@ public class UserController {
             return MessageFactory.getErrorMessage(errors);
         }
 
-        userService.insert(user);
+        userService.save(user);
 		return MessageFactory.getOperationSuccess();
 	}
 
@@ -124,7 +124,7 @@ public class UserController {
 		Long userId = session.getUserId();
 
 		// 验证邮箱正确性
-		User user = userService.selectById(userId);
+		User user = userService.getById(userId);
 		user.setPassword(null);
 
 		JSONObject result = (JSONObject)JSON.toJSON(user);

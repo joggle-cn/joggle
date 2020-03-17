@@ -52,7 +52,7 @@
     <logger name="org.springframework.web.cors" level="ERROR" />
     <logger name="org.springframework.security.web.util" level="ERROR" />
     <logger name="org.springframework.security.web" level="ERROR" />
-    <logger name="com.baomidou.mybatisplus" level="ERROR" />
+    <logger name="com.baomidou.mybatisplus" level="debug" />
     <logger name="org.apache.ibatis.io" level="INFO" />
     <logger name="org.mybatis.spring" level="ERROR" />
     <logger name="org.mybatis.spring.transaction" level="INFO" />

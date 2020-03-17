@@ -1,10 +1,9 @@
 package com.wuweibi.bullet.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Map;

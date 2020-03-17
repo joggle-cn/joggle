@@ -1,10 +1,12 @@
 package com.wuweibi.bullet.oauth2.service.impl;
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.oauth2.dao.OauthUserMapper;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,7 +18,12 @@ import org.springframework.stereotype.Service;
  * @since 2017-12-08
  */
 @Service
-public class OauthUserServiceImpl extends ServiceImpl<OauthUserMapper, OauthUser> implements OauthUserService {
+public class OauthUserServiceImpl implements OauthUserService {
+
+    @Autowired
+    private OauthUserMapper baseMapper;
+
+
 
     @Override
     public OauthUser getByUsername(String username) {
@@ -27,11 +34,8 @@ public class OauthUserServiceImpl extends ServiceImpl<OauthUserMapper, OauthUser
 
     @Override
     public OauthUser getByEmail(String email) {
-        OauthUser user = new OauthUser();
-        user.setEmail(email);
-
         // 验证是否存在
-        return this.baseMapper.selectOne(user);
+        return this.baseMapper.getByEmail(email);
     }
 
     @Override

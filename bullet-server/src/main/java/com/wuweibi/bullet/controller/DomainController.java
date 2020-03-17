@@ -3,39 +3,34 @@ package com.wuweibi.bullet.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
-import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -103,7 +98,7 @@ public class DomainController {
         if(!domainService.checkDomain(userId, domainId)){
             return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
-        Domain domain = domainService.selectById(domainId);
+        Domain domain = domainService.getById(domainId);
 
         return Result.success(domain);
     }
@@ -224,8 +219,8 @@ public class DomainController {
         }
 
         // 执行绑定
-        Domain domainInfo = domainService.selectById(domainId);
-        Device deviceInfo = deviceService.selectById(deviceId);
+        Domain domainInfo = domainService.getById(domainId);
+        Device deviceInfo = deviceService.getById(deviceId);
 
         DeviceMapping mapping = new DeviceMapping();
         mapping.setDomain(domainInfo.getDomain());
@@ -240,7 +235,7 @@ public class DomainController {
             mapping.setDomain(domainInfo.getDomain());
             mapping.setProtocol(DeviceMapping.PROTOCOL_HTTP);
         }
-        deviceMappingService.insert(mapping);
+        deviceMappingService.save(mapping);
         return Result.success();
     }
 

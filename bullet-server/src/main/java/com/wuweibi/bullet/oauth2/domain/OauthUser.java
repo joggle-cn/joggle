@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.oauth2.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.wuweibi.bullet.common.domain.BasePo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("t_sys_users")
 public class OauthUser extends BasePo {
     /**
      * 姓名

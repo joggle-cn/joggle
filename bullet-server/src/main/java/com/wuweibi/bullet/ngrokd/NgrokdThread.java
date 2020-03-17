@@ -3,16 +3,13 @@ package com.wuweibi.bullet.ngrokd;
  * Created by marker on 2019/4/10.
  */
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.ConfigUtils;
-import com.wuweibi.bullet.utils.FileTools;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.IOException;
 
-import static com.wuweibi.bullet.ConfigUtils.*;
+import static com.wuweibi.bullet.utils.ConfigUtils.getBulletDomain;
+import static com.wuweibi.bullet.utils.ConfigUtils.getServerProjectPath;
+
 
 /**
  *

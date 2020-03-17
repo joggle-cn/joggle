@@ -5,7 +5,7 @@ package com.wuweibi.bullet.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.conn.CoonPool;
@@ -71,7 +71,7 @@ public class DeviceController {
 
         Long userId = session.getUserId();
 
-        List<Device> list  =deviceService.selectByMap(newMap(1)
+        List<Device> list  =deviceService.listByMap(newMap(1)
                 .setParam("userId", userId)
                 .build());
 
@@ -138,11 +138,11 @@ public class DeviceController {
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, id);
         if(status){
-            Device device = deviceService.selectById(id);
+            Device device = deviceService.getById(id);
 
             // 删除映射
             deviceMappingService.deleteByDeviceId(id);
-            deviceService.deleteById(id);
+            deviceService.removeById(id);
 
             try {
                 // 停止ws链接
@@ -171,13 +171,13 @@ public class DeviceController {
             return Result.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
-
-        EntityWrapper ew = new EntityWrapper();
-        ew.setEntity(new DeviceOnline());
-        ew.where("deviceNo = {0}", deviceId).andNew("status = {0}", 1).orderBy("updateTime", false);
+        QueryWrapper wrapper2 = new QueryWrapper();
+        wrapper2.eq("deviceNo", deviceId);
+        wrapper2.eq("status", 1);
+        wrapper2.orderByDesc("updateTime");
 
         // 验证是否存在
-        DeviceOnline deviceOnline = deviceOnlineService.selectOne(ew);
+        DeviceOnline deviceOnline = deviceOnlineService.getOne(wrapper2);
         if(deviceOnline != null){
             // 验证是否绑定
             boolean isBinded = deviceService.existsDevice(deviceId);
@@ -194,7 +194,7 @@ public class DeviceController {
             device.setMacAddr(deviceOnline.getMacAddr());
             device.setIntranetIp(deviceOnline.getIntranetIp());
 
-            deviceService.insert(device);
+            deviceService.save(device);
 
             return Result.success();
         }
@@ -233,7 +233,7 @@ public class DeviceController {
         MapBuilder mapBuilder = newMap(3);
 
         // 设备信息
-        Device device = deviceService.selectById(deviceId);
+        Device device = deviceService.getById(deviceId);
         DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(device.getDeviceNo());
         JSONObject deviceInfo = (JSONObject) JSON.toJSON(device);
 
@@ -244,13 +244,21 @@ public class DeviceController {
             deviceInfo.put("status", -1);
         }
 
-        EntityWrapper<DeviceMapping> entityWrapper = new EntityWrapper();
-        entityWrapper.where("userId={0} and device_id={1} and protocol=2", userId, deviceId);
-        List<DeviceMapping> portList = deviceMappingService.selectList(entityWrapper);
 
-        entityWrapper = new EntityWrapper();
-        entityWrapper.where("userId={0} and device_id={1} and protocol!=2", userId, deviceId);
-        List<DeviceMapping> domainList = deviceMappingService.selectList(entityWrapper);
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("userId", userId);
+        wrapper.eq("device_id", deviceId);
+        wrapper.eq("protocol", 2);
+
+        List<DeviceMapping> portList = deviceMappingService.list(wrapper);
+
+
+        QueryWrapper wrapper2 = new QueryWrapper();
+        wrapper2.eq("userId", userId);
+        wrapper2.eq("device_id", deviceId);
+        wrapper2.ne("protocol", 2);
+
+        List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
 
 
         mapBuilder.setParam("deviceInfo", deviceInfo);

@@ -44,7 +44,7 @@ public final class MainCodeMaker {
 
 
         /** 包路径  */
-        final String basePackage = "com.wuweibi.bullet.entity";
+        final String basePackage = "com.wuweibi.bullet";
         final String moduleName  = "";
 
         /** 开发者 */

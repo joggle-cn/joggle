@@ -38,7 +38,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
     @Override
     public Result calculate(Long domainId, Integer time) {
-        Domain domain = domainService.selectById(domainId);
+        Domain domain = domainService.getById(domainId);
         // 校验域名是否存在
         if(domain == null){
             return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);

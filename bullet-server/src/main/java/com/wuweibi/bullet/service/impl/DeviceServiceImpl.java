@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.service.impl;
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.service.DeviceService;

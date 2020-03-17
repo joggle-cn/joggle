@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.mapper.SysMenuMapper">
+
+
+    <sql id="all_column">
+            a.id, a.`parent_id` as parentId, a.`level`, a.`type`, a.`url`, a.`icon`, a.`name`,
+            a.`description`, a.`sort`, `deleted`,
+            a.`created_by` as createdBy, a.`updated_by` as updatedBy, a.`updated_user_id` as updatedUserId,
+            a.`created_user_id` as createdUserId, a.`created_time` as createdTime, a.`updated_time` as updatedTime
+    </sql>
+
+
+    <!-- 查询用户的一级菜单-->
+    <select id="getOneLevelByUserId" resultType="com.wuweibi.bullet.entity.SysMenu"
+            parameterType="java.lang.Long">
+        select
+            <include refid="all_column"/>
+        from t_sys_menu a
+        left join t_sys_role_menu_relation b on a.id = b.menu_id
+        where
+            a.deleted = 0
+            and a.level = 1
+            and b.role_id = (select role_id from t_sys_users_roles_relation where user_id = #{userId})
+    </select>
+
+
+
+
+    <select id="selectByUserId" resultType="com.wuweibi.bullet.entity.SysMenu">
+        select <include refid="all_column" />
+        from t_sys_menu a
+        left join t_sys_role_menu_relation b on a.id = b.menu_id
+        where
+            a.deleted = 0 and a.level in (2,3) and a.parent_id = #{pid}
+            and b.role_id = (select role_id from t_sys_users_roles_relation where user_id = #{userId})
+
+    </select>
+</mapper>

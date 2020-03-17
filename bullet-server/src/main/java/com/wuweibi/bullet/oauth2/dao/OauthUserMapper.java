@@ -1,10 +1,8 @@
 package com.wuweibi.bullet.oauth2.dao;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Component;
 
 /**
  * 角色Mapper
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author marker
  *
  */
-public interface OauthUserMapper extends BaseMapper<OauthUser> {
+public interface OauthUserMapper{
 
 
     /**
@@ -33,4 +31,8 @@ public interface OauthUserMapper extends BaseMapper<OauthUser> {
      */
     @Update("update t_sys_users set loginTime =now() where id =#{userId}")
     void updateLoginTime(Long userId);
+
+    @Select("SELECT id,nickname,username,password,enabled,account_non_expired,credentials_non_expired,account_non_locked,created_time,updated_time,created_by,updated_by" +
+            " FROM t_sys_users WHERE email = #{username} limit 1")
+    OauthUser getByEmail(String email);
 }

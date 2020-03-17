@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
@@ -49,15 +50,15 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         // TODO host处理
 
 
-        DeviceMapping params = new DeviceMapping();
-        params.setDomain(host);
+        QueryWrapper params = new QueryWrapper();
+        params.eq("domain", host);
 
         DeviceMapping deviceMapping = this.baseMapper.selectOne(params);
         if(deviceMapping == null){
             return null;
         }
         long deviceId = deviceMapping.getDeviceId();
-        Device device = deviceService.selectById(deviceId);
+        Device device = deviceService.getById(deviceId);
 
 
         DeviceMappingDto dto = new DeviceMappingDto();

@@ -2,7 +2,7 @@ package com.wuweibi.bullet.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
@@ -91,7 +91,7 @@ public class WeixinAccountServiceImpl extends ServiceImpl<WeixinAccountMapper, W
                 if(this.baseMapper.existsOpenId(openId)){
                     this.baseMapper.updateByOpenId(account);
                 }else{
-                    insert(account);
+                    super.baseMapper.insert(account);
                 }
 
                 return MessageFactory.get(token);

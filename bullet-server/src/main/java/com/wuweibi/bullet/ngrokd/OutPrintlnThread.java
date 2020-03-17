@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.wuweibi.bullet.ConfigUtils.getClientProjectPath;
-
 /**
  * 输出控制台的线程
  *

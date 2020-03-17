@@ -7,7 +7,7 @@
 		<id column="id" property="id" />
 		<result column="email" property="email" />
 		<result column="nickname" property="nickname" />
-		<result column="pass" property="pass" />
+		<result column="pass" property="password" />
 		<result column="agree" property="agree" />
 	</resultMap>
 

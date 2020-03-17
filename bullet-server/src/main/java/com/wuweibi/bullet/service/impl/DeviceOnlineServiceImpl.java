@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -23,8 +23,8 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     @Override
     public void saveOrUpdateOnline(String deviceNo, String ip, String mac) {
 
-        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceNo = {0}", deviceNo);
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("deviceNo", deviceNo);
 
         int count = this.baseMapper.selectCount(ew);
 
@@ -44,8 +44,8 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     @Override
     public void updateOutLine(String deviceId) {
-        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceNo = {0}", deviceId);
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("deviceNo", deviceId);
 
         DeviceOnline deviceOnline = new DeviceOnline();
         deviceOnline.setDeviceNo(deviceId);
@@ -56,17 +56,19 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     @Override
     public DeviceOnline selectByDeviceNo(String deviceNo) {
-        EntityWrapper entityWrapper = new EntityWrapper<DeviceOnline>();
-        entityWrapper.setEntity(new DeviceOnline(deviceNo));
-        return this.selectOne(entityWrapper);
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("deviceNo", deviceNo);
+        return this.baseMapper.selectOne(ew);
     }
 
     @Override
     public boolean existsOnline(String deviceNo) {
-        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceNo = {0}", deviceNo);
-        ew.where("status = {0}", 1);
-        int count =  this.selectCount(ew);
+
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("deviceNo", deviceNo);
+        ew.eq("status", 1);
+
+        int count =  this.baseMapper.selectCount(ew);
         return count > 0;
     }
 
@@ -77,8 +79,11 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     @Override
     public void saveOrUpdateOnlineStatus(String deviceNo) {
-        EntityWrapper ew = new EntityWrapper(new DeviceOnline());
-        ew.where("deviceNo = {0}", deviceNo);
+        QueryWrapper ew = new QueryWrapper();
+        ew.eq("deviceNo", deviceNo);
+
+
+
         int count = this.baseMapper.selectCount(ew);
         DeviceOnline deviceOnline = new DeviceOnline();
         deviceOnline.setDeviceNo(deviceNo);

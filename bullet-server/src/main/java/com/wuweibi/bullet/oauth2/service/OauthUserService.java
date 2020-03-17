@@ -1,7 +1,5 @@
 package com.wuweibi.bullet.oauth2.service;
 
-import com.wuweibi.bullet.domain.message.MessageResult;
-import com.baomidou.mybatisplus.service.IService;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 
 /**
@@ -12,7 +10,7 @@ import com.wuweibi.bullet.oauth2.domain.OauthUser;
  * @author marker
  * @since 2017-12-08
  */
-public interface OauthUserService extends IService<OauthUser> {
+public interface OauthUserService {
 
     OauthUser getByUsername(String userName);
 
