@@ -37,8 +37,7 @@ if [ ! -x "$JAVA" ]; then
     exit 1
 fi
 
-
-CLASS='com.wuweibi.bullet.client.Main'
+ 
 
 
 
@@ -60,24 +59,26 @@ echo "Bullet当前工作目录: $BULLET_HOME"
 BULLER_CONF_DIR="$BULLET_HOME/conf"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
 
+BULLER_LOGS_DIR="$BULLET_HOME/logs/"
+echo "Bullet日志文件目录: $BULLER_LOGS_DIR"
+
 
 CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
 
 echo $CLASSPATH
 
-jarfile="$BULLET_HOME/target/bullet-client.jar"
+echo "他来了，他来了，他马上就要启动了..."
 
-if [ -e $jarfile ]; then
-cp $jarfile $BULLET_HOME/lib/
-else
-echo "continue..."
-fi
 
 
 exec "$JAVA" \
 -Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
 -Djava.bullet.home.dir="$BULLET_HOME" \
+-Dlog.dir="$BULLER_LOGS_DIR" \
 -Djava.security.egd=file:/dev/./urandom \
 -DBULLET_DEVICE_NO=$BULLET_DEVICE_NO \
 -classpath $CLASSPATH \
 -jar $BULLET_HOME/lib/bullet-client.jar --spring.profiles.active=prod
+
+
+
