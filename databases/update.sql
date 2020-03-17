@@ -46,4 +46,8 @@ ALTER TABLE `t_device_mapping` ADD COLUMN `domain_id` bigint COMMENT '域名ID' 
 -- 2020年1月15日 marker 新增设备通道
 ALTER TABLE `t_device` ADD COLUMN `server_tunnel_id` bigint NOT NULL COMMENT '设备通道' AFTER `mac_addr`;
 
+-- 2020年3月17日 marker server_tunnel_id 设置默认值1
+ALTER TABLE `t_device` CHANGE COLUMN `server_tunnel_id` `server_tunnel_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '设备通道';
+
 -- 2019年6月4日 (线上已更新)
+

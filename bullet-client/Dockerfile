@@ -8,9 +8,9 @@ MAINTAINER docker_user admin@wuweibi.com
 
 ARG VERSION=0.0.1
 # 时区处理
-ENV TZ=Asia/Shanghai
+ENV TZ Asia/Shanghai
 # Bullet设备编码
-ENV BULLET_DEVICE_NO = ''
+ENV BULLET_DEVICE_NO ''
 
 # 中文乱码处理
 ENV LANG C.UTF-8

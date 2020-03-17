@@ -29,7 +29,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -89,18 +88,17 @@ public class BulletAnnotation {
         }
 
         // TODO 校验设备是否被绑定（设备被绑定后同样的名称不在链接成功)
-
-
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-
-         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         if(pool.exists(this.deviceNo)){
             logger.warn("{} 设备已经在线", this.deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
             try {
-                this.session.close(new CloseReason(CloseReason.CloseCodes.NOT_CONSISTENT, "在线的设备编号已经被绑定"));
+                this.session.close(new CloseReason(CloseReason.
+                        CloseCodes.NOT_CONSISTENT,
+                        this.deviceNo + " deviceNo is online! please try another deviceNo."));
             } catch (IOException e) {
                 logger.error("", e);
             }

@@ -43,8 +43,8 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * @param userId 用户ID
      * @return
      */
-    @Select("select id,domain, type from t_domain where id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})")
-    List<JSONObject> selectListNotBindByUserId(Long userId);
+    @Select("select id,domain, type from t_domain where user_id = #{userId} and id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})")
+    List<JSONObject> selectListNotBindByUserId(@Param("userId") Long userId);
 
     /**
      * 更新域名有效期

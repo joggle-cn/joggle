@@ -1,5 +1,5 @@
 <included>
-    <property name="LOG_PATH" value="${log.dir:-/var/log/bullet}" />
+    <property name="LOG_PATH" value="${log.dir:-./}" />
     <property name="PROJECT_HOME" value="${LOG_PATH}" />
     <property name="MAX_FILE_SIZE" value="10mb" />
     <property name="MAX_HISTORY" value="5" />
