@@ -8,6 +8,8 @@ import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
+import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
 import com.wuweibi.bullet.service.MailService;
@@ -15,6 +17,7 @@ import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -151,6 +154,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             this.baseMapper.saveNewAuthRole(userId, roleCode);
         }
 
+    }
+
+    @Override
+    @Transactional
+    public Result activate(String code) {
+
+        User user = this.baseMapper.getByActivateCode(code);
+        if(user == null){
+            return Result.fail(SystemErrorType.ACCOUNT_ACTIVATE_FAILD);
+        }
+
+        Long userId = user.getId();
+        this.baseMapper.updateEnabled(userId);
+
+        // TODO 赠送随机域名1个月
+
+
+
+        return Result.success();
     }
 
 

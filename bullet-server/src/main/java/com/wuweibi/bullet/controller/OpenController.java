@@ -10,6 +10,7 @@ import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
@@ -20,9 +21,13 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -42,6 +47,9 @@ public class OpenController {
 	/** 密码加密器 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Resource
+	private MailService mailService;
 	
 	
 	@InitBinder  
@@ -82,33 +90,47 @@ public class OpenController {
 	 * @return
 	 */
 	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public Object register(@ModelAttribute User user, Errors errors){
+	public Object register(HttpServletRequest request, @ModelAttribute User user, Errors errors){
 		// 验证邮箱正确性
 		new RegisterValidator().validate(user, errors);
 		if(errors.hasErrors()){
 			return Result.fail(errors);
 		}
 
+		String email = user.getEmail();
+
 		// 验证是否存在
-		User u = userService.getByEmail(user.getEmail());
+		User u = userService.getByEmail(email);
 		if(u != null){
 			errors.rejectValue("email", String.valueOf(State.RegEmailExist));
 			return Result.fail(errors);
 		}
 		// 用户名设置为邮箱
-		user.setUsername(user.getEmail());
-		user.setEnabled(true); // TODO 目前没有做邮箱激活，直接启用账号
+		user.setUsername(email);
+		user.setEnabled(false); // 必须通过邮箱的邮件地址激活账号
 
 		// 密码加密处理
 		String password = user.getPassword();
 		user.setPassword(passwordEncoder.encode(password));
+
+		// 生成修改密码验证串,生命周期为30分钟.
+		String code = UUID.randomUUID().toString();
+		user.setActivateCode(code);
 
 		boolean status = userService.save(user);
 		if(status){
 			// 赋权用户端
 			userService.newAuthRole(user.getId(), "Consumer");
 
-			// TODO 注册成功后发送激活邮件
+			// 注册成功后发送激活邮件
+			Map<String,Object> params = new HashMap<>(1);
+			String url = "http://www.joggle.cn";
+
+
+			String forgetUrl = url +"#/user/activate?code=" + code;
+			params.put("url", forgetUrl);
+
+			mailService.send(email, "账号激活邮件", params, "register_mail.ftl");
 
 
 		}
@@ -116,7 +138,15 @@ public class OpenController {
 
 		return Result.success();
 	}
-	
+
+	/**
+	 * 激活用户
+	 */
+	@RequestMapping(value="/user/activate", method=RequestMethod.POST)
+	public Result activate(@RequestParam String code,
+									HttpServletRequest request){
+		return userService.activate(code);
+	}
 
 	 
 	

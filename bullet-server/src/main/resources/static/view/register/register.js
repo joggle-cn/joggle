@@ -49,34 +49,7 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 						if(result.code == "S00"){// 注册成功
                             layer.msg(res.t('register.success'));
 
-							let params = {
-								username: $scope.user.email,
-								password: $scope.user.password,
-								grant_type: 'password',
-							}
 
-                            // 登陆当前注册用户
-                            faceinner.post(api['user.token'], params , function(result2){
-								if(result2.access_token){
-									localStorage.token = result2.access_token;
-									localStorage.tokenExpires = result2.expires_in; // 有效期 单位：秒
-									localStorage.tokenTime = new Date().getTime(); // 当前时间
-									// 加载用户登录信息
-									faceinner.get(api['user.login.info'], function(res){
-										if(res.code == 'S00'){
-											$scope.$apply(function() {
-												$rootScope.user = res.data;
-												$rootScope.islogin = true;
-
-												// 登录成功，跳转到主页
-												setTimeout(function () {
-													window.location.href ='#/index';
-												}, 3000);
-											});
-										}
-									});
-								}
-							});
 						} else {// 注册失败
 							$scope.$apply(function () {
 								let len = result.data.length;

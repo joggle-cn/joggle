@@ -19,9 +19,11 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ import java.util.Map;
 public class MailServiceImpl implements MailService {
 
 
-    private static final String NORMAL_SUBJECT = "豆蕊米邮件通知";
+    private static final String NORMAL_SUBJECT = "Bullet服务通知";
 
 
     @Autowired
@@ -62,7 +64,7 @@ public class MailServiceImpl implements MailService {
 
 
     public MailServiceImpl() {
-        freeMarkerConfigurer.setTemplateLoaderPath("classpath:/mail");
+        freeMarkerConfigurer.setTemplateLoaderPath("classpath:/mail/template");
 
         try {
             freeMarkerConfigurer.afterPropertiesSet();
@@ -175,16 +177,22 @@ public class MailServiceImpl implements MailService {
      */
     public void sendMail(String to, String subject, String content) {
         try {
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom(serverEmail);
-
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, false, "UTF-8");
-            messageHelper.setFrom(simpleMailMessage.getFrom());
+
+            InternetAddress from = new InternetAddress();
+            try {
+                from.setPersonal("Bullet服务中心");
+            } catch (UnsupportedEncodingException e) {
+                log.error("", e);
+            }
+            from.setAddress(serverEmail);
+            messageHelper.setFrom(from);
+
             if (subject != null) {
                 messageHelper.setSubject(subject);
             } else {
-                messageHelper.setSubject(simpleMailMessage.getSubject());
+                messageHelper.setSubject("");
             }
             String[] tos  = to.split(";");
             messageHelper.setTo(tos);

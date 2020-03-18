@@ -58,6 +58,13 @@ public class User extends Model<User> {
 	private boolean enabled;
 
 
+	/**
+	 * 激活码
+	 */
+	@TableField("activate_code")
+	private String activateCode;
+
+
 
 
 	@Override

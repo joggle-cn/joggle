@@ -50,6 +50,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: 'view/profile/profile.htm'
 			, controllerUrl: 'view/profile/profile.js'
 		}))
+		/* 激活用户界面  */
+		.when('/user/activate', router({
+			templateUrl: 'view/user/activate/activate.htm'
+			, controllerUrl: 'view/user/activate/activate.js'
+		}))
 		
 		// 我的设备
 		.when('/user/device', router({

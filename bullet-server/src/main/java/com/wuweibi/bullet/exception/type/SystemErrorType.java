@@ -15,6 +15,7 @@ public enum SystemErrorType implements ErrorType {
     SYSTEM_ERROR("-1", "系统异常"),
     SYSTEM_BUSY("000000", "系统繁忙,请稍候再试"),
     FormFieldError("000001", "字段输入错误"),
+    ACCOUNT_ACTIVATE_FAILD("000002", "账号激活失败"),
 
     /**
      *  1000 设备相关

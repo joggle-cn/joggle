@@ -60,4 +60,9 @@ public interface UserMapper extends BaseMapper<User> {
     void saveNewAuthRole(@Param("userId") Long userId,@Param("roleCode")  String roleCode);
 
 
+    @Select("select * from t_sys_users where activate_code = #{code} and enabled != 1")
+    User getByActivateCode(@Param("code") String code);
+
+    @Update("update t_sys_users set enabled=1 where id = #{userId}")
+    boolean updateEnabled(@Param("userId") Long userId);
 }
