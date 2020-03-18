@@ -29,6 +29,7 @@ public class User extends Model<User> {
 	private Long id;
 	private String email;
 	private String nickname;
+	private String username;
 	private String password;
 	private String agree;
 
@@ -49,6 +50,12 @@ public class User extends Model<User> {
 	 */
 	@TableField("balance")
 	private BigDecimal balance;
+
+	/**
+	 * 是否启用
+	 */
+	@TableField("enabled")
+	private boolean enabled;
 
 
 

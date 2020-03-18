@@ -1,6 +1,11 @@
 'use strict';
 
-define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
+/**
+ * 注册账号模块
+ *
+ * @author marker
+ */
+define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加载依赖模块
 	
 	return ['$scope','$http','$location','res','userService', function ($scope, $http, $location, res, userService) {
 		$scope.agree = false; // 协议
@@ -38,36 +43,53 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 			
 			if($scope.isOk){
 				// 判断两次密码是否一致
-				if($scope.user.pass && ($scope.user.pass == $scope.password2)){
+				if($scope.user.password && ($scope.user.password == $scope.password2)){
 
 					faceinner.post(api['user.register'], $scope.user , function(result){
-						if(result.status == 0){// 注册成功
-                            alert(res.t('register.success'));
+						if(result.code == "S00"){// 注册成功
+                            layer.msg(res.t('register.success'));
+
+							let params = {
+								username: $scope.user.email,
+								password: $scope.user.password,
+								grant_type: 'password',
+							}
 
                             // 登陆当前注册用户
-                            faceinner.post(api['user.login'], $scope.user , function(result){
-								if(result.status){
-									// 登录成功，跳转到主页
-									window.location.href ='#/index';
+                            faceinner.post(api['user.token'], params , function(result2){
+								if(result2.access_token){
+									localStorage.token = result2.access_token;
+									localStorage.tokenExpires = result2.expires_in; // 有效期 单位：秒
+									localStorage.tokenTime = new Date().getTime(); // 当前时间
+									// 加载用户登录信息
+									faceinner.get(api['user.login.info'], function(res){
+										if(res.code == 'S00'){
+											$scope.$apply(function() {
+												$rootScope.user = res.data;
+												$rootScope.islogin = true;
+
+												// 登录成功，跳转到主页
+												setTimeout(function () {
+													window.location.href ='#/index';
+												}, 3000);
+											});
+										}
+									});
 								}
 							});
 						} else {// 注册失败
 							$scope.$apply(function () {
-								var len = result.data.length;
-								for(var i=0; i<len; i++){
-									var code = result.data[i];
-									if( res.code.RegEmailError == code ){// 邮箱错误
-										$scope.emailMsg = res.error(res.code.RegEmailError);
-									} else if ( res.code.RegEmailExist == code ){// 邮箱被注册
-										$scope.emailMsg = res.error(res.code.RegEmailExist);
-									}
+								let len = result.data.length;
+								for(let i=0; i<len; i++){
+									let fieldErrorInfo = result.data[i];
+									$scope[fieldErrorInfo.field+"Msg"] = fieldErrorInfo.msg;
 								}
 							});
 						}
 
 					});
 				} else {
-					$scope.password2Msg = res.error(res.code.PasswordInputNotEquals);
+					$scope.password2Msg = res.error(res.code.passwordInputNotEquals);
 				}  
 					
 	//					$("#registerModal").modal({// 弹出注册确认界面
@@ -100,16 +122,16 @@ define(['app','jquery','x18n'], function (app, $, x18n) {// 加载依赖模块
 		function validate(user){
 			$scope.isOk = true; 
 			if(user.email == null || '' == user.email){
-				$scope.emailMsg = res.error(res.code.MustFillInput); 
+				$scope.emailMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
 			}
-			if(user.pass == null || '' == user.pass){ 
-				$scope.passwordMsg = res.error(res.code.MustFillInput); 
+			if(user.password == null || '' == user.password){
+				$scope.passwordMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
 			}
 			
 			if(!$scope.user.agree){ 
-				alert( res.t('register.alertAgreeService'));
+				layer.msg(res.t('register.alertAgreeService'));
 				$scope.isOk = false;
 			} 
 		};

@@ -3,15 +3,20 @@ package com.wuweibi.bullet.entity.api;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.Getter;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -160,6 +165,27 @@ public class Result<T> {
     public static Result fail(ErrorType errorType) {
         return Result.fail(errorType, null);
     }
+
+
+
+    /**
+     * 获取转换后的SpringMVC错误
+     * @param errors SpringMVC错误
+     * @return
+     */
+    public static Result fail(Errors errors) {
+        List<FieldError> errorList = errors.getFieldErrors();
+        Iterator<FieldError> it = errorList.iterator();
+        FormFieldMessage[] errorCode = new FormFieldMessage[errorList.size()];
+        int i = 0;
+        while(it.hasNext()){
+            FieldError oe = it.next();
+            String field = oe.getField();
+            errorCode[i++] = new FormFieldMessage(field, Integer.parseInt(oe.getCode()));
+        }
+        return new Result(SystemErrorType.FormFieldError, errorCode);
+    }
+
 
     /**
      * 系统异常类并返回结果数据

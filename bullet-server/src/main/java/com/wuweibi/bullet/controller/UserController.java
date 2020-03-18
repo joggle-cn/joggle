@@ -5,29 +5,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
-import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.message.FormFieldMessage;
-import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
-import com.wuweibi.bullet.utils.HttpUtils;
-import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,50 +56,6 @@ public class UserController {
 
 
 
-
-    /**
-     * 忘记密码
-     * @return
-     */
-    @RequestMapping(value="/forget", method=RequestMethod.POST)
-    public MessageResult forget(@RequestParam String email,
-								HttpServletRequest request){
-        // 验证邮箱正确性
-        if(email.indexOf("@") == -1 && !SpringUtils.emailFormat(email)){// 邮箱格式不正确
-            FormFieldMessage ffm = new FormFieldMessage();
-            ffm.setField("email");
-            ffm.setStatus(State.RegEmailError);
-            return MessageFactory.getForm(ffm);
-        }
-        String ip = HttpUtils.getRemoteHost(request);
-        String url = HttpUtils.getRequestURL(request);
-        return userService.applyChangePass(email, url, ip);
-    }
-
-
-    /**
-	 * 注册账号
-	 * @return
-	 */
-	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public Object register(@ModelAttribute User user, Errors errors){
-		// 验证邮箱正确性
-
-		new RegisterValidator().validate(user, errors);
-		if(errors.hasErrors()){
-			return MessageFactory.getErrorMessage(errors);
-		}
-
-        // 验证是否存在
-        User u = userService.getByEmail(user.getEmail());
-        if(u != null){
-            errors.rejectValue("email", String.valueOf(State.RegEmailExist));
-            return MessageFactory.getErrorMessage(errors);
-        }
-
-        userService.save(user);
-		return MessageFactory.getOperationSuccess();
-	}
 
     @Autowired
     private CoonPool pool;

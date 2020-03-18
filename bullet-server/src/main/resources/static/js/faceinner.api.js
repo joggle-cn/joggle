@@ -17,7 +17,7 @@ let api = {
     "user.forget": '/api/user/forget',
 
     /* 注册 */
-    "user.register": '/api/user/register',
+    "user.register": '/api/open/register',
 
     /* 修改密码 */
     "user.changepass": '/api/user/changepass',

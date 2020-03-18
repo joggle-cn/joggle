@@ -48,4 +48,16 @@ public interface UserMapper extends BaseMapper<User> {
      */
     @Update("update t_sys_users set balance = balance + #{payMoney} where id = #{userId} and ((balance + #{payMoney}) >= 0)")
     boolean updateBalance(@Param("userId") Long userId, @Param("payMoney")  BigDecimal payMoney);
+
+
+    /**
+     * 给用户赋权角色
+     * (不会验证权限是否存在的)
+     * @param userId
+     * @param roleCode
+     */
+    @Update("insert into t_sys_users_roles_relation(user_id, role_id) values(#{userId}, (select id from t_sys_roles where code = #{roleCode} limit 1))")
+    void saveNewAuthRole(@Param("userId") Long userId,@Param("roleCode")  String roleCode);
+
+
 }

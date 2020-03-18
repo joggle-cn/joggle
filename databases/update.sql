@@ -49,5 +49,9 @@ ALTER TABLE `t_device` ADD COLUMN `server_tunnel_id` bigint NOT NULL COMMENT '�
 -- 2020年3月17日 marker server_tunnel_id 设置默认值1
 ALTER TABLE `t_device` CHANGE COLUMN `server_tunnel_id` `server_tunnel_id` bigint(20) NOT NULL DEFAULT 1 COMMENT '设备通道';
 
+
+-- 2020年3月18日 marker 新注册的用户，创建时间默认
+ALTER TABLE `t_sys_users` CHANGE COLUMN `created_time` `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间', CHANGE COLUMN `updated_time` `updated_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间';
+
 -- 2019年6月4日 (线上已更新)
 

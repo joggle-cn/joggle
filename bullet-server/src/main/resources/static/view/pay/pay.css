@@ -1,3 +1,6 @@
 .domain-pay input{
     outline: none !important;
 }
+.domain-pay .icheck-success{
+    display: inline-block;
+}

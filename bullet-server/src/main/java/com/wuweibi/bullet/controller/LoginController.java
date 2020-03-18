@@ -25,7 +25,7 @@ import java.util.Date;
 
 
 /**
- * 
+ * 登录读物
  * @author marker
  * @version 1.0
  */

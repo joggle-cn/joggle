@@ -27,7 +27,7 @@ public class RegisterValidator implements Validator{
 				}	
 	    	} 
 	    }
-	    ValidationUtils.rejectIfEmpty(errors, "pass", String.valueOf(State.PleseInputContent));
+	    ValidationUtils.rejectIfEmpty(errors, "password", String.valueOf(State.PleseInputContent));
 //	     
 	}
 

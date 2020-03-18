@@ -1,1 +1,391 @@
-.checkbox{padding-left:20px}.checkbox label{display:inline-block;vertical-align:middle;position:relative;padding-left:5px}.checkbox label::before{content:"";display:inline-block;position:absolute;width:17px;height:17px;left:0;margin-left:-20px;border:1px solid #ccc;border-radius:3px;background-color:#fff;-webkit-transition:border .15s ease-in-out,color .15s ease-in-out;-o-transition:border .15s ease-in-out,color .15s ease-in-out;transition:border .15s ease-in-out,color .15s ease-in-out}.checkbox label::after{display:inline-block;position:absolute;width:16px;height:16px;left:0;top:0;margin-left:-20px;padding-left:3px;padding-top:1px;font-size:11px;color:#555}.checkbox input[type=checkbox],.checkbox input[type=radio]{opacity:0;z-index:1}.checkbox input[type=checkbox]:focus+label::before,.checkbox input[type=radio]:focus+label::before{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}.checkbox input[type=checkbox]:checked+label::after,.checkbox input[type=radio]:checked+label::after{font-family:fontawesome;content:"\f00c"}.checkbox input[type=checkbox]:indeterminate+label::after,.checkbox input[type=radio]:indeterminate+label::after{display:block;content:"";width:10px;height:3px;background-color:#555;border-radius:2px;margin-left:-16.5px;margin-top:7px}.checkbox input[type=checkbox]:disabled+label,.checkbox input[type=radio]:disabled+label{opacity:.65}.checkbox input[type=checkbox]:disabled+label::before,.checkbox input[type=radio]:disabled+label::before{background-color:#eee;cursor:not-allowed}.checkbox.checkbox-circle label::before{border-radius:50%}.checkbox.checkbox-inline{margin-top:0}.checkbox-primary input[type=checkbox]:checked+label::before,.checkbox-primary input[type=radio]:checked+label::before{background-color:#337ab7;border-color:#337ab7}.checkbox-primary input[type=checkbox]:checked+label::after,.checkbox-primary input[type=radio]:checked+label::after{color:#fff}.checkbox-danger input[type=checkbox]:checked+label::before,.checkbox-danger input[type=radio]:checked+label::before{background-color:#d9534f;border-color:#d9534f}.checkbox-danger input[type=checkbox]:checked+label::after,.checkbox-danger input[type=radio]:checked+label::after{color:#fff}.checkbox-info input[type=checkbox]:checked+label::before,.checkbox-info input[type=radio]:checked+label::before{background-color:#5bc0de;border-color:#5bc0de}.checkbox-info input[type=checkbox]:checked+label::after,.checkbox-info input[type=radio]:checked+label::after{color:#fff}.checkbox-warning input[type=checkbox]:checked+label::before,.checkbox-warning input[type=radio]:checked+label::before{background-color:#f0ad4e;border-color:#f0ad4e}.checkbox-warning input[type=checkbox]:checked+label::after,.checkbox-warning input[type=radio]:checked+label::after{color:#fff}.checkbox-success input[type=checkbox]:checked+label::before,.checkbox-success input[type=radio]:checked+label::before{background-color:#5cb85c;border-color:#5cb85c}.checkbox-success input[type=checkbox]:checked+label::after,.checkbox-success input[type=radio]:checked+label::after{color:#fff}.checkbox-primary input[type=checkbox]:indeterminate+label::before,.checkbox-primary input[type=radio]:indeterminate+label::before{background-color:#337ab7;border-color:#337ab7}.checkbox-primary input[type=checkbox]:indeterminate+label::after,.checkbox-primary input[type=radio]:indeterminate+label::after{background-color:#fff}.checkbox-danger input[type=checkbox]:indeterminate+label::before,.checkbox-danger input[type=radio]:indeterminate+label::before{background-color:#d9534f;border-color:#d9534f}.checkbox-danger input[type=checkbox]:indeterminate+label::after,.checkbox-danger input[type=radio]:indeterminate+label::after{background-color:#fff}.checkbox-info input[type=checkbox]:indeterminate+label::before,.checkbox-info input[type=radio]:indeterminate+label::before{background-color:#5bc0de;border-color:#5bc0de}.checkbox-info input[type=checkbox]:indeterminate+label::after,.checkbox-info input[type=radio]:indeterminate+label::after{background-color:#fff}.checkbox-warning input[type=checkbox]:indeterminate+label::before,.checkbox-warning input[type=radio]:indeterminate+label::before{background-color:#f0ad4e;border-color:#f0ad4e}.checkbox-warning input[type=checkbox]:indeterminate+label::after,.checkbox-warning input[type=radio]:indeterminate+label::after{background-color:#fff}.checkbox-success input[type=checkbox]:indeterminate+label::before,.checkbox-success input[type=radio]:indeterminate+label::before{background-color:#5cb85c;border-color:#5cb85c}.checkbox-success input[type=checkbox]:indeterminate+label::after,.checkbox-success input[type=radio]:indeterminate+label::after{background-color:#fff}.radio{padding-left:20px}.radio label{display:inline-block;vertical-align:middle;position:relative;padding-left:5px}.radio label::before{content:"";display:inline-block;position:absolute;width:17px;height:17px;left:0;margin-left:-20px;border:1px solid #ccc;border-radius:50%;background-color:#fff;-webkit-transition:border .15s ease-in-out;-o-transition:border .15s ease-in-out;transition:border .15s ease-in-out}.radio label::after{display:inline-block;position:absolute;content:" ";width:11px;height:11px;left:3px;top:3px;margin-left:-20px;border-radius:50%;background-color:#555;-webkit-transform:scale(0,0);-ms-transform:scale(0,0);-o-transform:scale(0,0);transform:scale(0,0);-webkit-transition:-webkit-transform .1s cubic-bezier(.8,-.33,.2,1.33);-moz-transition:-moz-transform .1s cubic-bezier(.8,-.33,.2,1.33);-o-transition:-o-transform .1s cubic-bezier(.8,-.33,.2,1.33);transition:transform .1s cubic-bezier(.8,-.33,.2,1.33)}.radio input[type=radio]{opacity:0;z-index:1}.radio input[type=radio]:focus+label::before{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}.radio input[type=radio]:checked+label::after{-webkit-transform:scale(1,1);-ms-transform:scale(1,1);-o-transform:scale(1,1);transform:scale(1,1)}.radio input[type=radio]:disabled+label{opacity:.65}.radio input[type=radio]:disabled+label::before{cursor:not-allowed}.radio.radio-inline{margin-top:0}.radio-primary input[type=radio]+label::after{background-color:#337ab7}.radio-primary input[type=radio]:checked+label::before{border-color:#337ab7}.radio-primary input[type=radio]:checked+label::after{background-color:#337ab7}.radio-danger input[type=radio]+label::after{background-color:#d9534f}.radio-danger input[type=radio]:checked+label::before{border-color:#d9534f}.radio-danger input[type=radio]:checked+label::after{background-color:#d9534f}.radio-info input[type=radio]+label::after{background-color:#5bc0de}.radio-info input[type=radio]:checked+label::before{border-color:#5bc0de}.radio-info input[type=radio]:checked+label::after{background-color:#5bc0de}.radio-warning input[type=radio]+label::after{background-color:#f0ad4e}.radio-warning input[type=radio]:checked+label::before{border-color:#f0ad4e}.radio-warning input[type=radio]:checked+label::after{background-color:#f0ad4e}.radio-success input[type=radio]+label::after{background-color:#5cb85c}.radio-success input[type=radio]:checked+label::before{border-color:#5cb85c}.radio-success input[type=radio]:checked+label::after{background-color:#5cb85c}input[type=checkbox].styled:checked+label:after,input[type=radio].styled:checked+label:after{font-family:fontawesome;content:"\f00c"}input[type=checkbox] .styled:checked+label::before,input[type=radio] .styled:checked+label::before{color:#fff}input[type=checkbox] .styled:checked+label::after,input[type=radio] .styled:checked+label::after{color:#fff}
+/*!
+ * icheck-bootstrap v3.0.1 (https://github.com/bantikyan/icheck-bootstrap)
+ * Copyright 2018 Hovhannes Bantikyan.
+ * Licensed under MIT (https://github.com/bantikyan/icheck-bootstrap/blob/master/LICENSE)
+ */
+
+[class*="icheck-"] {
+    min-height: 22px;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    padding-left: 0px;
+}
+
+.icheck-inline {
+    display: inline-block;
+}
+
+.icheck-inline + .icheck-inline {
+    margin-left: .75rem;
+    margin-top: 6px;
+}
+
+[class*="icheck-"] > label {
+    padding-left: 29px !important;
+    min-height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+[class*="icheck-"] > input:first-child {
+    position: absolute !important;
+    opacity: 0;
+    margin: 0;
+}
+
+[class*="icheck-"] > input:first-child:disabled {
+    cursor: default;
+}
+
+[class*="icheck-"] > input:first-child + label::before,
+[class*="icheck-"] > input:first-child + input[type="hidden"] + label::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #D3CFC8;
+    border-radius: 0px;
+    margin-left: -29px;
+}
+
+[class*="icheck-"] > input:first-child:checked + label::after,
+[class*="icheck-"] > input:first-child:checked + input[type="hidden"] + label::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 7px;
+    height: 10px;
+    border: solid 2px #fff;
+    border-left: none;
+    border-top: none;
+    transform: translate(7.75px, 4.5px) rotate(45deg);
+    -ms-transform: translate(7.75px, 4.5px) rotate(45deg);
+}
+
+[class*="icheck-"] > input[type="radio"]:first-child + label::before,
+[class*="icheck-"] > input[type="radio"]:first-child + input[type="hidden"] + label::before {
+    border-radius: 50%;
+}
+
+[class*="icheck-"] > input:first-child:not(:checked):not(:disabled):hover + label::before,
+[class*="icheck-"] > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-width: 2px;
+}
+
+[class*="icheck-"] > input:first-child:disabled + label,
+[class*="icheck-"] > input:first-child:disabled + input[type="hidden"] + label,
+[class*="icheck-"] > input:first-child:disabled + label::before,
+[class*="icheck-"] > input:first-child:disabled + input[type="hidden"] + label::before {
+    pointer-events: none;
+    cursor: default;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
+
+.icheck-default > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-default > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #adadad;
+}
+
+.icheck-default > input:first-child:checked + label::before,
+.icheck-default > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.icheck-default > input:first-child:checked + label::after,
+.icheck-default > input:first-child:checked + input[type="hidden"] + label::after {
+    border-bottom-color: #333;
+    border-right-color: #333;
+}
+
+.icheck-primary > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-primary > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #2e6da4;
+}
+
+.icheck-primary > input:first-child:checked + label::before,
+.icheck-primary > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.icheck-success > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-success > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #4cae4c;
+}
+
+.icheck-success > input:first-child:checked + label::before,
+.icheck-success > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.icheck-info > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-info > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #46b8da;
+}
+
+.icheck-info > input:first-child:checked + label::before,
+.icheck-info > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+
+.icheck-warning > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-warning > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #eea236;
+}
+
+.icheck-warning > input:first-child:checked + label::before,
+.icheck-warning > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+
+.icheck-danger > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-danger > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #d43f3a;
+}
+
+.icheck-danger > input:first-child:checked + label::before,
+.icheck-danger > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.icheck-turquoise > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-turquoise > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #1abc9c;
+}
+
+.icheck-turquoise > input:first-child:checked + label::before,
+.icheck-turquoise > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #1abc9c;
+    border-color: #1abc9c;
+}
+
+.icheck-emerland > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-emerland > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #2ecc71;
+}
+
+.icheck-emerland > input:first-child:checked + label::before,
+.icheck-emerland > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.icheck-peterriver > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-peterriver > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #3498db;
+}
+
+.icheck-peterriver > input:first-child:checked + label::before,
+.icheck-peterriver > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.icheck-amethyst > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-amethyst > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #9b59b6;
+}
+
+.icheck-amethyst > input:first-child:checked + label::before,
+.icheck-amethyst > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #9b59b6;
+    border-color: #9b59b6;
+}
+
+.icheck-wetasphalt > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-wetasphalt > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #34495e;
+}
+
+.icheck-wetasphalt > input:first-child:checked + label::before,
+.icheck-wetasphalt > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #34495e;
+    border-color: #34495e;
+}
+
+.icheck-greensea > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-greensea > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #16a085;
+}
+
+.icheck-greensea > input:first-child:checked + label::before,
+.icheck-greensea > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #16a085;
+    border-color: #16a085;
+}
+
+.icheck-nephritis > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-nephritis > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #27ae60;
+}
+
+.icheck-nephritis > input:first-child:checked + label::before,
+.icheck-nephritis > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #27ae60;
+    border-color: #27ae60;
+}
+
+.icheck-belizehole > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-belizehole > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #2980b9;
+}
+
+.icheck-belizehole > input:first-child:checked + label::before,
+.icheck-belizehole > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.icheck-wisteria > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-wisteria > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #8e44ad;
+}
+
+.icheck-wisteria > input:first-child:checked + label::before,
+.icheck-wisteria > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #8e44ad;
+    border-color: #8e44ad;
+}
+
+.icheck-midnightblue > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-midnightblue > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #2c3e50;
+}
+
+.icheck-midnightblue > input:first-child:checked + label::before,
+.icheck-midnightblue > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.icheck-sunflower > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-sunflower > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #f1c40f;
+}
+
+.icheck-sunflower > input:first-child:checked + label::before,
+.icheck-sunflower > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #f1c40f;
+    border-color: #f1c40f;
+}
+
+.icheck-carrot > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-carrot > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #e67e22;
+}
+
+.icheck-carrot > input:first-child:checked + label::before,
+.icheck-carrot > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #e67e22;
+    border-color: #e67e22;
+}
+
+.icheck-alizarin > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-alizarin > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #e74c3c;
+}
+
+.icheck-alizarin > input:first-child:checked + label::before,
+.icheck-alizarin > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.icheck-clouds > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-clouds > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #ecf0f1;
+}
+
+.icheck-clouds > input:first-child:checked + label::before,
+.icheck-clouds > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #ecf0f1;
+    border-color: #ecf0f1;
+}
+
+.icheck-clouds > input:first-child:checked + label::after,
+.icheck-clouds > input:first-child:checked + input[type="hidden"] + label::after {
+    border-bottom-color: #95a5a6;
+    border-right-color: #95a5a6;
+}
+
+.icheck-concrete > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-concrete > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #95a5a6;
+}
+
+.icheck-concrete > input:first-child:checked + label::before,
+.icheck-concrete > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+}
+
+.icheck-orange > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-orange > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #f39c12;
+}
+
+.icheck-orange > input:first-child:checked + label::before,
+.icheck-orange > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #f39c12;
+    border-color: #f39c12;
+}
+
+.icheck-pumpkin > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-pumpkin > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #d35400;
+}
+
+.icheck-pumpkin > input:first-child:checked + label::before,
+.icheck-pumpkin > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #d35400;
+    border-color: #d35400;
+}
+
+.icheck-pomegranate > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-pomegranate > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #c0392b;
+}
+
+.icheck-pomegranate > input:first-child:checked + label::before,
+.icheck-pomegranate > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.icheck-silver > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-silver > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #bdc3c7;
+}
+
+.icheck-silver > input:first-child:checked + label::before,
+.icheck-silver > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #bdc3c7;
+    border-color: #bdc3c7;
+}
+
+.icheck-asbestos > input:first-child:not(:checked):not(:disabled):hover + label::before,
+.icheck-asbestos > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+    border-color: #7f8c8d;
+}
+
+.icheck-asbestos > input:first-child:checked + label::before,
+.icheck-asbestos > input:first-child:checked + input[type="hidden"] + label::before {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+}

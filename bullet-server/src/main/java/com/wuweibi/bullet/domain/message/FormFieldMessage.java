@@ -72,14 +72,16 @@ public class FormFieldMessage {
     public String getMsg() {
         if(null == msg ){
             try {
-                if(messages.size() == 0){
-                    getClass();
-                    @SuppressWarnings("static-access")
-                    Field[] fields =  State.class.getDeclaredFields();
-                    for(Field field : fields){
-                        Text t = field.getAnnotation(Text.class);
-                        if(t != null){
-                            messages.put((Integer)field.get(Integer.class), t.value());
+                if(messages.size() == 0) {
+                    synchronized (this.getClass()) {
+                        if (messages.size() == 0) {
+                            Field[] fields = State.class.getDeclaredFields();
+                            for (Field field : fields) {
+                                Text t = field.getAnnotation(Text.class);
+                                if (t != null) {
+                                    messages.put((Integer) field.get(Integer.class), t.value());
+                                }
+                            }
                         }
                     }
                 }

@@ -12,6 +12,7 @@ import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -142,6 +143,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updateBalance(Long userId, BigDecimal payMoney) {
         return this.baseMapper.updateBalance(userId, payMoney);
+    }
+
+    @Override
+    public void newAuthRole(Long userId, String roleCode) {
+        if(StringUtil.isNotBlank(roleCode)){
+            this.baseMapper.saveNewAuthRole(userId, roleCode);
+        }
+
     }
 
 

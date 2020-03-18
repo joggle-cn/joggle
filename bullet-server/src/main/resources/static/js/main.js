@@ -27,6 +27,7 @@ var options = {
         , 'amazeui':'lib/amazeui/js/amazeui.min'
         , 'dropload':'lib/jquery/plugins/dropload-gh-pages/dropload'
         , 'bootstrap-switch':'lib/bootstrap3/plugins/bootstrap-switch/js/bootstrap-switch.min'
+        , 'layer':'lib/layer-v3.1.1/layer/layer'
 
 
        

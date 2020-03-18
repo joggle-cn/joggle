@@ -27,7 +27,7 @@
 		  <div class="form-group">
 		    <label class="col-sm-3 control-label" ng-bind="res.t('register.password')"></label>
 		    <div class="col-sm-9">
-		      <input type="password" ng-model="user.pass" class="face-input" placeholder=""
+		      <input type="password" ng-model="user.password" class="face-input" placeholder=""
 		      ng-focus="passwordMsg=''" 
 		      >
 		      <span class="form_message" >{{passwordMsg}}</span>
@@ -44,13 +44,10 @@
 		  </div>
 		  <div class="form-group">
 		    <div class="col-sm-offset-3 col-sm-9">
-		      <div class="checkbox">
-		        <label>
-		          <input ng-model="user.agree" type="checkbox" value="true" />
-		          <span ng-bind="res.t('register.agree')"></span>
-		          <a target="_blank" href="#" ng-bind="res.t('register.protocol')"></a>
-		        </label>
-		      </div>
+				<div class="checkbox icheck-emerland">
+					<input type="checkbox" ng-model="user.agree" checked="" id="emerland">
+					<label for="emerland"><span ng-bind="res.t('register.agree')"></span> <a target="_blank" href="#" ng-bind="res.t('register.protocol')"></a></label>
+				</div>
 		    </div>
 		  </div>
 		  <div class="form-group">

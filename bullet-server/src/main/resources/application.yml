@@ -42,10 +42,10 @@ spring:
     exposeSessionAttributes: false
     requestContextAttribute: request
     suffix: .html
-
+  # 邮件 配置
   mail:
-    host: smtp.exmail.qq.com
-    port: 25
+    host: ${BULLET_MAIL_HOST:smtp.exmail.qq.com}
+    port: ${BULLET_MAIL_PORT:25}
     username: ${BULLET_MAIL_USERNAME:notice@wuweibi.com}
     password: ${BULLET_MAIL_PASSWORD:123456}
     properties:

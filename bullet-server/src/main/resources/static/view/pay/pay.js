@@ -5,7 +5,7 @@
  * @author marker
  * @date 2019-12-26
  */
-define(['app','jquery', 'css!./domain.css'], function (app, $) {//加载依赖js,
+define(['app','jquery', 'css!./pay.css'], function (app, $) {//加载依赖js,
 
 
 	var callback = ["$scope","$routeParams",'$location',  function ($scope, $routeParams, $location) {

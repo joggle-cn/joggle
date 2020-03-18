@@ -13,7 +13,8 @@ import lombok.Getter;
 public enum SystemErrorType implements ErrorType {
 
     SYSTEM_ERROR("-1", "系统异常"),
-    SYSTEM_BUSY("100000", "系统繁忙,请稍候再试"),
+    SYSTEM_BUSY("000000", "系统繁忙,请稍候再试"),
+    FormFieldError("000001", "字段输入错误"),
 
     /**
      *  1000 设备相关

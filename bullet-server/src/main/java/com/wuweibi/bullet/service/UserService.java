@@ -60,4 +60,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean updateBalance(Long userId, BigDecimal payMoney);
+
+
+    /**
+     * 给用户赋权角色
+     * (不会验证权限是否存在的)
+     * @param userId 用户Id
+     * @param roleCode
+     */
+    void newAuthRole(Long userId, String roleCode);
 }
