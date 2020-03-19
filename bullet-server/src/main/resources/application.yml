@@ -45,15 +45,19 @@ spring:
   # 邮件 配置
   mail:
     host: ${BULLET_MAIL_HOST:smtp.ym.163.com}
-    port: ${BULLET_MAIL_PORT:25}
+    port: ${BULLET_MAIL_PORT:994}
     username: ${BULLET_MAIL_USERNAME:notice@joggle.cn}
     password: ${BULLET_MAIL_PASSWORD:nopassword}
+    default-encoding: UTF-8
     properties:
       mail.smtp.auth: true
-      mail.smtp.starttls.enable: false
-      mail.smtp.starttls.required: false
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
       mail.smtp.connectiontimeout: 30000
       mail.smtp.writetimeout: 30000
+      mail.smtp.ssl.socketFactory.class: com.wuweibi.bullet.mail.MailSSLSocketFactory
+
   # 数据库配置
   datasource:
     driverClassName : com.mysql.jdbc.Driver

@@ -25,6 +25,8 @@ define(['app', 'layer','css!./activate.css'], function (app, layer) {
                     setTimeout(function(){
                         window.location.href='#/login';
                     },3000)
+                }else{
+                    layer.msg('激活失败，请联系管理员！');
                 }
             });
 
