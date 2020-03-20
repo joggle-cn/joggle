@@ -48,7 +48,7 @@
 	 from t_device_mapping
 
 	where status=1 and device_id in (select id from t_device where deviceId = #{deviceNo})
-		and domain_id in (select id from t_domain where due_time >= SYSDATE())
+		and domain_id in (select id from t_domain where due_time >= SYSDATE() or due_time is null)
 
 	</select>
 
