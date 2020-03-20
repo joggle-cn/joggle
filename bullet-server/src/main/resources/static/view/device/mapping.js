@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, $) {//加载依赖js,
+define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], function (app, $, layer) {//加载依赖js,
 
 
 
@@ -128,7 +128,9 @@ define(['app','jquery', 'bootstrap-switch', 'css!./device.css'], function (app, 
                     $("#addMapping").modal('hide');
                     flushData();
                 } else{
-                    alert(res.msg);
+                    layer.msg(res.msg);
+                    $scope.entity.status = false;
+
                 }
             });
 

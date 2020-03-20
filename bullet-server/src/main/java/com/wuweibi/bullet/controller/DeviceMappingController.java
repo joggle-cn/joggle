@@ -10,6 +10,7 @@ import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
@@ -17,6 +18,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -105,6 +107,8 @@ public class DeviceMappingController {
                 .build()));
     }
 
+    @Autowired
+    private DomainMapper domainMapper;
 
     /**
      * 保存数据
@@ -122,6 +126,12 @@ public class DeviceMappingController {
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
             return Result.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
+        }
+        // 判断映射的域名是否过期，过期后不允许开启
+        if(!domainMapper.checkDoaminIdDue(deviceMapping.getDomainId())){
+            if(entity.getStatus() == 1){ // 不能启用
+                return Result.fail(SystemErrorType.DOMAIN_IS_DUE);
+            }
         }
 
         boolean status = false;

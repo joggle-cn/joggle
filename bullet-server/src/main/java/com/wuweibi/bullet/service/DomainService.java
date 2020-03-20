@@ -47,4 +47,10 @@ public interface DomainService extends IService<Domain> {
      * @param dueTime
      */
     void updateDueTime(Long domainId, Long dueTime);
+
+    /**
+     * 检查所有域名的状态
+     */
+    void checkStatus();
+
 }

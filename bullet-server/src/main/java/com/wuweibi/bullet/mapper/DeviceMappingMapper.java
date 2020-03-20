@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      */
     boolean exists(Map<String, Object> build);
 
+
+
     String selectDeviceNo(Long  deviceId);
 
 
@@ -52,4 +55,13 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      */
     @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId}")
     boolean existsDomainId(@Param("deviceId") Long deviceId, @Param("domainId") Long domainId);
+
+
+    /**
+     * 更新Mapping状态
+     * @param mappingId 映射ID
+     * @param status 状态
+     */
+    @Update("update t_device_mapping set status =#{status} where id = #{id}")
+    void updateStatusById(@Param("id") Long mappingId, @Param("status") int status);
 }

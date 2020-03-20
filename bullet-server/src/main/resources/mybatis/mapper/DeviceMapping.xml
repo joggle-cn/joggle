@@ -31,7 +31,7 @@
 		select deviceId  from t_device where id = #{deviceId}
 	</select>
 
-	<!--根据设备编号获取-->
+	<!--根据设备编号获取 (新增有效期校验)-->
     <select id="selectListByDeviceNo" resultMap="BaseResultMap">
 	select
         id,
@@ -48,6 +48,7 @@
 	 from t_device_mapping
 
 	where status=1 and device_id in (select id from t_device where deviceId = #{deviceNo})
+		and domain_id in (select id from t_domain where due_time >= SYSDATE())
 
 	</select>
 

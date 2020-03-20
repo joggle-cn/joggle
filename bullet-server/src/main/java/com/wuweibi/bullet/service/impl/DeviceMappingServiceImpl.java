@@ -98,4 +98,6 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public boolean existsDomainId(Long deviceId, Long domainId) {
         return  this.baseMapper.existsDomainId(deviceId, domainId);
     }
+
+
 }

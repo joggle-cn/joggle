@@ -2,6 +2,7 @@
 	"home":{
 		"nav":{
 			"index": "Home",
+			"service": "Service",
 			"download": "Download",
 			"about": "About",
 			"help": "Help"

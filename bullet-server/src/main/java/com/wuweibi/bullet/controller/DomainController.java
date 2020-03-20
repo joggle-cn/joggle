@@ -149,16 +149,15 @@ public class DomainController {
             return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
-
+        // 计算价格
         Result result = orderPayBiz.calculate(domainId, time);
 
         if(result.isSuccess()){
             BigDecimal payMoney = result.getDataMapAsBigDecimal("payMoney");
             Long  dueTime   = result.getDataMapAsLong("dueTime");
             switch (payType){
-                case 1:
-                    orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
-                    break;
+                case 1: // 余额支付
+                    return orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
             }
 
         }

@@ -78,4 +78,5 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     boolean existsDomainId(Long deviceId, Long domainId);
+
 }

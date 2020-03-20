@@ -7,11 +7,14 @@ import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +26,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -50,7 +51,10 @@ public class OpenController {
 
 	@Resource
 	private MailService mailService;
-	
+
+	@Resource
+	private DomainService domainService;
+
 	
 	@InitBinder  
 	public void initBinder(WebDataBinder binder) {  
@@ -119,20 +123,37 @@ public class OpenController {
 
 		boolean status = userService.save(user);
 		if(status){
+			Long userId = user.getId();
 			// 赋权用户端
-			userService.newAuthRole(user.getId(), "Consumer");
+			userService.newAuthRole(userId, "Consumer");
 
 			// 注册成功后发送激活邮件
 			Map<String,Object> params = new HashMap<>(1);
 			String url = "http://www.joggle.cn";
-
-
 			String forgetUrl = url +"#/user/activate?code=" + code;
 			params.put("url", forgetUrl);
 
 			mailService.send(email, "账号激活邮件", params, "register_mail.ftl");
 
 
+			// 赠送域名
+			Domain domain = new Domain();
+
+			Calendar calendar = Calendar.getInstance();
+			Date time = calendar.getTime();
+			calendar.add(Calendar.DATE,30);
+			Date dueTime = calendar.getTime();
+			// 生成超级长的域名
+			domain.setDomain(CodeHelper.makeDeviceNo());
+			domain.setUserId(userId);
+			domain.setCreateTime(time);
+			domain.setBuyTime(time);
+			domain.setDueTime(dueTime);
+			domain.setOriginalPrice(BigDecimal.valueOf(2));
+			domain.setSalesPrice(BigDecimal.valueOf(1));
+			domain.setStatus(1);
+			domain.setType(2);
+			domainService.save(domain);
 		}
 
 

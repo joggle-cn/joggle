@@ -41,7 +41,7 @@ import java.util.List;
 
 
 /**
- * WebSocket服务
+ * Bullet WebSocket服务
  *
  *
  * @author marker
@@ -126,7 +126,6 @@ public class BulletAnnotation {
 
         // 获取设备的配置数据,并将映射配置发送到客户端
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-
         List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
 
 
