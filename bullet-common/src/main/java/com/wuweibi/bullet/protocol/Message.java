@@ -20,7 +20,8 @@ public abstract class Message {
 	public static final int DELIVER_RESP   = 0x80000004;
 	public static final int REPORT         = 0x5;
 	public static final int REPORT_RESP    = 0x80000005;
-	public static final int ACTIVE_TEST    = 0x10000001;//链路测试命令
+
+	public static final int DEVICE_SECRET    = 0x10000001;// 设备秘钥
 	public static final int ACTIVE_TEST_RESP = 0x10000010;
 
 

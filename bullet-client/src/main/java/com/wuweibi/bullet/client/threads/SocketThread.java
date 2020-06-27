@@ -81,6 +81,12 @@ public class SocketThread extends Thread {
                     pool.killThread(mpId);
 
                     break;
+                case Message.DEVICE_SECRET: //
+                    MsgDeviceSecret msgDeviceSecret = new MsgDeviceSecret(head);
+                    msgDeviceSecret.read(bis);
+                    String secret = msgDeviceSecret.getSecret();
+                    new UpdateSecretThread(secret).start();
+                    break;
 
                 case Message.NEW_MAPPING: // 新的映射请求
 

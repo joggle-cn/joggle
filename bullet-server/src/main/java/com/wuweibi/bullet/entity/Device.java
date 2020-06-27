@@ -49,6 +49,12 @@ public class Device extends Model<Device> {
 	private Long serverTunnelId;
 
 
+	/**
+	 * 设备秘钥
+	 */
+	@TableField("device_secret")
+	private String deviceSecret;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;

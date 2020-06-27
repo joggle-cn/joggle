@@ -54,5 +54,13 @@ ALTER TABLE `t_device` CHANGE COLUMN `server_tunnel_id` `server_tunnel_id` bigin
 ALTER TABLE `t_sys_users` CHANGE COLUMN `created_time` `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间', CHANGE COLUMN `updated_time` `updated_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间';
 -- 2020年3月18日 marker 新增注册激活码
 ALTER TABLE `t_sys_users` ADD COLUMN `activate_code` varchar(50) COMMENT '激活码' AFTER `updated_by`;
+
+-- 2020年6月25日 marker 新增设备秘钥，提高安全性
+ALTER TABLE `t_device`
+ADD COLUMN `device_secret` varchar(100) NULL COMMENT '设备秘钥' AFTER `server_tunnel_id`;
+
+
 -- 2019年6月4日 (线上已更新)
+
+
 

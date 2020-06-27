@@ -16,19 +16,18 @@ public class RegisterValidator implements Validator{
 
 	@Override
 	public void validate(Object target, Errors errors) {
+		ValidationUtils.rejectIfEmpty(errors, "password", String.valueOf(State.PleseInputContent));
+		ValidationUtils.rejectIfEmpty(errors, "email", String.valueOf(State.PleseInputContent));
+		ValidationUtils.rejectIfEmpty(errors, "nickname", String.valueOf(State.PleseInputContent));
+
+
 		User user = (User)target;
-	    String account = user.getNickname();
-		if(account == null){
-		    ValidationUtils.rejectIfEmpty(errors, "email", String.valueOf(State.PleseInputContent));
-	    }else{
-	    	if(account.indexOf("@") != -1){// email
-	    		if(!SpringUtils.emailFormat(user.getNickname())){// 邮箱格式正确
-	    			errors.rejectValue("email", String.valueOf(State.RegEmailError));
-				}	
-	    	} 
-	    }
-	    ValidationUtils.rejectIfEmpty(errors, "password", String.valueOf(State.PleseInputContent));
-//	     
+	    String email = user.getEmail();
+
+		if(!SpringUtils.emailFormat(email)){// 邮箱格式正确
+			errors.rejectValue("email", String.valueOf(State.RegEmailError));
+		}
+//
 	}
 
 }

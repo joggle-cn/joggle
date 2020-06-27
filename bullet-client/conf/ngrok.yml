@@ -1,6 +1,10 @@
-server_addr: "joggle.cn:8083"
-trust_host_root_certs: false
-use_insecure_skip_verify: true
-use_client_crt_path: ./conf/cert/ngrokroot.crt
-web_addr: false
+!!com.wuweibi.bullet.client.domain.NgrokConf
+auth_token: Qo0Bgz6w$iYmZAL26V3ZZbaNawzWZW1
+client_no: null
 console_ui: false
+server_addr: a.joggle.cn:8083
+trust_host_root_certs: false
+tunnels: {}
+use_client_crt_path: null
+use_insecure_skip_verify: false
+web_addr: false

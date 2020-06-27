@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
-import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -18,16 +18,22 @@ import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.commons.io.IOUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -158,7 +164,7 @@ public class DeviceController {
 
 
     /**
-     * 设备校验
+     * 设备校验(绑定)
      * @return
      */
     @RequestMapping(value = "/device/validate", method = RequestMethod.GET)
@@ -194,8 +200,32 @@ public class DeviceController {
             device.setMacAddr(deviceOnline.getMacAddr());
             device.setIntranetIp(deviceOnline.getIntranetIp());
 
-            deviceService.save(device);
+            // 生成设备秘钥
+            String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
+            device.setDeviceSecret(deviceSecret);
 
+            deviceService.save(device);
+            // 发送消息通知设备秘钥
+
+            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceId);
+            if(annotation != null){
+                MsgDeviceSecret msg = new MsgDeviceSecret();
+                msg.setSecret(deviceSecret);
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                    annotation.getSession().getBasicRemote().sendBinary(buf);
+
+                } catch (IOException e) {
+                    log.error("", e);
+                } finally {
+                    IOUtils.closeQuietly(outputStream);
+                }
+            }
             return Result.success();
         }
         return Result.fail(SystemErrorType.DEVICE_NOT_ONLINE);

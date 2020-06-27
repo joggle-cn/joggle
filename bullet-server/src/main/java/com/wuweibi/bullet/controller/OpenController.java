@@ -1,25 +1,30 @@
 package com.wuweibi.bullet.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
-import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.SnowflakeIdWorker;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -94,6 +100,7 @@ public class OpenController {
 	 * @return
 	 */
 	@RequestMapping(value="/register", method=RequestMethod.POST)
+	@Transactional
 	public Object register(HttpServletRequest request, @ModelAttribute User user, Errors errors){
 		// 验证邮箱正确性
 		new RegisterValidator().validate(user, errors);
@@ -143,8 +150,13 @@ public class OpenController {
 			Date time = calendar.getTime();
 			calendar.add(Calendar.DATE,30);
 			Date dueTime = calendar.getTime();
+			SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+			Long id = idWorker.nextId();
+
+			BigInteger a = new BigInteger(String.valueOf(id));
+
 			// 生成超级长的域名
-			domain.setDomain(CodeHelper.makeDeviceNo());
+			domain.setDomain(a.toString(Character.MAX_RADIX));
 			domain.setUserId(userId);
 			domain.setCreateTime(time);
 			domain.setBuyTime(time);
@@ -169,6 +181,32 @@ public class OpenController {
 		return userService.activate(code);
 	}
 
-	 
-	
+
+	/**
+	 * 设备秘钥校验
+	 * @return
+	 */
+	@RequestMapping(value="/device/secret", method=RequestMethod.POST)
+	public Result devicesecret(@RequestParam String clientNo,
+									  @RequestParam String secret,
+								HttpServletRequest request){
+
+		QueryWrapper queryWrapper = new QueryWrapper();
+		queryWrapper.eq("deviceId", clientNo);
+		Device device = deviceService.getOne(queryWrapper);
+		if(device == null){
+			return Result.fail(SystemErrorType.DEVICE_NOT_EXIST);
+		}
+
+		if(secret.equals(device.getDeviceSecret())){
+			return Result.success();
+		}
+		return Result.fail(SystemErrorType.DEVICE_SECRET_ERROR);
+	}
+
+	@Resource
+	private DeviceService deviceService;
+
+
+
 }

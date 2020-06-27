@@ -15,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import static com.wuweibi.bullet.client.utils.ConfigUtils.getClientProjectPath;
 
@@ -88,6 +86,8 @@ public class CommandThread extends Thread  {
 
         NgrokConf testEntity = yaml.loadAs(ymlText, NgrokConf.class);//如果读入Map,这里可以是Mapj接口,默认实现为LinkedHashMap
 
+        // 动态获取客户端Id
+        testEntity.setClient_no(ConfigUtils.getDeviceNo());
 
         Tunnels tunnels = new Tunnels();
         tunnels.setSubdomain(config.getDomain());
@@ -123,7 +123,8 @@ public class CommandThread extends Thread  {
         command.append(configPath).append(projectName).append(".yml ");
 
         if(ConfigUtils.getLogService()){// 开启日志
-            command.append("-log="+ logsPath + projectName + ".log");
+//            command.append("-log="+ logsPath + projectName + ".log");
+            command.append("-log=stdout");
         }
         command.append(" start ").append(mappingName);
 
@@ -161,7 +162,14 @@ public class CommandThread extends Thread  {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-
+            //获取执行命令后的输入流
+            InputStream inputStream = process.getInputStream();
+            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream);//装饰器模式
+            BufferedReader bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+            String str = null;
+            while((str = bufferedReader.readLine())!=null){
+                log.error("{}", str);
+            }
 
         } catch (IOException e) {
             log.error("", e);

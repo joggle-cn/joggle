@@ -33,6 +33,16 @@ public class NgrokConf {
     private boolean web_addr;
     private boolean console_ui;
 
+    /**
+     * 客户端秘钥 (绑定时服务器生成)
+     */
+    private String auth_token;
+
+    /**
+     * 设备编号（client_id)
+     */
+    private String client_no;
+
     private Map<String, Tunnels> tunnels = new HashMap<>(10);
 
 }
