@@ -22,9 +22,9 @@ pipeline {
                    echo "bullet-client deploying...."
                    sh '''
                        echo "bullet-client uploading....."
-                       scp ./bullet-client/target/bullet-client.jar root@192.168.1.100:/opt/bullet/lib/bullet-client.jar
+                       scp ./bullet-client/target/bullet-client.jar root@192.168.1.6:/opt/bullet/lib/bullet-client.jar
                        echo "systemctl restart bullet ...."
-                       ssh root@192.168.1.100 "systemctl restart bullet"
+                       ssh root@192.168.1.6 "systemctl restart bullet"
                     '''
 
                }
