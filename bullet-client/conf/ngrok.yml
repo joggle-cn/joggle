@@ -2,7 +2,7 @@
 auth_token: Qo0Bgz6w$iYmZAL26V3ZZbaNawzWZW1
 client_no: null
 console_ui: false
-server_addr: a.joggle.cn:8083
+server_addr: ngrok.joggle.cn:8083
 trust_host_root_certs: false
 tunnels: {}
 use_client_crt_path: null
