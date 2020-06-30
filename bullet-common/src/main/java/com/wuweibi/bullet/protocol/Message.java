@@ -22,7 +22,8 @@ public abstract class Message {
 	public static final int REPORT_RESP    = 0x80000005;
 
 	public static final int DEVICE_SECRET    = 0x10000001;// 设备秘钥
-	public static final int ACTIVE_TEST_RESP = 0x10000010;
+	public static final int LOG_MAPPING_STATUS = 0x10000010; // 日志开关消息
+	public static final int LOG_MAPPING_LOG = 0x10000011; // 日志 消息
 
 
 	public static final int NEW_MAPPING      = 0x6;
