@@ -18,22 +18,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ClientApplication implements CommandLineRunner {
 
-    private static ConnectionPool pool = new ConnectionPool();
-
-
     /**
      * 入口
      * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+
+
         SpringApplication app = new SpringApplication(ClientApplication.class);
-        app.addListeners(new CloseClientListener(pool));
+        app.addListeners(new CloseClientListener(ConnectionPool.getInstance()));
         app.run(args);
     }
 
     @Override
     public void run(String... strings) throws Exception {
+        ConnectionPool pool = ConnectionPool.getInstance();
 
         // 启动线程池
         pool.startup();

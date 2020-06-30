@@ -3,22 +3,17 @@ package com.wuweibi.bullet.client.threads;
  * Created by marker on 2019/4/10.
  */
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.client.Connection;
+import com.wuweibi.bullet.client.ConnectionPool;
 import com.wuweibi.bullet.client.domain.MappingInfo;
-import com.wuweibi.bullet.client.domain.NgrokConf;
-import com.wuweibi.bullet.client.domain.Proto;
-import com.wuweibi.bullet.client.domain.Tunnels;
-import com.wuweibi.bullet.client.utils.ConfigUtils;
-import com.wuweibi.bullet.utils.FileTools;
+import com.wuweibi.bullet.client.service.CommandThreadPool;
+import com.wuweibi.bullet.client.service.SpringUtil;
+import com.wuweibi.bullet.protocol.MsgCommandLog;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-
-import static com.wuweibi.bullet.client.utils.ConfigUtils.getClientProjectPath;
 
 /**
  *
@@ -51,6 +46,7 @@ public class NgrokLogThread extends Thread  {
     public NgrokLogThread(MappingInfo config, Process process){
         this.config = config;
         this.process = process;
+        this.mappingId = this.config.getId();
     }
 
 
@@ -68,16 +64,27 @@ public class NgrokLogThread extends Thread  {
             BufferedReader errorBufferedReader = new BufferedReader(errorInputStreamReader);//直接读字符串
             String str = null;
 
+            CommandThreadPool commandThreadPool = SpringUtil.getBean(CommandThreadPool.class);
+
+            ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+            Connection connection = connectionPool.getConn();
+
             while(true){
                 str = bufferedReader.readLine();
                 if(str != null ){
-                    System.out.println(str);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-                }
+                    MsgCommandLog msg = new MsgCommandLog();
+                    msg.setMappingId(this.mappingId);
+                    msg.setLine(str);
+                    msg.write(outputStream);
 
-                str = errorBufferedReader.readLine();
-                if(str != null ){
-                    System.out.println(str);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                    connection.getSession().getBasicRemote().sendBinary(buf);
                 }
 
                 try {

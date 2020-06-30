@@ -64,4 +64,8 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      */
     @Update("update t_device_mapping set status =#{status} where id = #{id}")
     void updateStatusById(@Param("id") Long mappingId, @Param("status") int status);
+
+
+    @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId})")
+    String selectDeviceNoById(@Param("mappingId") Long mappingId);
 }

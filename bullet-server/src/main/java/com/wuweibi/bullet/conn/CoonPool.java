@@ -33,7 +33,8 @@ public final class CoonPool {
         String deviceNo = conn.getDeviceNo();
         BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
         if(bulletAnnotation != null){
-            bulletAnnotation.stop();
+            conn.stop();
+            return;
         }
         clientConnections.put(deviceNo, conn);
     }

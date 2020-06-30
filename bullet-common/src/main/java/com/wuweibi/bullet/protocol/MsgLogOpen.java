@@ -62,9 +62,22 @@ public class MsgLogOpen extends Message {
         byte bs[] = new byte[9];
         in.read(bs);
         this.mappingId = Utils.Bytes8ToLong(bs);
-        this.open = Utils.ByteToInt(bs[9]);
+        this.open = Utils.ByteToInt(bs[8]);
     }
 
+    public Long getMappingId() {
+        return mappingId;
+    }
 
+    public void setMappingId(Long mappingId) {
+        this.mappingId = mappingId;
+    }
 
+    public int getOpen() {
+        return open;
+    }
+
+    public void setOpen(int open) {
+        this.open = open;
+    }
 }

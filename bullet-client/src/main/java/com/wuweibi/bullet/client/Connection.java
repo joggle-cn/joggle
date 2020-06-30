@@ -57,6 +57,9 @@ public class Connection {
         // while得作用是链接成功才会断开
         while (status){
 
+
+
+
             String tunnel   = ConfigUtils.getTunnel();// 通道服务器
             String deviceNo =  ConfigUtils.getDeviceNo(); // 设备ID
 
@@ -68,6 +71,7 @@ public class Connection {
 
 
             try {
+
                 this.session = container.connectToServer(client, new URI(url)); // 连接会话
                 count = 0; // 初始化链接次数。
                 status = false;
@@ -125,5 +129,9 @@ public class Connection {
         } catch (IOException e) {
             logger.error("", e);
         }
+    }
+
+    public Session getSession() {
+        return this.session;
     }
 }

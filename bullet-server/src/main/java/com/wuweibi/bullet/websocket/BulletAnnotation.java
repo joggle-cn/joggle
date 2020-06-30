@@ -206,6 +206,13 @@ public class BulletAnnotation {
                     deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac());
                     // 更新IP
                     return;
+                case Message.LOG_MAPPING_LOG:// 日志消息
+                    MsgCommandLog msgCommandLog = new MsgCommandLog(head);
+                    msgCommandLog.read(bis);
+                    // 转移消息到另外一个通道
+                    System.out.println();
+
+                    LogAnnotation.broadcast(msgCommandLog.getMappingId(), msgCommandLog.getLine());
             }
         } catch (IOException e) {
            logger.error("", e);
@@ -289,7 +296,7 @@ public class BulletAnnotation {
      * @param message 消息
      * @throws IOException
      */
-    private void sendObject(Object message) throws IOException {
+    public void sendObject(Object message) throws IOException {
         Message message1 = (Message) message;
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

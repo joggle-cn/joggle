@@ -22,15 +22,23 @@ public class ConnectionPool {
 
     private Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
+    private static ConnectionPool pool = new ConnectionPool();
+
+
 
 
 
     private List<Connection> list = new ArrayList<>();
 
 
-    public ConnectionPool(){
+    private ConnectionPool(){
 
     }
+
+    public static ConnectionPool getInstance(){
+        return pool;
+    }
+
 
     /**
      * 启动连接池
@@ -68,4 +76,8 @@ public class ConnectionPool {
     }
 
 
+    public Connection getConn() {
+        return this.list.get(0);
+
+    }
 }

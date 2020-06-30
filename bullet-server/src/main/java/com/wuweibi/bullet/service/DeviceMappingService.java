@@ -79,4 +79,10 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      */
     boolean existsDomainId(Long deviceId, Long domainId);
 
+    /**
+     *
+     * @param mappingId
+     * @return
+     */
+    String getDeviceNoByMappingId(Long mappingId);
 }

@@ -1,5 +1,5 @@
 {
 	"deviceNo":"695d05d9bb6c4b3a97bbf0475a4c62d9",
 	"logService":true,
-	"tunnel":"ws://joggle.cn:8081/tunnel"
+	"tunnel":"ws://localhost:8081/tunnel"
 }

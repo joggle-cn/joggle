@@ -162,8 +162,7 @@ public class CommandThread extends Thread  {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-            ngrokLogThread = new NgrokLogThread(this.config, this.process);
-            ngrokLogThread.start();
+
         } catch (IOException e) {
             log.error("", e);
         }
@@ -186,5 +185,14 @@ public class CommandThread extends Thread  {
         ngrokLogThread.interrupt();
         log.debug("准备停止[{}]Ngrok线程", this.config.getId());
         this.interrupt();
+    }
+
+    public void openLog() {
+        ngrokLogThread = new NgrokLogThread(this.config, this.process);
+        ngrokLogThread.start();
+    }
+
+    public void closeLog(){
+        ngrokLogThread.interrupt();
     }
 }

@@ -117,6 +117,23 @@ public class SocketThread extends Thread {
                     logger.debug("resave pong heard");
 
                     break;
+                case Message.LOG_MAPPING_STATUS:// 日志开关
+                    MsgLogOpen msg3 = new MsgLogOpen(head);
+                    msg3.read(bis);
+
+                    Long mappin2gId = msg3.getMappingId();
+                    CommandThreadPool commandThreadPool = SpringUtil.getBean(CommandThreadPool.class);
+                    CommandThread commandThread = commandThreadPool.getThread(mappin2gId);
+
+                    if(msg3.getOpen() == 1){
+
+                       commandThread.openLog();
+
+                    }else{
+                        commandThread.closeLog();
+                    }
+
+                    break;
             }
         } catch (IOException e) {
             logger.error("", e);

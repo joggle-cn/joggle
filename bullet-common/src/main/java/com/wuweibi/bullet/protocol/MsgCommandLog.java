@@ -67,6 +67,19 @@ public class MsgCommandLog extends Message {
         this.line = Utils.getString(bs2, 0, strlen);
     }
 
+    public Long getMappingId() {
+        return mappingId;
+    }
 
+    public void setMappingId(Long mappingId) {
+        this.mappingId = mappingId;
+    }
 
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
 }

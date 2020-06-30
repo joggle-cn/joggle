@@ -21,7 +21,7 @@ public class PoolTest {
         System.setProperty("java.bullet.conf.dir", "/WORK/git/Bullet/Client/conf");
 
 
-        ConnectionPool pool = new ConnectionPool();
+        ConnectionPool pool = ConnectionPool.getInstance();
 
 
         // 启动线程池

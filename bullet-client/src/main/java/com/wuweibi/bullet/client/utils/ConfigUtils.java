@@ -52,6 +52,9 @@ public class ConfigUtils {
 
     static {
         HomeDir = System.getProperty("java.bullet.home.dir");
+        if(HomeDir == null){
+            HomeDir = "bullet-client";
+        }
         ConfDir = HomeDir + File.separator + "conf";
         LogsDir = HomeDir + File.separator + "logs";
         logger.debug("准备加载config.json配置资源...");
