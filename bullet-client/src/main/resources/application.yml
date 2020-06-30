@@ -11,7 +11,7 @@ spring:
       enabled: true
   devtools:
     restart:
-      enabled: true
+      enabled: false
 
 
 

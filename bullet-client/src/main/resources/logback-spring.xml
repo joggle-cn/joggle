@@ -3,7 +3,7 @@
     <!-- 基础配置 -->
     <include resource="logback-common.xml"/>
 
-    <property name="PROJECT_HOME" value="${LOG_PATH}/client" />
+    <property name="PROJECT_HOME" value="${java.bullet.home.dir}/logs/client" />
 
     <!-- 文件输出 -->
     <include resource="logback-fileout.xml"/>
