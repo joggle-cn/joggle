@@ -21,7 +21,7 @@
         <spring.version>5.0.0.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
         <druid.version>1.1.0</druid.version>
-        <fastjson.version>1.2.8</fastjson.version>
+        <fastjson.version>1.2.25</fastjson.version>
         <mybaitsplus.version>3.3.1</mybaitsplus.version>
         <mysql.version>5.1.38</mysql.version>
         <log4j.version>1.2.17</log4j.version>
