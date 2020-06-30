@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 # 容器内部文件处理
 ADD ./bin/ /opt/bullet/bin/
 ADD ./conf/ /opt/bullet/conf/
-ADD ./lib/ /opt/bullet/lib/
+ADD ./target/bullet-client.jar /opt/bullet/lib/bullet-client.jar
 ADD ./logs/ /opt/bullet/logs/
 
 # 启动项目命令

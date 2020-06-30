@@ -155,22 +155,15 @@ public class CommandThread extends Thread  {
         }
 
     }
-
+    private NgrokLogThread ngrokLogThread;
 
     @Override
     public void run() {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-            //获取执行命令后的输入流
-            InputStream inputStream = process.getInputStream();
-            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream);//装饰器模式
-            BufferedReader bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
-            String str = null;
-            while((str = bufferedReader.readLine())!=null){
-                log.error("{}", str);
-            }
-
+            ngrokLogThread = new NgrokLogThread(this.config, this.process);
+            ngrokLogThread.start();
         } catch (IOException e) {
             log.error("", e);
         }
@@ -189,6 +182,9 @@ public class CommandThread extends Thread  {
         if(this.process != null) {
             this.process.destroy();
         }
+        log.debug("准备停止[{}]日志线程", this.config.getId());
+        ngrokLogThread.interrupt();
+        log.debug("准备停止[{}]Ngrok线程", this.config.getId());
         this.interrupt();
     }
 }

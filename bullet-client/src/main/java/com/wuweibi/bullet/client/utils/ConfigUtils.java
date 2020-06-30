@@ -30,21 +30,31 @@ import java.util.Properties;
  * @create 2017-12-06 下午9:43
  **/
 public class ConfigUtils {
+
+
     /** 日志 */
     private static Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
 
     /**
      * 配置文件名称
      */
-    public static final String CONFIG_FILE = "/config.json";
+    private static final String CONFIG_FILE = "/config.json";
 
+    /**
+     * 项目运行的根目录
+     */
+    public static String HomeDir;
     public static String ConfDir;
+    public static String LogsDir;
 
-    static JSONObject CONF ;
+    private static JSONObject configMap = null;
 
 
     static {
-        logger.debug("准备初始化配置资源...");
+        HomeDir = System.getProperty("java.bullet.home.dir");
+        ConfDir = HomeDir + File.separator + "conf";
+        LogsDir = HomeDir + File.separator + "logs";
+        logger.debug("准备加载config.json配置资源...");
         reload();
     }
 
@@ -54,11 +64,10 @@ public class ConfigUtils {
      * @return
      */
     public static String getClientProjectPath(){
-        String confDir = System.getProperty("java.bullet.home.dir");
-        if(String2Utils.isEmpty(confDir)){
-            confDir = "bullet-client";
+        if(String2Utils.isEmpty(HomeDir)){
+            return "bullet-client";
         }
-        return confDir;
+        return HomeDir;
     }
 
     /**
@@ -66,7 +75,7 @@ public class ConfigUtils {
      * @return
      */
     public static String getTunnel(){
-        return CONF.getString("tunnel");
+        return configMap.getString("tunnel");
     }
 
 
@@ -82,7 +91,7 @@ public class ConfigUtils {
             return deviceNo;
         }
         // 读取Bullet配置文件设备信息
-        return CONF.getString("deviceNo");
+        return configMap.getString("deviceNo");
     }
 
 
@@ -106,7 +115,7 @@ public class ConfigUtils {
      * @return
      */
     public static void setDeviceNo(String deviceNo) {
-        CONF.put("deviceNo", deviceNo);
+        configMap.put("deviceNo", deviceNo);
     }
 
     /**
@@ -114,7 +123,7 @@ public class ConfigUtils {
      * @return
      */
     public static Boolean getLogService() {
-        Boolean logService = CONF.getBoolean("logService");
+        Boolean logService = configMap.getBoolean("logService");
         if(logService == null){
             return false;
         }
@@ -128,7 +137,7 @@ public class ConfigUtils {
      */
     public static Properties getProperties() {
         Properties pro = new Properties();
-        for(Map.Entry<String, Object> entry : CONF.entrySet()){
+        for(Map.Entry<String, Object> entry : configMap.entrySet()){
             pro.setProperty(entry.getKey(), (String) entry.getValue());
         }
         return pro;
@@ -141,7 +150,7 @@ public class ConfigUtils {
     public static void store(){
         String fileName = ConfDir + CONFIG_FILE;
         File file = new File(fileName);
-        String jsonStr = JSON.toJSONString(CONF, SerializerFeature.PrettyFormat,
+        String jsonStr = JSON.toJSONString(configMap, SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.WriteNullListAsEmpty);
@@ -157,19 +166,12 @@ public class ConfigUtils {
      * 重新加载配置资源
      */
     public static void reload(){
-        // 获取配置文件路径
-        ConfDir = System.getProperty("java.bullet.conf.dir");
-        if(String2Utils.isEmpty(ConfDir)){
-            ConfDir = "bullet-client/conf";
-        }
-
         String result = "{}";
         InputStream inputStream = null;
         try {
             File file = new File(ConfDir + CONFIG_FILE);
             logger.info("正在加载配置文件 ",file.getAbsoluteFile());
             inputStream = new FileInputStream(file);
-
             result = IOUtils.toString(inputStream, "UTF-8");
             logger.debug("{}", result);
         } catch (IOException e) {
@@ -177,7 +179,7 @@ public class ConfigUtils {
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
-        CONF = JSONObject.parseObject(result);
+        configMap = JSONObject.parseObject(result);
     }
 
     /**
@@ -195,7 +197,7 @@ public class ConfigUtils {
         if (osName.contains("FreeBSD"))
              return "linux";
         if (osName.startsWith("Linux")) {
-        return "linux";
+            return "linux";
         }
         return "linux";
     }
