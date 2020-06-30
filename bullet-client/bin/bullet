@@ -20,10 +20,9 @@
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
 
-#export JAVA_HOME=/opt/sdk/jdk1.8.0_201/
-#export BULLET_HOME=/opt/bullet
 
 
+export JAVA_HOME=/opt/sdk/jdk1.8.0_201/
 
 if [ -x "$JAVA_HOME/bin/java" ]; then
     JAVA="$JAVA_HOME/bin/java"
@@ -32,53 +31,63 @@ else
 fi
 
 
+echo which java
+
 if [ ! -x "$JAVA" ]; then
+
     echo "Could not find any executable java binary. Please install java in your PATH or set JAVA_HOME"
+
     exit 1
 fi
 
- 
+
+CLASS='com.wuweibi.bullet.client.Main'
+
+
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+BINDIR=`dirname "$PRG"`
 
 
 
 
 
+bin=`dirname "$PRG"`
 
-if [ -x "$BULLET_HOME/bin/bullet" ]; then
-    BULLET_HOME=$BULLET_HOME
-else
-    bin=`dirname "${BASH_SOURCE-$0}"`
-    bin=`cd "$bin"; pwd`
-    BULLET_HOME=`cd "."; pwd`
-fi
-
-
+BULLET_HOME=`dirname "$bin"`
 
 echo "Bullet当前工作目录: $BULLET_HOME"
 
 BULLER_CONF_DIR="$BULLET_HOME/conf"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
 
-BULLER_LOGS_DIR="$BULLET_HOME/logs/"
-echo "Bullet日志文件目录: $BULLER_LOGS_DIR"
-
 
 CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
 
 echo $CLASSPATH
 
-echo "他来了，他来了，他马上就要启动了..."
+jarfile="$BULLET_HOME/target/bullet-client.jar"
 
+if [ -e $jarfile ]; then
+cp $jarfile $BULLET_HOME/lib/
+else
+echo "continue..."
+fi
 
 
 exec "$JAVA" \
--Djava.bullet.conf.dir="$BULLER_CONF_DIR" \
--Djava.bullet.home.dir="$BULLET_HOME" \
--Dlog.dir="$BULLER_LOGS_DIR" \
+-Djava.bullet.conf.dir=$BULLER_CONF_DIR \
+-Djava.bullet.home.dir=$BULLET_HOME \
 -Djava.security.egd=file:/dev/./urandom \
--DBULLET_DEVICE_NO=$BULLET_DEVICE_NO \
 -classpath $CLASSPATH \
 -jar $BULLET_HOME/lib/bullet-client.jar --spring.profiles.active=prod
-
-
-
