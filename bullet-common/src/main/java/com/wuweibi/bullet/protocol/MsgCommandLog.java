@@ -48,7 +48,7 @@ public class MsgCommandLog extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         byte[] strs = line.getBytes();
-        getHead().setLength(super.getLength() + strs.length);
+        getHead().setLength(super.getLength() +8+ strs.length);
         getHead().write(out);
         out.write(Utils.LongToBytes8(this.mappingId));
         out.write(strs);

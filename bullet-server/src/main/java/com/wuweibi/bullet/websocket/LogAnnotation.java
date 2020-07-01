@@ -87,9 +87,30 @@ public class LogAnnotation {
     @OnClose
     public void end() {
         connections.remove(this);
-//        String message = String.format("* %s %s",
-//                nickname, "has disconnected.");
-//        broadcast(message);
+
+
+        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
+
+
+        String deviceNo = deviceMappingService.getDeviceNoByMappingId(this.mappingId);
+
+        BulletAnnotation annotation = pool.getByDeviceNo(deviceNo);
+
+
+
+        // 关闭日志
+        MsgLogOpen msgLogOpen = new MsgLogOpen();
+        msgLogOpen.setMappingId(this.mappingId);
+        msgLogOpen.setOpen(0);
+
+        try {
+            annotation.sendObject(msgLogOpen);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
