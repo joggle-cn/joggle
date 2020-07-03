@@ -73,6 +73,12 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , templateUrl: 'view/device/mapping.htm'
             , controllerUrl: 'view/device/mapping.js'
         }))
+        // 映射日志
+        .when('/user/device/:deviceId/mapping/:mappingId/log', router({
+            minTitle: "端口映射日志"
+            , templateUrl: 'view/device/log/log.htm'
+            , controllerUrl: 'view/device/log/log.js'
+        }))
 
 		// 我的域名
 		.when('/user/domain', router({

@@ -247,7 +247,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                 }
             });
         };
-		 
+
+
 		 
  	}];
 	

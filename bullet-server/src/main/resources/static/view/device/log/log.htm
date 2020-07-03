@@ -4,168 +4,27 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<blockquote>
-				<p>设备详情</p>
+				<p>日志</p>
 			</blockquote>
 		</div>
 	</div>
 
 	<div class="row" style="margin-top: 10px;">
-		<div class="col-sm-9">
-
-			<div class="row">
-
-
-				<div class="col-xs-3">
-					<div class="item-server">
-						<i class="fa fa-server item-icon"></i>
-						<span class="item-status label-success" ng-if="deviceInfo.status == 1"></span>
-						<span class="item-status label-default" ng-if="deviceInfo.status != 1"></span>
-					</div>
-				</div>
-				<div class="col-xs-9" >
-					<div class="row">
-						<div class="col-sm-6 ">别名：{{deviceInfo.name}}</div>
-						<div class="col-sm-6 ">编码：{{deviceInfo.deviceNo}}</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6">地址：{{deviceInfo.intranetIp}}</div>
-					</div>
-				</div>
+		<div class="col-sm-12" style="    font-size: 13px;
+    font-family: monospace;">
+			<div class="  " ng-repeat="a in logs">
+				{{a}}
 			</div>
-		</div>
-		<div class="col-sm-3">
-			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
-			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
-			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
-		</div>
-	</div>
 
-	<hr>
-
-	<div class="row ">
-		<div class="col-xs-3">
-			<div class="device-feature-item">
-				<h5>线路</h5>
-				<p>{{features.lineName}}</p>
-			</div>
-		</div>
-		<div class="col-xs-3">
-			<div class="device-feature-item">
-				<h5>域名</h5>
-				<p>{{features.domainCount}}个</p>
-			</div>
-		</div>
-		<div class="col-xs-3">
-			<div class="device-feature-item">
-				<h5>端口</h5>
-				<p>{{features.portCount}}个</p>
-			</div>
-		</div>
-		<div class="col-xs-3">
-			<div class="device-feature-item">
-				<h5>宽带</h5>
-				<p>{{features.broadband}}</p>
-			</div>
 		</div>
 	</div>
 
 
 	<hr>
 
-	<!-- 端口映射 -->
-	<div class="row">
-		<div class="col-xs-12">
-			<blockquote>
-				<p>端口映射</p>
-			</blockquote>
-		</div>
-	</div>
-	<div class="row">
-	  <div class="col-xs-12">
-		  <table class="table table-hover">
-			  <thead>
-			  <tr>
-				  <th>序号</th>
-				  <th>外网地址</th>
-				  <th>内网服务</th>
-				  <th>状态</th>
-				  <th>备注</th>
-				  <th width="140">操作</th>
-			  </tr>
-			  </thead>
-			  <tbody>
-			  <tr ng-repeat="item in portList">
-				  <td>{{$index+1}}</td>
-				  <td>tcp://joggle.cn:{{item.remotePort}}</td>
-				  <td>
-					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
-				  </td>
-				  <td>
-					  <span class="label label-success" ng-if="item.status == 1">启用</span>
-					  <span class="" ng-if="item.status != 1"> - </span>
-				  </td>
-				  <td>{{item.description}}</td>
-				  <td>
 
-					  <a ng-click="addMapping(item, 1)" class="btn btn-info">编辑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-info">日志</a>
-					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
-				  </td>
-			  </tr>
-			  </tbody>
-		  </table>
-	  </div>
-	 	
-	</div>
-	<!-- 域名映射 -->
-	<div class="row">
-		<div class="col-xs-12">
-			<blockquote>
-				<p>域名映射</p>
-			</blockquote>
-		</div>
-	</div>
-	<div class="row">
-	  <div class="col-xs-12">
-		  <table class="table table-hover">
-			  <thead>
-			  <tr>
-				  <th>序号</th>
-				  <th>外网地址</th>
-				  <th>内网服务</th>
-				  <th>状态</th>
-				  <th>备注</th>
-				  <th width="140">操作</th>
-			  </tr>
-			  </thead>
-			  <tbody>
-			  <tr ng-repeat="item in domainList">
-				  <td>{{$index+1}}</td>
-				  <td>
-					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn">
-					  {{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn
-					  </a>
-				  </td>
-				  <td>
-					  <span ng-if="item.protocol == 1 || item.protocol == 3 ">{{item.host}}:{{item.port}}</span>
-				  </td>
-				  <td>
-					  <span class="label label-success" ng-if="item.status == 1">启用</span>
-					  <span class="" ng-if="item.status != 1"> - </span>
-				  </td>
-				  <td>{{item.description}}</td>
-				  <td>
-					  <a ng-click="addMapping(item,2)" class="btn btn-info">编辑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-info">日志</a>
-					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
-				  </td>
-			  </tr>
-			  </tbody>
-		  </table>
 
-	  </div>
 
-	</div>
 </div>
 
 
