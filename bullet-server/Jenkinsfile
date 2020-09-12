@@ -57,7 +57,7 @@ pipeline {
                             cd ./build/server/
                             echo "从服务器下载对应的ngrokd文件"
 
-                            scp root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrokd ./bin/ngrokd
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrokd ./bin/ngrokd
 
                             tar -zcvf bullet-server.tar.gz ./*
 
