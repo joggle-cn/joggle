@@ -77,7 +77,7 @@ pipeline {
                             echo "从服务器下载Win版本的ngrokd文件"
 
 
-                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrokd.exe ./bin/ngrokd
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrokd.exe ./bin/ngrokd.exe
                             tar -zcvf bullet-server-windows.tar.gz ./*
                             scp -o StrictHostKeyChecking=no bullet-server-windows.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
 
