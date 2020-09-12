@@ -30,10 +30,10 @@ ENV LANG C.UTF-8
 
 
 # 容器内部文件处理
-ADD ./bin/ /opt/bullet-server/bin/
-ADD ./conf/ /opt/bullet-server/conf/
+ADD ../build/server/bin /opt/bullet-server/bin/
+ADD ../build/server/conf /opt/bullet-server/conf/
 ADD ./target/bullet-server.jar /opt/bullet-server/lib/bullet-server.jar
-ADD ./logs/ /opt/bullet-server/logs/
+ADD ../build/server/logs /opt/bullet-server/logs/
 
 # 导出的端口
 EXPOSE 8083

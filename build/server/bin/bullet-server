@@ -24,6 +24,42 @@
 #export BULLET_HOME=/opt/bullet-server
 
 
+# Mysql数据库 配置
+export BULLET_MYSQL_HOST=192.168.1.6
+export BULLET_MYSQL_PORT=3306
+export BULLET_MYSQL_DATABASE=db_bullet
+export BULLET_MYSQL_USERNAME=root
+export BULLET_MYSQL_PASSWORD=123
+
+# 邮件 配置
+BULLET_MAIL_HOST=smtp.ym.163.com
+BULLET_MAIL_PORT=994
+BULLET_MAIL_USERNAME=notice@wuweibi.com
+BULLET_MAIL_PASSWORD=123456
+
+# ngrokd home 路径
+BULLET_NGROKD_HOME=/opt/ngrok
+
+
+PRG="$0" # 当前执行文件的路径
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+# 当前命令运行的路径
+PRGDIR=`dirname "$PRG"`
+
+# 找到home路径
+bin=`cd "$PRGDIR"; pwd`
+BULLET_HOME=`dirname "$bin"`
+
+# 如果home指定正确就用当前home路径
 
 if [ -x "$JAVA_HOME/bin/java" ]; then
     JAVA="$JAVA_HOME/bin/java"
@@ -38,24 +74,7 @@ if [ ! -x "$JAVA" ]; then
 fi
 
 
-CLASS='com.wuweibi.bullet.client.Main'
-
-
-
-
-
-
-if [ -x "$BULLET_HOME/bin/bullet-server" ]; then
-    BULLET_HOME=$BULLET_HOME
-else
-    bin=`dirname "${BASH_SOURCE-$0}"`
-    bin=`cd "$bin"; pwd`
-    BULLET_HOME=`cd "."; pwd`
-fi
-
-
-
-echo "Bullet当前工作目录: $BULLET_HOME"
+echo "Bullet Home目录: $BULLET_HOME"
 
 BULLER_CONF_DIR="$BULLET_HOME/conf"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
@@ -79,4 +98,4 @@ exec "$JAVA" \
 -Djava.bullet.home.dir="$BULLET_HOME" \
 -Djava.security.egd=file:/dev/./urandom \
 -classpath $CLASSPATH \
--jar $BULLET_HOME/lib/bullet-server.jar --spring.profiles.active=prod
+-jar $BULLET_HOME/lib/bullet-server.jar --spring.profiles.active=dev

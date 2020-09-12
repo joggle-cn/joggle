@@ -32,11 +32,17 @@
 
         <plugins>
 
+
+            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+
+            <!-- spring boot 插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <fork>true</fork>
+                    <fork>false</fork>
+                    <!-- 你的启动类 -->
+                    <mainClass>com.wuweibi.bullet.BulletServerApplication</mainClass>
                 </configuration>
             </plugin>
 

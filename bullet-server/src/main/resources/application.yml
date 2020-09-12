@@ -62,7 +62,7 @@ spring:
   datasource:
     driverClassName : com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://bullet-server:3306/db_bullet?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://${BULLET_MYSQL_HOST:bullet-server}:${BULLET_MYSQL_PORT:3306}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&characterEncoding=utf8&useSSL=false
     username: ${BULLET_MYSQL_USERNAME:root}
     password: ${BULLET_MYSQL_PASSWORD:123456}
     initialSize: 10
@@ -119,6 +119,7 @@ mybatis-plus:
 # log config
 logging:
   config: 'classpath:logback-spring.xml'
+
 # 设定ftl文件路径
 
 #网关白名单，无需要签权url
@@ -127,6 +128,10 @@ gate:
     authentication:
       startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template
 
+# ngrokd home路径
+bullet:
+  ngrokd:${BULLET_NGROKD_HOME:/opt/ngrok}
+
 
 
 # 微信配置
@@ -134,5 +139,5 @@ weixin:
   appId: wxc8e74d5165c333e6
   appSecret: a33692209929308c336b167ba226785a
 
-bullet:
-  ngrokd:${BULLET_NGROKD_HOME:/opt/ngrok}
+
+

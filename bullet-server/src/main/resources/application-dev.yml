@@ -2,10 +2,6 @@
 #
 # Spring 配置
 #
-spring:
-  datasource:
-    url: jdbc:mysql://${BULLET_MYSQL_HOST:localhost}:${BULLET_MYSQL_PORT:3307}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&characterEncoding=utf8&useSSL=false
-    username: ${BULLET_MYSQL_USERNAME:root}
-    password: ${BULLET_MYSQL_PASSWORD:123}
+
 
 

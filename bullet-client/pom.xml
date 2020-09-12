@@ -27,7 +27,7 @@
         <plugins>
             <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
 
-            <!-- spring热部署 -->
+            <!-- spring boot 插件  -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

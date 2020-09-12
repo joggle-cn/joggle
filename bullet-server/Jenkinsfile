@@ -39,11 +39,31 @@ pipeline {
                    sh '''
                         echo "bullet-server uploading to tmp file ....."
 
-                        scp ./bullet-server/target/bullet-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
 
-                        echo "bullet-server restart ....."
+                        if [ "$BRANCH_NAME"  = "prod" ];then
 
-                        ssh root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
+                            scp ./bullet-server/target/bullet-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+
+                            echo "bullet-server restart ....."
+
+                            ssh root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
+
+                        fi
+
+                        if [ "$BRANCH_NAME"  = "build" ];then
+                            echo "正在转移jar文件"
+                            mv ./bullet-server/target/bullet-server.jar ./build/server/lib/bullet-server.jar
+
+                            cd ./build/server/
+                            echo "从服务器下载对应的ngrokd文件"
+
+                            scp root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrokd ./bin/ngrokd
+
+                            tar -zcvf bullet-server.tar.gz ./*
+
+
+
+                        fi
                     '''
 
                }
