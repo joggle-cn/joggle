@@ -3,7 +3,6 @@ package com.wuweibi.bullet.config;
  * Created by marker on 2018/3/16.
  */
 
-import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
 import com.wuweibi.bullet.controller.interceptor.RequestParamsInterceptor;
@@ -11,7 +10,6 @@ import com.wuweibi.bullet.filter.CrossDomainFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -21,9 +19,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * WebMvcConfig
@@ -199,21 +195,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return registration;
     }
 
-    @Bean
-    public ServletRegistrationBean druidServlet() {
-        log.info("init Druid Servlet Configuration ");
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
-        servletRegistrationBean.setServlet(new StatViewServlet());
-        servletRegistrationBean.addUrlMappings("/druid/*");
-        Map<String, String> initParameters = new HashMap<String, String>();
-        initParameters.put("loginUsername", "admin");// 用户名
-        initParameters.put("loginPassword", "123456");// 密码
-        initParameters.put("resetEnable", "false");// 禁用HTML页面上的“Reset All”功能
-//        initParameters.put("allow", ""); // IP白名单 (没有配置或者为空，则允许所有访问)
-        //initParameters.put("deny", "192.168.20.38");// IP黑名单 (存在共同时，deny优先于allow)
-        servletRegistrationBean.setInitParameters(initParameters);
-
-        return servletRegistrationBean;
-    }
+//    @Bean
+//    public ServletRegistrationBean druidServlet() {
+//        log.info("init Druid Servlet Configuration ");
+//        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+//        servletRegistrationBean.setServlet(new StatViewServlet());
+//        servletRegistrationBean.addUrlMappings("/druid/*");
+//        Map<String, String> initParameters = new HashMap<String, String>();
+//        initParameters.put("loginUsername", "admin");// 用户名
+//        initParameters.put("loginPassword", "123456");// 密码
+//        initParameters.put("resetEnable", "false");// 禁用HTML页面上的“Reset All”功能
+////        initParameters.put("allow", ""); // IP白名单 (没有配置或者为空，则允许所有访问)
+//        //initParameters.put("deny", "192.168.20.38");// IP黑名单 (存在共同时，deny优先于allow)
+//        servletRegistrationBean.setInitParameters(initParameters);
+//
+//        return servletRegistrationBean;
+//    }
 
 }

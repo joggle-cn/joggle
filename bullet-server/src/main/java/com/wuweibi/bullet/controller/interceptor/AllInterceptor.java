@@ -38,6 +38,12 @@ public class AllInterceptor implements HandlerInterceptor {
 
         String url = request.getRequestURI().toString();
 
+
+        // 访问的首页地址
+        if("/".equals(url)){
+        	return true;
+		}
+
         // 验证权限
 		AuthenticationService authenticationService = SpringUtils.getBean(AuthenticationService.class);
 

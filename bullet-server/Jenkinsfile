@@ -58,8 +58,8 @@ pipeline {
 
                             echo "从服务器下载linux版本的ngrokd文件"
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrokd ./bin/ngrokd
-                            tar -zcvf bullet-server.tar.gz ./*
-                            scp -o StrictHostKeyChecking=no bullet-server.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                            tar -zcvf bullet-server-linux.tar.gz ./*
+                            scp -o StrictHostKeyChecking=no bullet-server-linux.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server.tar.gz
                             rm -rf ./bin/ngrok

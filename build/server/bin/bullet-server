@@ -23,6 +23,8 @@
 #export JAVA_HOME=/opt/sdk/jdk1.8.0_201/
 #export BULLET_HOME=/opt/bullet-server
 
+# 服务端口号
+export SERVER_PORT=8081
 
 # Mysql数据库 配置
 export BULLET_MYSQL_HOST=192.168.1.6
@@ -32,13 +34,13 @@ export BULLET_MYSQL_USERNAME=root
 export BULLET_MYSQL_PASSWORD=123
 
 # 邮件 配置
-BULLET_MAIL_HOST=smtp.ym.163.com
-BULLET_MAIL_PORT=994
-BULLET_MAIL_USERNAME=notice@wuweibi.com
-BULLET_MAIL_PASSWORD=123456
+export BULLET_MAIL_HOST=smtp.ym.163.com
+export BULLET_MAIL_PORT=994
+export BULLET_MAIL_USERNAME=notice@wuweibi.com
+export BULLET_MAIL_PASSWORD=123456
 
 # ngrokd home 路径
-BULLET_NGROKD_HOME=/opt/ngrok
+export BULLET_NGROKD_HOME=/opt/ngrok
 
 
 PRG="$0" # 当前执行文件的路径

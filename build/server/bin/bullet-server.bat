@@ -1,7 +1,9 @@
 @echo off
 
 setlocal
- 
+
+set SERVER_PORT=8081
+
 set BULLET_MYSQL_HOST=192.168.1.6
 set BULLET_MYSQL_PORT=3306
 set BULLET_MYSQL_DATABASE=db_bullet
@@ -37,26 +39,10 @@ echo This environment variable is needed to run this program
 goto end
 :okHome
 
-
-
-echo %BULLET_HOME%
-
-
-
-
 echo "Bullet Home %BULLET_HOME%"
 
 set BULLER_CONF_DIR="%BULLET_HOME%\conf"
 echo "Bullet config: %BULLER_CONF_DIR%"
 
-
-
-
-
-
-
-
-
- 
 
 java -Djava.bullet.conf.dir="%BULLER_CONF_DIR%" -Djava.bullet.home.dir="%BULLET_HOME%" -Djava.security.egd=file:/dev/./urandom  -jar %BULLET_HOME%/lib/bullet-server.jar --spring.profiles.active=dev

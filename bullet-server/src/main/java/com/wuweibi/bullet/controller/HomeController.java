@@ -1,20 +1,15 @@
 package com.wuweibi.bullet.controller;
 
-import com.wuweibi.bullet.alias.SessionAttr;
-import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.utils.HttpUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +22,13 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
-
+	@RequestMapping("")
+	public String welcome(HttpServletRequest request){
+		return "redirect:index.html";
+	}
 	/**
 	 * 首页
-	 * 重写首页，可自动判断访问的域名，识别接口host。
+	 * 重写首页，可自动判断访问的域名，识别接口ht。
 	 * @return
 	 */
 	@RequestMapping("/index.html")
