@@ -61,7 +61,7 @@ pipeline {
                             tar -zcvf bullet-server-linux.tar.gz ./*
                             scp -o StrictHostKeyChecking=no bullet-server-linux.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
 
-                            rm -rf bullet-server.tar.gz
+                            rm -rf bullet-server-linux.tar.gz
                             rm -rf ./bin/ngrok
 
                             echo "从服务器下载Mac版本的ngrokd文件"
