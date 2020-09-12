@@ -24,7 +24,7 @@
 
 1、首先使用mvn打包bullet-client.jar，拷贝到lib目录中。
 
-
+-
 
 2、构建Docker镜像。
 ```

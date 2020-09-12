@@ -37,7 +37,6 @@ import java.nio.ByteBuffer;
 import java.util.*;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
-import static com.wuweibi.bullet.utils.SessionHelper.getUserId;
 
 /**
  *
@@ -115,12 +114,15 @@ public class DeviceController {
     }
 
 
-    // 更新设备
+    /**
+     * 更新设备基本西新城
+     * @return
+     */
     @RequestMapping(value = "/device/", method = RequestMethod.POST)
-    public Object save(@RequestParam String name,
+    public Object save(@JwtUser Session session, @RequestParam String name,
                        @RequestParam Long id,
                        HttpServletRequest request ){
-        Long userId = getUserId(request);
+        Long userId = session.getUserId();
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, id);
