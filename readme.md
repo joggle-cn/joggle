@@ -1,21 +1,19 @@
-### Bullet 反向代理内网穿透服务器
+### Bullet 内网穿透Web管理工具
 
-基于Java实现，通过WebSocket全双工长连接技术， 将请求信息通过WebSocket链接发送给链接的客户端。
+本项目基于Java实现，是一款通过Bullet协议控制Ngrok客户端，实现的Web远程管理工具。
 
 
 ### Bullet 特性
 
-- 稳定、高效；
-- 断连重试机制，链接断后间隔10s尝试连接；
-- 真真意义的反向代理，长连接反向请求；
-- 支持Http、Https协议、TCP/IP协议；
-- 基于Ngrok实现保证请求响应数据的安全性，Ngrok内部通过rsa算法加密；
+- 快速、稳定；
+- 断连重试机制；
+- 反向代理请求；
+- 支持Http、Https协议、TCP协议；
+- TLS实现数据的安全传输；
 
 ![image](docs/images/WX20191226-100852.jpg)
-
-Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造轮子，在轮子的基础上做了优化，支持Server端Web管理。
-
-目前仅对Mac环境做了适配，需要其他环境替换bin/ngrok命令.
+ 
+目前实现了Mac、linux、window全环境适配.
 
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
@@ -35,57 +33,24 @@ Ngrok强势入驻，由于Ngrok在内网穿透这块确实稳定，故不再造�
 | bullet-client | Bullet客户端代理程序，主要控制Ngrok客户端协同操作| 
 | bullet-server | Server端为服务端主控程序，提供系列接口供Web前端页面调用，控制Client操作Ngrok客户端| 
 | bullet-codemaker | 本人比较懒，用的Mybatis-Plus生成代码| 
-  
 
-### ngrok 客户端与服务端 编译
+Bullet占用的端口说明
+|端口 |说明|
+|:---- |----   |
+| 8083 | Ngrok通道 |
+| 80   | 代理的http端口 | 
+| 443  | 代理的https端口 | 
+| 8081 | Bullet WEB管理服务（默认端口，可通过环境变量修改) |   
 
-http://www.yl-blog.com/article/608.html
 
-本项目需要手动编译对应平台ngrok命令替换项目中的ngrok命令。
+### Bullet Server 部署
 
+bullet的部署非常简单，百度网盘下载对应的server包，解压。
 
-### 编译Client & Server
+- 1、安装mysql数据库并执行源码中的sql文件；
+- 2、下载bullet-server的部署并解压；
+- 3、配置bin/bullet-server脚本的环境变量;
+- 4、执行./bin/bullet-server启动;
+- 5、访问http://localhost:8081
 
-编译
-```
-mvn install
-```
-
-进入到bullet目录运行程序
-```
-cd Client
-
-./bin/bullet
-
-```
-
-启动客户端
-
-```
-./bin/bullet
-```
-
-具体参考文档：[《客户端Readme.md》](Client/readme.md)
-
-### 服务端安装
-
-服务器端需要占用一个通道端口，写死在代码中的8081端口。
-
-1、先将数据库初始化好（见databases目录中）
-
-2、修改Server项目中的config.properties 配置文件。
-
-3、打Springboot jar包
-
-```
-cd Server
-
-# 打服务端包
-mvn install
-
-# 使用SpringBoot启动方式启动服务端
-
-java -Djava.security.egd=file:/dev/./urandom -jar target/server-1.0-SNAPSHOT.jar --spring.profiles.active=dev
-```
-
-5、使用域名泛解析到服务器IP。
+ 
