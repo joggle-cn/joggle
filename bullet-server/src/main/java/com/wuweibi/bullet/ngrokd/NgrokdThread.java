@@ -42,11 +42,18 @@ public class NgrokdThread extends Thread  {
 
         String privkeyPath   = projectPath + "/conf/privkey.pem";
         String fullchainPath = projectPath + "/conf/fullchain.pem";
+
+        String tunnelPrivkeyPath   = projectPath + "/conf/tunnel/privkey.pem";
+        String tunnelFullchainPath = projectPath + "/conf/tunnel/fullchain.pem";
+
+
         String ngrokdLogPath = projectPath + "/logs/ngrokd.log";
 
         this.command = projectPath + "/bin/ngrokd" +
             " -tlsKey=" + privkeyPath +
             " -tlsCrt=" + fullchainPath +
+            " -tlsTunnelKey=" + tunnelPrivkeyPath +
+            " -tlsTunnelCrt=" + tunnelFullchainPath +
             " -domain=" + domain +
             " -httpAddr=:80" +
             " -httpsAddr=:443" +
