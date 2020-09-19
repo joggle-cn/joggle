@@ -3,5 +3,10 @@
 # Spring 配置
 #
 
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: classpath:/static
 
 
