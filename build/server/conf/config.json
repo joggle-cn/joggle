@@ -1,3 +1,6 @@
 {
-
+  "domain": "joggle.cn",
+  "tunnelPort": 8013,
+  "httpPort": 8080,
+  "httpsPort": 443
 }

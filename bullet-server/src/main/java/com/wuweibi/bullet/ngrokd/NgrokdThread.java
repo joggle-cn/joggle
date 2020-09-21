@@ -3,6 +3,7 @@ package com.wuweibi.bullet.ngrokd;
  * Created by marker on 2019/4/10.
  */
 
+import com.wuweibi.bullet.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -39,13 +40,13 @@ public class NgrokdThread extends Thread  {
 
         log.debug("BulletServer项目路径：{}", projectPath);
 
+        // 服务端443的证书
+        String privkeyPath   = projectPath + "/conf/server/privkey.pem";
+        String fullchainPath = projectPath + "/conf/server/fullchain.pem";
 
-        String privkeyPath   = projectPath + "/conf/privkey.pem";
-        String fullchainPath = projectPath + "/conf/fullchain.pem";
-
+        // ngrok通道的证书
         String tunnelPrivkeyPath   = projectPath + "/conf/tunnel/privkey.pem";
         String tunnelFullchainPath = projectPath + "/conf/tunnel/fullchain.pem";
-
 
         String ngrokdLogPath = projectPath + "/logs/ngrokd.log";
 
@@ -55,10 +56,11 @@ public class NgrokdThread extends Thread  {
             " -tlsTunnelKey=" + tunnelPrivkeyPath +
             " -tlsTunnelCrt=" + tunnelFullchainPath +
             " -domain=" + domain +
-            " -httpAddr=:80" +
-            " -httpsAddr=:443" +
+            " -httpAddr=:" + ConfigUtils.getHttpPort() +
+            " -httpsAddr=:" + ConfigUtils.getHttpsPort() +
             " -log=" + ngrokdLogPath +
-            " -tunnelAddr=:8083";
+            " -serverUrl=http://localhost:8081"  +
+            " -tunnelAddr=:" + ConfigUtils.getTunnelPort();
 
 //        StringBuilder command = new StringBuilder(projectPath + "/bin/ngrokd -config=");
 //

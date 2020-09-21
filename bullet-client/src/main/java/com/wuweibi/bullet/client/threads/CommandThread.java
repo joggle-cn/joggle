@@ -182,7 +182,9 @@ public class CommandThread extends Thread  {
             this.process.destroy();
         }
         log.debug("准备停止[{}]日志线程", this.config.getId());
-        ngrokLogThread.interrupt();
+        if(ngrokLogThread != null){
+            ngrokLogThread.interrupt();
+        }
         log.debug("准备停止[{}]Ngrok线程", this.config.getId());
         this.interrupt();
     }

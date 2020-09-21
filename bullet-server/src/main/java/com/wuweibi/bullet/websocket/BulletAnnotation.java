@@ -210,7 +210,6 @@ public class BulletAnnotation {
                     MsgCommandLog msgCommandLog = new MsgCommandLog(head);
                     msgCommandLog.read(bis);
                     // 转移消息到另外一个通道
-                    System.out.println();
 
                     LogAnnotation.broadcast(msgCommandLog.getMappingId(), msgCommandLog.getLine());
             }

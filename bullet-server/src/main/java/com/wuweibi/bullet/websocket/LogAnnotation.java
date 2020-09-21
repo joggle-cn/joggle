@@ -31,12 +31,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * 日志
+ *
  * @author marker
  * @version 1.0
  */
 @ServerEndpoint(value = "/_ws/log/{id}")
 public class LogAnnotation {
-   
+
     public static final Set<LogAnnotation> connections =
             new CopyOnWriteArraySet<LogAnnotation>();
 
@@ -44,7 +45,7 @@ public class LogAnnotation {
     private Session session;
     private Long mappingId;
 
-    public LogAnnotation() { 
+    public LogAnnotation() {
     }
 
 
@@ -98,14 +99,15 @@ public class LogAnnotation {
         BulletAnnotation annotation = pool.getByDeviceNo(deviceNo);
 
 
-
         // 关闭日志
         MsgLogOpen msgLogOpen = new MsgLogOpen();
         msgLogOpen.setMappingId(this.mappingId);
         msgLogOpen.setOpen(0);
 
         try {
-            annotation.sendObject(msgLogOpen);
+            if (annotation != null) {
+                annotation.sendObject(msgLogOpen);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,23 +116,21 @@ public class LogAnnotation {
     }
 
 
-    @OnMessage(maxMessageSize=2000999)
-    public void incoming(String message) { 
+    @OnMessage(maxMessageSize = 2000999)
+    public void incoming(String message) {
 
     }
-
-
 
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-        System.out.println("Chat Error: " + t.toString() );
+        System.out.println("Chat Error: " + t.toString());
     }
 
-    
-    public static void sendMsg(String user,String msg) {
+
+    public static void sendMsg(String user, String msg) {
         for (LogAnnotation client : connections) {
-        	String result = "user not online!";
+            String result = "user not online!";
             result = msg;
             try {
                 client.session.getBasicRemote().sendText(result);
@@ -148,12 +148,11 @@ public class LogAnnotation {
             }
         }
     }
-    
-    
+
 
     public static void broadcast(Long mappingId, String msg) {
         for (LogAnnotation client : connections) {
-            if(mappingId.compareTo(client.getMappingId()) == 0){
+            if (mappingId.compareTo(client.getMappingId()) == 0) {
                 try {
                     synchronized (client) {
                         client.session.getBasicRemote().sendText(msg);
