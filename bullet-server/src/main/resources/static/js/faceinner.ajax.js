@@ -15,6 +15,7 @@ if(window.SERVER_URL && window.SERVER_URL != '${url}'){ // 如果配置了
 let faceinner = {
     /** 服务器地址 */
     server: server,
+    ws: server.replace("http", "ws"),
 
 
     errorfunc : function(state){

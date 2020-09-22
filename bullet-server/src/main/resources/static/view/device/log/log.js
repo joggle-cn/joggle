@@ -17,7 +17,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./log.css'], function (
         let mappingId = $routeParams.mappingId;
         $scope.logs = [];
 
-        var target = "ws://localhost:8081/_ws/log/"+ mappingId;
+
+
+        var target =  faceinner.ws + "/_ws/log/"+ mappingId;
         var ws;
         if ('WebSocket' in window) {
             ws = new WebSocket(target);
