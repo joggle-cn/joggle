@@ -6,12 +6,13 @@ package com.wuweibi.bullet.client.threads;
 import com.wuweibi.bullet.client.Connection;
 import com.wuweibi.bullet.client.ConnectionPool;
 import com.wuweibi.bullet.client.domain.MappingInfo;
-import com.wuweibi.bullet.client.service.CommandThreadPool;
-import com.wuweibi.bullet.client.service.SpringUtil;
 import com.wuweibi.bullet.protocol.MsgCommandLog;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.concurrent.locks.Lock;
@@ -44,7 +45,7 @@ public class NgrokLogThread extends Thread  {
 
 
     // 读可重复读，读写互斥 参考 ReadAndWriteLockTest
-    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
 
 
@@ -106,9 +107,9 @@ public class NgrokLogThread extends Thread  {
                     readLock.unlock();
                 }
 
-                if(this.isOpen){
-                    Thread.sleep(50);
-                }
+//                if(this.isOpen){
+//                    this.(50);
+//                }
             }
 
         } catch (Exception e) {
