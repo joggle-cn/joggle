@@ -123,8 +123,8 @@ public class CommandThread extends Thread  {
         command.append(configPath).append(projectName).append(".yml ");
 
         if(ConfigUtils.getLogService()){// 开启日志
-//            command.append("-log="+ logsPath + projectName + ".log");
-            command.append("-log=stdout");
+            command.append("-log="+ logsPath + projectName + ".log");
+//            command.append("-log=stdout");
         }
         command.append(" start ").append(mappingName);
 
@@ -162,7 +162,6 @@ public class CommandThread extends Thread  {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-
         } catch (IOException e) {
             log.error("", e);
         }
@@ -181,8 +180,8 @@ public class CommandThread extends Thread  {
         if(this.process != null) {
             this.process.destroy();
         }
-        log.debug("准备停止[{}]日志线程", this.config.getId());
         if(ngrokLogThread != null){
+            log.debug("准备停止[{}]日志线程", this.config.getId());
             ngrokLogThread.interrupt();
         }
         log.debug("准备停止[{}]Ngrok线程", this.config.getId());
