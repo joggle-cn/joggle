@@ -17,11 +17,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Ngrok命令日志线程
- *
+ * 废弃，不适用的处理方式，因为流数据多了会导致命令卡死
  * @author marker
  * @create 2019-04-10 12:50
  **/
 @Slf4j
+@Deprecated
 public class NgrokLogThread extends Thread {
 
     private String command;

@@ -5,17 +5,24 @@ package com.wuweibi.bullet.client.threads;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.client.Connection;
+import com.wuweibi.bullet.client.ConnectionPool;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.domain.NgrokConf;
 import com.wuweibi.bullet.client.domain.Proto;
 import com.wuweibi.bullet.client.domain.Tunnels;
 import com.wuweibi.bullet.client.utils.ConfigUtils;
+import com.wuweibi.bullet.protocol.MsgCommandLog;
 import com.wuweibi.bullet.utils.FileTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.wuweibi.bullet.client.utils.ConfigUtils.getClientProjectPath;
 
@@ -40,7 +47,19 @@ public class CommandThread extends Thread  {
     private Long mappingId;
 
 
+    /**
+     * 日志输出开关
+     */
+    private boolean isLogOpen = false;
+
+
     private Process process = null;
+
+
+    // 读可重复读，读写互斥 参考 ReadAndWriteLockTest
+    private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+
+
 
 
     /**
@@ -155,8 +174,12 @@ public class CommandThread extends Thread  {
         }
 
     }
-    private NgrokLogThread ngrokLogThread;
-    private  InputStream inputStream;
+
+
+    private InputStream inputStream;
+
+
+
 
     @Override
     public void run() {
@@ -164,6 +187,48 @@ public class CommandThread extends Thread  {
         try {
             this.process = Runtime.getRuntime().exec(command);
             this.inputStream = process.getInputStream();
+
+            // 获取执行命令后的输入流
+            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
+            BufferedReader bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+
+            String str = null;
+
+            ConnectionPool connectionPool = ConnectionPool.getInstance();
+
+            Connection connection = connectionPool.getConn();
+
+            while (true) {
+                Lock readLock = readWriteLock.readLock();
+                readLock.lock();
+                try {
+                    str = bufferedReader.readLine();
+                    // 不管日志有没有打开都需要消费
+                    if(str == null || !this.isLogOpen){
+                        log.debug("ngrok: {}", str);
+                        continue;
+                    }
+                    if (connection.isActive() && connection.getSession().isOpen()) {
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+                        MsgCommandLog msg = new MsgCommandLog();
+                        msg.setMappingId(this.mappingId);
+                        msg.setLine(str);
+                        msg.write(outputStream);
+                        // 包装了Bullet协议的
+                        byte[] resultBytes = outputStream.toByteArray();
+                        outputStream.close();
+                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                        connection.getSession().getBasicRemote().sendBinary(buf);
+                    }
+
+                } catch (Exception e) {
+                    log.error("", e);
+                } finally {
+                    readLock.unlock();
+                }
+            }
         } catch (IOException e) {
             log.error("", e);
         }
@@ -182,28 +247,19 @@ public class CommandThread extends Thread  {
         if(this.process != null) {
             this.process.destroy();
         }
-        if(ngrokLogThread != null){
-            log.debug("准备停止[{}]日志线程", this.config.getId());
-            ngrokLogThread.interrupt();
-        }
+        this.isLogOpen = false;
+
         log.debug("准备停止[{}]Ngrok线程", this.config.getId());
         this.interrupt();
     }
 
     public void openLog() {
-        log.debug("准备开启[{}]日志线程", this.config.getId());
-
-        if (ngrokLogThread != null) {
-            ngrokLogThread.stopThread();
-        }
-
-        ngrokLogThread = new NgrokLogThread(this.config, inputStream);
-        ngrokLogThread.start();
+        log.debug("准备开启[{}]日志数据流", this.config.getId());
+        this.isLogOpen = true;
     }
 
     public void closeLog(){
         log.debug("准备停止[{}]日志线程", this.config.getId());
-
-//        ngrokLogThread.stopThread();
+        this.isLogOpen = false;
     }
 }
