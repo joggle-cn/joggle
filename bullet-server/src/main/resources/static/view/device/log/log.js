@@ -35,8 +35,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./log.css'], function (
         };
 
         ws.onmessage = function(message) {
-            console.log(message)
-            $scope.logs.push(message.data);
+            $scope.$apply(function(){
+                $scope.logs.push(message.data);
+            })
         };
 
         ws.onerror = function(err) {

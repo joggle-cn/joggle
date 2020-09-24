@@ -63,11 +63,14 @@ public class NgrokLogThread extends Thread  {
 
     @Override
     public void run() {
+        InputStream inputStream = null;
+        InputStreamReader buInputStreamReader = null;
+        BufferedReader bufferedReader= null;
         try {
             //获取执行命令后的输入流
-            InputStream inputStream = process.getInputStream();
-            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream , Charset.forName("UTF-8"));//装饰器模式
-            BufferedReader bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+            inputStream = process.getInputStream();
+            buInputStreamReader = new InputStreamReader(inputStream , Charset.forName("UTF-8"));//装饰器模式
+            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
 
             String str = null;
 
@@ -103,6 +106,8 @@ public class NgrokLogThread extends Thread  {
                     }
 
 
+                } catch (Exception e){
+                    this.isOpen = false;
                 } finally {
                     readLock.unlock();
                 }
@@ -114,6 +119,7 @@ public class NgrokLogThread extends Thread  {
 
         } catch (Exception e) {
             log.error("", e);
+
         }
 
     }
