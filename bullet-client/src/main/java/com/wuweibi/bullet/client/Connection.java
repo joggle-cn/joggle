@@ -106,7 +106,7 @@ public class Connection {
      * 再次打开连接
      * （等待30秒，重试次数20次）
      */
-    public void opeAngain() {
+    public void openAgain() {
         try {
             count++;
             logger.debug("Connection 第{}次尝试连接", count);

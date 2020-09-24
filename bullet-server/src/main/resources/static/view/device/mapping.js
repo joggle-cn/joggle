@@ -10,13 +10,16 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
 
 
-	let callback = ["$scope","$routeParams","$location", function ($scope, $routeParams,$location) {
+	let callback = ["$scope","$routeParams","$location","$rootScope", function ($scope, $routeParams,$location,$rootScope) {
         $scope.active = 'device';
         // 设备ID
         let deviceId = $routeParams.deviceId;
         $scope.domainNoBindList = [];
         $scope.features = {
             lineName: '-',
+        }
+        $scope.deviceInfo = {
+            status: 1
         }
 
 
@@ -45,12 +48,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          * @param item
          * @returns {*|string}
          */
-        $scope.showDomain = function(item){
-            if(item.domain){
-                return item.domain;
+        $scope.showDomain = function (item) {
+            if (item.domain) {// 子域名
+                return item.domain + '.' + $rootScope.config.domain;
             }
-            if(item.hostname){
-               return item.hostname;
+            if (item.hostname) {// 自定义域名 CNAME指向
+                return item.hostname;
             }
         }
 

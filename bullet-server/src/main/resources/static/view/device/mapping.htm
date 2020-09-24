@@ -86,11 +86,11 @@
 			  <thead>
 			  <tr>
 				  <th>序号</th>
-				  <th>外网地址</th>
+				  <th>协议地址</th>
 				  <th>内网服务</th>
 				  <th>状态</th>
 				  <th>备注</th>
-				  <th width="140">操作</th>
+				  <th width="200">操作</th>
 			  </tr>
 			  </thead>
 			  <tbody>
@@ -108,8 +108,8 @@
 				  <td>
 
 					  <a ng-click="addMapping(item, 1)" class="btn btn-info">编辑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-info">日志</a>
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
+					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-default">日志</a>
 				  </td>
 			  </tr>
 			  </tbody>
@@ -135,15 +135,15 @@
 				  <th>内网服务</th>
 				  <th>状态</th>
 				  <th>备注</th>
-				  <th width="140">操作</th>
+				  <th width="200">操作</th>
 			  </tr>
 			  </thead>
 			  <tbody>
 			  <tr ng-repeat="item in domainList">
 				  <td>{{$index+1}}</td>
 				  <td>
-					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn">
-					  {{item.protocol | showProtocol}}://{{showDomain(item)}}.joggle.cn
+					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{showDomain(item)}}">
+					  {{item.protocol | showProtocol}}://{{showDomain(item)}}
 					  </a>
 				  </td>
 				  <td>
@@ -156,8 +156,8 @@
 				  <td>{{item.description}}</td>
 				  <td>
 					  <a ng-click="addMapping(item,2)" class="btn btn-info">编辑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-info">日志</a>
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
+					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-default">日志</a>
 				  </td>
 			  </tr>
 			  </tbody>

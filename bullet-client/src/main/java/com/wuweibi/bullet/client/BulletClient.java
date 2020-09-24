@@ -116,7 +116,7 @@ public class BulletClient {
             if(!code.contains(closeCode)){// 除了1000 、1007 以外的 执行
                 Thread.sleep(3000L);
                 logger.debug("Connection 正在重启链接服务器...");
-                connection.opeAngain();
+                connection.openAgain();
             } else if(CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeCode)) {// 由于设备编号的关闭
                 logger.error("========================================================");
                 logger.error("= 客户端启动失败!!! \t");
@@ -129,7 +129,7 @@ public class BulletClient {
                 logger.debug("重新加载一次配置信息...");
                 ConfigUtils.reload();
 
-                connection.opeAngain();
+                connection.openAgain();
             } else { //
                 logger.warn("========================================================");
                 logger.warn("= 正常关闭应用!!! \t");

@@ -9,24 +9,20 @@ import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.protocol.MsgCommandLog;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- *
  * Ngrok命令日志线程
  *
  * @author marker
  * @create 2019-04-10 12:50
  **/
 @Slf4j
-public class NgrokLogThread extends Thread  {
+public class NgrokLogThread extends Thread {
 
     private String command;
 
@@ -38,9 +34,6 @@ public class NgrokLogThread extends Thread  {
      */
     private Long mappingId;
 
-
-    private Process process = null;
-
     private boolean isOpen;
 
 
@@ -48,28 +41,29 @@ public class NgrokLogThread extends Thread  {
     private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
 
+    private BufferedReader bufferedReader = null;
+
+
+    private InputStream inputStream;
 
     /**
      * 构造
+     *
      * @param config
      */
-    public NgrokLogThread(MappingInfo config, Process process){
+    public NgrokLogThread(MappingInfo config, InputStream inputStream) {
         this.config = config;
-        this.process = process;
         this.mappingId = this.config.getId();
+        this.inputStream = inputStream;
         this.isOpen = true;
     }
 
 
     @Override
     public void run() {
-        InputStream inputStream = null;
-        InputStreamReader buInputStreamReader = null;
-        BufferedReader bufferedReader= null;
         try {
-            //获取执行命令后的输入流
-            inputStream = process.getInputStream();
-            buInputStreamReader = new InputStreamReader(inputStream , Charset.forName("UTF-8"));//装饰器模式
+            // 获取执行命令后的输入流
+            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
             bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
 
             String str = null;
@@ -78,58 +72,53 @@ public class NgrokLogThread extends Thread  {
 
             Connection connection = connectionPool.getConn();
 
-            while(this.isOpen){
+            while (this.isOpen) {
                 Lock readLock = readWriteLock.readLock();
                 readLock.lock();
-                try{
+                try {
                     str = bufferedReader.readLine();
-                    if(str != null ){
-
-                        if(connection.isActive() &&   connection.getSession().isOpen()){
+                    if (str != null) {
+                        if (connection.isActive() && connection.getSession().isOpen()) {
                             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
                             MsgCommandLog msg = new MsgCommandLog();
                             msg.setMappingId(this.mappingId);
                             msg.setLine(str);
                             msg.write(outputStream);
-
-                            System.out.println(str);
+//                            System.out.println(str);
                             // 包装了Bullet协议的
                             byte[] resultBytes = outputStream.toByteArray();
                             outputStream.close();
                             ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
-
-                            connection.getSession().getBasicRemote().sendBinary(buf, true);
+                            connection.getSession().getBasicRemote().sendBinary(buf);
                         }
 
                     }
-
-
-                } catch (Exception e){
+                } catch (Exception e) {
                     this.isOpen = false;
                 } finally {
                     readLock.unlock();
                 }
-
-//                if(this.isOpen){
-//                    this.(50);
-//                }
             }
 
         } catch (Exception e) {
             log.error("", e);
-
+            this.stopThread();
         }
 
     }
 
-    public void stopThread(){
+
+    /**
+     * 停止线程
+     */
+    public void stopThread() {
         this.isOpen = false;
 
 
         readWriteLock.writeLock().lock();
-        try{
+        try {
             this.interrupt();
         } finally {
             readWriteLock.writeLock().unlock();
