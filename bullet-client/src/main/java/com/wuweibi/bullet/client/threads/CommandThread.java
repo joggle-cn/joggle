@@ -191,13 +191,13 @@ public class CommandThread extends Thread  {
 
     public void openLog() {
         log.debug("准备开启[{}]日志线程", this.config.getId());
-        ngrokLogThread = new NgrokLogThread(this.config, this.process);
-        ngrokLogThread.start();
+//        ngrokLogThread = new NgrokLogThread(this.config, this.process);
+//        ngrokLogThread.start();
     }
 
     public void closeLog(){
         log.debug("准备停止[{}]日志线程", this.config.getId());
 
-        ngrokLogThread.stopThread();
+//        ngrokLogThread.stopThread();
     }
 }
