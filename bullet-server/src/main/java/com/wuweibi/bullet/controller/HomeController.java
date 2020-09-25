@@ -2,6 +2,7 @@ package com.wuweibi.bullet.controller;
 
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
+import com.wuweibi.bullet.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.HttpUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,9 +55,9 @@ public class HomeController {
 	@GetMapping("/api/open/init")
 	@ResponseBody
 	public Result init(){
+		String domain = ConfigUtils.getBulletDomain();
         Map map = new HashMap(3);
-        // TODO 配置化
-        map.put("domain", "joggle.cn");
+        map.put("domain", domain);
 		resourceManager.loadResource();
 		return Result.success(map);
 	}

@@ -19,6 +19,7 @@ import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.CodeHelper;
+import com.wuweibi.bullet.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,9 +134,10 @@ public class OpenController {
 			// 赋权用户端
 			userService.newAuthRole(userId, "Consumer");
 
+			String domainUrl = ConfigUtils.getBulletDomain();
 			// 注册成功后发送激活邮件
 			Map<String,Object> params = new HashMap<>(1);
-			String url = "http://www.joggle.cn";
+			String url = "http://www." + domainUrl;
 			String forgetUrl = url +"#/user/activate?code=" + code;
 			params.put("url", forgetUrl);
 
