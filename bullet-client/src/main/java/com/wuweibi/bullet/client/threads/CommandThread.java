@@ -14,6 +14,7 @@ import com.wuweibi.bullet.client.domain.Tunnels;
 import com.wuweibi.bullet.client.utils.ConfigUtils;
 import com.wuweibi.bullet.protocol.MsgCommandLog;
 import com.wuweibi.bullet.utils.FileTools;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -179,8 +180,10 @@ public class CommandThread extends Thread  {
     private InputStream inputStream;
 
 
+    private BufferedReader bufferedReader;
 
 
+    @SneakyThrows
     @Override
     public void run() {
         log.debug("run: {}", command);
@@ -190,7 +193,7 @@ public class CommandThread extends Thread  {
 
             // 获取执行命令后的输入流
             InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
-            BufferedReader bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
 
             String str = null;
 
@@ -206,6 +209,7 @@ public class CommandThread extends Thread  {
                     // 不管日志有没有打开都需要消费
                     if(str == null || !this.isLogOpen){
                         log.debug("ngrok: {}", str);
+                        Thread.sleep(1000l);
                         continue;
                     }
                     if (connection.isActive() && connection.getSession().isOpen()) {
@@ -221,6 +225,9 @@ public class CommandThread extends Thread  {
                         ByteBuffer buf = ByteBuffer.wrap(resultBytes);
 
                         connection.getSession().getBasicRemote().sendBinary(buf);
+                    } else {
+                        log.warn("websocket connection is down mappingId={}", this.mappingId);
+                        break;
                     }
 
                 } catch (Exception e) {
@@ -231,6 +238,8 @@ public class CommandThread extends Thread  {
             }
         } catch (IOException e) {
             log.error("", e);
+        } finally {
+            bufferedReader.close();
         }
 
     }
