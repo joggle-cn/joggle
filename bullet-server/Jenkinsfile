@@ -50,7 +50,7 @@ pipeline {
 
                             echo "发布前端页面"
 
-                            sed -ie 's/http:\\/\\/localhost:8081/joggle.cn:8081/g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/localhost:8081/joggle.cn:8081/g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
 
 
                             scp -r ./bullet-server/src/main/resources/static/* root@192.168.1.6:/opt/baota/wwwroot/www.joggle.cn/
