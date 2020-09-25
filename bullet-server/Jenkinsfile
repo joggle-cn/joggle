@@ -8,7 +8,7 @@ pipeline {
                       echo 'Deploying....'
                       sh '''
 
-                         if [ "$BRANCH_NAME"  = "prod" ];then
+                         if [ "$BRANCH_NAME"  = "build" ];then
                             sed -ie 's/http:\\/\\/localhost:8081//g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
                          fi
 
@@ -47,6 +47,13 @@ pipeline {
                             echo "bullet-server restart ....."
 
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
+
+                            echo "发布前端页面"
+
+                            sed -ie 's/http:\\joggle.cn:8081/\\/localhost:8081//g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
+
+
+                            scp -r ./bullet-server/src/main/resources/static/ root@192.168.1.6:/opt/baota/wwwroot/www.joggle.cn/
 
                         fi
 
