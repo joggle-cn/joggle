@@ -5,6 +5,7 @@ import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -94,6 +95,7 @@ public class DefaultGlobalExceptionHandlerAdvice {
         log.error("base exception:{}", e);
         return Result.fail();
     }
+
 
 
 }

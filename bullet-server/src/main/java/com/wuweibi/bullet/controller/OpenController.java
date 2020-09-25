@@ -18,8 +18,8 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
-import com.wuweibi.bullet.utils.SnowflakeIdWorker;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -150,13 +149,9 @@ public class OpenController {
 			Date time = calendar.getTime();
 			calendar.add(Calendar.DATE,30);
 			Date dueTime = calendar.getTime();
-			SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
-			Long id = idWorker.nextId();
 
-			BigInteger a = new BigInteger(String.valueOf(id));
-
-			// 生成超级长的域名
-			domain.setDomain(a.toString(Character.MAX_RADIX));
+			// 生成域名
+			domain.setDomain(CodeHelper.makeNewCode());
 			domain.setUserId(userId);
 			domain.setCreateTime(time);
 			domain.setBuyTime(time);

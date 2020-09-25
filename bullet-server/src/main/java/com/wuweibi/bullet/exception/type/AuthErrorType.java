@@ -28,8 +28,14 @@ public enum AuthErrorType implements ErrorType {
     NOT_BIND_USER("003024","未绑定openid" ),
     SMS_CODE_ERROR("040072","验证码错误" ),
     ACCOUNT_PASSWORD_ERROR("040073","账号或者密码错误" ),
-    ACCOUNT_NOT_FOUND("040074", "用户不存在，请联系管理员！" )
+    ACCOUNT_NOT_FOUND("040074", "用户不存在，请联系管理员！" ),
+    ACCOUNT_NOT_ACTIVATE("040075", "账号未激活" )
+
+
+
+
     ;
+
 
     /**
      * 错误类型码

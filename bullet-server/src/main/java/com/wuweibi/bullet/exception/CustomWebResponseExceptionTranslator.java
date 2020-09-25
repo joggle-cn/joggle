@@ -25,6 +25,10 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
             log.warn("", e);
             OAuth2Exception oAuth2Exception = (OAuth2Exception) e;
             if(oAuth2Exception instanceof InvalidGrantException){
+                if("User is disabled".equals(oAuth2Exception.getMessage())){
+                    return ResponseEntity
+                            .status(200).body(Result.fail(AuthErrorType.ACCOUNT_NOT_ACTIVATE));
+                }
                 return ResponseEntity
                         .status(200).body(Result.fail(AuthErrorType.ACCOUNT_PASSWORD_ERROR));
             }

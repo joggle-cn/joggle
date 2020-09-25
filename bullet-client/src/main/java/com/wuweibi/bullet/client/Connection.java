@@ -4,6 +4,7 @@ package com.wuweibi.bullet.client;
  */
 
 import com.wuweibi.bullet.client.utils.ConfigUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public class Connection {
             String tunnel   = ConfigUtils.getTunnel();// 通道服务器
             String deviceNo =  ConfigUtils.getDeviceNo(); // 设备ID
 
-            String url = tunnel + "/" + deviceNo;
+            String url = tunnel + "/" + (StringUtils.isBlank(deviceNo) ? "null" : deviceNo);
 
             // 获取WebSocket连接器，其中具体实现可以参照websocket-api.jar的源码,Class.forName("org.apache.tomcat.websocket.WsWebSocketContainer");
 

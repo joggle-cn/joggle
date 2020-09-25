@@ -63,10 +63,10 @@ public class SocketThread extends Thread {
                     msgDeviceNo.read(bis);
 
                     String deviceNo = msgDeviceNo.getDeviceNo();
-                    logger.error("================================================");
-                    logger.error("================ Device NO =====================");
-                    logger.error("=== {} ===", deviceNo);
-                    logger.error("================================================");
+                    System.out.println("================================================\t");
+                    System.out.println("================ Device NO =====================\t");
+                    System.out.println("=== " + deviceNo + " ===\t");
+                    System.out.println("================================================\t");
 
                     ConfigUtils.setDeviceNo(deviceNo);
                     ConfigUtils.store();

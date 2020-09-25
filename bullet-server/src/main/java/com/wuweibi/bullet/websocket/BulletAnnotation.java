@@ -83,8 +83,8 @@ public class BulletAnnotation {
         session.setMaxBinaryMessageBufferSize(1024000);
         session.setMaxIdleTimeout(0);
 
-        if(StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)){ //如果是首次链接
-            this.deviceNo = CodeHelper.makeDeviceNo();
+        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) { //如果是首次链接
+            this.deviceNo = CodeHelper.makeNewCode();
         }
 
         // TODO 校验设备是否被绑定（设备被绑定后同样的名称不在链接成功)

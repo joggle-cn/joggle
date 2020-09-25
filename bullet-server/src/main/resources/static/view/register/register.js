@@ -10,6 +10,7 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 	return ['$scope','$http','$location','res','userService', function ($scope, $http, $location, res, userService) {
 		$scope.agree = false; // 协议
 		$scope.isOk = false; // 是否可以提交表单
+		$scope.userLogin = {};
 		$scope.user = {
 		    pass: ""
 		    ,sex: 0
@@ -40,7 +41,7 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 		$scope.reg = function(){
 			
 			validate($scope.user);// 验证表单
-			
+
 			if($scope.isOk){
 				// 判断两次密码是否一致
 				if($scope.user.password && ($scope.user.password == $scope.password2)){
@@ -48,7 +49,19 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 					faceinner.post(api['user.register'], $scope.user , function(result){
 						if(result.code == "S00"){// 注册成功
                             layer.msg(res.t('register.success'));
-
+							// 弹出窗口提示去查看激活邮件
+							layer.open({
+								type: 1 //Page层类型
+								,area: ['500px', '300px']
+								,title: '欢迎您使用Bullet'
+								,shade: 0.6 //遮罩透明度
+								,maxmin: true //允许全屏最小化
+								,anim: 1 //0-6的动画形式，-1不开启
+								,content: '<div style="padding:50px;">' +
+									'恭喜您，<br/>&nbsp; &nbsp; &nbsp; 您的账号'+ $scope.user.email +'已注册成功! 还差一步即可激活账号，' +
+									'请登录您的邮箱查看激活邮件并确认激活。' +
+									'</div>'
+							});
 
 						} else {// 注册失败
 							$scope.$apply(function () {
@@ -59,15 +72,10 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 								}
 							});
 						}
-
 					});
 				} else {
 					$scope.password2Msg = res.error(res.code.passwordInputNotEquals);
-				}  
-					
-	//					$("#registerModal").modal({// 弹出注册确认界面
-	//						backdrop: false
-	//					});
+				}
 				 
 			
 			}
@@ -98,6 +106,13 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 				$scope.emailMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
 			}
+			// 邮箱校验
+			let myReg = /^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
+			if(!myReg.test(user.email)){
+				$scope.emailMsg = "邮箱格式不正确!";
+				$scope.isOk = false;
+			}
+
 			if(user.password == null || '' == user.password){
 				$scope.passwordMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
@@ -108,6 +123,7 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 				$scope.isOk = false;
 			} 
 		};
+
 	}];
 	
 });

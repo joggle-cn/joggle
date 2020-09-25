@@ -55,6 +55,7 @@ public class HomeController {
 	@ResponseBody
 	public Result init(){
         Map map = new HashMap(3);
+        // TODO 配置化
         map.put("domain", "joggle.cn");
 		resourceManager.loadResource();
 		return Result.success(map);
