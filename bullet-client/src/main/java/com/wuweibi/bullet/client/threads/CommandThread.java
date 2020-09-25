@@ -205,10 +205,10 @@ public class CommandThread extends Thread  {
                 Lock readLock = readWriteLock.readLock();
                 readLock.lock();
                 try {
+
                     str = bufferedReader.readLine();
                     // 不管日志有没有打开都需要消费
                     if(str == null || !this.isLogOpen){
-                        log.debug("ngrok: {}", str);
                         Thread.sleep(1000l);
                         continue;
                     }
