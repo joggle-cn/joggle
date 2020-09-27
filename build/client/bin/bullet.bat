@@ -47,4 +47,4 @@ echo "Bullet config: %BULLER_CONF_DIR%"
 
  
 
-java -Djava.bullet.conf.dir="%BULLER_CONF_DIR%" -Djava.bullet.home.dir="%BULLET_HOME%" -Djava.security.egd=file:/dev/./urandom  -jar %BULLET_HOME%/lib/bullet-client.jar --spring.profiles.active=dev
+java -Djava.bullet.conf.dir="%BULLER_CONF_DIR%" -Djava.bullet.home.dir="%BULLET_HOME%" -Djava.security.egd=file:/dev/./urandom  -jar %BULLET_HOME%/lib/bullet-client.jar --spring.profiles.active=prod
