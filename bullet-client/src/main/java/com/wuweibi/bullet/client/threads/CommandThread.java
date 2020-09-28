@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -183,13 +182,13 @@ public class CommandThread extends Thread {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-            this.inputStream = process.getInputStream();
+//            this.inputStream = process.getInputStream();
 
             // 获取执行命令后的输入流
-            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
-            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+//            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
+//            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
 
-            String str = null;
+//            String str = null;
 
 //            ConnectionPool connectionPool = ConnectionPool.getInstance();
 
@@ -236,11 +235,11 @@ public class CommandThread extends Thread {
         } catch (IOException e) {
             log.error("", e);
         } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                log.error("", e);
-            }
+//            try {
+//                bufferedReader.close();
+//            } catch (IOException e) {
+//                log.error("", e);
+//            }
         }
 
     }
