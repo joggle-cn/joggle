@@ -100,4 +100,4 @@ exec "$JAVA" \
 -Djava.bullet.home.dir="$BULLET_HOME" \
 -Djava.security.egd=file:/dev/./urandom \
 -classpath $CLASSPATH \
--jar $BULLET_HOME/lib/bullet-server.jar --spring.profiles.active=dev
+-jar $BULLET_HOME/lib/bullet-server.jar --spring.profiles.active=prod

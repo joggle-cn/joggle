@@ -5,17 +5,23 @@ package com.wuweibi.bullet.client.threads;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.client.Connection;
+import com.wuweibi.bullet.client.ConnectionPool;
 import com.wuweibi.bullet.client.domain.MappingInfo;
 import com.wuweibi.bullet.client.domain.NgrokConf;
 import com.wuweibi.bullet.client.domain.Proto;
 import com.wuweibi.bullet.client.domain.Tunnels;
 import com.wuweibi.bullet.client.utils.ConfigUtils;
+import com.wuweibi.bullet.protocol.MsgCommandLog;
 import com.wuweibi.bullet.utils.FileTools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -79,10 +85,6 @@ public class CommandThread extends Thread {
 
         String projectName = config.getHostname() + config.getProtocol() + config.getDomain();
 
-
-        // 去除系统判定Ngrok命令太大了
-//        String osName = ConfigUtils.getOSName();
-//        log.debug("os name = {}", osName);
 
 
         StringBuilder command = new StringBuilder(projectPath + "/bin/ngrok -config=");
@@ -182,56 +184,63 @@ public class CommandThread extends Thread {
         log.debug("run: {}", command);
         try {
             this.process = Runtime.getRuntime().exec(command);
-//            this.inputStream = process.getInputStream();
+            this.inputStream = process.getInputStream();
 
             // 获取执行命令后的输入流
-//            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
-//            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
+            InputStreamReader buInputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));//装饰器模式
+            bufferedReader = new BufferedReader(buInputStreamReader);//直接读字符串
 
-//            String str = null;
+            String str = null;
 
-//            ConnectionPool connectionPool = ConnectionPool.getInstance();
+            ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-//            Connection connection = connectionPool.getConn();
+            Connection connection = connectionPool.getConn();
 
-//            while (true) {
-//                Lock readLock = readWriteLock.readLock();
-//                readLock.lock();
-//                try {
-//                    // 判断线程是否关闭
-//                    if (this.commandThreadDown) {
-//                        break;
-//                    }
-//                    str = bufferedReader.readLine();
-//                    // 不管日志有没有打开都需要消费
-//                    if (str == null || !this.isLogOpen) {
-//                        Thread.sleep(1000l);
-//                        continue;
-//                    }
-//                    if (connection.isActive() && connection.getSession().isOpen()) {
-//                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//
-//                        MsgCommandLog msg = new MsgCommandLog();
-//                        msg.setMappingId(this.mappingId);
-//                        msg.setLine(str);
-//                        msg.write(outputStream);
-//                        // 包装了Bullet协议的
-//                        byte[] resultBytes = outputStream.toByteArray();
-//                        outputStream.close();
-//                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-//
-//                        connection.getSession().getBasicRemote().sendBinary(buf);
-//                    } else {
-//                        log.warn("websocket connection is down mappingId={}", this.mappingId);
-//                        break;
-//                    }
-//
-//                } catch (Exception e) {
-//                    log.error("", e);
-//                } finally {
-//                    readLock.unlock();
-//                }
-//            }
+            Lock readLock = readWriteLock.readLock();
+
+            while (true) {
+
+                // 判断线程是否关闭
+                if (this.commandThreadDown) {
+                    break;
+                }
+
+                readLock.lock();
+                try {
+                    if(bufferedReader.ready()){
+                        str = bufferedReader.readLine();
+                    } else {
+                        str = null;
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    }
+                    // 不管日志有没有打开都需要消费
+                    if (str == null || !this.isLogOpen) {
+                        continue;
+                    }
+                    if (connection.isActive()) {// websocket 链接还是活跃的
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+                        MsgCommandLog msg = new MsgCommandLog();
+                        msg.setMappingId(this.mappingId);
+                        msg.setLine(str);
+                        msg.write(outputStream);
+                        // 包装了Bullet协议的
+                        byte[] resultBytes = outputStream.toByteArray();
+                        outputStream.close();
+                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                        connection.getSession().getBasicRemote().sendBinary(buf);
+                    } else {
+                        log.warn("websocket connection is down mappingId={}", this.mappingId);
+                        break;
+                    }
+
+                } catch (Exception e) {
+                    log.error("", e);
+                } finally {
+                    readLock.unlock();
+                }
+            }
         } catch (IOException e) {
             log.error("", e);
         } finally {

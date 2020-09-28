@@ -10,24 +10,25 @@
 
 
 
+    <!--  开发和测试日志-->
     <springProfile name="!prod">
-        <!-- configuration to be enabled when the "production" profile is not active -->
         <root level="debug">
             <appender-ref ref="STDOUT"/>
+            <appender-ref ref="DEBUG-ROLLING"/>
             <appender-ref ref="INFO-ROLLING"/>
             <appender-ref ref="ERROR-ROLLING"/>
-            <appender-ref ref="DEBUG-ROLLING"/>
         </root>
 
 
     </springProfile>
 
+    <!-- 线上日志-->
     <springProfile name="prod">
         <root level="debug">
             <appender-ref ref="STDOUT"/>
+            <appender-ref ref="DEBUG-ROLLING"/>
             <appender-ref ref="INFO-ROLLING"/>
             <appender-ref ref="ERROR-ROLLING"/>
-            <appender-ref ref="DEBUG-ROLLING"/>
         </root>
     </springProfile>
 
