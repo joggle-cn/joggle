@@ -78,7 +78,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	@TableField("userId")
 	private Long userId;
 
-	/** 协议 1 HTTP */
+	/** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
 	private Integer protocol;
 
 	/** 备注 */

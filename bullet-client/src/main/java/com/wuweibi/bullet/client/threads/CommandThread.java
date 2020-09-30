@@ -118,6 +118,10 @@ public class CommandThread extends Thread {
             tunnels.setRemote_port(this.config.getRemotePort());
         } else if (config.getProtocol() == 3) { // https
             proto.setHttps(config.getHost() + ':' + config.getPort());
+        } else if (config.getProtocol() == 4) { // http/https (两种协议支持)
+            String host = config.getHost() + ':' + config.getPort();
+            proto.setHttps(host);
+            proto.setHttp(host);
         }
 
 

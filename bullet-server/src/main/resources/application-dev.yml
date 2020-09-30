@@ -7,6 +7,8 @@ spring:
   devtools:
     restart:
       enabled: true
-      additional-paths: classpath:/static
+      # 表示从这个默认不触发重启的目录中除去static目录
+      exclude: classpath:/static/**
+      # additional-paths: classpath:/static
 
 
