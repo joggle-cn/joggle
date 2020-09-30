@@ -20,10 +20,6 @@
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
 
-
-
-export JAVA_HOME=/opt/sdk/jdk1.8.0_201/
-
 if [ -x "$JAVA_HOME/bin/java" ]; then
     JAVA="$JAVA_HOME/bin/java"
 else
