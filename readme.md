@@ -1,6 +1,6 @@
 ### 什么是 Bullet内网穿透？
 
-Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现了基于Websocket的Bullet内网穿透交互协议，通过Bullet协议控制Ngrok客户端实现Web界面管理。
+Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现了基于Websocket的Bullet内网穿透交互协议，通过自定义的协议控制Ngrok客户端实现Web界面管理。
 
 注意：本项目对Ngrok源码定制化的修改以满足安全性等需求，所以需要使用作者提供的Ngrok源码来编译。推荐使用百度网盘编译好的ngrokd & ngrok命令。
 
@@ -12,11 +12,11 @@ Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现�
 
 ### Bullet 特性
 
+- 支持http+https、Http、Https协议、TCP协议；
 - 免费开源、灵活配置、多租户支持、多协议支持；
+- TLS实现数据的安全传输；
 - 断连重试机制；
 - 反向代理请求；
-- 支持http+https、Http、Https协议、TCP协议；
-- TLS实现数据的安全传输；
 
 ### Bullet的管理界面
 
@@ -42,28 +42,30 @@ Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现�
 | bullet-codemaker | 本人比较懒，用的Mybatis-Plus生成代码| 
 | databases | sql相关的（历史原因部分字段的设计采用驼峰）| 
 
-Bullet占用的端口说明：
+BulletServer占用的端口说明：
 |端口 |说明|
 |:---- |----   |
 | 8083 | Ngrok通道 |
-| 80   | 代理的http端口 | 
-| 443  | 代理的https端口 | 
+| 80   | 代理的http端口(固定) | 
+| 443  | 代理的https端口(固定) | 
 | 8081 | Bullet WEB管理服务（默认端口，可通过环境变量修改) |   
 
 
 ### BulletClient 快速体验
 
-bullet-client的部署非常简单，百度网盘下载对应的client包
+首先您需要登录到平台注册一个账号，激活后您将获得一个雪花域名并赠予一个月的使用权（激活账号后才有哦）。
 
+
+bullet-client的部署非常简单，百度网盘下载对应的client包
+```
 下载地址：https://pan.baidu.com/s/1dy2qzPtN3CmftuHGm3BJgA
 密码: h9hf
+```
 
-解压后
-
-# 1、创建bullet文件夹
+#### 1、创建bullet文件夹
 `mkdir -p /opt/bullet/`
 
-# 2、解压客户端压缩包
+#### 2、解压客户端压缩包
 `tar -xvf bullet-client-linux.tar.gz`
 
 树形结构如下
@@ -87,7 +89,7 @@ bullet-client的部署非常简单，百度网盘下载对应的client包
     └── readme.txt
 ```
 
-# 3、执行 ./bin/bullet 启动客户端 输出日志有客户端编号
+#### 3、执行 ./bin/bullet 启动客户端 输出日志有客户端编号
 
 `./bin/bullet`
 
@@ -98,10 +100,10 @@ bullet-client的部署非常简单，百度网盘下载对应的client包
 ================================================	
 ```
 
-# 4、登录到Bullet平台绑定设备
+#### 4、登录到Bullet平台绑定设备
 
 
-# 5、将赠送的域名绑定到设备即可开启内网穿透之旅。
+#### 5、将赠送的域名绑定到设备即可开启内网穿透之旅。
 
  
  
