@@ -78,6 +78,11 @@ public class ConfigUtils {
      * @return
      */
     public static String getTunnel(){
+        String tunnel = System.getenv("BULLET_TUNNEL");
+        if(StringUtils.isNotBlank(tunnel)){
+            logger.debug("读取到环境变量 env tunnel={}", tunnel);
+            return tunnel;
+        }
         return configMap.getString("tunnel");
     }
 
@@ -90,7 +95,7 @@ public class ConfigUtils {
         // 优先读取环境变量的设备编码
         String deviceNo = System.getProperty("BULLET_DEVICE_NO");
         if(StringUtils.isNotBlank(deviceNo)){
-            logger.debug("读取到环境变量，不采用配置 env deviceNo={}", deviceNo);
+            logger.debug("读取到环境变量 env deviceNo={}", deviceNo);
             return deviceNo;
         }
         // 读取Bullet配置文件设备信息
