@@ -1,23 +1,29 @@
-### Bullet 内网穿透Web管理工具
+### 什么是 Bullet内网穿透？
 
-本项目基于Java实现，是一款通过Bullet协议控制Ngrok客户端，实现的Web远程管理工具。
+Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现了基于Websocket的Bullet内网穿透交互协议，通过Bullet协议控制Ngrok客户端实现Web界面管理。
 
+注意：本项目对Ngrok源码定制化的修改以满足安全性等需求，所以需要使用作者提供的Ngrok源码来编译。推荐使用百度网盘编译好的ngrokd & ngrok命令。
 
-### Bullet 特性
-
-- 快速、稳定；
-- 断连重试机制；
-- 反向代理请求；
-- 支持Http、Https协议、TCP协议；
-- TLS实现数据的安全传输；
-
-![image](docs/images/WX20191226-100852.jpg)
- 
-目前实现了Mac、linux、window全环境适配.
 
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
  
+
+
+### Bullet 特性
+
+- 免费开源、灵活配置、多租户支持、多协议支持；
+- 断连重试机制；
+- 反向代理请求；
+- 支持http+https、Http、Https协议、TCP协议；
+- TLS实现数据的安全传输；
+
+### Bullet的管理界面
+
+![image](docs/images/WX20191226-100852.jpg)
+ 
+
+目前实现了Mac、linux、window全环境适配.理论上还可以支持ARM，有这方面用户需求的可以联系作者。
 
 ### Bullet 逻辑架构
 
@@ -29,12 +35,14 @@
 
 |目录 |说明|
 |:---- |----   |
+| build  | 构建使用的目录接口，用户DevOps流水线发布产品 |
 | bullet-common  | 公共模块，包含加密、日志配置、Bullet协议、Builer结构 |
 | bullet-client | Bullet客户端代理程序，主要控制Ngrok客户端协同操作| 
 | bullet-server | Server端为服务端主控程序，提供系列接口供Web前端页面调用，控制Client操作Ngrok客户端| 
 | bullet-codemaker | 本人比较懒，用的Mybatis-Plus生成代码| 
+| databases | sql相关的（历史原因部分字段的设计采用驼峰）| 
 
-Bullet占用的端口说明
+Bullet占用的端口说明：
 |端口 |说明|
 |:---- |----   |
 | 8083 | Ngrok通道 |
@@ -43,14 +51,57 @@ Bullet占用的端口说明
 | 8081 | Bullet WEB管理服务（默认端口，可通过环境变量修改) |   
 
 
-### Bullet Server 部署
+### BulletClient 快速体验
 
-bullet的部署非常简单，百度网盘下载对应的server包，解压。
+bullet-client的部署非常简单，百度网盘下载对应的client包
 
-- 1、安装mysql数据库并执行源码中的sql文件；
-- 2、下载bullet-server的部署并解压；
-- 3、配置bin/bullet-server脚本的环境变量;
-- 4、执行./bin/bullet-server启动;
-- 5、访问http://localhost:8081
+下载地址：https://pan.baidu.com/s/1dy2qzPtN3CmftuHGm3BJgA
+密码: h9hf
 
+解压后
+
+# 1、创建bullet文件夹
+`mkdir -p /opt/bullet/`
+
+# 2、解压客户端压缩包
+`tar -xvf bullet-client-linux.tar.gz`
+
+树形结构如下
+```
+.
+├── bin
+│   ├── bullet
+│   ├── bullet.bat
+│   └── ngrok
+├── conf
+│   ├── cert
+│   │   ├── ca.crt
+│   │   └── readme.md
+│   ├── config.json
+│   └── ngrok.yml
+├── doc
+│   ├── bullet.service
+│   └── http\345\215\217\350\256\256.md
+└── lib
+    ├── bullet-client.jar
+    └── readme.txt
+```
+
+# 3、执行 ./bin/bullet 启动客户端 输出日志有客户端编号
+
+`./bin/bullet`
+
+```
+================================================	
+================ Device NO =====================	
+=== 5s4jmygyox6o ===	
+================================================	
+```
+
+# 4、登录到Bullet平台绑定设备
+
+
+# 5、将赠送的域名绑定到设备即可开启内网穿透之旅。
+
+ 
  
