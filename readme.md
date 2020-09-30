@@ -102,8 +102,12 @@ bullet-client的部署非常简单，百度网盘下载对应的client包
 
 #### 4、登录到Bullet平台绑定设备
 
+![image](docs/images/QQ20200930-192647.png)
+
 
 #### 5、将赠送的域名绑定到设备即可开启内网穿透之旅。
+
+![image](docs/images/QQ20200930-192937.png)
 
  
  
