@@ -58,6 +58,7 @@ define([
                 case 1 : return "http";
                 case 2 : return "tcp";
                 case 3 : return "https";
+                case 4 : return "https";
                 default: return "-";
             }
             return "-";
