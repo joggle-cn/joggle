@@ -2,6 +2,7 @@ package com.wuweibi.bullet.exception;
 
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.provider.error.WebResponseExceptionTr
 
 /**
  * 异常翻译
+ *
  * @author marker
  */
 @Slf4j
@@ -21,11 +23,11 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
     @Override
     public ResponseEntity translate(Exception e) {
 
-        if(e instanceof OAuth2Exception){
+        if (e instanceof OAuth2Exception) {
             log.warn("", e);
             OAuth2Exception oAuth2Exception = (OAuth2Exception) e;
-            if(oAuth2Exception instanceof InvalidGrantException){
-                if("User is disabled".equals(oAuth2Exception.getMessage())){
+            if (oAuth2Exception instanceof InvalidGrantException) {
+                if ("User is disabled".equals(oAuth2Exception.getMessage())) {
                     return ResponseEntity
                             .status(200).body(Result.fail(AuthErrorType.ACCOUNT_NOT_ACTIVATE));
                 }
@@ -35,16 +37,20 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
             return ResponseEntity
                     .status(200).body(Result.fail(oAuth2Exception));
 
-        } else if(e instanceof InternalAuthenticationServiceException){
-            InternalAuthenticationServiceException ex = (InternalAuthenticationServiceException)e;
-
-            OAuth2Exception oAuth2Exception =  (OAuth2Exception) ex.getCause();
-
+        } else if (e instanceof InternalAuthenticationServiceException) {
+            InternalAuthenticationServiceException ex = (InternalAuthenticationServiceException) e;
+            String msg = "";
+            if (ex.getCause() instanceof BaseException) {
+                Exception exception = (Exception) ex.getCause();
+                msg = exception.getMessage();
+            } else {
+                OAuth2Exception oAuth2Exception = (OAuth2Exception) ex.getCause();
+                msg = oAuth2Exception.getMessage();
+            }
             return ResponseEntity
-                    .status(200)
-                    .body("dsadsaddsadsad");
+                    .status(200).body(Result.fail(SystemErrorType.newErrorType(msg)));
 
-        } else if(e instanceof InsufficientAuthenticationException) {
+        } else if (e instanceof InsufficientAuthenticationException) {
             log.warn("", e);
             return ResponseEntity
                     .status(200).body(Result.fail(AuthErrorType.INVALID_LOGIN));

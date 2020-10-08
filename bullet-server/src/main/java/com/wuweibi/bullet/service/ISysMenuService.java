@@ -19,5 +19,17 @@ public interface ISysMenuService extends IService<SysMenu> {
 
     List<SysMenu> getOneLevel(Long userId);
 
-    List<SysMenu> getSecondaryLevel(Long userId, Long pid);
+    List<SysMenu> getSecondaryLevel(Long userId, Integer pid);
+    /**
+     * 获取所有
+     */
+    List<SysMenu> getAll();
+
+
+    /**
+     * 根据URL查询菜单
+     * @param url 地址
+     * @return
+     */
+    SysMenu selectByUrl(String url);
 }

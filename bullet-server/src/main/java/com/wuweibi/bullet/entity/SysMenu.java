@@ -26,13 +26,13 @@ public class SysMenu implements Serializable {
      * id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     /**
      * 父菜单id
      */
     @TableField("parent_id")
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 级别

@@ -16,6 +16,7 @@ public enum SystemErrorType implements ErrorType {
     SYSTEM_BUSY("000000", "系统繁忙,请稍候再试"),
     FormFieldError("000001", "字段输入错误"),
     ACCOUNT_ACTIVATE_FAILD("000002", "账号激活失败"),
+    CUSTOM_ERROR("000004", "操作失败"),
 
     /**
      *  1000 设备相关
@@ -61,5 +62,17 @@ public enum SystemErrorType implements ErrorType {
     SystemErrorType(String code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+
+
+    /**
+     * 新建一个自定义的错误类型对象
+     *
+     * @param msg 消息
+     * @return
+     */
+    public static ErrorType newErrorType(String msg) {
+        return new CustomErrorType(CUSTOM_ERROR.code, msg);
     }
 }

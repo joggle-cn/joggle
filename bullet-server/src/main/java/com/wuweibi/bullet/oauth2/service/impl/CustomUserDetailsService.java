@@ -64,12 +64,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 判断用户是哪个端的用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String clientName = authentication.getName();
-        if("manager".equals(clientName)){// 运营端
+//        if("manager".equals(clientName)){// 运营端
 //            Set<GrantedAuthority> authList = this.obtainGrantedAuthorities(user);
 //            if(!hasRoleCode(authList, "operating")){// 没有运营端权限
 //                throw new BaseException(AuthErrorType.ACCOUNT_NOT_FOUND);
 //            }
-        }
+//        }
 
         // 验证验证码是否匹配
         HttpServletRequest request =  ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();

@@ -56,6 +56,8 @@
     <logger name="org.apache.ibatis.io" level="INFO" />
     <logger name="org.mybatis.spring" level="ERROR" />
     <logger name="org.mybatis.spring.transaction" level="INFO" />
+    <!-- no log   -->
+    <logger name="com.wuweibi.bullet.mapper.DomainMapper.selectDueDomain" level="ERROR" />
 
 
 </configuration>

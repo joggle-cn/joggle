@@ -30,5 +30,12 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @param pid
      * @return
      */
-    List<SysMenu> selectByUserId(@Param("userId") Long userId, @Param("pid")  Long pid);
+    List<SysMenu> selectByUserId(@Param("userId") Long userId, @Param("pid")  Integer pid);
+
+    /**
+     * 根据url查询菜单
+     * @param url 地址
+     * @return
+     */
+    SysMenu selectByUrl(String url);
 }

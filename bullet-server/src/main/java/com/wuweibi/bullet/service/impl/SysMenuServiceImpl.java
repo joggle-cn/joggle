@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.entity.SysMenu;
 import com.wuweibi.bullet.mapper.SysMenuMapper;
@@ -48,7 +49,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
-    public List<SysMenu> getSecondaryLevel(Long userId, Long pid) {
+    public List<SysMenu> getSecondaryLevel(Long userId, Integer pid) {
         List<SysMenu> list = this.baseMapper.selectByUserId(userId, pid);
 
         // 排序
@@ -61,6 +62,18 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return treeList;
     }
 
+    @Override
+    public List<SysMenu> getAll() {
+        QueryWrapper ew = new QueryWrapper();
+        ew.setEntity(new SysMenu());
+        return this.baseMapper.selectList(ew);
+    }
+
+    @Override
+    public SysMenu selectByUrl(String url) {
+        return this.baseMapper.selectByUrl(url);
+    }
+
 
     /**
      * 递归查询数据
@@ -70,7 +83,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @param id 父级ID
      * @param level 级别
      */
-    private void forEachInvoke(List<SysMenu> treeList, List<SysMenu> list, Long id, Integer level) {
+    private void forEachInvoke(List<SysMenu> treeList, List<SysMenu> list, Integer id, Integer level) {
         Iterator<SysMenu> it = list.iterator();
         while (it.hasNext()) {
             SysMenu module = it.next();

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.SysMenu;
@@ -50,9 +51,86 @@ public class SysMenuController {
      * @return
      */
     @GetMapping("/list/secondary")
-    public Object listSecondaryLevel(@JwtUser Session session, @RequestParam Long pid) {
+    public Object listSecondaryLevel(@JwtUser Session session, @RequestParam Integer pid) {
         Long userId = session.getUserId();
         List<SysMenu> list = sysMenuService.getSecondaryLevel(userId, pid);
         return Result.success(list);
     }
+
+
+
+
+    /**
+     * 寻找url的菜单信息
+     * @param url 地址
+     * @return
+     */
+    @GetMapping("/lookup")
+    public Object lookup(@RequestParam("url") String url) {
+
+
+
+        SysMenu module = sysMenuService.selectByUrl(url);
+        if(module == null){
+            module = new SysMenu();
+            module.setId(0);
+            module.setParentId(0);
+        }
+
+        int pid = module.getParentId();
+        int id = module.getId();
+
+
+        JSONObject data = new JSONObject();
+        data.put("id", module.getId());
+        data.put("pid", pid);
+        data.put("level", module.getLevel());
+
+
+        // 刷新菜单级别
+        List<SysMenu> allList = sysMenuService.getAll();
+
+        // 获取一级菜单
+        if(pid == 0){
+            data.put("oneid", id);
+        }else{
+
+            SysMenu onelevel = getOneLevel(allList, pid);
+            if(onelevel != null){
+                data.put("onelevel", onelevel.getLevel());
+                data.put("onepid", onelevel.getParentId());
+                data.put("oneid", onelevel.getId());
+            }else {
+                data.put("oneid", id);
+            }
+
+        }
+
+
+
+        return Result.success(data);
+    }
+
+
+
+    /**
+     * 获取一级菜单（递归）
+     * @param allList 全部数据
+     * @param pid 父级ID
+     * @return
+     */
+    private SysMenu getOneLevel(List<SysMenu> allList, int pid){
+        for(SysMenu m : allList){
+            if(m.getId() == pid){
+                if(m.getLevel() == 1){
+                    return m;
+                } else{
+                    return getOneLevel(allList, m.getParentId());
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

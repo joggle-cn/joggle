@@ -21,19 +21,24 @@
         where
             a.deleted = 0
             and a.level = 1
-            and b.role_id = (select role_id from t_sys_users_roles_relation where user_id = #{userId})
+            and b.role_id in (select role_id from t_sys_users_roles_relation where user_id = #{userId})
     </select>
 
 
 
-
+<!--    查询用户的2-3级菜单-->
     <select id="selectByUserId" resultType="com.wuweibi.bullet.entity.SysMenu">
         select <include refid="all_column" />
         from t_sys_menu a
         left join t_sys_role_menu_relation b on a.id = b.menu_id
         where
-            a.deleted = 0 and a.level in (2,3) and a.parent_id = #{pid}
-            and b.role_id = (select role_id from t_sys_users_roles_relation where user_id = #{userId})
+            a.deleted = 0 and a.level in (2,3)
+            and b.role_id in (select role_id from t_sys_users_roles_relation where user_id = #{userId})
 
+    </select>
+
+
+    <select id="selectByUrl" resultType="com.wuweibi.bullet.entity.SysMenu" parameterType="java.lang.String">
+        select <include refid="all_column"/> from t_sys_menu a where a.`url` = #{url}
     </select>
 </mapper>

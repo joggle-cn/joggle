@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * <p>
- *  域名与端口服务实现类
+ * 域名与端口服务实现类
  * </p>
  *
  * @author marker
@@ -35,10 +35,8 @@ import java.util.List;
 public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> implements DomainService {
 
 
-
     @Resource
     private CoonPool coonPool;
-
 
 
     @Override
@@ -63,51 +61,48 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Resource
     private DeviceMappingService deviceMappingService;
- @Resource
+    @Resource
     private DeviceMappingMapper deviceMappingMapper;
 
 
     @Override
     public void checkStatus() {
-        log.debug("check domain status ....");
         // 查询过期的域名
         List<JSONObject> list = this.baseMapper.selectDueDomain();
-        if(list.size() > 0){
-            // 强行停止ngrok客户端线程
-            Iterator<JSONObject> it = list.iterator();
-            while (it.hasNext()){
-                JSONObject item = it.next();
-                Long mappingId  = item.getLong("mappingId");
-                String deviceNo = item.getString("deviceNo");
+        if (list.size() == 0) {
+            return;
+        }
+        log.debug("check domain status ....");
+        // 强行停止ngrok客户端线程
+        Iterator<JSONObject> it = list.iterator();
+        while (it.hasNext()) {
+            JSONObject item = it.next();
+            Long mappingId = item.getLong("mappingId");
+            String deviceNo = item.getString("deviceNo");
 
-                DeviceMapping entity = deviceMappingService.getById(mappingId);
-                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
-                if(annotation != null){
-                    JSONObject data = (JSONObject) JSON.toJSON(entity);
-                    MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    try {
-                        msg.write(outputStream);
-                        // 包装了Bullet协议的
-                        byte[] resultBytes = outputStream.toByteArray();
-                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                        annotation.getSession().getBasicRemote().sendBinary(buf);
-                    } catch (IOException e) {
-                        log.error("", e);
-                    } finally {
-                        IOUtils.closeQuietly(outputStream);
-                    }
+            DeviceMapping entity = deviceMappingService.getById(mappingId);
+            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+            if (annotation != null) {
+                JSONObject data = (JSONObject) JSON.toJSON(entity);
+                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                    annotation.getSession().getBasicRemote().sendBinary(buf);
+                } catch (IOException e) {
+                    log.error("", e);
+                } finally {
+                    IOUtils.closeQuietly(outputStream);
                 }
-                // 更新Mapping状态
-                deviceMappingMapper.updateStatusById(mappingId, 0);
-
-
             }
+            // 更新Mapping状态
+            deviceMappingMapper.updateStatusById(mappingId, 0);
 
 
         }
-
-
 
     }
 }
