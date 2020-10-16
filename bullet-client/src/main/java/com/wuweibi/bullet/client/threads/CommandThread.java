@@ -21,7 +21,6 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -203,20 +202,15 @@ public class CommandThread extends Thread {
             Lock readLock = readWriteLock.readLock();
 
             while (true) {
-
                 // 判断线程是否关闭
                 if (this.commandThreadDown) {
                     break;
                 }
-
                 readLock.lock();
+
+                str = bufferedReader.readLine();
+                log.debug("LOG:{}", str);
                 try {
-                    if(bufferedReader.ready()){
-                        str = bufferedReader.readLine();
-                    } else {
-                        str = null;
-                        TimeUnit.MILLISECONDS.sleep(100);
-                    }
                     // 不管日志有没有打开都需要消费
                     if (str == null || !this.isLogOpen) {
                         continue;

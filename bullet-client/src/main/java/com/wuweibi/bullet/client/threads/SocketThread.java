@@ -125,11 +125,12 @@ public class SocketThread extends Thread {
                     CommandThreadPool commandThreadPool = SpringUtil.getBean(CommandThreadPool.class);
                     CommandThread commandThread = commandThreadPool.getThread(mappin2gId);
 
-                    if(msg3.getOpen() == 1){
-
-                       commandThread.openLog();
-
-                    }else{
+                    if (commandThread == null) {
+                        break;
+                    }
+                    if (msg3.getOpen() == 1) {
+                        commandThread.openLog();
+                    } else {
                         commandThread.closeLog();
                     }
 
