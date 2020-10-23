@@ -206,11 +206,12 @@ public class CommandThread extends Thread {
                 if (this.commandThreadDown) {
                     break;
                 }
-                readLock.lock();
-
-                str = bufferedReader.readLine();
-                log.debug("LOG:{}", str);
                 try {
+
+                    readLock.lock();
+
+                    str = bufferedReader.readLine();
+                    log.debug("LOG:{}", str);
                     // 不管日志有没有打开都需要消费
                     if (str == null || !this.isLogOpen) {
                         continue;
