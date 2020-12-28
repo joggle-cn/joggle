@@ -4,6 +4,7 @@ Bullet是一款开源的反向代理内网穿透利器，采用Java技术实现�
 
 注意：本项目对Ngrok源码定制化的修改以满足安全性等需求，所以需要使用作者提供的Ngrok源码来编译。推荐使用百度网盘编译好的ngrokd & ngrok命令。
 
+本项目已经解决ngrok内存泄漏问题
 
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
