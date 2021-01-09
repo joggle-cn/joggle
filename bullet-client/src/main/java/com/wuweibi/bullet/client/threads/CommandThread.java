@@ -211,11 +211,12 @@ public class CommandThread extends Thread {
                     readLock.lock();
 
                     str = bufferedReader.readLine();
-                    log.debug("LOG:{}", str);
                     // 不管日志有没有打开都需要消费
                     if (str == null || !this.isLogOpen) {
+                        Thread.sleep(500);
                         continue;
                     }
+                    log.debug("LOG:{}", str);
                     if (connection.isActive()) {// websocket 链接还是活跃的
                         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

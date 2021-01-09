@@ -40,7 +40,7 @@ public class HeartThread extends TimerTask {
     public void run() {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        logger.info("Connection heart time={}", sdf.format(new Date()));
+        logger.debug("Connection heart time={}", sdf.format(new Date()));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
