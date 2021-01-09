@@ -30,7 +30,7 @@
 ```
 docker build \
 --build-arg VERSION=0.0.1 \
--t wuweiit/bullet-client:0.0.1 .
+-t wuweiit/bullet-client:0.0.4 .
 ```
 
 4、快速运行Bullet客户端容器
