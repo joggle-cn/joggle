@@ -48,7 +48,7 @@
 		"sexboy": "Boy",
 		"password": "Password",
 		"password2": "Confirm Password",
-		"agree": "Agree",
+		"agree": "Agree No illegal application",
 		"protocol": "《The application of Internet terms》",
 		"success": "Register Success!",
 		"alertAgreeService": "Register User Must Agree Service terms."

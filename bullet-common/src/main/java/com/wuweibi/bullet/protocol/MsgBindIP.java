@@ -4,7 +4,6 @@ package com.wuweibi.bullet.protocol;
  */
 
 import com.wuweibi.bullet.utils.Utils;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -18,18 +17,19 @@ import java.io.OutputStream;
  * @author marker
  * @create 2017-12-07 下午1:13
  **/
-@Data
 @Slf4j
 public class MsgBindIP extends Message {
 
 
-
-    // ip地址
+    /**
+     * ip地址
+     */
     private String ip;
 
-    // mac 地址
+    /**
+     * mac 地址
+     */
     private String mac;
-
 
 
     /**

@@ -53,7 +53,6 @@ define(['app', 'layer', 'css!./download.css'], function (app, layer) {//加载�
 		 
  	}];
 	
-	
-	app.controller('IndexController', callback ); 
+	 
 	return callback;
 });

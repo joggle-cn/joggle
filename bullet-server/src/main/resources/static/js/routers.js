@@ -22,6 +22,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 	      , controllerUrl: 'view/home/index.js'
 		}))
 		// 关于我们
+		.when('/document', router({
+			templateUrl: 'view/document/document.htm'
+			, controllerUrl: 'view/document/document.js'
+		}))
+		// 关于我们
 		.when('/about', router({
 			templateUrl: 'view/about/about.htm'
 			, controllerUrl: 'view/about/about.js'

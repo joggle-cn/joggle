@@ -43,11 +43,11 @@
 <!--				<li>-->
 				  <!--<a href="#/wishwall/index">心愿墙</a>-->
 				</li>
-				  <li>
-					  <a href="#/service" ng-bind="res.t('home.nav.service')"></a>
-				  </li>
+<!--				  <li>-->
+<!--					  <a href="#/service" ng-bind="res.t('home.nav.service')"></a>-->
+<!--				  </li>-->
 				<li>
-				  <a href="https://help.joggle.cn/" target="_blank" ng-bind="res.t('home.nav.help')"></a>
+				  <a href="#/document" ng-bind="res.t('home.nav.help')"></a>
 				</li>
 				<li>
 				  <a href="#/download" ng-bind="res.t('home.nav.download')"></a>
@@ -128,7 +128,7 @@
 	   <!---->
 		</p>
 		<div class="text-center">
-			© 2014 - 2020 www.{{config.domain}}
+			© 2014 - 2021 www.{{config.domain}}
 			<span ng-show="islogin">
 				<a href="#"> conn= <span ng-bind="user.connNums"></span></a>
 			</span>
