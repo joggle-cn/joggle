@@ -2,11 +2,13 @@ package com.wuweibi.bullet.conn;/**
  * Created by marker on 2018/1/10.
  */
 
+import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,5 +105,25 @@ public final class CoonPool {
      */
     public boolean exists(String deviceNo) {
         return clientConnections.containsKey(deviceNo);
+    }
+
+
+    /**
+     * 广播所有客户端
+     * @param msg
+     */
+    public void boradcast(Message msg) {
+        // TODO 限制当前用户的设备
+
+        Set<String> sets = clientConnections.keySet();
+        for(String key : sets){
+            BulletAnnotation bulletAnnotation = clientConnections.get(key);
+            try {
+                bulletAnnotation.sendMessage(msg);
+            } catch (IOException e) {
+                logger.debug("", e);
+            }
+        }
+
     }
 }

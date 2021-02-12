@@ -72,6 +72,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , templateUrl: 'view/device/bind.htm'
             , controllerUrl: 'view/device/bind.js'
         }))
+        .when('/user/device/wol', router({
+            minTitle: "网络唤醒"
+            , templateUrl: 'view/device/wol/wol.htm'
+            , controllerUrl: 'view/device/wol/wol.js'
+        }))
         // 端口映射
         .when('/user/device/:deviceId/mapping', router({
             minTitle: "设备端口映射"

@@ -5,6 +5,8 @@ package com.wuweibi.bullet.client.threads;
 
 import com.alibaba.fastjson.JSON;
 import com.wuweibi.bullet.client.domain.MappingInfo;
+import com.wuweibi.bullet.client.network.wol.WOLNode;
+import com.wuweibi.bullet.client.network.wol.exceptions.UnableToWakeUpWOLNodeException;
 import com.wuweibi.bullet.client.service.CommandThreadPool;
 import com.wuweibi.bullet.client.service.SpringUtil;
 import com.wuweibi.bullet.client.utils.ConfigUtils;
@@ -88,6 +90,20 @@ public class SocketThread extends Thread {
                     new UpdateSecretThread(secret).start();
                     break;
 
+                case Message.NEW_WOLMAC:// 网络唤醒
+                    MsgWOL msgWOL = new MsgWOL(head);
+                    msgWOL.read(bis);
+
+                    String mac = msgWOL.getMac();
+
+                    WOLNode node = new WOLNode(mac);
+                    try {
+                        node.wakeUP();
+                    } catch (UnableToWakeUpWOLNodeException e) {
+                        logger.error("", e);
+                    }
+
+                    break;
                 case Message.NEW_MAPPING: // 新的映射请求
 
 

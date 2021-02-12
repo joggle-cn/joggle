@@ -306,4 +306,17 @@ public class BulletAnnotation {
         this.session.getBasicRemote().sendBinary(buf,true);
     }
 
+
+    /**
+     * 发送消息
+     * @param msg
+     */
+    public void sendMessage(Message msg) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        msg.write(outputStream);
+        // 包装了Bullet协议的
+        byte[] resultBytes = outputStream.toByteArray();
+        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+        this.session.getBasicRemote().sendBinary(buf,true);
+    }
 }

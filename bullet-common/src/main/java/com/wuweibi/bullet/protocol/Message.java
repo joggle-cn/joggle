@@ -29,6 +29,7 @@ public abstract class Message {
 	public static final int NEW_MAPPING      = 0x6;
 	public static final int NEW_UNMAPPING      = 0x60000001;
 	public static final int NEW_BINDIP      = 0x7;
+	public static final int NEW_WOLMAC      = 0x9;
 
 	
 	

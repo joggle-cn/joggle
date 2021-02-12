@@ -14,7 +14,8 @@
 			"device": "我的设备",
 			"domain": "我的域名",
 			"devicebind": "绑定设备",
-			"download":"下载客户端"
+			"download":"下载客户端",
+			"wol":"网络唤醒"
 			
 		},
 		
