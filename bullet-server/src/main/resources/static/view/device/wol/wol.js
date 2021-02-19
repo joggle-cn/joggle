@@ -37,6 +37,8 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
                     });
                 }
+
+                $("#bindWolButton").attr("disabled",false);
             });
 
         }

@@ -36,4 +36,6 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     boolean existsDevice(String deviceId);
+
+    void wakeUp(Long userId, String mac);
 }

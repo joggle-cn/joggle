@@ -12,7 +12,6 @@ import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.DeviceOnline;
@@ -20,7 +19,6 @@ import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
-import com.wuweibi.bullet.protocol.MsgWOL;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -78,7 +76,7 @@ public class DeviceController {
 
         Long userId = session.getUserId();
 
-        List<Device> list  =deviceService.listByMap(newMap(1)
+        List<Device> list  = deviceService.listByMap(newMap(1)
                 .setParam("userId", userId)
                 .build());
 
@@ -321,21 +319,14 @@ public class DeviceController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/wol", method = RequestMethod.POST)
+    @RequestMapping(value = "/device/wol", method = RequestMethod.POST)
     @ResponseBody
-    public MessageResult WOL(HttpServletRequest request, String mac ){
-
-        MapBuilder mapBuilder = newMap(3);
-
-        MsgWOL msg = new MsgWOL();
-        msg.setMac(mac);
-
-        coonPool.boradcast(msg);
+    public Result WOL(@JwtUser Session session, String mac ){
 
 
+        deviceService.wakeUp(session.getUserId(), mac);
 
-
-        return MessageFactory.get(mapBuilder.build());
+        return Result.success();
     }
 
 

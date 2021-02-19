@@ -98,6 +98,7 @@ public class SocketThread extends Thread {
 
                     WOLNode node = new WOLNode(mac);
                     try {
+                        logger.debug("wakeUp mac: {}", mac);
                         node.wakeUP();
                     } catch (UnableToWakeUpWOLNodeException e) {
                         logger.error("", e);

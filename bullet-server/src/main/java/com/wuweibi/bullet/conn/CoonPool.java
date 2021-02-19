@@ -110,19 +110,23 @@ public final class CoonPool {
 
     /**
      * 广播所有客户端
+     * @param deviceNo
      * @param msg
      */
-    public void boradcast(Message msg) {
-        // TODO 限制当前用户的设备
+    public void boradcast(String deviceNo, Message msg) {
 
-        Set<String> sets = clientConnections.keySet();
-        for(String key : sets){
-            BulletAnnotation bulletAnnotation = clientConnections.get(key);
-            try {
-                bulletAnnotation.sendMessage(msg);
-            } catch (IOException e) {
-                logger.debug("", e);
-            }
+        BulletAnnotation bulletAnnotation = this.getByDeviceNo(deviceNo);
+        if(bulletAnnotation == null){
+            return;
+        }
+        if(!bulletAnnotation.getSession().isOpen()){
+            return;
+        }
+
+        try {
+            bulletAnnotation.sendMessage(msg);
+        } catch (IOException e) {
+            logger.debug("", e);
         }
 
     }
