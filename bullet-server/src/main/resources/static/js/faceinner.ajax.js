@@ -7,7 +7,7 @@
  */
 
 // 读取服务器地址
-let server = 'http://joggle.cn:8081';
+let server = 'http://localhost:8081';
 if(window.SERVER_URL && window.SERVER_URL != '${url}'){ // 如果配置了
     server = window.SERVER_URL;
 }
