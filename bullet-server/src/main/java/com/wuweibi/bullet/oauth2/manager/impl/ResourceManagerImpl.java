@@ -6,7 +6,7 @@ package com.wuweibi.bullet.oauth2.manager.impl;
 import com.wuweibi.bullet.oauth2.domain.Resource;
 import com.wuweibi.bullet.oauth2.manager.NewMvcRequestMatcher;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
-import com.wuweibi.bullet.oauth2.service.ResourceService;
+import com.wuweibi.bullet.oauth2.service.Oauth2ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class ResourceManagerImpl implements ResourceManager {
 
     @Autowired
-    private ResourceService resourceService;
+    private Oauth2ResourceService oauth2ResourceService;
 
     /**
      * 系统中所有权限集合
@@ -66,7 +66,7 @@ public class ResourceManagerImpl implements ResourceManager {
      * 加载权限资源数据
      */
     public Map<RequestMatcher, ConfigAttribute> loadResource() {
-        Set<Resource> resources = resourceService.findAll();
+        Set<Resource> resources = oauth2ResourceService.findAll();
         this.resourceConfigAttributes = resources.stream()
                 .collect(Collectors.toMap(
                         resource -> this.newMvcRequestMatcher(resource.getUrl(), resource.getMethod()),

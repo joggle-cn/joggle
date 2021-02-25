@@ -9,6 +9,6 @@ import com.wuweibi.bullet.oauth2.domain.Group;
  *
  * @author marker
  */
-public interface GroupMapper extends BaseMapper<Group> {
+public interface Oauth2GroupMapper extends BaseMapper<Group> {
 
 }

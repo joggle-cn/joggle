@@ -7,10 +7,9 @@ import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.domain.Role;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
-import com.wuweibi.bullet.oauth2.service.RoleService;
+import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private OauthUserService oauthUserService;
 
     @Resource
-    private RoleService roleService;
+    private Oauth2RoleService oauth2RoleService;
 
 
     /**
@@ -108,7 +107,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @return
      */
     protected Set<GrantedAuthority> obtainGrantedAuthorities(OauthUser user) {
-        Set<Role> roles = roleService.queryUserRolesByUserId(user.getId());
+        Set<Role> roles = oauth2RoleService.queryUserRolesByUserId(user.getId());
         log.info("user:{},roles:{}", user.getUsername(), roles);
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getCode()))

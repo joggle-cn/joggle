@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author marker
  */
-public interface ResourceService {
+public interface Oauth2ResourceService {
 
 
     /**

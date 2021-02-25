@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.oauth2.service.impl;
 
-import com.wuweibi.bullet.oauth2.dao.RoleMapper;
-import com.wuweibi.bullet.oauth2.service.RoleService;
+import com.wuweibi.bullet.oauth2.dao.Oauth2RoleMapper;
 import com.wuweibi.bullet.oauth2.domain.Role;
+import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,10 @@ import java.util.Set;
  * @author marker
  */
 @Service
-public class RoleServiceImpl implements RoleService {
+public class Oauth2RoleServiceImpl implements Oauth2RoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
+    private Oauth2RoleMapper roleMapper;
 
     @Override
     public Set<Role> queryUserRolesByUserId(long userId) {

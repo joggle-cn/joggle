@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author marker
  */
-public interface RoleService {
+public interface Oauth2RoleService {
 
 
     /**

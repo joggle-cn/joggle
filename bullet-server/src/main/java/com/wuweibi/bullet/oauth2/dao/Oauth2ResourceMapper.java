@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Mapper
 @Repository
-public interface ResourceMapper {
+public interface Oauth2ResourceMapper {
 
 
     /**

@@ -1,9 +1,12 @@
 package com.wuweibi.bullet.entity.api;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wuweibi.bullet.domain.domain.LayPage;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
+import com.wuweibi.bullet.entity.Role;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -195,6 +198,16 @@ public class Result<T> {
      */
     public static Result fail(Object data) {
         return new Result<>(SystemErrorType.SYSTEM_ERROR, data);
+    }
+
+
+    /**
+     * 转换layui page
+     * @param pageInfo
+     * @return
+     */
+    public static LayPage layPage(Page<Role> pageInfo) {
+        return new LayPage(pageInfo);
     }
 
 

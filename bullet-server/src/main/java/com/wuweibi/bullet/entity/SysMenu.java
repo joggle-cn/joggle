@@ -44,7 +44,7 @@ public class SysMenu implements Serializable {
      * 菜单类型（1运营，2商户）
      */
     @TableField("type")
-    private String type;
+    private Integer type;
 
     /**
      * 菜单路径

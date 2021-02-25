@@ -1,9 +1,9 @@
 package com.wuweibi.bullet.oauth2.service.impl;
 
 
-import com.wuweibi.bullet.oauth2.dao.ResourceMapper;
+import com.wuweibi.bullet.oauth2.dao.Oauth2ResourceMapper;
 import com.wuweibi.bullet.oauth2.domain.Resource;
-import com.wuweibi.bullet.oauth2.service.ResourceService;
+import com.wuweibi.bullet.oauth2.service.Oauth2ResourceService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import java.util.Set;
  *
  */
 @Service
-public class ResourceServiceImpl implements ResourceService {
+public class Oauth2ResourceServiceImpl implements Oauth2ResourceService {
     @Autowired
-    private ResourceMapper resourceMapper;
+    private Oauth2ResourceMapper resourceMapper;
 
     @Override
     public Set<Resource> findAll() {

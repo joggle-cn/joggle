@@ -9,7 +9,7 @@ import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.oauth2.domain.Resource;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
-import com.wuweibi.bullet.oauth2.service.ResourceService;
+import com.wuweibi.bullet.oauth2.service.Oauth2ResourceService;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public static final String NONEXISTENT_URL = "NONEXISTENT_URL";
 
     @javax.annotation.Resource
-    private ResourceService resourceService;
+    private Oauth2ResourceService oauth2ResourceService;
 
 
     /**
@@ -138,7 +138,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList())
                 .toArray(new String[authorityRoles.size()]);
-        Set<Resource> resources = resourceService.queryByRoleCodes(authorityRoleCodes);
+        Set<Resource> resources = oauth2ResourceService.queryByRoleCodes(authorityRoleCodes);
         if (log.isDebugEnabled()) {
             log.debug("用户被授予角色的资源数量是:{}, 资源集合信息为:{}", resources.size(), resources);
         }

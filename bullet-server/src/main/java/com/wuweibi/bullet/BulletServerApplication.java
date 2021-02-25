@@ -40,7 +40,7 @@ public class BulletServerApplication  {
         System.out.println("======================================");
 
         // 启动ngrokd线程
-        new NgrokdThread().start();
+//        new NgrokdThread().start();
     }
 
 }

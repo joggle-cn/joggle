@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.mapper.RoleMapper">
+
+
+    <sql id="column">
+        `id`, `type`, `client_type`, `code`, `name`, `description`, `deleted`, `created_by`, `updated_by`, `updated_user_id`,
+`created_user_id`, `created_time`, `updated_time`, `supplier_id`
+    </sql>
+
+
+    <select id="selectCustomPage" resultType="com.wuweibi.bullet.entity.Role">
+        select <include refid="column"/> from t_sys_roles where deleted = 0
+    </select>
+
+
+</mapper>

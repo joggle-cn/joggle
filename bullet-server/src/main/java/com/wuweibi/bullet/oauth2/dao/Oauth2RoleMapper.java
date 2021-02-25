@@ -13,7 +13,7 @@ import java.util.Set;
  * @author marker
  *
  */
-public interface RoleMapper extends BaseMapper<Role> {
+public interface Oauth2RoleMapper extends BaseMapper<Role> {
 
 
     /**
