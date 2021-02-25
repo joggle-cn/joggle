@@ -50,12 +50,11 @@ public final class MainCodeMaker {
         /** 开发者 */
         final String author      = "marker";
 
-
         /** 数据库配置 */
 
-        String username = "root";
-        String password = "123";
-        String jdbcUrl  = "jdbc:mysql://localhost:3307/db_bullet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+        String username = "db_bullet";
+        String password = "3LKDGHb38ZPSPC46";
+        String jdbcUrl  = "jdbc:mysql://192.168.1.6:3306/db_bullet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 
 
         AutoGenerator mpg = new AutoGenerator();

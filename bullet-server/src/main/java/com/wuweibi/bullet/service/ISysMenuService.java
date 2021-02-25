@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service;
 
+import com.wuweibi.bullet.entity.Button;
 import com.wuweibi.bullet.entity.SysMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -32,4 +33,14 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @return
      */
     SysMenu selectByUrl(String url);
+
+    /**
+     * 获取所有菜单
+     * @return
+     */
+    List<SysMenu> getAllToTree();
+
+    List<SysMenu> getTwoLevelToTree();
+
+    void save(SysMenu entity, List<Button> buttons);
 }

@@ -1,18 +1,19 @@
 package com.wuweibi.bullet.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.domain.domain.session.Session;
+import com.wuweibi.bullet.entity.Button;
 import com.wuweibi.bullet.entity.SysMenu;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.service.ISysMenuService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.wuweibi.bullet.utils.StringUtil;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -132,5 +133,91 @@ public class SysMenuController {
         return null;
     }
 
+
+
+    /**
+     * 获取所有菜单
+     */
+    @GetMapping("/list")
+    public Object list() {
+        List<SysMenu> treeList = sysMenuService.getAllToTree();
+        return Result.success(treeList);
+    }
+
+
+    /**
+     * 获取
+     * @param id id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Object list(@PathVariable("id") int id) {
+        return Result.success(sysMenuService.getById(id));
+    }
+
+
+
+    /**
+     * 删除
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/{ids}")
+    public Object delete(@PathVariable("ids") String ids) {
+
+        List<Integer> idList = StringUtil.splitInt(ids, ",");
+
+        if (idList.size() == 0) {
+            return Result.fail( );
+        }
+        // 校验是否为子菜单
+        int moduleId = idList.get(0);
+//        boolean status = sysMenuService.existsChild(moduleId);
+//        if (status) {
+//            return MessageResult.warpper(CodeStatus.ERROR_DELETE_MODULE_EXISTS_CHILD);
+//        }
+//        sysMenuService.deleteBatchIds(idList);
+//
+//        // 删除按钮
+//        sysMenuService.deleteByModuleId(moduleId);
+
+
+        return Result.success();
+    }
+
+
+    /**
+     * 保存或者更新
+     *
+     * @param entity 实体
+     * @return
+     */
+    @PutMapping("/{id}")
+    public Object saveOrUpdate(SysMenu entity, @RequestParam("buttons") String buttonStr) {
+        entity.setUpdatedTime(new Date());
+        if(StringUtil.isBlank(entity.getUrl())){
+            entity.setUrl("");
+        }
+        if(StringUtil.isBlank(entity.getIcon())){
+            entity.setIcon("");
+        }
+        List<Button> buttons = JSON.parseArray(buttonStr, Button.class);
+//
+        sysMenuService.save(entity, buttons);
+
+        return Result.success();
+    }
+
+
+
+    /**
+     * 获取二级菜单树
+     *
+     */
+    @GetMapping("/options")
+    public Object level2() {
+        List<SysMenu> treeList = sysMenuService.getTwoLevelToTree();
+        return Result.success(treeList);
+    }
 
 }

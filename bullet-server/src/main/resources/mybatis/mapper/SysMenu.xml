@@ -41,4 +41,17 @@
     <select id="selectByUrl" resultType="com.wuweibi.bullet.entity.SysMenu" parameterType="java.lang.String">
         select <include refid="all_column"/> from t_sys_menu a where a.`url` = #{url}
     </select>
+
+
+    <select id="getEnableAll" resultType="com.wuweibi.bullet.entity.SysMenu">
+
+        select <include refid="all_column" />
+        from t_sys_menu a
+where a.deleted = 0
+    </select>
+    <select id="getTwoLevelList" resultType="com.wuweibi.bullet.entity.SysMenu">
+        select <include refid="all_column" />
+        from t_sys_menu a
+        where a.deleted = 0 and a.`level` in (1,2)
+    </select>
 </mapper>

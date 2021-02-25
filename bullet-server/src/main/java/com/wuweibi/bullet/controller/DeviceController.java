@@ -316,7 +316,6 @@ public class DeviceController {
 
     /**
      * 通过mac地址网络唤醒设备
-     * @param request
      * @return
      */
     @RequestMapping(value = "/device/wol", method = RequestMethod.POST)

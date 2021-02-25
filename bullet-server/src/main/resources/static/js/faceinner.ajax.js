@@ -149,6 +149,9 @@ let faceinner = {
                 'Authorization': 'Basic Y2xpZW50X2FwcDpwYXNzd29yZA==',
             }
         }
+        // 处理Token
+        this.progressToken(options);
+
         $.ajax(options);
     },
 

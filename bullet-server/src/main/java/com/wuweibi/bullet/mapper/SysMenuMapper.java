@@ -38,4 +38,9 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @return
      */
     SysMenu selectByUrl(String url);
+
+    List<SysMenu> getEnableAll();
+
+
+    List<SysMenu> getTwoLevelList();
 }
