@@ -97,7 +97,7 @@ public class BulletAnnotation {
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
             try {
                 this.session.close(new CloseReason(CloseReason.
-                        CloseCodes.NORMAL_CLOSURE,
+                        CloseCodes.NOT_CONSISTENT,
                         deviceNo + " deviceNo is online! please try another deviceNo."));
             } catch (IOException e) {
                 logger.error("", e);
