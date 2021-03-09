@@ -117,7 +117,7 @@ public class BulletClient {
                 Thread.sleep(3000L);
                 logger.debug("Connection 正在重启链接服务器...");
                 connection.openAgain();
-            } else if(CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeCode)) {// 由于设备编号的关闭
+            } else if(CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeCode)) {// 由于设备已经在线（不符合约定)
                 logger.error("========================================================");
                 logger.error("= 客户端启动失败!!! \t");
                 logger.error("= 请将deviceNo配置为\"null\"，以便服务器分配新的设备编号\t");

@@ -78,12 +78,12 @@ public class BulletAnnotation {
              // 设备编号（服务器端生成)
              @PathParam("deviceNo")String deviceNo) {
         this.session  = session;
-        this.deviceNo = deviceNo;
 
         session.setMaxBinaryMessageBufferSize(1024000);
         session.setMaxIdleTimeout(0);
 
-        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) { //如果是首次链接
+        // 如果是首次链接，执行重新分配设备编码
+        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
             this.deviceNo = CodeHelper.makeNewCode();
         }
 
@@ -104,12 +104,14 @@ public class BulletAnnotation {
             }
             return;
         }
+
         // 设备在线
+        this.deviceNo = deviceNo;
         deviceOnlineService.saveOrUpdateOnlineStatus(this.deviceNo);
         this.deviceStatus = true;
 
 
-        if(StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)){
+        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
             // 发送配置到客户端
             MsgDeviceNo msgDeviceNo = new MsgDeviceNo();
             msgDeviceNo.setDeviceNo(this.deviceNo);
@@ -155,8 +157,15 @@ public class BulletAnnotation {
 
 
     @OnClose
-    public void end() {
-        logger.debug("BulletAnnotation status={}", this.deviceStatus);
+    public void end(CloseReason closeReason) {
+        // 这里是由于设备已经在线，其他设备将不允许关闭唯一的在线设备接入信息。
+        if (CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeReason.getCloseCode())) {
+            logger.warn("CloseReason({}) deviceNo=[{}] is online, sessionId[{}] is closed!",
+                    CloseReason.CloseCodes.NOT_CONSISTENT.getCode(), this.deviceNo, this.session.getId());
+            return;
+        }
+
+        logger.warn("BulletAnnotation deviceNo={},status={}", this.deviceNo, this.deviceStatus);
         if(this.deviceStatus){ // 正常设备才能移除
             updateOutLine();
         }
