@@ -92,13 +92,13 @@ public class BulletAnnotation {
 
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        if(pool.exists(this.deviceNo)){
-            logger.warn("{} 设备已经在线", this.deviceNo);
+        if(pool.exists(deviceNo)){
+            logger.warn("{} 设备已经在线", deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
             try {
                 this.session.close(new CloseReason(CloseReason.
                         CloseCodes.NORMAL_CLOSURE,
-                        this.deviceNo + " deviceNo is online! please try another deviceNo."));
+                        deviceNo + " deviceNo is online! please try another deviceNo."));
             } catch (IOException e) {
                 logger.error("", e);
             }
