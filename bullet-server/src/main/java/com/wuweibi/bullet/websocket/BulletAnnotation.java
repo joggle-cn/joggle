@@ -113,8 +113,7 @@ public class BulletAnnotation {
 
         if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
             // 发送配置到客户端
-            MsgDeviceNo msgDeviceNo = new MsgDeviceNo();
-            msgDeviceNo.setDeviceNo(this.deviceNo);
+            MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
 
             try {
                 sendObject(msgDeviceNo);

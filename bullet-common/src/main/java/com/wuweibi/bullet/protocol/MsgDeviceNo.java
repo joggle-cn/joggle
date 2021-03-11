@@ -28,7 +28,7 @@ public class MsgDeviceNo extends Message {
     public MsgDeviceNo(String deviceNo) {
         super(Message.DEVICE_NO);
         this.deviceNo = deviceNo;
-        getHead().setLength(super.getLength() + 32);
+        getHead().setLength(super.getLength() + deviceNo.length());
     }
 
     public MsgDeviceNo() {
@@ -43,10 +43,10 @@ public class MsgDeviceNo extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
-
+        int len = deviceNo.getBytes().length;
         // 写入IP地址
-        byte bs[] = new byte[32];
-        System.arraycopy(deviceNo.getBytes(), 0, bs, 0, deviceNo.getBytes().length);
+        byte bs[] = new byte[len];
+        System.arraycopy(deviceNo.getBytes(), 0, bs, 0, len);
         out.write(bs);
         out.flush();
     }
@@ -54,9 +54,11 @@ public class MsgDeviceNo extends Message {
     @Override
     public void read(InputStream in) throws IOException {
         // 读取deviceNo
-        byte bs[] = new byte[32];
+        int len = getHead().getLength() - 24;
+
+        byte bs[] = new byte[len];
         in.read(bs);
-        this.deviceNo = Utils.getString(bs, 0, 32);
+        this.deviceNo = Utils.getString(bs, 0, len);
 
     }
 
@@ -66,5 +68,6 @@ public class MsgDeviceNo extends Message {
 
     public void setDeviceNo(String deviceNo) {
         this.deviceNo = deviceNo;
+        getHead().setLength(super.getLength() + deviceNo.length());
     }
 }
