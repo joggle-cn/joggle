@@ -78,6 +78,7 @@ public class BulletAnnotation {
              // 设备编号（服务器端生成)
              @PathParam("deviceNo")String deviceNo) {
         this.session  = session;
+        this.deviceNo = deviceNo;
 
         session.setMaxBinaryMessageBufferSize(1024000);
         session.setMaxIdleTimeout(0);
@@ -85,6 +86,15 @@ public class BulletAnnotation {
         // 如果是首次链接，执行重新分配设备编码
         if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
             this.deviceNo = CodeHelper.makeNewCode();
+
+            // 发送配置到客户端
+            MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
+
+            try {
+                sendObject(msgDeviceNo);
+            } catch (IOException e) {
+                logger.error("", e);
+            }
         }
 
         // TODO 校验设备是否被绑定（设备被绑定后同样的名称不在链接成功)
@@ -106,21 +116,9 @@ public class BulletAnnotation {
         }
 
         // 设备在线
-        this.deviceNo = deviceNo;
         deviceOnlineService.saveOrUpdateOnlineStatus(this.deviceNo);
         this.deviceStatus = true;
 
-
-        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
-            // 发送配置到客户端
-            MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
-
-            try {
-                sendObject(msgDeviceNo);
-            } catch (IOException e) {
-                logger.error("", e);
-            }
-        }
 
         // 将链接添加到连接池
         pool.addConnection(this);
