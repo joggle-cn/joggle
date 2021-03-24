@@ -1,5 +1,6 @@
 !!com.wuweibi.bullet.client.domain.NgrokConf
-auth_token: JwL3ejAc$7RGblA..5NdhZtC.oDG8R/
+auth_token: JNe6U7Cv$Bu1qz2D/46ExZ6tFh68UO1
+bullet_server: ws://joggle.cn:8081/tunnel
 client_no: null
 console_ui: false
 server_addr: ngrok.joggle.cn:8083
