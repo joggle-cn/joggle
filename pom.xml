@@ -86,7 +86,7 @@
     <modules>
         <module>bullet-common</module>
         <module>bullet-server</module>
-        <module>bullet-client</module>
+<!--        <module>bullet-client</module>-->
         <module>bullet-codemaker</module>
     </modules>
 

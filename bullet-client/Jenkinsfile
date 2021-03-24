@@ -35,7 +35,7 @@ pipeline {
 
                             echo "从服务器下载linux Arm32版本的ngrok文件"
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_arm/ngrok ./bin/ngrok
-                            tar -zcvf bullet-client-linux_arm32.tar.gz ./*
+                            tar -zcvf bullet-client-linux_arm32.tar.gz --xform 's#^#bullet-client/#'  ./*
                             scp -o StrictHostKeyChecking=no bullet-client-linux_arm32.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
                             rm -rf bullet-client-linux_arm32.tar.gz
                             rm -rf bin/ngrok
