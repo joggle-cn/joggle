@@ -7,6 +7,8 @@ docker build \
 -t wuweiit/bullet-client:0.0.4 .
 ```
 
+--platform=linux/amd64,linux/arm64
+
 推送镜像到仓库
 
 ```
