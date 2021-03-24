@@ -6,7 +6,6 @@ pipeline {
                steps {
                    echo "env: ${env.BRANCH_NAME}"
                    echo "Building.."
-                   sh "/opt/maven/bin/mvn clean package -Dmaven.test.skip=true"
                }
            }
            stage('Test') {
@@ -31,23 +30,28 @@ pipeline {
 
 
                        if [ "$BRANCH_NAME"  = "build" ];then
-                           echo "正在转移jar文件"
-                           mv ./bullet-client/target/bullet-client.jar ./build/client/lib/bullet-client.jar
 
                            cd ./build/client/
 
-                           echo "从服务器下载linux版本的ngrokd文件"
-                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrok ./bin/ngrok
-                           tar -zcvf bullet-client-linux.tar.gz ./*
-                           scp -o StrictHostKeyChecking=no bullet-client-linux.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                            echo "从服务器下载linux Arm32版本的ngrok文件"
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_arm/ngrok ./bin/ngrok
+                            tar -zcvf bullet-client-linux_arm32.tar.gz ./*
+                            scp -o StrictHostKeyChecking=no bullet-client-linux_arm32.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
+                            rm -rf bullet-client-linux_arm32.tar.gz
+                            rm -rf bin/ngrok
 
-                           rm -rf bullet-client-linux.tar.gz
+
+                           echo "从服务器下载linux版本的ngrok文件"
+                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/ngrok ./bin/ngrok
+                           tar -zcvf bullet-client-linux_amd64.tar.gz ./*
+                           scp -o StrictHostKeyChecking=no bullet-client-linux_amd64.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
+                           rm -rf bullet-client-linux_amd64.tar.gz
                            rm -rf bin/ngrok
 
-                           echo "从服务器下载Mac版本的ngrokd文件"
-                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrok ./bin/ngrok
+                           echo "从服务器下载Mac版本的ngrok文件"
+                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrok ./bin/ngrok
                            tar -zcvf bullet-client-darwin.tar.gz ./*
-                           scp -o StrictHostKeyChecking=no bullet-client-darwin.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                           scp -o StrictHostKeyChecking=no bullet-client-darwin.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
 
                            rm -rf bullet-client-darwin.tar.gz
@@ -57,9 +61,9 @@ pipeline {
                            echo "从服务器下载Win版本的ngrokd文件"
 
 
-                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrok.exe ./bin/ngrok.exe
+                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrok.exe ./bin/ngrok.exe
                            tar -zcvf bullet-client-windows.tar.gz ./*
-                           scp -o StrictHostKeyChecking=no bullet-client-windows.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                           scp -o StrictHostKeyChecking=no bullet-client-windows.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                            rm -rf bullet-client-windows.tar.gz
                            rm -rf bin/ngrok.exe

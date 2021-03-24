@@ -20,24 +20,8 @@
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
 
-if [ -x "$JAVA_HOME/bin/java" ]; then
-    JAVA="$JAVA_HOME/bin/java"
-else
-    JAVA=`which java`
-fi
 
 
-echo which java
-
-if [ ! -x "$JAVA" ]; then
-
-    echo "Could not find any executable java binary. Please install java in your PATH or set JAVA_HOME"
-
-    exit 1
-fi
-
-
-CLASS='com.wuweibi.bullet.client.Main'
 
 
 PRG="$0"
@@ -55,9 +39,6 @@ done
 BINDIR=`dirname "$PRG"`
 
 
-
-
-
 bin=`dirname "$PRG"`
 
 BULLET_HOME=`dirname "$bin"`
@@ -67,23 +48,7 @@ echo "Bullet当前工作目录: $BULLET_HOME"
 BULLER_CONF_DIR="$BULLET_HOME/conf"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
 
-
-CLASSPATH="${CLASSPATH}:$BULLET_HOME/lib"
-
-echo $CLASSPATH
-
-jarfile="$BULLET_HOME/target/bullet-client.jar"
-
-if [ -e $jarfile ]; then
-cp $jarfile $BULLET_HOME/lib/
-else
-echo "continue..."
-fi
+NGROK_BIN="$BULLET_HOME/bin/ngrok"
 
 
-exec "$JAVA" \
--Djava.bullet.conf.dir=$BULLER_CONF_DIR \
--Djava.bullet.home.dir=$BULLET_HOME \
--Djava.security.egd=file:/dev/./urandom \
--classpath $CLASSPATH \
--jar $BULLET_HOME/lib/bullet-client.jar --spring.profiles.active=prod
+$NGROK_BIN -log stdout -config=$BULLER_CONF_DIR/ngrok.yml  start-all

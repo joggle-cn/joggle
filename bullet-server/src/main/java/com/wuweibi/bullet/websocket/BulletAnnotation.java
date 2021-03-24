@@ -80,7 +80,7 @@ public class BulletAnnotation {
              @PathParam("deviceNo")String deviceNo) {
         this.session  = session;
         this.deviceNo = deviceNo;
-        session.setMaxIdleTimeout(5 * 1000);
+        session.setMaxIdleTimeout(0);
 
 
         // 如果是首次链接，执行重新分配设备编码

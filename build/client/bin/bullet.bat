@@ -34,17 +34,10 @@ echo %BULLET_HOME%
 
 echo "Bullet Home %BULLET_HOME%"
 
+set NGROK_BIN="%BULLET_HOME%\bin\ngrok.exe"
 set BULLER_CONF_DIR="%BULLET_HOME%\conf"
 echo "Bullet config: %BULLER_CONF_DIR%"
 
 
 
-
-
-
-
-
-
- 
-
-java -Djava.bullet.conf.dir="%BULLER_CONF_DIR%" -Djava.bullet.home.dir="%BULLET_HOME%" -Djava.security.egd=file:/dev/./urandom  -jar %BULLET_HOME%/lib/bullet-client.jar --spring.profiles.active=prod
+$NGROK_BIN -log  -config=$BULLER_CONF_DIR/ngrok.yml  start-all
