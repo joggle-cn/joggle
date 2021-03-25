@@ -19,11 +19,6 @@
 #               \  \ `-.   \_\_`. _.'_/_/  -' _.' /
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
-
-
-
-
-
 PRG="$0"
 
 while [ -h "$PRG" ]; do
@@ -42,13 +37,11 @@ BINDIR=`dirname "$PRG"`
 bin=`dirname "$PRG"`
 
 BULLET_HOME=`dirname "$bin"`
+BULLET_BIN="$BULLET_HOME/bin/ngrok"
+BULLET_CONF_DIR="$BULLET_HOME/conf"
+BULLET_LOG_DIR="$BULLET_HOME/logs"
 
 echo "Bullet当前工作目录: $BULLET_HOME"
-
-BULLER_CONF_DIR="$BULLET_HOME/conf"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
 
-NGROK_BIN="$BULLET_HOME/bin/ngrok"
-
-
-$NGROK_BIN -log stdout -config=$BULLER_CONF_DIR/ngrok.yml  start-all
+BULLET_BIN -log $BULLET_LOG_DIR/bullet.log -config=BULLET_CONF_DIR/ngrok.yml  start-all

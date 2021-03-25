@@ -56,13 +56,9 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Override
     public void wakeUp(Long userId, String mac) {
-
         // 查询所有设备是因为大部分用户的设备数量并不多。
         List<Device> deviceList = getListByUserId(userId);
-        MsgWOL msg = new MsgWOL();
-        msg.setMac(mac);
-
-
+        MsgWOL msg = new MsgWOL(mac);
         deviceList.forEach(item ->{
             String deviceNo = item.getDeviceNo();
             coonPool.boradcast(deviceNo, msg);
