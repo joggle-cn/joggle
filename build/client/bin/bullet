@@ -44,4 +44,4 @@ BULLET_LOG_DIR="$BULLET_HOME/logs"
 echo "Bullet当前工作目录: $BULLET_HOME"
 echo "Bullet配置文件目录: $BULLER_CONF_DIR"
 
-BULLET_BIN -log $BULLET_LOG_DIR/bullet.log -config=BULLET_CONF_DIR/ngrok.yml  start-all
+$BULLET_BIN -log $BULLET_LOG_DIR/bullet.log -config=$BULLET_CONF_DIR/ngrok.yml  start-all
