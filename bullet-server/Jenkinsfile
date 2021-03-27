@@ -52,7 +52,11 @@ pipeline {
 
                             sed -ie 's/http:\\/\\/localhost:8081//g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
 
+                            echo "发布前端页面 to 宝塔"
                             scp -r ./bullet-server/src/main/resources/static/* root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/www.joggle.cn/
+
+                            echo "发布前端页面 to aliyun"
+                            scp -r ./bullet-server/src/main/resources/static/* root@joggle.cn:/opt/nginx/html/
 
                         fi
 
