@@ -19,21 +19,10 @@
 #               \  \ `-.   \_\_`. _.'_/_/  -' _.' /
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
-PRG="$0"
-
-while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "$PRG"`/"$link"
-  fi
-done
-
-BINDIR=`dirname "$PRG"`
-
-
+shell_path="$0"
+relative_path="${shell_path:1}"
+PRG="$(pwd)$relative_path"
+bin=`dirname "$PRG"`
 bin=`dirname "$PRG"`
 
 BULLET_HOME=`dirname "$bin"`
@@ -41,7 +30,7 @@ BULLET_BIN="$BULLET_HOME/bin/ngrok"
 BULLET_CONF_DIR="$BULLET_HOME/conf"
 BULLET_LOG_DIR="$BULLET_HOME/logs"
 
-echo "Bullet当前工作目录: $BULLET_HOME"
-echo "Bullet配置文件目录: $BULLER_CONF_DIR"
+echo "Bullet Home Dir: $BULLET_HOME"
+echo "Bullet Conf Dir: $BULLET_CONF_DIR"
 
 $BULLET_BIN -log $BULLET_LOG_DIR/bullet.log -config=$BULLET_CONF_DIR/ngrok.yml  start-all

@@ -56,7 +56,7 @@ pipeline {
                             scp -r ./bullet-server/src/main/resources/static/* root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/www.joggle.cn/
 
                             echo "发布前端页面 to aliyun"
-                            scp -r ./bullet-server/src/main/resources/static/* root@joggle.cn:/opt/nginx/html/
+                            scp -r ./bullet-server/src/main/resources/static/* root@joggle.cn:/opt/data/nginx/html/
 
                         fi
 
