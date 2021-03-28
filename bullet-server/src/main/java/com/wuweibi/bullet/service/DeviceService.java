@@ -38,4 +38,11 @@ public interface DeviceService extends IService<Device> {
     boolean existsDevice(String deviceId);
 
     void wakeUp(Long userId, String mac);
+
+    /**
+     * 根据设备编号获取设备信息
+     * @param deviceNo 设备编号
+     * @return
+     */
+    Device getByDeviceNo(String deviceNo);
 }

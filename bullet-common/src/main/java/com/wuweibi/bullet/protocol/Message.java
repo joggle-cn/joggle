@@ -30,6 +30,8 @@ public abstract class Message {
 	public static final int NEW_UNMAPPING      = 0x60000001;
 	public static final int NEW_BINDIP      = 0x7;
 	public static final int NEW_WOLMAC      = 0x9;
+	public static final int AUTH      = 0xa; // 认证
+	public static final int AUTH_RESP      = 0xa000001; //
 
 	
 	

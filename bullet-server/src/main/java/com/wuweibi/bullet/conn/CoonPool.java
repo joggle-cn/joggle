@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,11 +46,12 @@ public final class CoonPool {
      * @param conn 链接对象
      */
     public void removeConnection(BulletAnnotation conn) {
-        if(conn != null){
-            String deviceNo = conn.getDeviceNo();
-            clientConnections.remove(deviceNo); // 直接全部移除
-            conn.stop();
+        if(conn == null){
+            return;
         }
+        String deviceNo = conn.getDeviceNo();
+        clientConnections.remove(deviceNo); // 直接全部移除
+        conn.stop();
     }
 
 
@@ -123,11 +123,7 @@ public final class CoonPool {
             return;
         }
 
-        try {
-            bulletAnnotation.sendMessage(msg);
-        } catch (IOException e) {
-            logger.debug("", e);
-        }
+        bulletAnnotation.sendMessage(msg);
 
     }
 }

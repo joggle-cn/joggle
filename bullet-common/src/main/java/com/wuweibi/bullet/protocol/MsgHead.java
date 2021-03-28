@@ -15,6 +15,10 @@ public class MsgHead {
 	private int  command;//消息命令
 	private long sequence1;// 命令产生的日期和时间
 	private long sequence2;// 0开始递增（支持最大32位）
+	/**
+	 * 消息头长度
+	 */
+	public static final int HEAD_LENGTH = 24;
 
 	public MsgHead() {
 		length = 24;
