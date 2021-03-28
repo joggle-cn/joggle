@@ -32,8 +32,9 @@ public class MsgWOL extends Message {
      */
     public MsgWOL(String mac) {
         super(Message.NEW_WOLMAC);
+        this.mac = mac;
         // mac 17位
-        getHead().setLength(super.getLength() + 17);
+        getHead().setLength(super.getLength() + mac.length());
     }
 
     public MsgWOL() {
@@ -51,18 +52,20 @@ public class MsgWOL extends Message {
         log.debug("send {}",this.toString());
 
         // 写入mac地址
-        byte bs2[] = new byte[17];
-        System.arraycopy(mac.getBytes(), 0, bs2, 0, mac.getBytes().length);
+        int len = mac.getBytes().length;
+        byte bs2[] = new byte[len];
+        System.arraycopy(mac.getBytes(), 0, bs2, 0, len);
         out.write(bs2);
         out.flush();
     }
 
     @Override
     public void read(InputStream in) throws IOException {
+        int len = getLength() - MsgHead.HEAD_LENGTH;
         // 读取mac
-        byte[] bs = new byte[17];
+        byte[] bs = new byte[len];
         in.read(bs);
-        this.mac = Utils.getString(bs, 0, 17);
+        this.mac = Utils.getString(bs, 0, len);
         log.debug("reciver {}", this.toString());
     }
 
