@@ -3,18 +3,14 @@ package com.wuweibi.bullet.config.security;
 import com.google.common.collect.Lists;
 import com.wuweibi.bullet.exception.CustomWebResponseExceptionTranslator;
 import com.wuweibi.bullet.oauth2.enhancer.CustomTokenEnhancer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -106,7 +102,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .exceptionTranslator(customExceptionTranslator())
                 .tokenEnhancer(tokenEnhancerChain())// 自定义token生成方式
                 // 该字段设置设置refresh token是否重复使用,true:reuse;false:no reuse.
-//                .reuseRefreshTokens(false)
+                .reuseRefreshTokens(false)
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
                 // update by joe_chen add  granter
@@ -129,7 +125,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenServices.setTokenStore(endpoints.getTokenStore());
         tokenServices.setSupportRefreshToken(true);
         // 复用refresh token
-        tokenServices.setReuseRefreshToken(true);
+        tokenServices.setReuseRefreshToken(false);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
         // Token生命周期

@@ -1,6 +1,7 @@
 [Unit]
 Description=bullet service
-After=network.target 
+Wants=systemd-networkd-wait-online.service
+After=systemd-networkd-wait-online.service
 [Service]
 ExecStart=/opt/bullet/bin/bullet
 Restart=on-failure

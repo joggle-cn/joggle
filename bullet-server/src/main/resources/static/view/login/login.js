@@ -21,6 +21,7 @@ define(['app','layer','css!./login.css'], function (app, layer) {// 加载依赖
 			// 表单验证
 			faceinner.post(api['user.token'], params , function(res){
 				if(res.access_token){
+					localStorage.tokenInfo = JSON.stringify(res);
 					localStorage.token = res.access_token;
 					localStorage.tokenExpires = res.expires_in; // 有效期 单位：秒
 					localStorage.tokenTime = new Date().getTime(); // 当前时间

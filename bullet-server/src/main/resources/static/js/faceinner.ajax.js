@@ -69,7 +69,7 @@ let faceinner = {
      * @param func 回调函数
      * @param funcerror 调用失败函数
      */
-    get: function(url, data, func, funcerror){
+    get: async function(url, data, func, funcerror){
         let options = {
             url: faceinner.server + url ,
             type: 'get',
@@ -90,7 +90,7 @@ let faceinner = {
             options.error = funcerror;
         }
         // 处理Token
-        this.progressToken(options);
+        await this.progressToken(options);
 
         $.ajax(options);
     },
@@ -100,7 +100,7 @@ let faceinner = {
      * 处理Token
      * @param options
      */
-    progressToken : function(options){
+    progressToken : async function(options){
         if(localStorage.token && localStorage.token != 'null'){
             let tokenTime    = parseInt(localStorage.tokenTime);
             let tokenExpires = parseInt(localStorage.tokenExpires);
@@ -112,7 +112,37 @@ let faceinner = {
                     'Authorization': 'Bearer ' + localStorage.token,
                 }
             } else {
-                console.log('登录过期了, 请重新登录！');
+                if(options.data && options.data['grant_type'] && options.data.grant_type == 'password'){
+                    return;
+                }
+                console.log('登录过期了, 刷新Token！');
+                debugger
+                let tokenInfo = JSON.parse(localStorage.tokenInfo);
+                let refreshToken = tokenInfo.refresh_token;
+
+                let params ={
+                    refresh_token: refreshToken,
+                    grant_type: 'refresh_token',
+                    _async: false, // 同步
+                }
+                await faceinner.post(api["user.token"],params ,   function(res) {
+                    if(res.code == "040073"){
+                        console.log('RefreshToken过期了, 请重新登录！');
+                        // 跳转到登录
+                        window.location.href = "#/login"
+                        return;
+                    }
+                    localStorage.tokenInfo = JSON.stringify(res);
+                    localStorage.token = res.access_token;
+                    localStorage.tokenExpires = res.expires_in; // 有效期 单位：秒
+                    localStorage.tokenTime = new Date().getTime(); // 当前时间
+
+                    options.headers ={
+                        'Authorization': 'Bearer ' + localStorage.token,
+                    }
+                    console.log('Token 刷新完成');
+                });
+
             }
         }
     },
@@ -125,7 +155,7 @@ let faceinner = {
      * @param data 参数
      * @param func 回调函数
      */
-    post: function(url, data, func){
+    post: async function(url, data, func){
         let options = {
             url: faceinner.server + url ,
             type: 'post',
@@ -137,6 +167,9 @@ let faceinner = {
             // xhrFields: {
             //     withCredentials: true
             // },
+        }
+        if(data._async == false){
+            options.async = data._async;
         }
         if(func === undefined){
             delete options.data;
@@ -150,7 +183,7 @@ let faceinner = {
             }
         }
         // 处理Token
-        this.progressToken(options);
+        // this.progressToken(options);
 
         $.ajax(options);
     },
