@@ -18,3 +18,10 @@ docker login
 # 推送镜像
 docker push wuweiit/bullet-client:0.0.4
 ```
+
+
+docker build -t wuweibi/bullet . &&  docker run --rm wuweibi/bullet 
+
+
+docker buildx build -t wuweiit/bullet1 \
+--platform=linux/amd64 .

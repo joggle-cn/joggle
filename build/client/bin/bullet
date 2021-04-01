@@ -19,13 +19,8 @@
 #               \  \ `-.   \_\_`. _.'_/_/  -' _.' /
 #             ===`-.`___`-.__\ \___  /__.-'_.'_.-'===
 
-shell_path="$0"
-relative_path="${shell_path:1}"
-PRG="$(pwd)$relative_path"
-bin=`dirname "$PRG"`
-bin=`dirname "$PRG"`
-
-BULLET_HOME=`dirname "$bin"`
+workdir=$(cd $(dirname $0); pwd)
+BULLET_HOME=`dirname "$workdir"`
 BULLET_BIN="$BULLET_HOME/bin/ngrok"
 BULLET_CONF_DIR="$BULLET_HOME/conf"
 BULLET_LOG_DIR="$BULLET_HOME/logs"

@@ -64,6 +64,8 @@ public class BulletAnnotation {
 
     // 设备状态
     private boolean deviceStatus = false;
+    // 是否认证过
+    private boolean authStatus = false;
 
 
     /**
@@ -94,13 +96,26 @@ public class BulletAnnotation {
 
             // 发送配置到客户端
             MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
-
             try {
                 sendObject(msgDeviceNo);
             } catch (IOException e) {
                 logger.error("", e);
             }
+
+            // 待绑定的设备，无需认证执行上线
+            deviceOnline();
         }
+
+        // 检查是否绑定
+        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
+        Device device = deviceService.getByDeviceNo(this.deviceNo);
+
+        if (device == null) { // 未绑定
+            // 待绑定的设备，无需认证执行上线
+            deviceOnline();
+        }
+
+
     }
 
 
