@@ -104,12 +104,12 @@ public class BulletAnnotation {
 
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
+            return;
         }
 
         // 检查是否绑定
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
-
         if (device == null) { // 未绑定
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
