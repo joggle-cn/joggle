@@ -115,6 +115,9 @@ public class BulletAnnotation {
             deviceOnline();
         }
 
+        // TODO 需要认证
+
+
 
     }
 

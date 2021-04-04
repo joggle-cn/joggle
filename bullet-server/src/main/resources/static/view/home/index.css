@@ -1,5 +1,7 @@
 
-
+#index .lead{
+    line-height: 1.8;
+}
 
 #index .jumbotron {
     position: relative;
@@ -31,4 +33,37 @@
 #index .index-icon{
     width: 100px;
     margin: 0 auto;
+}
+
+
+#index	.counter{
+    background: #fff;
+    text-align: center;
+    position: relative;
+}
+
+#index.counter .counter-content{
+    padding: 30px 20px 50px;
+    color: #fff;
+    position: relative;
+}
+#index .counter .counter-icon{
+    display: inline-block;
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+#index .counter .counter-value{
+    display: block;
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #333333;
+}
+#index .counter .title{
+    font-size: 20px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px rgb(210 210 210/71%);
+    color: #333333;
+}
+@media only screen and (max-width: 990px){
+    .counter{ margin-bottom: 20px; }
 }

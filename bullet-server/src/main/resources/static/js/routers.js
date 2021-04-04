@@ -21,10 +21,15 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 	        templateUrl: 'view/home/index.htm'
 	      , controllerUrl: 'view/home/index.js'
 		}))
-		// 关于我们
+		// 文档
 		.when('/document', router({
 			templateUrl: 'view/document/document.htm'
 			, controllerUrl: 'view/document/document.js'
+		}))
+		// 硬件
+		.when('/hardware', router({
+			templateUrl: 'view/hardware/index.htm'
+			, controllerUrl: 'view/hardware/index.js'
 		}))
 		// 关于我们
 		.when('/about', router({

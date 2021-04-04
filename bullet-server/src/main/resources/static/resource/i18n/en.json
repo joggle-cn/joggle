@@ -3,6 +3,7 @@
 		"nav":{
 			"index": "Home",
 			"service": "Service",
+			"device": "Hardware",
 			"download": "Download",
 			"about": "About",
 			"help": "Help"
