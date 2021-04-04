@@ -130,6 +130,12 @@ let faceinner = {
                         console.log('RefreshToken过期了, 请重新登录！');
                         // 跳转到登录
                         window.location.href = "#/login"
+
+                        delete localStorage.tokenInfo;
+                        delete localStorage.token;
+                        delete localStorage.tokenExpires; // 有效期 单位：秒
+                        delete localStorage.tokenTime; // 当前时间
+
                         return;
                     }
                     localStorage.tokenInfo = JSON.stringify(res);
