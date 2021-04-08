@@ -1,6 +1,8 @@
 package com.wuweibi.bullet.utils;
 
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,8 +43,7 @@ public class HttpUtils {
 		url.append(scheme); // http, https
 		url.append("://");
 		url.append(request.getServerName());
-		if (("http".equals(scheme) && port != 80)
-				|| ("https".equals(scheme) && port != 443)) {
+		if (!ArrayUtils.contains(new int[]{80,443}, port)) {
 			url.append(':');
 			url.append(request.getServerPort());
 		}
