@@ -30,7 +30,12 @@ public class HttpUtils {
 	 */
 	public static String getRequestURL(HttpServletRequest request) {
 		StringBuilder url  = new StringBuilder();
-		String scheme      = request.getScheme();
+
+		String scheme = request.getHeader("X-Forwarded-Proto");
+		if(StringUtil.isBlank(scheme)){
+			scheme = request.getScheme();
+		}
+
 		String contextPath = request.getContextPath();
 		int port           = request.getServerPort();
 		url.append(scheme); // http, https

@@ -1,12 +1,13 @@
 {
 	"home":{
-		"nav":{
+		"nav": {
 			"index": "首页",
 			"service": "企业服务",
 			"device": "硬件设备",
 			"download": "下载中心",
 			"about": "关于我们",
-			"help": "帮助中心"
+			"help": "帮助中心",
+			"feedback": "问题反馈"
 		},
 		"btn":{
 			"flashchat": "闪聊模式",

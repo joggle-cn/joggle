@@ -6,7 +6,8 @@
 			"device": "Hardware",
 			"download": "Download",
 			"about": "About",
-			"help": "Help"
+			"help": "Help",
+			"feedback": "Feedback"
 		},
 		"btn":{
 			"flashchat": "Flash Chat",

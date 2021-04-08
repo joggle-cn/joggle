@@ -42,6 +42,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			, controllerUrl: 'view/download/download.js'
 		}))
 
+		// 用户反馈
+		.when('/feedback', router({
+			templateUrl: 'view/feedback/index.htm'
+			, controllerUrl: 'view/feedback/index.js'
+		}))
 
 		// 登录
 		.when('/login', router({
