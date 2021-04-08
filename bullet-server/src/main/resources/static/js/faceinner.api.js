@@ -12,6 +12,8 @@ let api = {
 
     /** 初始化数据  */
     "init": '/api/open/init',
+    /* 网站数据统计 */
+    "statistics": '/api/open/statistics',
 
     /* 忘记密码 */
     "user.forget": '/api/open/forget',

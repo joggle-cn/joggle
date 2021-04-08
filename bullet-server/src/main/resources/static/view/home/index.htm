@@ -15,39 +15,55 @@
 
 
     <div class="container">
-
         <div class="row">
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="counter">
                     <div class="counter-content">
-                        <span class="counter-value">29</span>
+                        <span class="counter-value" ng-bind="countInfo.userNum">0</span>
                         <h3 class="title">用户</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="counter">
                     <div class="counter-content">
-                        <span class="counter-value">16</span>
+                        <span class="counter-value" ng-bind="countInfo.deviceNum">0</span>
                         <h3 class="title">设备</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="counter">
                     <div class="counter-content">
-                        <span class="counter-value">60</span>
-                        <h3 class="title">域名</h3>
+                        <span class="counter-value" ng-bind="countInfo.deviceOnlineNum">0</span>
+                        <h3 class="title">在线设备</h3>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-2 col-sm-6">
                 <div class="counter">
                     <div class="counter-content">
-                        <span class="counter-value">1</span>
+                        <span class="counter-value" ng-bind="countInfo.domainNum">0</span>
+                        <h3 class="title">域名</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6">
+                <div class="counter">
+                    <div class="counter-content">
+                        <span class="counter-value" ng-bind="countInfo.portNum">0</span>
+                        <h3 class="title">端口</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <div class="counter">
+                    <div class="counter-content">
+                        <span class="counter-value" ng-bind="countInfo.tunnelNum">0</span>
                         <h3 class="title">通道</h3>
                     </div>
                 </div>

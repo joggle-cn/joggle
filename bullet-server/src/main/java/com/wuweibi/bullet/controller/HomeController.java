@@ -1,7 +1,9 @@
 package com.wuweibi.bullet.controller;
 
+import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
+import com.wuweibi.bullet.service.CountService;
 import com.wuweibi.bullet.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.HttpUtils;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,21 @@ public class HomeController {
         map.put("dockerClientVersion", "0.0.6");
 		resourceManager.loadResource();
 		return Result.success(map);
+	}
+
+
+	@Resource
+	private CountService countService;
+
+	/**
+	 * 统计数据接口
+	 * @return
+	 */
+	@GetMapping("/api/open/statistics")
+	@ResponseBody
+	public Result statistics(){
+		CountVO countVO = countService.getCountInfo();
+		return Result.success(countVO);
 	}
 
 }

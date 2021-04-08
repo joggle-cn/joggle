@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.mapper.CountMapper">
+
+    <select id="selectCountInfo" resultType="com.wuweibi.bullet.domain.vo.CountVO">
+        select
+            (select count(id) from t_device) as deviceNum,
+            (select count(id) from t_sys_users) as userNum,
+            (select count(id) from t_server_tunnel) as tunnelNum,
+            (select count(id) from t_domain where type = 2 and status = 1) as domainNum,
+            (select count(id) from t_domain where type = 1 and status = 1) as portNum,
+            (select count(id) from t_device_online where `status` = 1) as deviceOnlineNum
+        from DUAL
+    </select>
+</mapper>

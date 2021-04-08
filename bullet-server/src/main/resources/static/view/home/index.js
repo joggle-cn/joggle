@@ -7,6 +7,14 @@
  */
 define(['app','css!./index.css'], function (app) {//加载依赖js,
 	var callback = ["$scope", function ($scope) {
+        $scope.countInfo = {
+            deviceNum: 0,
+            deviceOnlineNum: 0,
+            domainNum: 0,
+            portNum: 0,
+            tunnelNum: 0,
+            userNum: 0
+        }
 
 		// 校验是否登录
 
@@ -17,19 +25,31 @@ define(['app','css!./index.css'], function (app) {//加载依赖js,
             }
         });
 
+        faceinner.get(api['statistics'], function(res){
+            if (res.code != 'S00') {
+                return;
+            }
+            console.log(res)
+            $scope.$apply(function(){
+                $scope.countInfo = res.data;
+            });
 
 
-        $('#index .counter-value').each(function(){
-            $(this).prop('Counter',0).animate({
-                Counter: $(this).text()
-            },{
-                duration: 1500,
-                easing: 'swing',
-                step: function (now){
-                    $(this).text(Math.ceil(now));
-                }
+            $('#index .counter-value').each(function(){
+                $(this).prop('Counter',0).animate({
+                    Counter: $(this).text()
+                },{
+                    duration: 1500,
+                    easing: 'swing',
+                    step: function (now){
+                        $(this).text(Math.ceil(now));
+                    }
+                });
             });
         });
+
+
+
 
 		 
 		 
