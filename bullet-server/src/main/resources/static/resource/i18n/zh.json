@@ -52,7 +52,7 @@
 		"age": "年龄",
 		"password": "密码",
 		"password2": "确认密码",
-		"agree": "同意不做违法应用",
+		"agree": "同意《用户使用协议》",
 		"protocol": "《互联网应用使用条款》",
         "success": "账号注册成功，请查看邮件激活账号！",
 		"alertAgreeService": "您正在注册平台用户，请勾选同意服务条款"

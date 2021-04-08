@@ -1,13 +1,16 @@
-<div class="container">
+<div class="container" id="register">
 	<div class="row">
 	  <div class="col-md-7">
-
 		  <img src="./resource/images/register/register.jpg" style="width: 100%; margin-top:3em" />
 	  </div>
 	  <div class="col-md-5">
-	  	
-		<form class="form-horizontal mt50" role="form"> 
-		  <input ng-model="user.icon" type="hidden" />
+
+		<form class="form-horizontal mt50" role="form">
+			<div class="blink activity">
+				New活动：注册即可获赠雪花域名一个！！！
+			</div>
+			<br/>
+			<input ng-model="user.icon" type="hidden" />
 	      <div class="form-group">
 		    <label class="col-sm-3 control-label" ng-bind="res.t('register.email')"></label>
 		    <div class="col-sm-9">

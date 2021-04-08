@@ -5,7 +5,7 @@
  *
  * @author marker
  */
-define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加载依赖模块
+define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $, x18n,layer) {// 加载依赖模块
 	
 	return ['$scope','$http','$location','res','userService', function ($scope, $http, $location, res, userService) {
 		$scope.agree = false; // 协议

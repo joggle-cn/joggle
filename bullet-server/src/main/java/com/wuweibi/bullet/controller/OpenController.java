@@ -142,7 +142,7 @@ public class OpenController {
 			params.put("url", url);
 			params.put("activateUrl", activateUrl);
 
-			mailService.send(email, "账号激活邮件", params, "register_mail.ftl");
+			mailService.send(email, "Bullet账号激活", params, "register_mail.ftl");
 
 
 			// 赠送域名
