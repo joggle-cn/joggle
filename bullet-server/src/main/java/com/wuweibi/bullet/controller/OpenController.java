@@ -137,7 +137,7 @@ public class OpenController {
 			String domainUrl = ConfigUtils.getBulletDomain();
 			// 注册成功后发送激活邮件
 			Map<String,Object> params = new HashMap<>(1);
-			String url = "http://www." + domainUrl;
+			String url = "https://www." + domainUrl;
 			String forgetUrl = url +"#/user/activate?code=" + code;
 			params.put("url", forgetUrl);
 
@@ -149,7 +149,7 @@ public class OpenController {
 
 			Calendar calendar = Calendar.getInstance();
 			Date time = calendar.getTime();
-			calendar.add(Calendar.DATE,30);
+			calendar.add(Calendar.DATE,365); // 1年使用权
 			Date dueTime = calendar.getTime();
 
 			// 生成域名
@@ -164,7 +164,6 @@ public class OpenController {
 			domain.setType(2);
 			domainService.save(domain);
 		}
-
 
 		return Result.success();
 	}
