@@ -115,8 +115,11 @@ let faceinner = {
                 if(options.data && options.data['grant_type'] && options.data.grant_type == 'password'){
                     return;
                 }
+                if(!localStorage.tokenInfo){
+                    return;
+                }
                 console.log('登录过期了, 刷新Token！');
-                debugger
+
                 let tokenInfo = JSON.parse(localStorage.tokenInfo);
                 let refreshToken = tokenInfo.refresh_token;
 

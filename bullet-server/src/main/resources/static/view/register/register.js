@@ -109,7 +109,11 @@ define(['app','jquery','x18n', 'layer'], function (app, $, x18n,layer) {// 加�
 			// 邮箱校验
 			let myReg = /^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
 			if(!myReg.test(user.email)){
-				$scope.emailMsg = "邮箱格式不正确!";
+				$scope.emailMsg = res.error(res.code.mustFillInput);
+				$scope.isOk = false;
+			}
+			if(user.nickname == null || '' == user.nickname){
+				$scope.nicknameMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
 			}
 

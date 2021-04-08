@@ -19,7 +19,6 @@ import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +101,7 @@ public class OpenController {
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	@Transactional
 	public Object register(HttpServletRequest request, @ModelAttribute User user, Errors errors){
+
 		// 验证邮箱正确性
 		new RegisterValidator().validate(user, errors);
 		if(errors.hasErrors()){
@@ -134,12 +134,13 @@ public class OpenController {
 			// 赋权用户端
 			userService.newAuthRole(userId, "Consumer");
 
-			String domainUrl = ConfigUtils.getBulletDomain();
 			// 注册成功后发送激活邮件
 			Map<String,Object> params = new HashMap<>(1);
-			String url = "https://www." + domainUrl;
-			String forgetUrl = url +"#/user/activate?code=" + code;
-			params.put("url", forgetUrl);
+
+			String url = HttpUtils.getRequestURL(request);
+			String activateUrl = url +"#/user/activate?code=" + code;
+			params.put("url", url);
+			params.put("activateUrl", activateUrl);
 
 			mailService.send(email, "账号激活邮件", params, "register_mail.ftl");
 

@@ -123,4 +123,8 @@ public class HttpUtils {
 		}
 		return lang.toLowerCase();
 	}
+
+	public static String getScheme(HttpServletRequest request) {
+		return request.getScheme();
+	}
 }
