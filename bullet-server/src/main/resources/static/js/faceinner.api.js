@@ -14,7 +14,7 @@ let api = {
     "init": '/api/open/init',
 
     /* 忘记密码 */
-    "user.forget": '/api/user/forget',
+    "user.forget": '/api/open/forget',
 
     /* 注册 */
     "user.register": '/api/open/register',

@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-08-13
  */
-define(['css!./app.css'], function ( ) {// 加载依赖js,
+define(['css!./app.css'], function ( ) {// 加载依赖js,a
 
 	
 	return ['$scope','$location','userService', '$AjaxService',
@@ -48,7 +48,7 @@ define(['css!./app.css'], function ( ) {// 加载依赖js,
              * 提交重置密码申请
              */
             $scope.submitRestPass = function(){
-                var data = {email: $scope.email};
+                let data = {email: $scope.email};
 
                 faceinner.post(api['user.forget'], data,  function(res){
                     if(res.status == 0){

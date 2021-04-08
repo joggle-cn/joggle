@@ -135,7 +135,7 @@ public class OpenController {
 			userService.newAuthRole(userId, "Consumer");
 
 			// 注册成功后发送激活邮件
-			Map<String,Object> params = new HashMap<>(1);
+			Map<String,Object> params = new HashMap<>(2);
 
 			String url = HttpUtils.getRequestURL(request);
 			String activateUrl = url +"#/user/activate?code=" + code;

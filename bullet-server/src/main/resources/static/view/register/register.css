@@ -44,7 +44,7 @@
     color: red;
 }
 #register .activity{
-    text-align: center;
+    text-align: center;    color: red;
     font-weight: bold;
     height: 20px; line-height: 20px
 }

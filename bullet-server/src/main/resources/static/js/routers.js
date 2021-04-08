@@ -56,8 +56,8 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 		}))
         /** 忘记密码 */
         .when('/forget', router({
-            templateUrl: '/view/forget/forget.htm'
-            , controllerUrl: '/view/forget/forget.js'
+            templateUrl: 'view/forget/forget.htm'
+            , controllerUrl: 'view/forget/forget.js'
         }))
 
 		/* 用户路由  */

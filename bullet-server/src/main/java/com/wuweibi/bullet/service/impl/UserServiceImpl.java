@@ -75,23 +75,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         apply.setIp(ip);
         apply.setStatus(0);
 
-
         // 更新以前Email相关Code的status
         userForgetMapper.updateEmailStatus(email);
 
         userForgetMapper.insert(apply);
 
-
-
         // 发送激活邮件
-        Map<String,Object> params = new HashMap<>(1);
-
-        if(url.indexOf("http://faceinner.com") != -1){
-            url = "https://faceinner.com";
-        }
+        Map<String,Object> params = new HashMap<>(2);
 
         String forgetUrl = url +"#/forget?code="+apply.getCode();
-        params.put("url", forgetUrl);
+        params.put("forgetUrl", forgetUrl);
+        params.put("url", url);
 
         mailService.send(email, params, "forget_mail.ftl");
 

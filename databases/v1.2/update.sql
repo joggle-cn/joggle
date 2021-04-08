@@ -13,3 +13,6 @@ INSERT INTO `t_sys_resources`(`id`, `code`, `type`, `name`, `url`, `method`, `de
 
 INSERT INTO `t_sys_roles_resources_relation`(`id`, `resource_id`, `role_id`) VALUES (138, 19, 2);
 INSERT INTO `t_sys_roles_resources_relation`(`id`, `resource_id`, `role_id`) VALUES (139, 19, 1);
+
+ALTER TABLE `t_user_forget`
+    MODIFY COLUMN `oldPass` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `userId`;
