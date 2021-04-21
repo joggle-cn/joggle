@@ -209,8 +209,10 @@ public class BulletAnnotation {
 
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
+        String msg = "Device AuthToken Error!!!";
+
         // 认证成功 发送映射信息
-        if (device.getDeviceSecret() != null && device.getDeviceSecret().equals(authToken)) {
+        if (device != null && device.getDeviceSecret() != null && device.getDeviceSecret().equals(authToken)) {
 
             // 设备上线（包含设备校验）
             deviceOnline();
@@ -220,10 +222,12 @@ public class BulletAnnotation {
                 return;
             }
             sendMappingInfo();
+            msg = "SUCCESS";
         }
 
+
         // 发送认证失败消息
-        MsgAuthResp authResp = new MsgAuthResp("Device AuthToken Error!!!");
+        MsgAuthResp authResp = new MsgAuthResp(msg);
         sendMessage(authResp);
 
     }
