@@ -3,7 +3,7 @@
 <mapper namespace="com.wuweibi.bullet.mapper.DomainMapper">
 
 	<!--	根据用户ID查询归属域名-->
-	<select id="selectByUserId" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.Long">
-		select id, domain, type, status, due_time as dueTime from t_domain where user_id = #{userId}
+	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain.vo.DomainVO" parameterType="java.lang.Long">
+		select id, domain, type, status, due_time as dueDateTime from t_domain where user_id = #{userId}
 	</select>
 </mapper>

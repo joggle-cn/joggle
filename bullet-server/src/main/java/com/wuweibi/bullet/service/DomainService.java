@@ -2,6 +2,7 @@ package com.wuweibi.bullet.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.entity.Domain;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface DomainService extends IService<Domain> {
      * @param userId 用户ID
      * @return
      */
-    List<JSONObject> getListByUserId(Long userId);
+    List<DomainVO> getListByUserId(Long userId);
 
     /**
      * 检查域名是否和用户绑定

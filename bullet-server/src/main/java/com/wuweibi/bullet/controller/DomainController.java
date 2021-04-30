@@ -9,6 +9,7 @@ import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
@@ -70,15 +71,15 @@ public class DomainController {
             return Result.fail(AuthErrorType.INVALID_LOGIN);
         }
         Long userId = session.getUserId();
-        List<JSONObject> list = domainService.getListByUserId(userId);
+        List<DomainVO> list = domainService.getListByUserId(userId);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         list.forEach((item)->{
-            Date dueTime = item.getDate("dueTime");
-            if(dueTime == null){
-                item.put("dueTime", "永久有效");
-            }else{
-                item.put("dueTime", simpleDateFormat.format(dueTime));
+            Date dueTime = item.getDueDateTime();
+            if (dueTime == null) {
+                item.setDueTime("永久有效");
+            } else {
+                item.setDueTime(simpleDateFormat.format(dueTime));
             }
 
         });

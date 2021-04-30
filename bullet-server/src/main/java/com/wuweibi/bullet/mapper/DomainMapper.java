@@ -2,6 +2,7 @@ package com.wuweibi.bullet.mapper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.entity.Domain;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -23,10 +24,10 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 根据用户ID查询归属域名
-     * @param userId
+     * @param userId 用户ID
      * @return
      */
-    List<JSONObject> selectByUserId(Long userId);
+    List<DomainVO> selectByUserId(@Param("userId") Long userId);
 
     /**
      * 检查域名是否和用户绑定

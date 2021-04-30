@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
@@ -40,7 +41,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
 
     @Override
-    public List<JSONObject> getListByUserId(Long userId) {
+    public List<DomainVO> getListByUserId(Long userId) {
         return this.baseMapper.selectByUserId(userId);
     }
 
