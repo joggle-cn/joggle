@@ -22,6 +22,10 @@
 	</div>
 
 
+	<div class="no-device-info" ng-if="list.length == 0">
+		您还没有绑定设备，赶紧去<a href="#/download">下载客户端</a>程序运行并绑定吧!
+	</div>
+
 	<div class="row">
 		<div class="col-md-4" ng-repeat="item in list">
 			<a class="item-wrap" href="#/user/device/{{item.id}}/mapping">

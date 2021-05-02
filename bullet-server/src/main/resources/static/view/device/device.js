@@ -11,7 +11,7 @@ define(['app','jquery', 'css!./device.css'], function (app, $) {//加载依赖js
 	var callback = ["$scope", function ($scope) {
 
         $scope.active = 'device';
-
+        $scope.list =[];
 
 
 

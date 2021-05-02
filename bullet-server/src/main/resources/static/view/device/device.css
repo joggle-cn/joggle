@@ -56,3 +56,7 @@
 .device .device-feature-item p{
     color: #929292;
 }
+.device .no-device-info{
+    text-align: center;
+    margin-top: 7rem;
+}

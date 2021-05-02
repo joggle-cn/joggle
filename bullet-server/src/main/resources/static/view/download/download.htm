@@ -54,7 +54,17 @@
                 </div>
                 <h3><a href="https://help.joggle.cn/docs/deploy/docker-deploy-client.html" target="_blank" class="btn btn-default">Docker</a></h3>
                 <p>
-                    版本：{{config.dockerClientVersion}} <br>
+                    版本：{{config.dockerClientVersion}} <br><br>
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-android"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  class="btn btn-default">Android</a></h3>
+                <p>
+                    版本：{{config.apkClientVersion}} <br>
+                    支持：amd64(arm64-v8a)<br>【全网首发Android设备客户端】
                 </p>
             </div>
         </div>
