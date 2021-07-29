@@ -19,7 +19,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
             lineName: '-',
         }
         $scope.deviceInfo = {
-            status: 0
+            status: null
         }
 
 

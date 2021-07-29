@@ -11,6 +11,9 @@ pipeline {
                          if [ "$BRANCH_NAME"  = "build" ];then
                             sed -ie 's/http:\\/\\/localhost:8081//g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
                          fi
+                         if [ "$BRANCH_NAME"  = "prod" ];then
+                            sed -ie 's/http:\\/\\/localhost:8081/https:\\/\\/api.joggle.cn/g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
+                         fi
 
                          # echo "修改版本号 $VERSION ";
                          # sed -ie "s/dev-version/$VERSION/g" static/lib/common.lib.js
@@ -45,18 +48,16 @@ pipeline {
                             scp -o StrictHostKeyChecking=no ./bullet-server/target/bullet-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
 
                             echo "bullet-server restart ....."
-
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
                             echo "发布前端页面"
+                            cd bullet-server/src/main/resources/static/
+                            ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
+                            scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
 
-                            sed -ie 's/http:\\/\\/localhost:8081//g' bullet-server/src/main/resources/static/js/faceinner.ajax.js
+                            echo "发布前端页面 to OSS"
+                            ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
 
-                            echo "发布前端页面 to 宝塔"
-                            scp -r ./bullet-server/src/main/resources/static/* root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/www.joggle.cn/
-
-                            echo "发布前端页面 to aliyun"
-                            scp -r ./bullet-server/src/main/resources/static/* root@joggle.cn:/opt/data/nginx/html/
 
                         fi
 
