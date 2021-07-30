@@ -22,6 +22,7 @@ import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
@@ -332,7 +333,7 @@ public class DeviceController {
      */
     @RequestMapping(value = "/device/discovery", method = RequestMethod.GET)
     public Result discovery(HttpServletRequest request){
-        String ip = request.getRemoteHost();
+        String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
         return Result.success(list);
     }

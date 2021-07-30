@@ -2,6 +2,7 @@ package com.wuweibi.bullet.utils;
 
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -10,21 +11,22 @@ import java.util.Locale;
 
 
 /**
- * 
+ *
  * 不修改此类中的成员变量，则线程安全
- * 
- * 
+ *
+ *
  * 工具类
  * @author marker
  *
  */
 public class HttpUtils {
 
-	
+
 	// 代理服务器的HTTP请求协议，客户端真实IP字段名称
 	public static final String X_REAL_IP = "X-Real-IP";
-	
-	
+
+	private static final String UNKNOWN = "unknown";
+
 	/**
 	 * 获取请求对象的URL地址
 	 * @param request 请求对象
@@ -50,9 +52,9 @@ public class HttpUtils {
 		url.append(contextPath);
 		return url.toString();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * for nigx返向代理构造 获取客户端IP地址
 	 * @param request
@@ -60,9 +62,38 @@ public class HttpUtils {
 	 */
 	public static String getRemoteHost(HttpServletRequest request){
 		String ip = request.getHeader(X_REAL_IP);// 获取代理IP地址
-		return (null == ip)? request.getRemoteHost() : ip; 
+		return (null == ip)? request.getRemoteHost() : ip;
 	}
-	
+
+	/**
+	 * 获取ip
+	 * @param request HttpServletRequest
+	 * @return {String}
+	 */
+	public static String getRemoteIP(HttpServletRequest request) {
+		Assert.notNull(request, "HttpServletRequest is null");
+		String ip = request.getHeader("X-Requested-For");
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getHeader("X-Forwarded-For");
+		}
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (StringUtil.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return StringUtil.isBlank(ip) ? null : ip.split(",")[0];
+	}
+
 	/**
 	 * 检查是否有cookieName
 	 * @param request
@@ -77,11 +108,11 @@ public class HttpUtils {
 	    		cookie = cookies[i];
 	    		if(cookie.getName().equals(cookieName))
 	    			return true;
-	    	} 
+	    	}
 		return false;
 	}
-	
-	
+
+
 	public static String getCookie(HttpServletRequest request, String cookieName){
 		Cookie cookie;
 		Cookie[] cookies = request.getCookies();
@@ -90,18 +121,18 @@ public class HttpUtils {
 	    		cookie = cookies[i];
 	    		if(cookie.getName().equals(cookieName))
 	    			return cookie.getValue();
-	    	} 
+	    	}
 		return "";
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 获取语言信息
-	 * 
+	 *
 	 * 1. 优先获取URL重写参数
 	 * 2. 获取Http请求浏览器语言标识
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -112,7 +143,7 @@ public class HttpUtils {
 			lang = (String) session.getAttribute("lang");
 		}
 		if(lang == null){
-			lang = request.getParameter("lang"); 
+			lang = request.getParameter("lang");
 		}
 		if(lang == null){
 			Locale locale = request.getLocale();
@@ -121,7 +152,7 @@ public class HttpUtils {
 				lang = locale.getLanguage()+"-"+ c;
 			}else{
 				lang = locale.getLanguage();
-				
+
 			}
 		}
 		if(lang == null){
