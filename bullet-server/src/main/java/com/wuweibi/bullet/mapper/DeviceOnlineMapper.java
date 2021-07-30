@@ -3,6 +3,8 @@ package com.wuweibi.bullet.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
+import java.util.List;
+
 /**
  * <p>
   *  Mapper 接口
@@ -24,4 +26,5 @@ public interface DeviceOnlineMapper extends BaseMapper<DeviceOnline> {
      */
     void updateStatus(String deviceOnline);
 
+    List<DeviceOnline> selectDiscoveryDevice(String ip);
 }

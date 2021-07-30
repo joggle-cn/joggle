@@ -12,6 +12,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
 
         $scope.active = 'bind';
+        $scope.discovery = [];
 
         /**
          * 校验设备是否存在
@@ -64,10 +65,30 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 		$scope.exit = function(){
             $("#editDevice").modal('hide');
         }
-		 
-		 
+
+
+
+
+
+        /**
+         * 设备发现
+         */
+        $scope.selectDeviceNo = function(deviceNo){
+            $scope.deviceId = deviceNo;
+        }
+        $scope.deviceDiscovery = function(){
+            faceinner.get(api['user.device.discovery'], {}, function(res) {
+                if (res.code == 'S00') {
+                    $scope.$apply(function(){
+                        $scope.discovery = res.data;
+                    })
+                }
+            });
+        }
+        $scope.deviceDiscovery();
+
  	}];
-	
-	
+
+
 	return callback;
 });

@@ -2,6 +2,9 @@ package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.entity.DeviceOnline;
+
+import java.util.List;
 
 /**
  * <p>
@@ -45,4 +48,11 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     Device getByDeviceNo(String deviceNo);
+
+    /**
+     * 设备发现（同样出口IP的设备)
+     * @param ip
+     * @return
+     */
+    List<DeviceOnline> getDiscoveryDevice(String ip);
 }

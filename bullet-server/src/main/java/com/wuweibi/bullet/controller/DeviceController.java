@@ -321,11 +321,20 @@ public class DeviceController {
     @RequestMapping(value = "/device/wol", method = RequestMethod.POST)
     @ResponseBody
     public Result WOL(@JwtUser Session session, String mac ){
-
-
         deviceService.wakeUp(session.getUserId(), mac);
-
         return Result.success();
+    }
+
+
+    /**
+     * 设备发现接口
+     * @return
+     */
+    @RequestMapping(value = "/device/discovery", method = RequestMethod.GET)
+    public Result discovery(HttpServletRequest request){
+        String ip = request.getRemoteHost();
+        List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
+        return Result.success(list);
     }
 
 

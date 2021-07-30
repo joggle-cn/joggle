@@ -19,11 +19,11 @@
               }
           </style>
 
-          <div style="max-width: 450px; margin: 100px auto ">
+          <div style="max-width: 450px; margin: 100px auto 30px ">
               <div class="input-group">
                   <input type="text" ng-model="deviceId" class="form-control" aria-label="Text input with multiple buttons">
                   <div class="input-group-btn">
-                      <button id="bindButton" ng-click="validate()" type="button" class="btn btn-default">绑定设备</button>
+                      <button id="bindButton" ng-click="validate()" type="button" class="btn btn-success">绑定设备</button>
                   </div>
               </div>
               <div style="padding-top: 20px;">
@@ -36,11 +36,30 @@
                   <p style="text-align: center;" ng-bind="info">正在为链接校验服务器...</p>
               </div>
 
-
           </div>
       </div>
-	 	
+
 	</div>
+
+    <div class="row">
+        <div ng-show="discovery.length > 0">
+            <div class="alert alert-success" role="alert">
+               说明：基于设备发现未绑定的设备清单，可点击选择设备编码。
+            </div>
+        </div>
+        <div class="" ng-repeat="a in discovery track by $index">
+            <div class="col-xs-3 col-md-2 alert-info" style="margin: 10px; padding-top:20px;
+            text-align: center" ng-click="selectDeviceNo(a.deviceNo)">
+                <span class="label label-info">{{a.deviceNo}}</span>
+                <p>{{a.intranetIp}}</p>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
 </div>
 
 

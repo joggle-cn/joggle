@@ -20,4 +20,13 @@
 		update t_device_online set status=1, updateTime=sysdate() where deviceNo=#{deviceNo}
 	</update>
 
+
+    <select id="selectDiscoveryDevice" resultType="com.wuweibi.bullet.entity.DeviceOnline">
+		select a.* from t_device_online a
+		left join t_device b on a.deviceNo = b.deviceId
+		WHERE  a.`status` = 1 and a.public_ip = #{ip}
+		group by a.deviceNo
+		HAVING count(b.id) = 0
+	</select>
+
 </mapper>

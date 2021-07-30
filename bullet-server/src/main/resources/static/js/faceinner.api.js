@@ -52,6 +52,7 @@ let api = {
     "user.device.validate": '/api/user/device/validate',
     "user.device.mapping": '/api/user/device/mapping/',
     "user.device.wol": '/api/user/device/wol',
+    "user.device.discovery": '/api/user/device/discovery',
     "system.ngrokd.check": '/api/system/ngrokd/check',
 
     /* 用户域名与端口 */

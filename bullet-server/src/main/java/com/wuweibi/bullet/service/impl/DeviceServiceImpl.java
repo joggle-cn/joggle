@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
+import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgWOL;
 import com.wuweibi.bullet.service.DeviceService;
 import org.springframework.stereotype.Service;
@@ -68,6 +70,14 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     public Device getByDeviceNo(String deviceNo) {
         return this.baseMapper.selectOne(Wrappers.<Device>lambdaQuery().eq(Device::getDeviceNo, deviceNo));
+    }
+
+    @Resource
+    private DeviceOnlineMapper deviceOnlineMapper;
+
+    @Override
+    public List<DeviceOnline> getDiscoveryDevice(String ip) {
+        return this.deviceOnlineMapper.selectDiscoveryDevice(ip);
     }
 
 
