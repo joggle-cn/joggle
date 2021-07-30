@@ -56,6 +56,11 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	 */
     @TableField(value="intranet_ip" )
 	private String intranetIp;
+	/**
+	 * 公网IP
+	 */
+    @TableField()
+	private String publicIp;
 
 
 	/**

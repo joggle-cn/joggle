@@ -19,6 +19,7 @@ package com.wuweibi.bullet.websocket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.*;
@@ -43,6 +44,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
+
 
 /**
  * Bullet WebSocket服务
@@ -50,7 +53,7 @@ import java.util.List;
  * @author marker
  * @version 1.0
  */
-@ServerEndpoint(value = "/tunnel/{deviceNo}")
+@ServerEndpoint(value = "/tunnel/{deviceNo}", configurator = WebSocketConfigurator.class)
 public class BulletAnnotation {
     /**
      * 日志
@@ -89,6 +92,7 @@ public class BulletAnnotation {
                      @PathParam("deviceNo") String deviceNo) {
         this.session = session;
         this.deviceNo = deviceNo;
+
 
         // 如果是首次链接，执行重新分配设备编码
         if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
@@ -286,13 +290,32 @@ public class BulletAnnotation {
             return;
         }
 
+        String publicIp = getRemoteAddress(this.session);
         // 设备在线
-        deviceOnlineService.saveOrUpdateOnlineStatus(this.deviceNo);
+        DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
+        deviceOnlineInfoDTO.setDeviceNo(deviceNo);
+        deviceOnlineInfoDTO.setPublicIp(publicIp);
+        deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
         this.deviceStatus = true;
 
         // 将链接添加到连接池
         pool.addConnection(this);
     }
+
+
+    @SneakyThrows
+    public static String getRemoteAddress(final Session session) {
+        //.getAddress().getHostAddress()
+        //.holder.addr.hostName
+        //.holder.addr.holder.address
+        //.holder.addr.holder.hostName
+        //return (String) eval(session,"#root.channel.remoteAddress");
+
+        return (String) session.getUserProperties().get(IP_ADDR);
+//         String expression =  "#root.wsRemoteEndpoint.socketWrapper.remoteAddr";
+//        return (String) Ognl.getValue(expression, session);
+    }
+
 
 
     @OnError

@@ -6,7 +6,7 @@ package com.wuweibi.bullet.config;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
 import com.wuweibi.bullet.controller.interceptor.RequestParamsInterceptor;
-import com.wuweibi.bullet.filter.CrossDomainFilter;
+import com.wuweibi.bullet.filter.WebsocketIPFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -174,12 +174,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * 专门用于
      * @return
      */
+//    @Bean
+//    public FilterRegistrationBean FilterRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(new CrossDomainFilter());
+//        registration.addUrlPatterns("/oauth/*"); // oauth token
+//        registration.setName("CrossDomainFilter");
+//        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);//设置最高优先级
+//        return registration;
+//    }
+
     @Bean
-    public FilterRegistrationBean FilterRegistration() {
+    public FilterRegistrationBean FilterRegistration1() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new CrossDomainFilter());
-        registration.addUrlPatterns("/oauth/*"); // oauth token
-        registration.setName("CrossDomainFilter");
+        registration.setFilter(new WebsocketIPFilter());
+        registration.addUrlPatterns("/*"); // oauth token
+        registration.setName("WebsocketIPFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);//设置最高优先级
         return registration;
     }

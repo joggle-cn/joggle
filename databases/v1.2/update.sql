@@ -16,3 +16,11 @@ INSERT INTO `t_sys_roles_resources_relation`(`id`, `resource_id`, `role_id`) VAL
 
 ALTER TABLE `t_user_forget`
     MODIFY COLUMN `oldPass` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `userId`;
+
+
+ALTER TABLE `t_device_online`
+    ADD COLUMN `public_ip` varchar(20) NULL AFTER `mac_addr`;
+
+
+ALTER TABLE `t_device_online`
+    MODIFY COLUMN `intranet_ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '内网IP' AFTER `status`;

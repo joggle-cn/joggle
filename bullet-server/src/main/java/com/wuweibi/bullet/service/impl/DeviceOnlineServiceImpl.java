@@ -1,7 +1,9 @@
 package com.wuweibi.bullet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -11,7 +13,7 @@ import java.util.Date;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author marker
@@ -35,9 +37,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnline.setIntranetIp(ip); // ip
         deviceOnline.setMacAddr(mac); // mac
 
-        if(count > 0){
+        if (count > 0) {
             this.baseMapper.update(deviceOnline, ew);
-        }else{// save
+        } else {// save
             this.baseMapper.insert(deviceOnline);
         }
     }
@@ -68,7 +70,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         ew.eq("deviceNo", deviceNo);
         ew.eq("status", 1);
 
-        int count =  this.baseMapper.selectCount(ew);
+        int count = this.baseMapper.selectCount(ew);
         return count > 0;
     }
 
@@ -78,22 +80,23 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     }
 
     @Override
-    public void saveOrUpdateOnlineStatus(String deviceNo) {
-        QueryWrapper ew = new QueryWrapper();
-        ew.eq("deviceNo", deviceNo);
-
-
-
-        int count = this.baseMapper.selectCount(ew);
-        DeviceOnline deviceOnline = new DeviceOnline();
-        deviceOnline.setDeviceNo(deviceNo);
-        deviceOnline.setStatus(1);// 等待被绑定（在线)
+    public boolean saveOrUpdate(DeviceOnlineInfoDTO deviceInfo) {
+        String deviceNo = deviceInfo.getDeviceNo();
+        DeviceOnline deviceOnline = this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
+                .eq(DeviceOnline::getDeviceNo, deviceNo));
+        if(deviceOnline == null){
+            deviceOnline = new DeviceOnline();
+            deviceOnline.setDeviceNo(deviceNo);
+            deviceOnline.setStatus(1);// 等待被绑定（在线)
+        }
+        deviceOnline.setPublicIp(deviceInfo.getPublicIp());
         deviceOnline.setUpdateTime(new Date());
 
-        if(count > 0){
-            this.baseMapper.updateStatus(deviceNo);
-        }else{// save
+        if (deviceOnline.getId() != null) {
+            this.baseMapper.updateById(deviceOnline);
+        } else {// save
             this.baseMapper.insert(deviceOnline);
         }
+        return true;
     }
 }

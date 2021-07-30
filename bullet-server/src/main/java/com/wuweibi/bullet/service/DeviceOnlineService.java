@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
 /**
@@ -43,5 +44,10 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      */
     void allDownNow();
 
-    void saveOrUpdateOnlineStatus(String deviceNo);
+    /**
+     * 保存或者更新在线设备信息
+     * @param deviceOnlineInfoDTO 在线设备信息
+     * @return
+     */
+    boolean saveOrUpdate(DeviceOnlineInfoDTO deviceOnlineInfoDTO);
 }
