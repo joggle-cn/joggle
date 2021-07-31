@@ -30,6 +30,8 @@ public class RequestParamsInterceptor implements HandlerInterceptor {
             logger.info("============== Request Info ================");
             String METHOD = request.getMethod();
             String uri = request.getRequestURI();
+
+			logger.info("IP: {}", request.getHeader("X-Forwarded-For"));
             logger.info("{} {}",METHOD, uri);
             logger.info("Params={}", JSON.toJSON(request.getParameterMap()));
             logger.info("============== Request Info END================");

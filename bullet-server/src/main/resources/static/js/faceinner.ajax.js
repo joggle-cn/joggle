@@ -108,9 +108,14 @@ let faceinner = {
 
             let tmp = (curTime - tokenTime)/1000; // 转换为秒
             if(tmp < tokenExpires){ // 没过期
-                options.headers ={
-                    'Authorization': 'Bearer ' + localStorage.token,
+                if(options.headers){
+                    options.headers['Authorization'] = 'Bearer ' + localStorage.token;
+                }else{
+                    options.headers = {
+                        'Authorization': 'Bearer ' + localStorage.token,
+                    }
                 }
+
             } else {
                 if(options.data && options.data['grant_type'] && options.data.grant_type == 'password'){
                     return;
@@ -244,6 +249,27 @@ let faceinner = {
             host += ":" + window.location.port;
         }
         return host;
+    },
+
+
+
+    /**
+     * ajax 请求
+     *
+     * @param url URL地址
+     * @param data 参数
+     * @param func 回调函数
+     * @param funcerror 调用失败函数
+     */
+    ajax: async function(options){
+        options.url =  faceinner.server + options.url ;
+        options.crossDomain =  true;
+        options.xhrFields =  {
+            withCredentials: true
+        };
+        // 处理Token
+        await this.progressToken(options);
+        $.ajax(options);
     }
 
 };

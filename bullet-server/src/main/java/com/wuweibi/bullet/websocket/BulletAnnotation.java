@@ -119,7 +119,7 @@ public class BulletAnnotation {
             deviceOnline();
         }
 
-        // TODO 需要认证
+        // 需要认证(客户端主动发起)
 
 
 
@@ -305,15 +305,7 @@ public class BulletAnnotation {
 
     @SneakyThrows
     public static String getRemoteAddress(final Session session) {
-        //.getAddress().getHostAddress()
-        //.holder.addr.hostName
-        //.holder.addr.holder.address
-        //.holder.addr.holder.hostName
-        //return (String) eval(session,"#root.channel.remoteAddress");
-
         return (String) session.getUserProperties().get(IP_ADDR);
-//         String expression =  "#root.wsRemoteEndpoint.socketWrapper.remoteAddr";
-//        return (String) Ognl.getValue(expression, session);
     }
 
 

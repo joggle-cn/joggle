@@ -77,11 +77,20 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
             $scope.deviceId = deviceNo;
         }
         $scope.deviceDiscovery = function(){
-            faceinner.get(api['user.device.discovery'], {}, function(res) {
-                if (res.code == 'S00') {
-                    $scope.$apply(function(){
-                        $scope.discovery = res.data;
-                    })
+            faceinner.ajax({
+                url : api['user.device.discovery'],
+                headers: {
+                    'connection': 'close'
+                },
+                beforeSend: function ( R) {
+                    R.setRequestHeader('Connection' , 'close' ) ;
+                },
+                success: function(res) {
+                    if (res.code == 'S00') {
+                        $scope.$apply(function(){
+                            $scope.discovery = res.data;
+                        })
+                    }
                 }
             });
         }
