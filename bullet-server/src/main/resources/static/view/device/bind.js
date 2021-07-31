@@ -33,12 +33,14 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
 
 
                     // 准备跳转
-                    $scope.time = 3;
-                    var timer = $interval(function(){
-                        $scope.time = $scope.time -1;
-
+                    $scope.time = 2;
+                    let timer = $interval(function(){
+                        let num = $scope.time - 1;
+                        if (num >= 0) {
+                            $scope.time = num;
+                        }
                         $scope.info = "绑定完成！ 等待" + $scope.time + "秒跳转到 > 我的设备。";
-                        if($scope.time < 0){
+                        if($scope.time <= 0){
                             $("#bindButton").attr("disabled", false);
                             $location.path("/user/device");
                             $interval.cancel(timer);
