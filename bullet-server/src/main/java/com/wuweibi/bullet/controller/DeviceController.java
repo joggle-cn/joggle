@@ -19,6 +19,7 @@ import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
+import com.wuweibi.bullet.protocol.MsgUnBind;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -154,9 +155,17 @@ public class DeviceController {
             deviceService.removeById(id);
 
             try {
-                // 停止ws链接
                 BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceNo());
-                bulletAnnotation.stop();
+
+                MsgUnBind msg = new MsgUnBind();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    msg.write(outputStream);
+                    // 包装了Bullet协议的
+                    byte[] resultBytes = outputStream.toByteArray();
+                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                    bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
+                // 停止ws链接
+               bulletAnnotation.stop();
             } catch (Exception e){
                 log.error("{}", e.getMessage());
             }
