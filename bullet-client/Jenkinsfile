@@ -57,7 +57,7 @@ pipeline {
                            rm -rf bin/ngrok
 
                            echo "从服务器下载linux amd64版本的ngrok文件"
-                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/ngrok ./bin/ngrok
+                           scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_amd64/ngrok ./bin/ngrok
                             ssh -o StrictHostKeyChecking=no root@192.168.1.5 "cd $workdir && tar -zcvf bullet-client-linux_amd64.tar.gz --xform 's#^#bullet-client/#' *"
                            scp -o StrictHostKeyChecking=no bullet-client-linux_amd64.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
                            rm -rf bullet-client-linux_amd64.tar.gz
