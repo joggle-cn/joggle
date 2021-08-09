@@ -47,6 +47,7 @@
     <logger name="org.springframework.data.redis" level="INFO"></logger>
 
     <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="DEBUG" />
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" />
 
 
     <logger name="org.springframework.web.cors" level="ERROR" />

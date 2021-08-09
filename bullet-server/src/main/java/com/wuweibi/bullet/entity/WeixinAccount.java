@@ -7,12 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author marker
@@ -60,9 +59,6 @@ public class WeixinAccount extends Model<WeixinAccount> {
     private String jwtToken;
 
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+
 
 }

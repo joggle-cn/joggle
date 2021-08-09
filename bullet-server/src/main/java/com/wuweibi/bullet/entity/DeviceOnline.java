@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -77,11 +76,6 @@ public class DeviceOnline extends Model<DeviceOnline> {
         this.deviceNo = deviceNo;
     }
 
-
-    @Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
 
 	@Override
 	public String toString() {

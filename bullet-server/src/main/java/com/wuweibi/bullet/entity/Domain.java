@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -79,10 +78,7 @@ public class Domain extends Model<Domain> {
 	@TableField(value = "status")
 	private Integer status;
 
-    @Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+
 
 
 	/**

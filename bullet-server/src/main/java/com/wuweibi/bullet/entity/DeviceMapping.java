@@ -101,8 +101,4 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Long serverTunnelId;
 
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 }

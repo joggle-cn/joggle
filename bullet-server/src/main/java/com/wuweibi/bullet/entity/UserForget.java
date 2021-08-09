@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author marker
@@ -103,10 +103,7 @@ public class UserForget extends Model<UserForget> {
 		this.email = email;
 	}
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+
 
 	@Override
 	public String toString() {

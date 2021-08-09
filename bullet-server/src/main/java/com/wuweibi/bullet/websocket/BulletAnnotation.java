@@ -331,12 +331,9 @@ public class BulletAnnotation {
     private void updateOutLine() {
         logger.warn("数据库操作设备[{}]下线！", this.deviceNo);
         // 更新设备状态
-        try {
-            DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-            deviceOnlineService.updateOutLine(this.deviceNo);
+        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+        deviceOnlineService.updateOutLine(this.deviceNo);
 
-        } catch (Exception e) {
-        }
     }
 
 
@@ -365,8 +362,8 @@ public class BulletAnnotation {
     public void stop() {
         try {
             this.session.close(
-                    new CloseReason(CloseReason.CloseCodes.SERVICE_RESTART,
-                            "重启设备！"));
+                    new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
+                            "服务器端主动关闭连接！"));
         } catch (IOException e) {
             logger.error("", e);
         }
