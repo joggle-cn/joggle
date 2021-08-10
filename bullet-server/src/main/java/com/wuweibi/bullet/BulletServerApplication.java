@@ -3,11 +3,8 @@ package com.wuweibi.bullet; /**
  */
 
 import com.wuweibi.bullet.listener.CloseServerListener;
-import com.wuweibi.bullet.listener.StartedServerListener;
-import com.wuweibi.bullet.ngrokd.NgrokdThread;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Bullet服务器端
@@ -31,9 +28,7 @@ public class BulletServerApplication  {
      */
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(BulletServerApplication.class);
-        app.addListeners(
-                new StartedServerListener(),
-                new CloseServerListener());
+        app.addListeners(new CloseServerListener());
         app.run(args);
         System.out.println("======================================");
         System.out.println("========  Bullet Server ==============");

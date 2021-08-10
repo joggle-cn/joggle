@@ -333,7 +333,6 @@ public class BulletAnnotation {
         // 更新设备状态
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
         deviceOnlineService.updateOutLine(this.deviceNo);
-
     }
 
 

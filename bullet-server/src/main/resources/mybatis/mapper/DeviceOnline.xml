@@ -12,7 +12,7 @@
 
 	<!--更新所有设备状态-->
     <update id="updateStatusDown">
-		update t_device_online set status=-1 where 1=1
+		update t_device_online set status=-1 where status !=-1
 	</update>
 
 
