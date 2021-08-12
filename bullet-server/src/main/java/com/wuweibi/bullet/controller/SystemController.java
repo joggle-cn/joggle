@@ -35,14 +35,14 @@ public class SystemController {
 
 	@Resource
     private BulletConfig bulletConfig;
-	
-	@InitBinder  
-	public void initBinder(WebDataBinder binder) {  
-	    // 添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型  
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-		dateFormat.setLenient(false);  
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
-		
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    // 添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
 		binder.setValidator(new UserValidator()); //添加一个spring自带的validator
 	}
 
@@ -58,12 +58,6 @@ public class SystemController {
 
 
         String ngrokdHomePath = bulletConfig.getNgrokd();
-
-
-
-
-
-
         return MessageFactory.getOperationSuccess();
     }
 
@@ -88,5 +82,5 @@ public class SystemController {
     }
 
 
-	
+
 }

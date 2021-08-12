@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.domain.vo.ReleaseDetail;
+import com.wuweibi.bullet.domain.vo.ReleaseInfo;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.User;
@@ -46,7 +49,7 @@ import java.util.*;
 public class OpenController {
 
 	@Autowired private OauthUserService oauthUserService;
-	
+
 	/** 消息通知 */
 	@Autowired private UserService userService;
 
@@ -60,14 +63,14 @@ public class OpenController {
 	@Resource
 	private DomainService domainService;
 
-	
-	@InitBinder  
-	public void initBinder(WebDataBinder binder) {  
-	    // 添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型  
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-		dateFormat.setLenient(false);  
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
-		
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    // 添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
 		binder.setValidator(new LoginParamValidator()); //添加一个spring自带的validator
 	}
 
@@ -203,6 +206,38 @@ public class OpenController {
 
 	@Resource
 	private DeviceService deviceService;
+
+	/**
+	 * 检查客户端更新
+	 * @return
+	 */
+	@RequestMapping(value="/checkUpdate")
+	public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO, HttpServletRequest request){
+
+		ReleaseDetail releaseDetail = new ReleaseDetail();
+
+		ReleaseInfo releaseInfo = new ReleaseInfo();
+		releaseInfo.setDescription("Bullet");
+		releaseInfo.setTitle("Bullet");
+		releaseInfo.setVersion("1.2.9");
+		releaseInfo.setCreateDate("2021-08-12");
+		releaseDetail.setRelease(releaseInfo);
+
+
+		String path = clientInfoDTO.getOs()+"_"+clientInfoDTO.getArch() + "/";
+		if(clientInfoDTO.getOs().equals("linux") && clientInfoDTO.getArch().equals("amd64")){
+			path = "";
+		}
+
+		releaseDetail.setDownload_url("https://open.joggle.cn/ngrok/" + path + "ngrok");
+		releaseDetail.setChecksum("");
+		releaseDetail.setSignature("");
+		releaseDetail.setPatch_type("");
+		releaseDetail.setAvailable(true);
+
+
+		return releaseDetail;
+	}
 
 
 
