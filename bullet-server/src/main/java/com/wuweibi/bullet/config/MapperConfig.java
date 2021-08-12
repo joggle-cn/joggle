@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages={
     "com.wuweibi.bullet.mapper",
+    "com.wuweibi.bullet.client.mapper",
     "com.wuweibi.bullet.oauth2.dao",
 })
 public class MapperConfig {

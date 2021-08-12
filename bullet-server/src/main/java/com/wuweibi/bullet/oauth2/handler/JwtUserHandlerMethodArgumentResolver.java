@@ -7,12 +7,10 @@ import com.alibaba.fastjson.JSON;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
-import com.wuweibi.bullet.utils.SpringUtil;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.jwt.Jwt;
@@ -24,7 +22,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 

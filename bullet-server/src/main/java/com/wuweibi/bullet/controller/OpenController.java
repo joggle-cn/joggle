@@ -3,6 +3,8 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.client.entity.ClientVersion;
+import com.wuweibi.bullet.client.service.ClientVersionService;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
@@ -24,6 +26,7 @@ import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -206,6 +209,8 @@ public class OpenController {
 
 	@Resource
 	private DeviceService deviceService;
+	@Resource
+	private ClientVersionService clientVersionService;
 
 	/**
 	 * 检查客户端更新
@@ -214,13 +219,17 @@ public class OpenController {
 	@RequestMapping(value="/checkUpdate")
 	public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO, HttpServletRequest request){
 
+		ClientVersion clientVersion = clientVersionService.getNewVersion();
+
+
 		ReleaseDetail releaseDetail = new ReleaseDetail();
 
 		ReleaseInfo releaseInfo = new ReleaseInfo();
-		releaseInfo.setDescription("Bullet");
-		releaseInfo.setTitle("Bullet");
-		releaseInfo.setVersion("1.2.9");
-		releaseInfo.setCreateDate("2021-08-12");
+		releaseInfo.setDescription(clientVersion.getDescription());
+		releaseInfo.setTitle(clientVersion.getTitle());
+		releaseInfo.setVersion(clientVersion.getVersion());
+		String createTime = DateFormatUtils.ISO_DATE_FORMAT.format(clientVersion.getCreateTime());
+		releaseInfo.setCreateDate(createTime);
 		releaseDetail.setRelease(releaseInfo);
 
 
@@ -229,12 +238,11 @@ public class OpenController {
 			path = "";
 		}
 
-		releaseDetail.setDownload_url("https://open.joggle.cn/ngrok/" + path + "ngrok");
-		releaseDetail.setChecksum("");
-		releaseDetail.setSignature("");
-		releaseDetail.setPatch_type("");
+		releaseDetail.setDownload_url(clientVersion.getDownloadUrl() + path + "ngrok");
+		releaseDetail.setChecksum(clientVersion.getChecksum());
+		releaseDetail.setSignature(null);
+		releaseDetail.setPatch_type(null);
 		releaseDetail.setAvailable(true);
-
 
 		return releaseDetail;
 	}

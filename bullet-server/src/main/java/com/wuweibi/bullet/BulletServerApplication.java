@@ -13,9 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @create 2019-04-10 09:50
  **/
 @SpringBootApplication(
-        scanBasePackages={
-            "com.wuweibi.bullet.config"
-        }
+    scanBasePackages={
+        "com.wuweibi.bullet.config"
+    }
 )
 public class BulletServerApplication  {
 

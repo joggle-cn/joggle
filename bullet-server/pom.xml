@@ -76,6 +76,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
 
 
@@ -89,7 +93,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.3</version>
+            <version>3.4.1</version>
         </dependency>
 
 
@@ -188,13 +192,6 @@
             <version>1.0.2</version>
         </dependency>
 
-        <!-- Mybatis-Plus -->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus</artifactId>-->
-<!--            <version>${mybaitsplus.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
@@ -233,6 +230,8 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+
+
     </dependencies>
 
 </project>

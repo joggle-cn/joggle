@@ -45,7 +45,7 @@ public final class MainCodeMaker {
 
         /** 包路径  */
         final String basePackage = "com.wuweibi.bullet";
-        final String moduleName  = "";
+        final String moduleName  = "client";
 
         /** 开发者 */
         final String author      = "marker";
@@ -54,7 +54,7 @@ public final class MainCodeMaker {
 
         String username = "db_bullet";
         String password = "3LKDGHb38ZPSPC46";
-        String jdbcUrl  = "jdbc:mysql://192.168.1.6:3306/db_bullet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+        String jdbcUrl  = "jdbc:mysql://192.168.1.6:30118/db_bullet?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 
 
         AutoGenerator mpg = new AutoGenerator();
@@ -92,7 +92,7 @@ public final class MainCodeMaker {
 //                return super.processTypeConvert(gc, fieldType);
 //            }
 //        });
-        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername(username);
         dsc.setPassword(password);
         dsc.setUrl(jdbcUrl);
@@ -111,7 +111,7 @@ public final class MainCodeMaker {
         strategy.setEntityTableFieldAnnotationEnable(true);
         strategy.setLogicDeleteFieldName("deleted");
 
-        // strategy.setInclude(new String[] { "user" }); // 需要生成的表
+         strategy.setInclude(new String[] { "client_version" }); // 需要生成的表
 //         strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
 //         strategy.setSuperEntityClass("com.wuweibi.cloud.common.core.entity.po.BasePo");

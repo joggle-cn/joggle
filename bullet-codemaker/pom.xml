@@ -18,11 +18,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.0.0.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
         <junit.version>4.13.1</junit.version>
         <druid.version>1.1.0</druid.version>
         <fastjson.version>1.2.25</fastjson.version>
-        <mybaitsplus.version>3.3.1</mybaitsplus.version>
+        <mybaitsplus.version>3.4.1</mybaitsplus.version>
         <mysql.version>[8.0.16,)</mysql.version>
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.19</slf4j.version>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.1.2</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>

@@ -1,20 +1,13 @@
 package com.wuweibi.bullet.config;
 
-import com.alibaba.druid.support.http.StatViewServlet;
-import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -26,6 +19,7 @@ import java.util.Map;
 @ComponentScan(
     basePackages={
         "com.wuweibi.bullet.service",
+        "com.wuweibi.bullet.client",
         "com.wuweibi.bullet.oauth2.service",
         "com.wuweibi.bullet.oauth2.manager",
         "com.wuweibi.bullet.business",
