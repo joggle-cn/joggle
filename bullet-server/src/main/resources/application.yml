@@ -128,10 +128,12 @@ gate:
     authentication:
       startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template
 
-# ngrokd home路径
+# bullet 配置
 bullet:
-  ngrokd:${BULLET_NGROKD_HOME:/opt/ngrok}
-
+  # ngrokd服务路径
+  ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
+  # 前端访问地址
+  serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
 
 
 # 微信配置

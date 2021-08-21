@@ -20,6 +20,14 @@ import org.springframework.context.annotation.Configuration;
 public class BulletConfig {
 
 
+    /**
+     * ngrokd home
+     */
     private String ngrokd;
+
+    /**
+     * 前端访问地址
+     */
+    private String serverUrl;
 
 }
