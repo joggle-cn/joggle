@@ -30,7 +30,7 @@ https://www.oschina.net/p/bullet-joggle
 ![image](docs/images/WX20191226-100852.jpg)
  
 
-目前实现了Mac、linux、window全环境适配.理论上还可以支持ARM，有这方面用户需求的可以联系作者。
+目前实现了Mac、linux、window、Android、ARM设备等全环境适配。
 
 ### Bullet 逻辑架构
 
