@@ -121,7 +121,7 @@ public class Result<T> {
      * @return Result
      */
     public static Result fail() {
-        return new Result(SystemErrorType.SYSTEM_ERROR);
+        return new Result(SystemErrorType.CUSTOM_ERROR);
     }
 
     /**

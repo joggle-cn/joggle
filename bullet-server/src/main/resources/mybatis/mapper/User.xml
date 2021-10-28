@@ -15,8 +15,9 @@
 
 	<!-- 更新用户密码 -->
 	<update id="updatePass">
-		update t_user set
-		pass = #{pass}
+		update t_sys_users set
+		password = #{pass},
+		updated_time = now()
 		where id = #{userId}
 	</update>
 

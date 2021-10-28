@@ -1,13 +1,12 @@
 package com.wuweibi.bullet.oauth2.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.oauth2.dao.OauthUserMapper;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OauthUserServiceImpl implements OauthUserService {
 
-    @Autowired
+    @Resource
     private OauthUserMapper baseMapper;
 
 

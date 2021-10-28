@@ -17,6 +17,7 @@ public enum SystemErrorType implements ErrorType {
     FormFieldError("000001", "字段输入错误"),
     ACCOUNT_ACTIVATE_FAILD("000002", "账号激活失败"),
     CUSTOM_ERROR("000004", "操作失败"),
+    OLDPASSWORD_ERROR("000005", "原密码错误"),
 
     /**
      *  1000 设备相关

@@ -25,16 +25,16 @@ define(['app','css!./index.css'], function (app) {//加载依赖js,
             }
         });
 
+        // 统计数据
         faceinner.get(api['statistics'], function(res){
             if (res.code != 'S00') {
                 return;
             }
-            console.log(res)
             $scope.$apply(function(){
                 $scope.countInfo = res.data;
             });
 
-
+            //  数字的动态效果
             $('#index .counter-value').each(function(){
                 $(this).prop('Counter',0).animate({
                     Counter: $(this).text()
@@ -51,12 +51,12 @@ define(['app','css!./index.css'], function (app) {//加载依赖js,
 
 
 
-		 
-		 
-		 
+
+
+
  	}];
-	
-	
-	app.controller('IndexController', callback ); 
+
+
+	app.controller('IndexController', callback );
 	return callback;
 });

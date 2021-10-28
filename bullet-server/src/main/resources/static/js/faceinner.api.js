@@ -35,6 +35,8 @@ let api = {
 
     /* 登录用户的信息 */
     "user.login.info": '/api/user/login/info',
+    // 修改密码
+    "user.login.password": '/api/user/password',
 
     /* 注销 */
     "user.loginout": '/api/user/loginout',

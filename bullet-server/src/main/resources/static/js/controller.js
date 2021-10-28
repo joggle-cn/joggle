@@ -5,7 +5,7 @@ define([
  	 , 'angular'
 	 , 'webchat'
 	 , 'app'
-	
+
 ], function ($, angular, WebChat, app) {//加载依赖js,
 
 
@@ -93,20 +93,20 @@ define([
 
 
         // 初始化数据
-        $scope.init = function(){
+        $scope.init = async function () {
 
             // 加载系统初始化信息
-            faceinner.get(api['init'], function(res){
-                if(res.code == 'S00'){
-                    $rootScope.$apply(function() {
+            await faceinner.get(api['init'], function (res) {
+                if (res.code == 'S00') {
+                    $rootScope.$apply(function () {
                         $rootScope.config = res.data;
                     });
                 }
             });
 
 
-            faceinner.get(api['user.login.info'],function(res){
-                if(res.code == 'S00'){
+            faceinner.get(api['user.login.info'], function (res) {
+                if (res.code == 'S00') {
                     $rootScope.user = res.data;
                     $rootScope.islogin = true;
                     $session.user = res.data;
@@ -275,16 +275,16 @@ define([
 
 
 
-	
+
 	// 切换语言
 	app.controller('languageController',['res','$scope','$location',
 	           function (res, $scope, $location) {
 
 		// 切换语言
-		$scope.change = function(lang){ 
+		$scope.change = function(lang){
 			res.set(lang);
 		};
-		
+
 	}]);
-	
+
 });
