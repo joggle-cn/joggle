@@ -17,11 +17,9 @@ import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
-import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,19 +44,15 @@ import java.util.List;
 public class DomainController {
 
 
-    @Autowired
+    @Resource
     private CoonPool coonPool;
 
 
     /** 域名管理 */
-    @Autowired
+    @Resource
     private DomainService domainService;
 
-
-    @Autowired
-    private DeviceOnlineService deviceOnlineService;
-
-    @Autowired
+    @Resource
     private DeviceMappingService deviceMappingService;
 
 

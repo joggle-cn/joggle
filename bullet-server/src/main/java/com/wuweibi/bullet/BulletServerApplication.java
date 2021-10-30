@@ -12,17 +12,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author marker
  * @create 2019-04-10 09:50
  **/
-@SpringBootApplication(
-    scanBasePackages={
-        "com.wuweibi.bullet.config"
-    }
-)
+@SpringBootApplication
 public class BulletServerApplication  {
 
 
-
     /**
-     * 入口
+     * 程序入口
      * @param args
      * @throws Exception
      */
@@ -31,11 +26,8 @@ public class BulletServerApplication  {
         app.addListeners(new CloseServerListener());
         app.run(args);
         System.out.println("======================================");
-        System.out.println("========  Bullet Server ==============");
+        System.out.println("========  Bullet Server Started ==============");
         System.out.println("======================================");
-
-        // 启动ngrokd线程
-//        new NgrokdThread().start();
     }
 
 }

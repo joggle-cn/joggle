@@ -70,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * 不需要网关签权的url配置(/oauth,/open)
      * 默认/oauth开头是不需要的
      */
-    @Value("${gate.ignore.authentication.startWith}")
+    @Value("${spring.security.oauth2.ignoreUrls}")
     private String ignoreUrls = "/oauth";
 
 
@@ -80,12 +80,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private MacSigner verifier;
 
     /**
+     * 判断是否有权限访问接口
      * @param authRequest 访问的url,method
      * @return 有权限true, 无权限或全局资源中未找到请求url返回否
      */
     @Override
     public boolean decide(HttpServletRequest authRequest) {
         log.debug("正在访问的url是:{}，method:{}", authRequest.getServletPath(), authRequest.getMethod());
+        // 忽略地址判断
+        if (ignoreAuthentication(authRequest.getRequestURI())) {
+            return true;
+        }
+
         //获取用户认证信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //获取此url，method访问对应的权限资源信息
@@ -93,6 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (NONEXISTENT_URL.equals(urlConfigAttribute.getAttribute())) {
             log.debug("url未在资源池中找到，拒绝访问");
             throw new BaseException(AuthErrorType.ACCESS_DENIED);
+
         }
         //获取此访问用户所有角色拥有的权限资源
         Set<Resource> userResources = findResourcesByAuthorityRoles(authentication.getAuthorities());

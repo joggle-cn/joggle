@@ -48,9 +48,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open","/error")
             .permitAll()
 
-
-
-
         ;
     }
 

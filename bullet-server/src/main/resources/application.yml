@@ -12,6 +12,10 @@ spring:
     oauth2:
       jwt:
         signingKey: ${BULLET_SIGNNING_KEY:123456}
+      ignoreUrls: /api
+
+
+
   thymeleaf:
     cache: false
   http:

@@ -12,7 +12,6 @@ import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.service.RoleService;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
@@ -52,7 +52,7 @@ public class RoleController {
     /**
      * RoleService
      */
-    @Autowired
+    @Resource
     private RoleService roleService;
 
 

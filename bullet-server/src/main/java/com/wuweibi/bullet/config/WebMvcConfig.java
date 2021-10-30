@@ -15,10 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
@@ -34,13 +31,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
     /**
-     * MVC跨域配置
+     * 跨域配置
      * @param registry
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-
-
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*")
@@ -48,8 +43,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("forward:/index.html");
+        WebMvcConfigurer.super.addViewControllers(registry);
+    }
 
-//    @Bean
+    //    @Bean
 //    public HttpMessageConverter<String> responseBodyConverter() {
 //        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
 ////        converter.setSupportedMediaTypes()

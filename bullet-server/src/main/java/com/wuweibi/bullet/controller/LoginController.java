@@ -17,7 +17,6 @@ import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SessionHelper;
 import com.wuweibi.bullet.utils.ValidationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +41,7 @@ import java.util.Date;
 @RequestMapping("/api")
 public class LoginController {
 
-    @Autowired
+    @Resource
     private OauthUserService oauthUserService;
 
     /**

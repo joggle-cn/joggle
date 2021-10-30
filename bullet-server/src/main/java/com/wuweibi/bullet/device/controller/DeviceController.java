@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.device.controller;
 /**
  * Created by marker on 2017/12/6.
  */
@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -41,14 +43,14 @@ import java.util.*;
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
- *
+ * 设备：提供设备的管理功能，能够对设备绑定、查询、设备解绑、设备信息更新等功能。
  *
  * @author marker
  * @create 2017-12-06 下午9:19
  **/
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/device")
 public class DeviceController {
 
 
@@ -73,7 +75,7 @@ public class DeviceController {
      * 设备列表
      * @return
      */
-    @RequestMapping(value = "/device/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object device(@JwtUser Session session){
 
         Long userId = session.getUserId();
@@ -120,18 +122,19 @@ public class DeviceController {
      * 更新设备基本西新城
      * @return
      */
-    @RequestMapping(value = "/device/", method = RequestMethod.POST)
-    public Object save(@JwtUser Session session, @RequestParam String name,
-                       @RequestParam Long id,
-                       HttpServletRequest request ){
+    @PostMapping()
+    public Result save(@JwtUser Session session,
+                       @RequestBody @Valid DeviceUpdateDTO dto){
         Long userId = session.getUserId();
+        Long deviceId = dto.getId();
+        String name = dto.getName();
 
         // 校验设备是否是他的
-        boolean status = deviceService.exists(userId, id);
+        boolean status = deviceService.exists(userId, deviceId);
         if(status){
-            deviceService.updateName(id, name);
+            deviceService.updateName(deviceId, name);
         }
-        return MessageFactory.getOperationSuccess();
+        return Result.success();
     }
 
 
@@ -139,7 +142,7 @@ public class DeviceController {
      * 删除设备
      * @return
      */
-    @RequestMapping(value = "/device/", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/")
     public Object save(@JwtUser Session session,
                        @RequestParam Long id,
                        HttpServletRequest request ){
@@ -179,7 +182,7 @@ public class DeviceController {
      * 设备校验(绑定)
      * @return
      */
-    @RequestMapping(value = "/device/validate", method = RequestMethod.GET)
+    @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
     public Result validate(@JwtUser Session session, String deviceId,  HttpServletRequest request){
         Long userId = session.getUserId();
@@ -262,7 +265,7 @@ public class DeviceController {
      * @param deviceId
      * @return
      */
-    @RequestMapping(value = "/device/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public Object device(HttpServletRequest request, @RequestParam Long deviceId,
                          @JwtUser Session session){
@@ -328,7 +331,7 @@ public class DeviceController {
      * 通过mac地址网络唤醒设备
      * @return
      */
-    @RequestMapping(value = "/device/wol", method = RequestMethod.POST)
+    @RequestMapping(value = "/wol", method = RequestMethod.POST)
     @ResponseBody
     public Result WOL(@JwtUser Session session, String mac ){
         deviceService.wakeUp(session.getUserId(), mac);
@@ -340,7 +343,7 @@ public class DeviceController {
      * 设备发现接口
      * @return
      */
-    @RequestMapping(value = "/device/discovery", method = RequestMethod.GET)
+    @RequestMapping(value = "/discovery", method = RequestMethod.GET)
     public Result discovery(HttpServletRequest request){
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);

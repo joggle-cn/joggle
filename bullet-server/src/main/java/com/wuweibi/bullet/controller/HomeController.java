@@ -19,36 +19,32 @@ import java.util.Map;
 
 /**
  * 主页控制器
+ *
+ *
  * @author marker
  * @version 1.0
  */
 @Controller
 public class HomeController {
 
-	@RequestMapping("")
-	public String welcome(HttpServletRequest request){
-		return "redirect:index.html";
-	}
-	/**
-	 * 首页
-	 * 重写首页，可自动判断访问的域名，识别接口ht。
-	 * @return
-	 */
-	@RequestMapping("/index.html")
-	public String home(HttpServletRequest request){
-		/* 基础信息收集 */
-        request.setAttribute("url", HttpUtils.getRequestURL(request));// 网址路径
-        request.setAttribute("lang", HttpUtils.getLanguage(request));// 网址路径
-
-		return "index";
-	}
-
-
 	/**
 	 * 接口资源管理器
 	 */
 	@Resource
 	private ResourceManager resourceManager;
+
+
+	/**
+	 * 首页
+	 */
+	@RequestMapping("/index.html")
+	public String home(HttpServletRequest request){
+        request.setAttribute("url", HttpUtils.getRequestURL(request));// 网址路径
+        request.setAttribute("lang", HttpUtils.getLanguage(request));// 网址路径
+		return "index";
+	}
+
+
 
     /**
      * 初始化接口
