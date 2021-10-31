@@ -75,7 +75,7 @@ public class DeviceController {
      * 设备列表
      * @return
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping
     public Object device(@JwtUser Session session){
 
         Long userId = session.getUserId();
@@ -96,7 +96,7 @@ public class DeviceController {
 
             int status = getStatus(deviceNo);
             deviceDto.setStatus(status);
-
+            // TODO 性能问题
            DeviceOnline deviceOnline =  deviceOnlineService.selectByDeviceNo( deviceNo);
            if(deviceOnline != null){
                deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
@@ -142,7 +142,7 @@ public class DeviceController {
      * 删除设备
      * @return
      */
-    @DeleteMapping(value = "/")
+    @DeleteMapping(value = "")
     public Object save(@JwtUser Session session,
                        @RequestParam Long id,
                        HttpServletRequest request ){

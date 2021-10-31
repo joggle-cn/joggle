@@ -21,6 +21,10 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         $scope.deviceInfo = {
             status: null
         }
+        $scope.deviceUpdate = {
+            id: null,
+            name: null
+        }
 
 
 
@@ -36,6 +40,10 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                         $scope.features = res.data.features;
                         $scope.portList = res.data.portList;
                         $scope.domainList = res.data.domainList;
+                        $scope.deviceUpdate = {
+                            id: $scope.deviceInfo.id,
+                            name: $scope.deviceInfo.name,
+                        }
                     });
                 }
             });
@@ -153,10 +161,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          * 编辑设备
          */
         $scope.editDevice = function(item){
-
             item.createTimeStr = (new Date(item.createTime))
                 .format("yyyy-MM-dd hh:mm:ss");
-
             $("#editDevice").modal({
                 backdrop: false
             });
@@ -219,9 +225,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          * 保存Device
          */
         $scope.saveDevice = function(){
-            faceinner.post(api['user.device'], $scope.deviceInfo , function(res) {
-                if (res.status == 0) {
+            faceinner.postJson(api['user.device'], $scope.deviceUpdate , function(res) {
+                if (res.code == 'S00') {
                     $("#editDevice").modal('hide');
+                    flushData();
+                }else{
+                    layer.msg(res.msg);
                 }
             });
         }
@@ -252,10 +261,10 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         };
 
 
-		 
+
  	}];
-	
-	
+
+
 	// app.controller('IndexController', callback );
 	return callback;
 });

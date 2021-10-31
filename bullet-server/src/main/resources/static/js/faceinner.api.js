@@ -49,7 +49,7 @@ let api = {
 
 
     /* 用户设备 */
-    "user.device": '/api/user/device/',
+    "user.device": '/api/user/device',
     "user.device.info": '/api/user/device/info',
     "user.device.validate": '/api/user/device/validate',
     "user.device.mapping": '/api/user/device/mapping/',

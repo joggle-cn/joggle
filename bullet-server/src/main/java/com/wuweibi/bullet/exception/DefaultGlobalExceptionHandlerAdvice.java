@@ -1,12 +1,11 @@
-package com.wuweibi.bullet.controller.exception;
+package com.wuweibi.bullet.exception;
 
 import com.wuweibi.bullet.entity.api.Result;
-import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,11 +36,11 @@ public class DefaultGlobalExceptionHandlerAdvice {
         return Result.fail(SystemErrorType.DEVICE_NOT_ONLINE);
     }
 
-//    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-//    public Result serviceException(MethodArgumentNotValidException ex) {
-//        log.error("service exception:{}", ex.getMessage());
-//        return Result.fail(SystemErrorType.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldError().getDefaultMessage());
-//    }
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    public Result serviceException(MethodArgumentNotValidException ex) {
+        log.error("service exception:{}", ex.getMessage());
+        return Result.fail(SystemErrorType.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldError().getDefaultMessage(), null);
+    }
 
 
 //    @ExceptionHandler(value = {MissingServletRequestParameterException.class})

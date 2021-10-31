@@ -18,6 +18,7 @@ public enum SystemErrorType implements ErrorType {
     ACCOUNT_ACTIVATE_FAILD("000002", "账号激活失败"),
     CUSTOM_ERROR("000004", "操作失败"),
     OLDPASSWORD_ERROR("000005", "原密码错误"),
+    ARGUMENT_NOT_VALID("000006", "参数校验失败"),
 
     /**
      *  1000 设备相关

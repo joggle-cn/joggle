@@ -203,6 +203,41 @@ let faceinner = {
     },
 
 
+    postJson: function(url, data, func){
+        let options = {
+            url: faceinner.server + url ,
+            type: 'post',
+            data: JSON.stringify(data) ,
+            dataType: "json",
+            contentType: 'application/json',
+            success: func,
+            error: faceinner.errorfunc,
+            // crossDomain: true,
+            // xhrFields: {
+            //     withCredentials: true
+            // },
+        }
+        if(data._async == false){
+            options.async = data._async;
+        }
+        if(func === undefined){
+            delete options.data;
+            options.success = data;
+        }
+        if (url != '/oauth/token') {// 非登录接口
+            this.progressToken(options);// 处理Token
+        } else {// 登录接口，加入客户端Authorization头
+            options.headers = {
+                'Authorization': 'Basic Y2xpZW50X2FwcDpwYXNzd29yZA==',
+            }
+        }
+        // 处理Token
+        // this.progressToken(options);
+
+        $.ajax(options);
+    },
+
+
     /**
      * delete 请求
      *
@@ -270,7 +305,7 @@ let faceinner = {
         // 处理Token
         await this.progressToken(options);
         $.ajax(options);
-    }
+    },
 
 };
 
