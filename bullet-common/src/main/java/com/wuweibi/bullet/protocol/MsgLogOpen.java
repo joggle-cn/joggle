@@ -36,7 +36,7 @@ public class MsgLogOpen extends Message {
         super(Message.LOG_MAPPING_STATUS);
         this.mappingId = mappingId;
         this.open = open;
-        getHead().setLength(super.getLength() + 9);
+        getHead().setLength(super.getLength() + 12);
     }
 
     public MsgLogOpen() {
@@ -52,17 +52,17 @@ public class MsgLogOpen extends Message {
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
         out.write( Utils.LongToBytes8(this.mappingId));
-        out.write( Utils.IntToByte(this.open));
+        out.write( Utils.IntToBytes4(this.open));
         out.flush();
     }
 
     @Override
     public void read(InputStream in) throws IOException {
         // 读取deviceNo
-        byte bs[] = new byte[9];
+        byte bs[] = new byte[12];
         in.read(bs);
         this.mappingId = Utils.Bytes8ToLong(bs);
-        this.open = Utils.ByteToInt(bs[8]);
+        this.open = Utils.Bytes4ToInt(bs, 8);
     }
 
     public Long getMappingId() {

@@ -69,9 +69,7 @@ public class LogAnnotation {
         BulletAnnotation annotation = pool.getByDeviceNo(deviceNo);
 
         // 开启日志
-        MsgLogOpen msgLogOpen = new MsgLogOpen();
-        msgLogOpen.setMappingId(this.mappingId);
-        msgLogOpen.setOpen(1);
+        MsgLogOpen msgLogOpen = new MsgLogOpen(this.mappingId, 1);
 
         try {
             annotation.sendObject(msgLogOpen);

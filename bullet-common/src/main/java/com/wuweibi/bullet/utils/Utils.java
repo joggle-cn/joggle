@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 
 public class Utils {
-	
+
 	public static SimpleDateFormat fomatDate = new SimpleDateFormat("mmddhhmmss");
 
 	public Utils() {
@@ -88,14 +88,14 @@ public class Utils {
 	}
 
 	public static void LongToBytes8(long l, byte b[], int pos) {
-		b[pos] = (byte) (int) (255L & l);
-		b[pos + 1] = (byte) (int) ((65280L & l) >> 8);
-		b[pos + 2] = (byte) (int) ((0xff0000L & l) >> 16);
-		b[pos + 3] = (byte) (int) ((0xff000000L & l) >> 24);
-		b[pos + 4] = (byte) (int) ((0xff00000000L & l) >> 32);
-		b[pos + 5] = (byte) (int) ((0xff0000000000L & l) >> 40);
-		b[pos + 6] = (byte) (int) ((0xff000000000000L & l) >> 48);
-		b[pos + 7] = (byte) (int) ((0xff00000000000000L & l) >> 56);
+		b[pos + 7] = (byte) (int) (255L & l);
+		b[pos + 6] = (byte) (int) ((65280L & l) >> 8);
+		b[pos + 5] = (byte) (int) ((0xff0000L & l) >> 16);
+		b[pos + 4] = (byte) (int) ((0xff000000L & l) >> 24);
+		b[pos + 3] = (byte) (int) ((0xff00000000L & l) >> 32);
+		b[pos + 2] = (byte) (int) ((0xff0000000000L & l) >> 40);
+		b[pos + 1] = (byte) (int) ((0xff000000000000L & l) >> 48);
+		b[pos] = (byte) (int) ((0xff00000000000000L & l) >> 56);
 	}
 
 	public static void LongToBytes12(long l, byte b[], int pos) {
@@ -113,8 +113,8 @@ public class Utils {
 		b[pos + 11] = (byte) (int) ((0xff000000L & l) >> 24);
 	}
 
-	
-	
+
+
 	public static long BytesToLong(byte[] b, int srcPos, int count,
 			boolean inverse) {
 		long l = 0L;
@@ -127,7 +127,7 @@ public class Utils {
 		}
 		return l;
 	}
-	
+
 	public static long Bytes4ToLong(byte abyte0[],int offset) {
 		long a1 = (255L & (long) abyte0[0+offset]) << 24;
 		long a2 = (255L & (long) abyte0[1+offset]) << 16;
@@ -136,16 +136,16 @@ public class Utils {
 		long re = a1
 				| a2
 				| a3|a4;
-		
+
 		return  re;
 	}
 	 public static void main(String[] args) {
-			
+
 		 byte[] b = new byte[]{
 				 0, 0, 0, 61,
-				 0, 0, 0, 1, 
+				 0, 0, 0, 1,
 				 -76, 109, -101,23,
-				 60, 114, 30, -90, 
+				 60, 114, 30, -90,
 				 0, 0, 0, 1
 		 };
 		 //[0, 0, 0, 61, 0, 0, 0, 1, -76, 109, -101, 23, 60, 112, -89, 0, 0, 0, 0, 1]
@@ -153,14 +153,14 @@ public class Utils {
 		 System.out.println(Utils.Bytes4ToLong(b,8));
 		 System.out.println(Utils.Bytes4ToLong(b, 12));
 		 System.out.println(Utils.Bytes4ToLong(b, 16));
-		 
+
 		 byte[] as = Utils.LongToBytes4(3027082007L);
 		 for(byte ad: as){
 			 System.out.print(ad);
 		 } System.out.println();
 		 System.out.println(Utils.Bytes4ToLong(as, 0));
-				
-		 
+
+
 	}
 
 	public static void IntToBytes(int i, byte abyte0[]) {
