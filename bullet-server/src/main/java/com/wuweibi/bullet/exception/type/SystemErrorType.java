@@ -19,6 +19,8 @@ public enum SystemErrorType implements ErrorType {
     CUSTOM_ERROR("000004", "操作失败"),
     OLDPASSWORD_ERROR("000005", "原密码错误"),
     ARGUMENT_NOT_VALID("000006", "参数校验失败"),
+    LOGIN_INVALID("000007", "会话失效"),
+    SYSTEN_FORM_ERROR("000008", "表单校验不通过"),
 
     /**
      *  1000 设备相关

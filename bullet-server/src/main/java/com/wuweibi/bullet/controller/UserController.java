@@ -6,13 +6,16 @@ import com.qq.connect.QQConnectException;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageResult;
+import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -147,5 +151,25 @@ public class UserController {
         // 根据code查询用户信息
         return userService.changePass4Code(code, pass);
     }
+
+
+
+    /**
+     * 修改密码
+     */
+    @ResponseMessage
+    @PostMapping(value = "/password")
+    public Result password(@Valid PasswordParam dto, @JwtUser Session session) {
+        if (!session.isLogin()) {
+            return Result.fail(SystemErrorType.LOGIN_INVALID);
+        }
+        Long userId = session.getUserId();
+        boolean status = userService.updatePassword(userId, dto);
+        if (status) {
+            return Result.success();
+        }
+        return Result.fail();
+    }
+
 
 }

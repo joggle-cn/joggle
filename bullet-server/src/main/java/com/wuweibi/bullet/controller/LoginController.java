@@ -4,14 +4,9 @@ package com.wuweibi.bullet.controller;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.alias.SessionAttr;
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
-import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.params.LoginParam;
-import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.UserService;
@@ -26,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -103,24 +97,6 @@ public class LoginController {
     private UserService userService;
 
 
-    /**
-     * 修改密码
-     */
-    @ResponseMessage
-    @PostMapping(value = "/user/password")
-    public Object password(HttpServletRequest request,
-                           @Valid PasswordParam dto, Errors errs
-            , @JwtUser Session session) {
-        if (!session.isLogin()) {
-            return MessageFactory.get(MessageCode.login_err_pass);
-        }
-        Long userId = session.getUserId();
-        boolean status = userService.updatePassword(userId, dto);
-        if (status) {
-            return Result.success();
-        }
-        return Result.fail();
-    }
 
 
 }

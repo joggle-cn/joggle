@@ -1,14 +1,22 @@
 package com.wuweibi.bullet.exception;
 
+import com.wuweibi.bullet.exception.domain.FieldMsg;
 import com.wuweibi.bullet.entity.api.Result;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -55,19 +63,18 @@ public class DefaultGlobalExceptionHandlerAdvice {
      * @param e
      * @return
      */
-//    @ExceptionHandler(value = {BindException.class})
-//    @ResponseStatus(HttpStatus.OK)
-//    public Result exception(BindException e) {
-//        BindingResult bindingResult = e.getBindingResult();
-//        List<ObjectError> list = bindingResult.getAllErrors();
-//        List<FieldMsg> dataList = new ArrayList<>(list.size());
-//
-//        for(ObjectError error : list){
-//            FieldError field = (FieldError)error;
-//            dataList.add(new FieldMsg(field.getField(), field.getDefaultMessage()));
-//        }
-//        return Result.fail(SystemErrorType.SYSTEN_FORM_ERROR, dataList);
-//    }
+    @ExceptionHandler(value = {BindException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public Result<FieldMsg> exception(BindException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        List<ObjectError> list = bindingResult.getAllErrors();
+        List<FieldMsg> dataList = new ArrayList(list.size());
+        for (ObjectError error : list) {
+            FieldError field = (FieldError) error;
+            dataList.add(new FieldMsg(field.getField(), field.getDefaultMessage()));
+        }
+        return Result.fail(SystemErrorType.SYSTEN_FORM_ERROR, dataList);
+    }
 
 
     /**
