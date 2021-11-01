@@ -17,8 +17,9 @@
 package com.wuweibi.bullet.websocket;
 
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.protocol.MsgLogOpen;
-import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
 
 import javax.websocket.*;
@@ -38,38 +39,32 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint(value = "/_ws/log/{id}")
 public class LogAnnotation {
 
-    public static final Set<LogAnnotation> connections =
-            new CopyOnWriteArraySet<LogAnnotation>();
+    public static final Set<LogAnnotation> connections = new CopyOnWriteArraySet<>();
 
     private String nickname;
     private Session session;
-    private Long mappingId;
+    private Long deviceId;
 
     public LogAnnotation() {
     }
 
 
     @OnOpen
-    public void start(Session session, @PathParam("id") Long mappingId) {
+    public void start(Session session, @PathParam("id") Long deviceId) {
         this.session = session;
-        this.mappingId = mappingId;
+        this.deviceId = deviceId;
         connections.add(this);
 
 
         // 通知对应的mapping
         // 找设备ID
-
-
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
-        DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-
-
-        String deviceNo = deviceMappingService.getDeviceNoByMappingId(this.mappingId);
-
-        BulletAnnotation annotation = pool.getByDeviceNo(deviceNo);
+        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
+        Device device = deviceService.getById(this.deviceId);
+        BulletAnnotation annotation = pool.getByDeviceNo(device.getDeviceNo());
 
         // 开启日志
-        MsgLogOpen msgLogOpen = new MsgLogOpen(this.mappingId, 1);
+        MsgLogOpen msgLogOpen = new MsgLogOpen(this.deviceId, 1);
 
         try {
             annotation.sendObject(msgLogOpen);
@@ -89,17 +84,14 @@ public class LogAnnotation {
 
 
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
-        DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-
-
-        String deviceNo = deviceMappingService.getDeviceNoByMappingId(this.mappingId);
-
-        BulletAnnotation annotation = pool.getByDeviceNo(deviceNo);
+        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
+        Device device = deviceService.getById(this.deviceId);
+        BulletAnnotation annotation = pool.getByDeviceNo(device.getDeviceNo());
 
 
         // 关闭日志
         MsgLogOpen msgLogOpen = new MsgLogOpen();
-        msgLogOpen.setMappingId(this.mappingId);
+        msgLogOpen.setDeviceId(this.deviceId);
         msgLogOpen.setOpen(0);
 
         try {
@@ -148,9 +140,9 @@ public class LogAnnotation {
     }
 
 
-    public static void broadcast(Long mappingId, String msg) {
+    public static void broadcast(Long deviceId, String msg) {
         for (LogAnnotation client : connections) {
-            if (mappingId.compareTo(client.getMappingId()) == 0) {
+            if (deviceId.compareTo(client.getDeviceId()) == 0) {
                 try {
                     synchronized (client) {
                         client.session.getBasicRemote().sendText(msg);
@@ -165,13 +157,13 @@ public class LogAnnotation {
                     }
                     String message = String.format("* %s %s",
                             client.nickname, "has been disconnected.");
-                    broadcast(mappingId, message);
+                    broadcast(deviceId, message);
                 }
             }
         }
     }
 
-    private Long getMappingId() {
-        return this.mappingId;
+    private Long getDeviceId() {
+        return this.deviceId;
     }
 }

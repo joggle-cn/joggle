@@ -76,6 +76,11 @@ public class BulletAnnotation {
      */
     private String deviceNo;
 
+    /**
+     * 设备ID
+     */
+    private Long deviceId;
+
 
     public BulletAnnotation() {
     }
@@ -117,6 +122,8 @@ public class BulletAnnotation {
         if (device == null) { // 未绑定
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
+        }else{
+            this.deviceId = device.getId();
         }
 
         // 需要认证(客户端主动发起)
@@ -197,7 +204,7 @@ public class BulletAnnotation {
                     msgCommandLog.read(bis);
                     // 转移消息到另外一个通道
 
-                    LogAnnotation.broadcast(msgCommandLog.getMappingId(), msgCommandLog.getLine());
+                    LogAnnotation.broadcast(this.deviceId, msgCommandLog.getLine());
             }
         } catch (IOException e) {
             logger.error("", e);
@@ -213,6 +220,7 @@ public class BulletAnnotation {
 
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
+        this.deviceId = device.getId();
         String msg = "Device AuthToken Error!!!";
 
         // 认证成功 发送映射信息

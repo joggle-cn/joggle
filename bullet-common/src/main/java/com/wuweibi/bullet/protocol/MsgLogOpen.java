@@ -18,9 +18,9 @@ import java.io.OutputStream;
 public class MsgLogOpen extends Message {
 
     /**
-     * 映射Id
+     * 设备Id
      */
-    private Long mappingId;
+    private Long deviceId;
 
     /**
      * 日志开关 1 打开， 0 关闭
@@ -32,9 +32,9 @@ public class MsgLogOpen extends Message {
     /**
      * 构造
      */
-    public MsgLogOpen(Long mappingId, int open) {
+    public MsgLogOpen(Long deviceId, int open) {
         super(Message.LOG_MAPPING_STATUS);
-        this.mappingId = mappingId;
+        this.deviceId = deviceId;
         this.open = open;
         getHead().setLength(super.getLength() + 12);
     }
@@ -51,7 +51,7 @@ public class MsgLogOpen extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
-        out.write( Utils.LongToBytes8(this.mappingId));
+        out.write( Utils.LongToBytes8(this.deviceId));
         out.write( Utils.IntToBytes4(this.open));
         out.flush();
     }
@@ -61,16 +61,16 @@ public class MsgLogOpen extends Message {
         // 读取deviceNo
         byte bs[] = new byte[12];
         in.read(bs);
-        this.mappingId = Utils.Bytes8ToLong(bs);
+        this.deviceId = Utils.Bytes8ToLong(bs);
         this.open = Utils.Bytes4ToInt(bs, 8);
     }
 
-    public Long getMappingId() {
-        return mappingId;
+    public Long getDeviceId() {
+        return deviceId;
     }
 
-    public void setMappingId(Long mappingId) {
-        this.mappingId = mappingId;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
     public int getOpen() {

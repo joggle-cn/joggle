@@ -14,12 +14,11 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./log.css'], function (
         $scope.active = 'device';
         // 设备ID
         let deviceId = $routeParams.deviceId;
-        let mappingId = $routeParams.mappingId;
         $scope.logs = [];
 
 
 
-        var target =  faceinner.ws + "/_ws/log/"+ mappingId;
+        var target =  faceinner.ws + "/_ws/log/"+ deviceId;
         var ws;
         if ('WebSocket' in window) {
             ws = new WebSocket(target);
@@ -54,10 +53,10 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./log.css'], function (
 
 
 
-		 
+
  	}];
-	
-	
+
+
 	// app.controller('IndexController', callback );
 	return callback;
 });

@@ -40,6 +40,7 @@
 			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
 			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
 			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
+			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">日志</a>
 		</div>
 	</div>
 
@@ -112,7 +113,6 @@
 
 					  <a ng-click="addMapping(item, 1)" class="btn btn-info">编辑</a>
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-default">日志</a>
 				  </td>
 			  </tr>
 			  </tbody>
@@ -160,7 +160,6 @@
 				  <td>
 					  <a ng-click="addMapping(item,2)" class="btn btn-info">编辑</a>
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
-					  <a href="#/user/device/{{item.id}}/mapping/{{item.id}}/log" class="btn btn-default">日志</a>
 				  </td>
 			  </tr>
 			  </tbody>

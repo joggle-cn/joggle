@@ -20,7 +20,7 @@ public class MsgCommandLog extends Message {
     /**
      * 映射Id
      */
-    private Long mappingId;
+    private Long deviceId;
 
     /**
      * 一行日志
@@ -30,9 +30,9 @@ public class MsgCommandLog extends Message {
     /**
      * 构造
      */
-    public MsgCommandLog(Long mappingId, String line) {
+    public MsgCommandLog(Long deviceId, String line) {
         super(Message.LOG_MAPPING_LOG);
-        this.mappingId = mappingId;
+        this.deviceId = deviceId;
         this.line = line;
     }
 
@@ -50,7 +50,7 @@ public class MsgCommandLog extends Message {
         byte[] strs = line.getBytes();
         getHead().setLength(super.getLength() +8+ strs.length);
         getHead().write(out);
-        out.write(Utils.LongToBytes8(this.mappingId));
+        out.write(Utils.LongToBytes8(this.deviceId));
         out.write(strs);
         out.flush();
     }
@@ -61,18 +61,18 @@ public class MsgCommandLog extends Message {
         // 读取deviceNo
         byte bs[] = new byte[8];
         in.read(bs);
-        this.mappingId = Utils.Bytes8ToLong(bs);
+        this.deviceId = Utils.Bytes8ToLong(bs);
         byte bs2[] = new byte[strlen];
         in.read(bs2);
         this.line = Utils.getString(bs2, 0, strlen);
     }
 
-    public Long getMappingId() {
-        return mappingId;
+    public Long getDeviceId() {
+        return deviceId;
     }
 
-    public void setMappingId(Long mappingId) {
-        this.mappingId = mappingId;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getLine() {
