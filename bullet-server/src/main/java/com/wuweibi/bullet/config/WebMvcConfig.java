@@ -50,6 +50,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addViewControllers(registry);
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        if(!registry.hasMappingForPattern("/**")){
+            registry.addResourceHandler("/static/**")
+                    .addResourceLocations("classpath:/static/");
+        }
+    }
+
     //    @Bean
 //    public HttpMessageConverter<String> responseBodyConverter() {
 //        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
@@ -145,7 +153,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
 
         registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
+//        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
 
 
     }

@@ -3,6 +3,7 @@ package com.wuweibi.bullet.config.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -61,8 +62,18 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.cors();
 
         http.authorizeRequests()
-                .antMatchers("/actuator/**", "/logout").permitAll()
-                .anyRequest().permitAll()
+
+                // 特殊接口
+                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**").permitAll()
+
+                // 放过静态资源
+                .antMatchers("/lib/**", "/js/**","/css/**","/template/**","/resource/**","/view/**", "/index.html").permitAll()
+
+                // 其他接口全部走认证
+                .anyRequest().authenticated()
+
+                // 关闭session
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
         ;
     }
 
