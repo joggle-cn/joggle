@@ -24,3 +24,36 @@ ALTER TABLE `t_device_online`
 
 ALTER TABLE `t_device_online`
     MODIFY COLUMN `intranet_ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '内网IP' AFTER `status`;
+
+-- 客户端版本管理
+CREATE TABLE `client_version` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `version` varchar(255) DEFAULT NULL COMMENT '版本号',
+  `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `download_url` varchar(255) DEFAULT NULL COMMENT '下载URL地址',
+  `checksum` varchar(255) DEFAULT NULL COMMENT '检查信息',
+  `status` tinyint(1) DEFAULT NULL COMMENT '状态 1上架 0下架',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+-- 新增数据收集
+CREATE TABLE `data_metrics`  (
+    `id` bigint(20) NOT NULL COMMENT 'id',
+    `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+    `device_id` bigint(20) NULL DEFAULT NULL COMMENT '设备ID',
+    `mapping_id` bigint(20) NULL DEFAULT NULL COMMENT '设备映射ID',
+    `bytes_in` bigint(22) NULL DEFAULT NULL COMMENT '进入流量',
+    `bytes_out` bigint(22) NULL DEFAULT NULL COMMENT '出口流量',
+    `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+    `create_date` date NULL DEFAULT NULL COMMENT '创建天 yyyy-mm-dd',
+    `create_month` date NULL DEFAULT NULL COMMENT '创建月 yyyy-mm',
+    `create_year` smallint(4) NULL DEFAULT NULL COMMENT '创建年 yyyy',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_user_id`(`user_id`) USING BTREE,
+    INDEX `idx_create_date`(`create_date`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据收集' ROW_FORMAT = Dynamic;
+
