@@ -1,19 +1,18 @@
 
 package com.wuweibi.bullet.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
-import javax.annotation.Resources;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  *  以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候中取出ApplicaitonContext.
- *  
+ *
  * @author marker
  * @date 2013-8-24 下午3:52:13
  * @version 1.0
@@ -105,4 +104,29 @@ public class SpringUtils implements ApplicationContextAware {
     public static int getPropInt(String key) {
         return Integer.valueOf(getProperty(key));
     }
+
+
+
+	/**
+	 * 是否为生产环境
+	 * @return
+	 */
+	public static boolean isProduction(){
+		Environment env = getBean(Environment.class);
+		String active = env.getProperty("spring.profiles.active");
+		if("prod".equals(active)){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 是否为生产环境
+	 * @return
+	 */
+	public static String getProfilesActive(){
+		Environment env = getBean(Environment.class);
+		String active = env.getProperty("spring.profiles.active");
+		return active;
+	}
 }

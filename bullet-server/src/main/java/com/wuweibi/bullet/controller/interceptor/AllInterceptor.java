@@ -27,7 +27,7 @@ public class AllInterceptor implements HandlerInterceptor {
 	/**
 	 * 日志记录器
 	 */
-	protected Logger logger = LoggerFactory.getLogger(getClass()); 
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * 预处理
@@ -53,16 +53,16 @@ public class AllInterceptor implements HandlerInterceptor {
 		}
 
 		// 接口权限校验
-		Result result = authenticationService.hasPermission(request);
-		if(result.isSuccess()){
-			return true;
-		}
+//		Result result = authenticationService.hasPermission(request);
+//		if(result.isSuccess()){
+//			return true;
+//		}
 
 
 		// 无权限 返回请登录
 
-		renderJson(result);
-		return false;
+//		renderJson(result);
+		return true;
 	}
 
 
@@ -80,15 +80,15 @@ public class AllInterceptor implements HandlerInterceptor {
 //
 //		// 打印请求参数
 //		CodeHelper.printRequestParameter(request);
-		
-		
+
+
 	}
-	
+
 	public void afterCompletion(HttpServletRequest request,
                                 HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		
-		
+
+
 	}
 
 
