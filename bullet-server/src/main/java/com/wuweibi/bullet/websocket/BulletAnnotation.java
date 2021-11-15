@@ -233,13 +233,20 @@ public class BulletAnnotation {
                 sendMessage(authResp);
                 return;
             }
+            MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
+            sendMessage(authResp);
+
+            try {
+                Thread.sleep(3000l);
+            } catch (InterruptedException e) {
+                logger.error("", e);
+            }
             sendMappingInfo();
-            msg = "SUCCESS";
+            return;
         }
 
-
-        // 发送认证失败消息
-        MsgAuthResp authResp = new MsgAuthResp(msg);
+        // 发送认证结果消息
+        MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
         sendMessage(authResp);
 
     }
