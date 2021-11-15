@@ -62,7 +62,7 @@ spring:
   datasource:
     driverClassName : com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://${BULLET_MYSQL_HOST:bullet-server}:${BULLET_MYSQL_PORT:3306}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&serverTimezone=UTC&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${BULLET_MYSQL_HOST:bullet-server}:${BULLET_MYSQL_PORT:3306}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${BULLET_MYSQL_USERNAME:root}
     password: ${BULLET_MYSQL_PASSWORD:123456}
     initialSize: 10
