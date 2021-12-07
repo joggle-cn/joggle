@@ -1,0 +1,29 @@
+
+
+
+#about .about-banner {
+    padding: 30px 0;
+}
+
+#about .masthead-button-links{
+
+    margin-top: 30px;
+}
+
+#about .masthead-links a{
+    color:#ffffff
+
+}
+#about .index-bullet-title{
+    margin: 30px 0;
+}
+#about .index-textcenter{
+    text-align: center;
+}
+#about .index-icon{
+    width: 100px;
+    margin: 0 auto;
+}
+#about .contact-support-icon{
+    width: 100px;
+}

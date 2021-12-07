@@ -77,6 +77,9 @@
                         <span ng-bind="user.email"></span> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#/user/dashboard"><i class="fa fa-cog"></i> <span>Dashboard</span></a>
+                        </li>
                         <li><a href="#/user/profile">
                             <i class="fa fa-user-o"></i> <span ng-bind="res.t('user.profile')"></span>
                         </a></li>
@@ -92,9 +95,6 @@
                         <li><a href="#/user/device/wol">
                             <i class="fa fa-heartbeat"></i> <span ng-bind="res.t('home.btn.wol')"></span></a>
                         </li>
-                        <!--						<li>-->
-                        <!--							<a href="#/system"><i class="fa fa-cog"></i> <span>系统配置</span></a>-->
-                        <!--						</li>-->
                         <li class="divider"></li>
                         <li><a ng-click="loginout()"><i class="fa fa-power-off"></i> <span
                                 ng-bind="res.t('user.loginout')"></span></a></li>
