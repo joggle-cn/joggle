@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service;
 
+import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.vo.CountVO;
 
 /**
@@ -17,5 +18,11 @@ public interface CountService {
      * @return
      */
     CountVO getCountInfo();
+
+    /**
+     * 统计统计数据
+     * @return
+     */
+    UserCountVO getUserCountInfo(Long userId);
 
 }

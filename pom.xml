@@ -87,7 +87,8 @@
         <module>bullet-common</module>
         <module>bullet-server</module>
 <!--        <module>bullet-client</module>-->
-        <module>bullet-codemaker</module>
+<!--        使用easycode-->
+<!--        <module>bullet-codemaker</module>-->
     </modules>
 
     <dependencyManagement>

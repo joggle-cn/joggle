@@ -1,6 +1,8 @@
 package com.wuweibi.bullet.mapper;
 
+import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.vo.CountVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -15,4 +17,5 @@ public interface CountMapper {
 
     CountVO selectCountInfo();
 
+    UserCountVO selectUserCountInfo(@Param("userId") Long userId);
 }

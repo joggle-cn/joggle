@@ -65,6 +65,8 @@ let api = {
     "user.domain.nobind": '/api/user/domain/nobind',
     "user.domain.bind.device": '/api/user/domain/bind',
 
+    "user.dashboard.statistics": '/api/dashboard/statistics',
+
 
 
 

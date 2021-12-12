@@ -12,4 +12,32 @@
             (select count(id) from t_device_online where `status` = 1) as deviceOnlineNum
         from DUAL
     </select>
+    <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserCountVO">
+        select
+            c.todayFlow,
+            ifnull((c.todayFlow-todayFlow2)/todayFlow2, 1) as todayFlowOn,
+            c.monthFlow,
+            ifnull((c.monthFlow - monthFlow2)/monthFlow2, 1) as monthFlowOn,
+            c.yearFlow,
+            ifnull((c.yearFlow - yearFlow2)/yearFlow2, 1) as yearFlowOn,
+            c.monthLink,
+            ifnull((c.monthLink - monthLink2)/monthLink2, 1) as monthLinkOn
+        from (select
+              a.user_id,
+              IFNULL(sum(case when a.create_date = CURRENT_DATE then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow,
+              IFNULL(sum(case when a.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d') then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow2,
+              IFNULL(sum(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow,
+              IFNULL(sum(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-1') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow2,
+              IFNULL(sum(case when a.create_year = DATE_FORMAT(CURRENT_DATE,'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow,
+              IFNULL(sum(case when a.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 YEAR),'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow2,
+              IFNULL(count(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0) monthLink,
+              IFNULL(count(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-1') then a.bytes_in+a.bytes_out end),0) monthLink2
+          from
+              data_metrics a
+          WHERE a.user_id = #{userId}
+          GROUP BY a.user_id) c
+
+
+
+    </select>
 </mapper>

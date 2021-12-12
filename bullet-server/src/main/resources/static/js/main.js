@@ -20,7 +20,7 @@ var options = {
         , 'angular-route': 'lib/angular/angular-route.min'
         , 'angularAMD': 'lib/angular/angularAMD.min'
         , 'webchat': 'lib/faceinner/websocket'
-        , 'umeditor': 'lib/umeditor/umeditor'	        	
+        , 'umeditor': 'lib/umeditor/umeditor'
         , 'umeditorConfig': 'lib/umeditor/umeditor.config'
         , 'handlebars': 'lib/handlebars/handlebars-v1.3.0'
         , 'loading': 'lib/jquery/jquery.loading'
@@ -28,11 +28,12 @@ var options = {
         , 'dropload':'lib/jquery/plugins/dropload-gh-pages/dropload'
         , 'bootstrap-switch':'lib/bootstrap3/plugins/bootstrap-switch/js/bootstrap-switch.min'
         , 'layer':'lib/layer-v3.1.1/layer/layer'
+        , 'echarts':'https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min'
 
 
-       
-        
-        /* 自定义JavaScript */	
+
+
+        /* 自定义JavaScript */
         , 'app': 'js/app'
         , 'moudleRouter': 'js/routers'
         , 'moudleServices': 'js/services'
@@ -74,7 +75,7 @@ var options = {
        , 'umeditor':{
            deps:['jquery','umeditorConfig']
        }
-        
+
     },
     deps: [ 'bootstrap', 'loading','api','ajax']
     , urlArgs: "time=" + Math.random() // 防止读取缓存，调试用
@@ -112,14 +113,14 @@ require([
       , 'moudleRouter'
       , 'moudleController'
       , 'loading'
-      
+
     ], function(angular, angularAMD, app, loading) {
 	console.log('ready bootstrap angular');
 	angularAMD.bootstrap(app);
-	     
-	
-	
-	
+
+
+
+
 });
 
 
