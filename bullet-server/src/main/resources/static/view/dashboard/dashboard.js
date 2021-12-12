@@ -34,7 +34,7 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//åŠ è½
 
 
         var dom = document.getElementById("contain1er");
-        var myChart = echarts.init(dom);
+        // var myChart = echarts.init(dom);
         var app = {};
 
         var option;
@@ -59,9 +59,9 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//åŠ è½
             ]
         };
 
-        if (option && typeof option === 'object') {
-            myChart.setOption(option);
-        }
+        // if (option && typeof option === 'object') {
+        //     myChart.setOption(option);
+        // }
 
 
     }];

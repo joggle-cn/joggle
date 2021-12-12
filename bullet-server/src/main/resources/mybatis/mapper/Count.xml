@@ -12,16 +12,18 @@
             (select count(id) from t_device_online where `status` = 1) as deviceOnlineNum
         from DUAL
     </select>
+
+<!--    统计用户的流量情况-->
     <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserCountVO">
         select
-            c.todayFlow,
-            ifnull((c.todayFlow-todayFlow2)/todayFlow2, 1) as todayFlowOn,
-            c.monthFlow,
-            ifnull((c.monthFlow - monthFlow2)/monthFlow2, 1) as monthFlowOn,
-            c.yearFlow,
-            ifnull((c.yearFlow - yearFlow2)/yearFlow2, 1) as yearFlowOn,
-            c.monthLink,
-            ifnull((c.monthLink - monthLink2)/monthLink2, 1) as monthLinkOn
+            round(c.todayFlow,2) as todayFlow,
+            round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
+            round(c.monthFlow,2) as monthFlow,
+            round(ifnull((c.monthFlow - monthFlow2)/monthFlow2, IF(c.monthFlow=0, 0, 1)) * 100,2) as monthFlowOn,
+            round(c.yearFlow,2) as yearFlow,
+            round(ifnull((c.yearFlow - yearFlow2)/yearFlow2, IF(c.yearFlow=0, 0, 1)) * 100,2) as yearFlowOn,
+            round(c.monthLink,2) monthLink,
+            round(ifnull((c.monthLink - monthLink2)/monthLink2, IF(c.monthLink=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
               a.user_id,
               IFNULL(sum(case when a.create_date = CURRENT_DATE then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow,
@@ -36,8 +38,5 @@
               data_metrics a
           WHERE a.user_id = #{userId}
           GROUP BY a.user_id) c
-
-
-
     </select>
 </mapper>

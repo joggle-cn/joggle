@@ -15,7 +15,16 @@ import org.apache.ibatis.annotations.Param;
 public interface CountMapper {
 
 
+    /**
+     * 统计首页情况
+     * @return
+     */
     CountVO selectCountInfo();
 
+    /**
+     * 统计用户的流量情况
+     * @param userId 用户ID
+     * @return
+     */
     UserCountVO selectUserCountInfo(@Param("userId") Long userId);
 }
