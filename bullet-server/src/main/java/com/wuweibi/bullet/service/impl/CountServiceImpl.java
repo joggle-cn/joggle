@@ -22,6 +22,10 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public UserCountVO getUserCountInfo(Long userId) {
-        return countMapper.selectUserCountInfo(userId);
+        UserCountVO userCountVO =  countMapper.selectUserCountInfo(userId);
+        if(userCountVO == null){
+            userCountVO = new UserCountVO();
+        }
+        return userCountVO;
     }
 }

@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 @Data
 public class UserCountVO {
 
-    private Long todayFlow;
-    private BigDecimal todayFlowOn; // 同比
-    private Long monthFlow;
-    private BigDecimal monthFlowOn; // 同比
-    private Long yearFlow;
-    private BigDecimal yearFlowOn; // 同比
-    private Long monthLink;
-    private BigDecimal monthLinkOn; // 同比
+    private Long todayFlow = 0l;
+    private BigDecimal todayFlowOn = BigDecimal.ZERO; // 同比
+    private Long monthFlow = 0l;
+    private BigDecimal monthFlowOn = BigDecimal.ZERO; // 同比
+    private Long yearFlow = 0l;
+    private BigDecimal yearFlowOn = BigDecimal.ZERO; // 同比
+    private Long monthLink = 0l;
+    private BigDecimal monthLinkOn = BigDecimal.ZERO; // 同比
 
 }
