@@ -1,8 +1,11 @@
 package com.wuweibi.bullet.mapper;
 
+import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -27,4 +30,12 @@ public interface CountMapper {
      * @return
      */
     UserCountVO selectUserCountInfo(@Param("userId") Long userId);
+
+    /**
+     * 统计设备流量排行
+     * @param userId 用户ID
+     * @param type
+     * @return
+     */
+    List<DeviceCountInfoVO> selectUserDeviceRank(@Param("userId") Long userId, @Param("type") Integer type);
 }

@@ -7,6 +7,13 @@ server:
 #
 # Spring 配置
 #
+
+springfox:
+  documentation:
+    enabled: true
+    swagger-ui:
+      enabled: true
+      base-url: /api/v2/api-docs
 spring:
   security:
     oauth2:

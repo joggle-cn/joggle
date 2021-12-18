@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             //处理跨域请求中的Preflight请求
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**","/error")
+            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**","/error","/swagger-ui/**","/api/v2/api-docs")
             .permitAll()
 
         ;

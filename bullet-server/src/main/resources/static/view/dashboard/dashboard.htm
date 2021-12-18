@@ -123,17 +123,97 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
-    <hr class="footerhr">
+    <hr class=" ">
 
-<!--    DEMO-->
+    <div class="row">
+        <div class="col-sm-6 col-md-8">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <h4><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> 总体流量走势 [demo]</h4>
+                </div>
+                <div class="collapse navbar-collapse bs-example-js-navbar-collapse">
 
-<!--    <div id="contain1er" style="width: 100%; height: 400px; position: relative">-->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="fat-menu" class="dropdown">
+                            <a id="drop3"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                所有设备
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="drop3">
+                                <li><a href="">所有设备</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="">设备A</a></li>
+                                <li><a href="">设备B</a></li>
+                                <li><a href="">设备C</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.nav-collapse -->
+            </div>
 
-<!--    </div>-->
+
+            <div id="contain1er" style="width: 100%; height: 400px; position: relative">
+
+            </div>
+
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <h4><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span> 设备流量排行</h4>
+            <div id="someTab">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active" ng-click="selectTab(1)">
+                        <a href="" aria-controls="home" role="tab" data-toggle="tab">今日</a>
+                    </li>
+                    <li role="presentation" ng-click="selectTab(2)">
+                        <a href="" aria-controls="profile" role="tab" data-toggle="tab">昨日</a>
+                    </li>
+                    <li role="presentation" ng-click="selectTab(3)">
+                        <a href="" aria-controls="tab3" role="tab" data-toggle="tab">本月</a>
+                    </li>
+                    <li role="presentation" ng-click="selectTab(4)">
+                        <a href="" aria-controls="tab4" role="tab" data-toggle="tab">今年</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane" ng-class="{active: isSelected(1)}">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in deviceRank">
+                            {{$index+1}}. {{item.deviceName}} <span class="pull-right">{{item.flow}}MB</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" ng-class="{active: isSelected(2)}">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in deviceRank">
+                                {{$index+1}}. {{item.deviceName}} <span class="pull-right">{{item.flow}}MB</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" ng-class="{active: isSelected(3)}">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in deviceRank">
+                                {{$index+1}}. {{item.deviceName}} <span class="pull-right">{{item.flow}}MB</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" ng-class="{active: isSelected(4)}">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="item in deviceRank">
+                                {{$index+1}}. {{item.deviceName}} <span class="pull-right">{{item.flow}}MB</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 
 

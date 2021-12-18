@@ -29,14 +29,39 @@
               IFNULL(sum(case when a.create_date = CURRENT_DATE then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow,
               IFNULL(sum(case when a.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d') then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow2,
               IFNULL(sum(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow,
-              IFNULL(sum(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-1') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow2,
+              IFNULL(sum(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow2,
               IFNULL(sum(case when a.create_year = DATE_FORMAT(CURRENT_DATE,'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow,
               IFNULL(sum(case when a.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 YEAR),'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow2,
               IFNULL(count(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0) monthLink,
-              IFNULL(count(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-1') then a.bytes_in+a.bytes_out end),0) monthLink2
+              IFNULL(count(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01') then a.bytes_in+a.bytes_out end),0) monthLink2
           from
               data_metrics a
           WHERE a.user_id = #{userId}
           GROUP BY a.user_id) c
+    </select>
+
+<!--    统计设备流量排行-->
+    <select id="selectUserDeviceRank" resultType="com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO">
+        select
+            a.device_id,
+            b.`name` deviceName,
+            sum(a.bytes_in+a.bytes_out)/1024/1024 flow
+        from data_metrics a
+        left join t_device b on a.device_id = b.id
+        WHERE b.userId = #{userId}
+        <if test="type == 1">
+            and a.create_date = CURRENT_DATE
+        </if>
+        <if test="type == 2">
+            and a.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')
+        </if>
+        <if test="type == 3">
+            and a.create_month = DATE_FORMAT(NOW() ,'%Y-%m-01')
+        </if>
+        <if test="type == 4">
+            and a.create_year = DATE_FORMAT(CURRENT_DATE,'%Y')
+        </if>
+        GROUP BY a.device_id
+        order by flow desc
     </select>
 </mapper>

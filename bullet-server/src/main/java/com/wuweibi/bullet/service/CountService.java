@@ -1,7 +1,10 @@
 package com.wuweibi.bullet.service;
 
+import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.vo.CountVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -20,9 +23,17 @@ public interface CountService {
     CountVO getCountInfo();
 
     /**
-     * 统计统计数据
+     * 用户统计汇总数据
+     * @param userId 用户ID
      * @return
      */
     UserCountVO getUserCountInfo(Long userId);
 
+    /**
+     * 统计设备流量排行
+     * @param userId 用户ID
+     * @param type
+     * @return
+     */
+    List<DeviceCountInfoVO> getUserDeviceRank(Long userId, Integer type);
 }

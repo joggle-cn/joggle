@@ -66,6 +66,7 @@ let api = {
     "user.domain.bind.device": '/api/user/domain/bind',
 
     "user.dashboard.statistics": '/api/dashboard/statistics',
+    "user.dashboard.device.rank": '/api/dashboard/device/rank',
 
 
 

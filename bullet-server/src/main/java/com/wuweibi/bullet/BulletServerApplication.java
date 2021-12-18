@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author marker
  * @create 2019-04-10 09:50
  **/
+
+
 @SpringBootApplication
 public class BulletServerApplication  {
 
