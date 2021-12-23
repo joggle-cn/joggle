@@ -28,7 +28,7 @@ var options = {
         , 'dropload':'lib/jquery/plugins/dropload-gh-pages/dropload'
         , 'bootstrap-switch':'lib/bootstrap3/plugins/bootstrap-switch/js/bootstrap-switch.min'
         , 'layer':'lib/layer-v3.1.1/layer/layer'
-        , 'echarts':'https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min'
+        , 'echarts':'lib/echarts/echarts.min'
 
 
 
