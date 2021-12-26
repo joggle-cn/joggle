@@ -57,3 +57,5 @@ CREATE TABLE `data_metrics`  (
     INDEX `idx_create_date`(`create_date`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数据收集' ROW_FORMAT = Dynamic;
 
+
+ALTER TABLE `t_device_online` ADD COLUMN `client_version` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户端版本' AFTER `public_ip`;
