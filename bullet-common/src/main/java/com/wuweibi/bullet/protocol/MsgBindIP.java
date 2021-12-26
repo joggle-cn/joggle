@@ -30,6 +30,10 @@ public class MsgBindIP extends Message {
      * mac 地址
      */
     private String mac;
+    /**
+     * 版本
+     */
+    private String version;
 
 
     /**
@@ -39,7 +43,8 @@ public class MsgBindIP extends Message {
         super(Message.NEW_BINDIP);
         // IP 20 位
         // mac 17位
-        getHead().setLength(super.getLength() + 20 + 17);
+        // version 8
+        getHead().setLength(super.getLength() + 20 + 17 + 8);
         this.ip = ip;
     }
 
@@ -55,7 +60,7 @@ public class MsgBindIP extends Message {
     @Override
     public void write(OutputStream out) throws IOException {
         getHead().write(out);
-        log.debug("send {}",this.toString());
+        log.debug("send {}", this.toString());
 
         // 写入IP地址
         byte bs[] = new byte[20];
@@ -67,6 +72,12 @@ public class MsgBindIP extends Message {
         // 写入mac地址
         byte bs2[] = new byte[17];
         System.arraycopy(mac.getBytes(), 0, bs2, 0, mac.getBytes().length);
+        out.write(bs2);
+        out.flush();
+
+        // 写入version
+        bs2 = new byte[8];
+        System.arraycopy(version.getBytes(), 0, bs2, 0, version.getBytes().length);
         out.write(bs2);
         out.flush();
     }
@@ -82,7 +93,13 @@ public class MsgBindIP extends Message {
         bs = new byte[17];
         in.read(bs);
         this.mac = Utils.getString(bs, 0, 17);
-        log.debug("reciver {}", this.toString());
+        // 读取version
+        bs = new byte[8];
+        in.read(bs);
+        this.version = Utils.getString(bs, 0, 8);
+
+        // 兼容协议扩展，读取多余内容
+        super.readResidue(in, 45);
     }
 
     public String getIp() {
@@ -100,5 +117,13 @@ public class MsgBindIP extends Message {
 
     public void setMac(String mac) {
         this.mac = mac;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

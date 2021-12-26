@@ -21,7 +21,7 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @param ip
      * @param mac
      */
-    void saveOrUpdateOnline(String deviceNo, String ip, String mac);
+    void saveOrUpdateOnline(String deviceNo, String ip, String mac, String clientVersion);
 
 
     /**

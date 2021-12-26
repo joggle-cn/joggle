@@ -23,24 +23,29 @@ import java.util.Date;
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
     @Override
-    public void saveOrUpdateOnline(String deviceNo, String ip, String mac) {
+    public void saveOrUpdateOnline(String deviceNo, String ip, String mac, String clientVersion) {
 
         QueryWrapper ew = new QueryWrapper();
         ew.eq("deviceNo", deviceNo);
 
-        int count = this.baseMapper.selectCount(ew);
-
-        DeviceOnline deviceOnline = new DeviceOnline();
-        deviceOnline.setDeviceNo(deviceNo);
-        deviceOnline.setStatus(1);// 等待被绑定（在线)
-        deviceOnline.setUpdateTime(new Date());
-        deviceOnline.setIntranetIp(ip); // ip
-        deviceOnline.setMacAddr(mac); // mac
-
-        if (count > 0) {
-            this.baseMapper.update(deviceOnline, ew);
-        } else {// save
+        DeviceOnline deviceOnline = this.baseMapper.selectOne(ew);
+        if (deviceOnline == null) {
+            deviceOnline = new DeviceOnline();
+            deviceOnline.setDeviceNo(deviceNo);
+            deviceOnline.setStatus(1);// 等待被绑定（在线)
+            deviceOnline.setUpdateTime(new Date());
+            deviceOnline.setIntranetIp(ip); // ip
+            deviceOnline.setMacAddr(mac); // mac
+            deviceOnline.setClientVersion(clientVersion);
             this.baseMapper.insert(deviceOnline);
+        } else {
+            deviceOnline.setDeviceNo(deviceNo);
+            deviceOnline.setStatus(1);// 等待被绑定（在线)
+            deviceOnline.setUpdateTime(new Date());
+            deviceOnline.setIntranetIp(ip); // ip
+            deviceOnline.setMacAddr(mac); // mac
+            deviceOnline.setClientVersion(clientVersion);
+            this.baseMapper.updateById(deviceOnline);
         }
     }
 

@@ -59,6 +59,9 @@ public class DeviceOnline extends Model<DeviceOnline> {
     @TableField()
 	private String publicIp;
 
+	@ApiModelProperty("客户端版本")
+	private String clientVersion;
+
 
 	/**
 	 * 默认构造

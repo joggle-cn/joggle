@@ -287,8 +287,10 @@ public class DeviceController {
 
         if(deviceOnline != null){
             deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
+            deviceInfo.put("clientVersion", deviceOnline.getClientVersion());
             deviceInfo.put("status", deviceOnline.getStatus());
         } else {
+            deviceInfo.put("clientVersion", "");
             deviceInfo.put("status", -1);
         }
 

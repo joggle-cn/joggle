@@ -53,9 +53,6 @@ public class Device extends Model<Device> {
 	private String deviceSecret;
 
 
-	@ApiModelProperty("客户端版本")
-	private String clientVersion;
-
 
 	@Override
 	public String toString() {

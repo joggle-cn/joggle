@@ -194,10 +194,8 @@ public class BulletAnnotation {
 
                     // 更新设备状态
                     DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac(), msg2.getVersion());
 
-
-                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac());
-                    // 更新IP
                     return;
                 case Message.LOG_MAPPING_LOG:// 日志消息
                     MsgCommandLog msgCommandLog = new MsgCommandLog(head);
