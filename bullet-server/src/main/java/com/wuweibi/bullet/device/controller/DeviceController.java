@@ -306,7 +306,7 @@ public class DeviceController {
         QueryWrapper wrapper2 = new QueryWrapper();
         wrapper2.eq("userId", userId);
         wrapper2.eq("device_id", deviceId);
-        wrapper2.in("protocol", Arrays.asList(1, 3) );
+        wrapper2.in("protocol", Arrays.asList(1, 3, 4) );
 
         List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
 
