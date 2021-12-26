@@ -13,7 +13,7 @@ import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.User;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
@@ -62,10 +62,10 @@ public class UserController {
      * 获取登录的用户信息
      */
     @RequestMapping(value = "/login/info", method = RequestMethod.GET)
-    public Result loginInfo(@JwtUser Session session) {
+    public R loginInfo(@JwtUser Session session) {
 
         if (session.isNotLogin()) {
-            return Result.fail(AuthErrorType.INVALID_LOGIN);
+            return R.fail(AuthErrorType.INVALID_LOGIN);
         }
 
         Long userId = session.getUserId();
@@ -84,7 +84,7 @@ public class UserController {
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
 
 
-        return Result.success(result);
+        return R.success(result);
     }
 
 
@@ -130,13 +130,13 @@ public class UserController {
      * 注销操作
      */
     @RequestMapping(value = "/loginout", method = RequestMethod.POST)
-    public Result loginout(HttpServletRequest request) {
+    public R loginout(HttpServletRequest request) {
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenValue = StringUtils.substring(authentication, AuthenticationService.BEARER_BEGIN_INDEX);
         if (consumerTokenServices.revokeToken(tokenValue)) {
-            return Result.success();
+            return R.success();
         } else {
-            return Result.fail(AuthErrorType.INVALID_REQUEST);
+            return R.fail(AuthErrorType.INVALID_REQUEST);
         }
     }
 
@@ -159,16 +159,16 @@ public class UserController {
      */
     @ResponseMessage
     @PostMapping(value = "/password")
-    public Result password(@Valid PasswordParam dto, @JwtUser Session session) {
+    public R password(@Valid PasswordParam dto, @JwtUser Session session) {
         if (!session.isLogin()) {
-            return Result.fail(SystemErrorType.LOGIN_INVALID);
+            return R.fail(SystemErrorType.LOGIN_INVALID);
         }
         Long userId = session.getUserId();
         boolean status = userService.updatePassword(userId, dto);
         if (status) {
-            return Result.success();
+            return R.success();
         }
-        return Result.fail();
+        return R.fail();
     }
 
 

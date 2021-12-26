@@ -13,7 +13,7 @@ import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -62,7 +62,7 @@ public class DomainController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Object device( @JwtUser Session session){
         if(session.isNotLogin()){
-            return Result.fail(AuthErrorType.INVALID_LOGIN);
+            return R.fail(AuthErrorType.INVALID_LOGIN);
         }
         Long userId = session.getUserId();
         List<DomainVO> list = domainService.getListByUserId(userId);
@@ -91,11 +91,11 @@ public class DomainController {
 
         // 检查是否该用户的域名
         if(!domainService.checkDomain(userId, domainId)){
-            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
         Domain domain = domainService.getById(domainId);
 
-        return Result.success(domain);
+        return R.success(domain);
     }
 
 
@@ -117,7 +117,7 @@ public class DomainController {
 
         // 检查是否该用户的域名
         if(!domainService.checkDomain(userId, domainId)){
-            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
 
@@ -141,15 +141,15 @@ public class DomainController {
 
         // 检查是否该用户的域名
         if(!domainService.checkDomain(userId, domainId)){
-            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
         // 计算价格
-        Result result = orderPayBiz.calculate(domainId, time);
+        R r = orderPayBiz.calculate(domainId, time);
 
-        if(result.isSuccess()){
-            BigDecimal payMoney = result.getDataMapAsBigDecimal("payMoney");
-            Long  dueTime   = result.getDataMapAsLong("dueTime");
+        if(r.isSuccess()){
+            BigDecimal payMoney = r.getDataMapAsBigDecimal("payMoney");
+            Long  dueTime   = r.getDataMapAsLong("dueTime");
             switch (payType){
                 case 1: // 余额支付
                     return orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
@@ -158,7 +158,7 @@ public class DomainController {
         }
 
 
-        return result;
+        return r;
     }
 
 
@@ -178,7 +178,7 @@ public class DomainController {
             }
         });
 
-        return Result.success(list);
+        return R.success(list);
     }
 
     @Resource
@@ -200,16 +200,16 @@ public class DomainController {
 
         // 检查是否该用户的域名
         if(!domainService.checkDomain(userId, domainId)){
-            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
         // 检查设备是否该用户的
         if(!deviceService.exists(userId, deviceId)){
-            return Result.fail(SystemErrorType.DEVICE_NOT_EXIST);
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         // 检查域名是否已经绑定
         if(deviceMappingService.existsDomainId(deviceId, domainId)){
-            return Result.fail(SystemErrorType.DEVICE_OTHER_BIND);
+            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
         // 执行绑定
@@ -230,7 +230,7 @@ public class DomainController {
             mapping.setProtocol(DeviceMapping.PROTOCOL_HTTP);
         }
         deviceMappingService.save(mapping);
-        return Result.success();
+        return R.success();
     }
 
 

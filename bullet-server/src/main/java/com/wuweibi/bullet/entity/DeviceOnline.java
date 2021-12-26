@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -44,10 +45,7 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	@TableField(value = "mac_addr")
 	private String macAddr;
 
-    /**
-     * 在线状态 -1 不在线  1在线
-     */
-	@TableField(value="status" )
+	@ApiModelProperty("在线状态 -1离线  1在线")
 	private Integer status;
 
 	/**

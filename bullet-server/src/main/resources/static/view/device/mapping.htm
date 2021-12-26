@@ -21,7 +21,7 @@
 					<div class="item-server">
 						<i class="fa fa-server item-icon"></i>
 						<span class="item-status label-success" ng-if="deviceInfo.status == 1"></span>
-						<span class="item-status label-default" ng-if="deviceInfo.status == 0"></span>
+						<span class="item-status label-default" ng-if="deviceInfo.status != 1"></span>
 					</div>
 				</div>
 				<div class="col-xs-9" >
@@ -32,6 +32,9 @@
 					<div class="row">
 						<div class="col-sm-6">地址：{{deviceInfo.intranetIp}}</div>
 						<div class="col-sm-6">MAC：{{deviceInfo.macAddr}}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">版本：{{deviceInfo.clientVersion}}</div>
 					</div>
 				</div>
 			</div>

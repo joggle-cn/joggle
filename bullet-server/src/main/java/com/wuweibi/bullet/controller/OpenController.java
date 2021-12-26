@@ -17,7 +17,7 @@ import com.wuweibi.bullet.domain.vo.ReleaseInfo;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.User;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -124,7 +124,7 @@ public class OpenController {
         // 验证邮箱正确性
         new RegisterValidator().validate(user, errors);
         if (errors.hasErrors()) {
-            return Result.fail(errors);
+            return R.fail(errors);
         }
 
         String email = user.getEmail();
@@ -133,7 +133,7 @@ public class OpenController {
         User u = userService.getByEmail(email);
         if (u != null) {
             errors.rejectValue("email", String.valueOf(State.RegEmailExist));
-            return Result.fail(errors);
+            return R.fail(errors);
         }
         // 用户名设置为邮箱
         user.setUsername(email);
@@ -188,15 +188,15 @@ public class OpenController {
             domainService.save(domain);
         }
 
-        return Result.success();
+        return R.success();
     }
 
     /**
      * 激活用户
      */
     @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
-    public Result activate(@RequestParam String code,
-                           HttpServletRequest request) {
+    public R activate(@RequestParam String code,
+                      HttpServletRequest request) {
         return userService.activate(code);
     }
 
@@ -207,21 +207,21 @@ public class OpenController {
      * @return
      */
     @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
-    public Result devicesecret(@RequestParam String clientNo,
-                               @RequestParam String secret,
-                               HttpServletRequest request) {
+    public R devicesecret(@RequestParam String clientNo,
+                          @RequestParam String secret,
+                          HttpServletRequest request) {
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("deviceId", clientNo);
         Device device = deviceService.getOne(queryWrapper);
         if (device == null) {
-            return Result.fail(SystemErrorType.DEVICE_NOT_EXIST);
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
 
         if (secret.equals(device.getDeviceSecret())) {
-            return Result.success();
+            return R.success();
         }
-        return Result.fail(SystemErrorType.DEVICE_SECRET_ERROR);
+        return R.fail(SystemErrorType.DEVICE_SECRET_ERROR);
     }
 
     @Resource

@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.business;
 
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 
 import java.math.BigDecimal;
 
@@ -19,7 +19,7 @@ public interface OrderPayBiz {
      * @param time 天
      * @return
      */
-    Result calculate(Long domainId, Integer time);
+    R calculate(Long domainId, Integer time);
 
 
     /**
@@ -30,6 +30,6 @@ public interface OrderPayBiz {
      * @param dueTime
      * @return
      */
-    Result balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime);
+    R balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime);
 
 }

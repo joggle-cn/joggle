@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.exception;
 
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +29,13 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
             if (oAuth2Exception instanceof InvalidGrantException) {
                 if ("User is disabled".equals(oAuth2Exception.getMessage())) {
                     return ResponseEntity
-                            .status(200).body(Result.fail(AuthErrorType.ACCOUNT_NOT_ACTIVATE));
+                            .status(200).body(R.fail(AuthErrorType.ACCOUNT_NOT_ACTIVATE));
                 }
                 return ResponseEntity
-                        .status(200).body(Result.fail(AuthErrorType.ACCOUNT_PASSWORD_ERROR));
+                        .status(200).body(R.fail(AuthErrorType.ACCOUNT_PASSWORD_ERROR));
             }
             return ResponseEntity
-                    .status(200).body(Result.fail(oAuth2Exception));
+                    .status(200).body(R.fail(oAuth2Exception));
 
         } else if (e instanceof InternalAuthenticationServiceException) {
             InternalAuthenticationServiceException ex = (InternalAuthenticationServiceException) e;
@@ -48,12 +48,12 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
                 msg = oAuth2Exception.getMessage();
             }
             return ResponseEntity
-                    .status(200).body(Result.fail(SystemErrorType.newErrorType(msg)));
+                    .status(200).body(R.fail(SystemErrorType.newErrorType(msg)));
 
         } else if (e instanceof InsufficientAuthenticationException) {
             log.warn("", e);
             return ResponseEntity
-                    .status(200).body(Result.fail(AuthErrorType.INVALID_LOGIN));
+                    .status(200).body(R.fail(AuthErrorType.INVALID_LOGIN));
         } else {
             return ResponseEntity
                     .status(500).body(null);

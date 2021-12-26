@@ -2,7 +2,7 @@ package com.wuweibi.bullet.metrics.controller;
 
 
 import com.wuweibi.bullet.entity.Device;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
@@ -41,18 +41,18 @@ public class DataMetricsOpenController {
      * @return 新增结果
      */
     @PostMapping()
-    public Result insert(@RequestBody @Valid DataMetricsDTO dataMetrics) {
+    public R insert(@RequestBody @Valid DataMetricsDTO dataMetrics) {
         String deviceNo = dataMetrics.getDeviceNo();
         Device device = deviceService.getByDeviceNo(deviceNo);
         if (device == null) {
-            return Result.fail(SystemErrorType.DEVICE_NOT_EXIST);
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         DataMetrics entity = new DataMetrics();
         BeanUtils.copyProperties(dataMetrics, entity);
         entity.setCreateTime(new Date());
         entity.setDeviceId(device.getId());
         entity.setUserId(device.getUserId());
-        return Result.success(this.dataMetricsService.save(entity));
+        return R.success(this.dataMetricsService.save(entity));
     }
 
 }

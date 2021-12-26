@@ -29,7 +29,7 @@ import java.util.List;
  * @param <T>
  */
 @Getter
-public class Result<T> {
+public class R<T> {
 
     public static final String SUCCESSFUL_CODE = "S00";
     public static final String SUCCESSFUL_MESG = "操作成功";
@@ -53,14 +53,14 @@ public class Result<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public Result() {
+    public R() {
         this.timestamp = ZonedDateTime.now().toInstant();
     }
 
     /**
      * @param errorType
      */
-    public Result(ErrorType errorType) {
+    public R(ErrorType errorType) {
         this.code = errorType.getCode();
         this.msg = errorType.getMsg();
         this.timestamp = ZonedDateTime.now().toInstant();
@@ -70,13 +70,13 @@ public class Result<T> {
      * @param errorType
      * @param data
      */
-    public Result(ErrorType errorType, T data) {
+    public R(ErrorType errorType, T data) {
         this(errorType);
         this.data = data;
     }
 
 
-    public Result(ErrorType errorType, String msg, T data) {
+    public R(ErrorType errorType, String msg, T data) {
         this(errorType);
         this.data = data;
         this.msg = msg;
@@ -89,7 +89,7 @@ public class Result<T> {
      * @param msg
      * @param data
      */
-    private Result(String code, String msg, T data) {
+    private R(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -102,8 +102,8 @@ public class Result<T> {
      * @param data 对象
      * @return Result
      */
-    public static Result success(Object data) {
-        return new Result<>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
+    public static R success(Object data) {
+        return new R<>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
     }
 
     /**
@@ -111,7 +111,7 @@ public class Result<T> {
      *
      * @return Result
      */
-    public static Result success() {
+    public static R success() {
         return success(null);
     }
 
@@ -120,8 +120,8 @@ public class Result<T> {
      *
      * @return Result
      */
-    public static Result fail() {
-        return new Result(SystemErrorType.CUSTOM_ERROR);
+    public static R fail() {
+        return new R(SystemErrorType.CUSTOM_ERROR);
     }
 
     /**
@@ -130,7 +130,7 @@ public class Result<T> {
      * @param baseException 异常
      * @return Result
      */
-    public static Result fail(BaseException baseException) {
+    public static R fail(BaseException baseException) {
         return fail(baseException, null);
     }
 
@@ -141,8 +141,8 @@ public class Result<T> {
      * @param data 对象
      * @return Result
      */
-    public static Result fail(BaseException baseException, Object data) {
-        return new Result<>(baseException.getErrorType(), data);
+    public static R fail(BaseException baseException, Object data) {
+        return new R<>(baseException.getErrorType(), data);
     }
 
     /**
@@ -152,11 +152,11 @@ public class Result<T> {
      * @param data 对象
      * @return Result
      */
-    public static Result fail(ErrorType errorType, Object data) {
-        return new Result<>(errorType, data);
+    public static R fail(ErrorType errorType, Object data) {
+        return new R<>(errorType, data);
     }
-    public static Result fail(ErrorType errorType, String msg, Object data) {
-        return new Result<>(errorType, msg, data);
+    public static R fail(ErrorType errorType, String msg, Object data) {
+        return new R<>(errorType, msg, data);
     }
 
     /**
@@ -165,8 +165,8 @@ public class Result<T> {
      * @param errorType 错误类型
      * @return Result
      */
-    public static Result fail(ErrorType errorType) {
-        return Result.fail(errorType, null);
+    public static R fail(ErrorType errorType) {
+        return R.fail(errorType, null);
     }
 
 
@@ -176,7 +176,7 @@ public class Result<T> {
      * @param errors SpringMVC错误
      * @return
      */
-    public static Result fail(Errors errors) {
+    public static R fail(Errors errors) {
         List<FieldError> errorList = errors.getFieldErrors();
         Iterator<FieldError> it = errorList.iterator();
         FormFieldMessage[] errorCode = new FormFieldMessage[errorList.size()];
@@ -186,7 +186,7 @@ public class Result<T> {
             String field = oe.getField();
             errorCode[i++] = new FormFieldMessage(field, Integer.parseInt(oe.getCode()));
         }
-        return new Result(SystemErrorType.FormFieldError, errorCode);
+        return new R(SystemErrorType.FormFieldError, errorCode);
     }
 
 
@@ -196,8 +196,8 @@ public class Result<T> {
      * @param data 对象
      * @return Result
      */
-    public static Result fail(Object data) {
-        return new Result<>(SystemErrorType.SYSTEM_ERROR, data);
+    public static R fail(Object data) {
+        return new R<>(SystemErrorType.SYSTEM_ERROR, data);
     }
 
 

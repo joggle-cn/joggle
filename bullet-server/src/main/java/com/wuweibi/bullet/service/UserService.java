@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.User;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 
 import java.math.BigDecimal;
 
@@ -78,7 +78,7 @@ public interface UserService extends IService<User> {
      * @param code 激活码
      * @return
      */
-    Result activate(String code);
+    R activate(String code);
 
     /**
      * 更新密码

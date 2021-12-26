@@ -2,7 +2,7 @@ package com.wuweibi.bullet.business.impl;
 
 
 import com.wuweibi.bullet.entity.Domain;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
@@ -37,15 +37,15 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
 
     @Override
-    public Result calculate(Long domainId, Integer time) {
+    public R calculate(Long domainId, Integer time) {
         Domain domain = domainService.getById(domainId);
         // 校验域名是否存在
         if(domain == null){
-            return Result.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
         if(domain.getDueTime() == null){
-            return Result.fail(SystemErrorType.DOMAIN_IS_NOT_SUPPORT_ORDER);
+            return R.fail(SystemErrorType.DOMAIN_IS_NOT_SUPPORT_ORDER);
         }
 
         // 计算价格
@@ -62,7 +62,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
 
 
-        return Result.success(newMap(2)
+        return R.success(newMap(2)
                 .setParam("payMoney",  StringUtil.roundHalfUp(payPrice))
                 .setParam("dueTime",  calendar.getTime().getTime())
                 .build());
@@ -74,18 +74,18 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
     @Override
     @Transactional
-    public Result balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime) {
+    public R balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime) {
         if(payMoney == null){
-            return Result.fail(SystemErrorType.PAY_MONEY_NOT_NULL);
+            return R.fail(SystemErrorType.PAY_MONEY_NOT_NULL);
         }
 
         // 扣减余额
         boolean status = userService.updateBalance(userId, payMoney.negate());
         if(status){
             domainService.updateDueTime(domainId, dueTime);
-            return Result.success();
+            return R.success();
         }else{
-            return Result.fail(SystemErrorType.PAY_MONEY_BALANCE_NOT_ENOUGH);
+            return R.fail(SystemErrorType.PAY_MONEY_BALANCE_NOT_ENOUGH);
         }
     }
 }

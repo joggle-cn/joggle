@@ -3,7 +3,7 @@ package com.wuweibi.bullet.oauth2.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.oauth2.domain.Resource;
@@ -195,20 +195,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return
      */
     @Override
-    public Result hasPermission(HttpServletRequest request) {
+    public R hasPermission(HttpServletRequest request) {
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtil.isBlank(authentication)) {
-            return Result.fail(AuthErrorType.INVALID_TOKEN);
+            return R.fail(AuthErrorType.INVALID_TOKEN);
         }
         // token是否有效
         if (invalidJwtAccessToken(authentication)) {
-            return Result.fail(AuthErrorType.INVALID_LOGIN);
+            return R.fail(AuthErrorType.INVALID_LOGIN);
         }
         //从认证服务获取是否有权限
         if (this.decide(request)) {
-            return Result.success();
+            return R.success();
         } else {
-            return Result.fail(AuthErrorType.UNAUTHORIZED);
+            return R.fail(AuthErrorType.UNAUTHORIZED);
         }
     }
 

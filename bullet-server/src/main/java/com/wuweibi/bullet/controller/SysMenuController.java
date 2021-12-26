@@ -7,7 +7,7 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.Button;
 import com.wuweibi.bullet.entity.SysMenu;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.ISysMenuService;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,7 @@ public class SysMenuController {
     public Object listOneLevel(@JwtUser Session session) {
         Long userId = session.getUserId();
         List<SysMenu> list = sysMenuService.getOneLevel(userId);
-        return Result.success(list);
+        return R.success(list);
     }
 
 
@@ -55,7 +55,7 @@ public class SysMenuController {
     public Object listSecondaryLevel(@JwtUser Session session, @RequestParam Integer pid) {
         Long userId = session.getUserId();
         List<SysMenu> list = sysMenuService.getSecondaryLevel(userId, pid);
-        return Result.success(list);
+        return R.success(list);
     }
 
 
@@ -109,7 +109,7 @@ public class SysMenuController {
 
 
 
-        return Result.success(data);
+        return R.success(data);
     }
 
 
@@ -141,7 +141,7 @@ public class SysMenuController {
     @GetMapping("/list")
     public Object list() {
         List<SysMenu> treeList = sysMenuService.getAllToTree();
-        return Result.success(treeList);
+        return R.success(treeList);
     }
 
 
@@ -152,7 +152,7 @@ public class SysMenuController {
      */
     @GetMapping("/{id}")
     public Object list(@PathVariable("id") int id) {
-        return Result.success(sysMenuService.getById(id));
+        return R.success(sysMenuService.getById(id));
     }
 
 
@@ -168,7 +168,7 @@ public class SysMenuController {
         List<Integer> idList = StringUtil.splitInt(ids, ",");
 
         if (idList.size() == 0) {
-            return Result.fail( );
+            return R.fail( );
         }
         // 校验是否为子菜单
         int moduleId = idList.get(0);
@@ -182,7 +182,7 @@ public class SysMenuController {
 //        sysMenuService.deleteByModuleId(moduleId);
 
 
-        return Result.success();
+        return R.success();
     }
 
 
@@ -205,7 +205,7 @@ public class SysMenuController {
 //
         sysMenuService.save(entity, buttons);
 
-        return Result.success();
+        return R.success();
     }
 
 
@@ -217,7 +217,7 @@ public class SysMenuController {
     @GetMapping("/options")
     public Object level2() {
         List<SysMenu> treeList = sysMenuService.getTwoLevelToTree();
-        return Result.success(treeList);
+        return R.success(treeList);
     }
 
 }

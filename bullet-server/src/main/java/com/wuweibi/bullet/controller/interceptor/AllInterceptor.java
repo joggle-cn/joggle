@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.controller.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class AllInterceptor implements HandlerInterceptor {
 	 * 警告信息
 	 * @throws IOException
 	 */
-	private void renderJson(Result result) throws IOException {
+	private void renderJson(R r) throws IOException {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
 				.currentRequestAttributes()).getRequest();
@@ -109,7 +109,7 @@ public class AllInterceptor implements HandlerInterceptor {
 		response.setCharacterEncoding(encoding);
 		response.setContentType("application/json;charset=UTF-8");
 		Writer writer = response.getWriter();
-		writer.write(JSON.toJSONString(result));
+		writer.write(JSON.toJSONString(r));
 		writer.flush();
 		writer.close();
 	}

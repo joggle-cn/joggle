@@ -4,7 +4,7 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.CountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,10 +32,10 @@ public class DashboardController {
      */
     @GetMapping("/statistics")
     @ResponseBody
-    public Result<UserCountVO> statistics(@JwtUser Session session){
+    public R<UserCountVO> statistics(@JwtUser Session session){
         Long userId = session.getUserId();
         UserCountVO countVO = countService.getUserCountInfo(userId);
-        return Result.success(countVO);
+        return R.success(countVO);
     }
 
     /**
@@ -45,12 +45,12 @@ public class DashboardController {
     @ApiOperation("统计设备流量排行")
     @GetMapping("/device/rank")
     @ResponseBody
-    public Result<List<DeviceCountInfoVO>> getUserDeviceRank(
+    public R<List<DeviceCountInfoVO>> getUserDeviceRank(
             @RequestParam("type") Integer type,
             @JwtUser Session session){
         Long userId = session.getUserId();
         List<DeviceCountInfoVO> countVO = countService.getUserDeviceRank(userId, type);
-        return Result.success(countVO);
+        return R.success(countVO);
     }
 
 }

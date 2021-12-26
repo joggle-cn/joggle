@@ -8,7 +8,7 @@ import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.Message;
@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
@@ -101,9 +102,9 @@ public class DeviceMappingController {
      * @return
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Object device(@JwtUser Session session,@RequestParam Long deviceId){
+    public R<List<DeviceMapping>> device(@JwtUser Session session, @RequestParam Long deviceId){
         Long userId = session.getUserId();
-        return MessageFactory.get(deviceMappingService.listByMap(newMap(2)
+        return R.success(deviceMappingService.listByMap(newMap(2)
                 .setParam("userId", userId)
                 .setParam("device_id", deviceId)
                 .build()));
@@ -118,21 +119,24 @@ public class DeviceMappingController {
      * @return
      */
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Result save(@JwtUser Session session, DeviceMapping entity ){
+    public R save(@JwtUser Session session, DeviceMapping entity ){
         Long userId = session.getUserId();
         entity.setUserId(userId);
 
         DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
         entity.setDomainId(deviceMapping.getDomainId());
+        entity.setDomain(entity.getDomain());
+        entity.setPort(entity.getPort());
+        entity.setProtocol(entity.getProtocol());
 
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
-            return Result.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
+            return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
         }
         // 判断映射的域名是否过期，过期后不允许开启
         if(!domainMapper.checkDoaminIdDue(deviceMapping.getDomainId())){
             if(entity.getStatus() == 1){ // 不能启用
-                return Result.fail(SystemErrorType.DOMAIN_IS_DUE);
+                return R.fail(SystemErrorType.DOMAIN_IS_DUE);
             }
         }
 
@@ -143,7 +147,7 @@ public class DeviceMappingController {
             // 验证域名是否被使用
             boolean isOk = deviceMappingService.existsDomain(entity.getDomain());
             if(isOk){
-                return Result.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
+                return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
             }
 
             status = deviceMappingService.save(entity);
@@ -157,7 +161,7 @@ public class DeviceMappingController {
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
                 BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
                 if(annotation == null){// 设备不在线
-                    return Result.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+                    return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
                 }
 
                 JSONObject data = (JSONObject)JSON.toJSON(entity);
@@ -188,9 +192,9 @@ public class DeviceMappingController {
 
             }
 
-            return Result.success();
+            return R.success();
         }
-        return Result.fail("服务器错误");
+        return R.fail("服务器错误");
     }
 
 

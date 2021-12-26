@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.oauth2.service;
 
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import org.springframework.security.jwt.Jwt;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public interface AuthenticationService {
      * @param request
      * @return
      */
-    Result hasPermission(HttpServletRequest request);
+    R hasPermission(HttpServletRequest request);
 
 
     /**

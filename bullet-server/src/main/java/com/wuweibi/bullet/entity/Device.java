@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -47,13 +48,13 @@ public class Device extends Model<Device> {
 	@TableField("server_tunnel_id")
 	private Long serverTunnelId;
 
-
-	/**
-	 * 设备秘钥
-	 */
+	@ApiModelProperty("设备秘钥")
 	@TableField("device_secret")
 	private String deviceSecret;
 
+
+	@ApiModelProperty("客户端版本")
+	private String clientVersion;
 
 
 	@Override

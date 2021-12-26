@@ -13,14 +13,16 @@ define(['app','css!./about.css'], function (app) {//加载依赖js,
         // 加载用户登录信息
         faceinner.get(api['user.login.info'], function(res){
             if(res.code == '040006'){ // 没有登录
-                window.location.href='#/login';
+                if(localStorage.token){
+                    window.location.href='#/login';
+                }
             }
         });
-		 
-		 
-		 
+
+
+
  	}];
-	
+
 
 	return callback;
 });

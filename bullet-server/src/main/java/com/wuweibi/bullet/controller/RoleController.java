@@ -8,7 +8,7 @@ import com.wuweibi.bullet.alias.Var;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.domain.LayPage;
 import com.wuweibi.bullet.entity.Role;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.RoleService;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -170,7 +170,7 @@ public class RoleController {
                 .setParam("keyword", '%' + keywordNew + '%')
                 .build());
 
-        return Result.layPage(pageInfo);
+        return R.layPage(pageInfo);
     }
 
 

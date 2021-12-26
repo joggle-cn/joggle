@@ -9,7 +9,7 @@ import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
@@ -155,11 +155,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional
-    public Result activate(String code) {
+    public R activate(String code) {
 
         User user = this.baseMapper.getByActivateCode(code);
         if (user == null) {
-            return Result.fail(SystemErrorType.ACCOUNT_ACTIVATE_FAILD);
+            return R.fail(SystemErrorType.ACCOUNT_ACTIVATE_FAILD);
         }
 
         Long userId = user.getId();
@@ -168,7 +168,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // TODO 赠送随机域名1个月
 
 
-        return Result.success();
+        return R.success();
     }
 
 

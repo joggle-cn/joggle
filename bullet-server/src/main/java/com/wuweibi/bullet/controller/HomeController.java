@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.controller;
 
 import com.wuweibi.bullet.domain.vo.CountVO;
-import com.wuweibi.bullet.entity.api.Result;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.service.CountService;
 import com.wuweibi.bullet.utils.ConfigUtils;
@@ -52,7 +52,7 @@ public class HomeController {
      */
 	@GetMapping("/api/open/init")
 	@ResponseBody
-	public Result init(){
+	public R init(){
 		String domain = ConfigUtils.getBulletDomain();
         Map map = new HashMap(3);
         map.put("domain", domain);
@@ -61,7 +61,7 @@ public class HomeController {
         map.put("dockerClientVersion", "0.0.7");
         map.put("apkClientVersion", "0.0.1");
 		resourceManager.loadResource();
-		return Result.success(map);
+		return R.success(map);
 	}
 
 
@@ -74,9 +74,9 @@ public class HomeController {
 	 */
 	@GetMapping("/api/open/statistics")
 	@ResponseBody
-	public Result statistics(){
+	public R statistics(){
 		CountVO countVO = countService.getCountInfo();
-		return Result.success(countVO);
+		return R.success(countVO);
 	}
 
 }
