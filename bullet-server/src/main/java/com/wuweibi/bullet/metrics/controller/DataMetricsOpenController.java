@@ -1,13 +1,16 @@
 package com.wuweibi.bullet.metrics.controller;
 
 
+import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.service.DeviceService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +27,7 @@ import java.util.Date;
  * @author marker
  * @since 2021-11-07 14:17:51
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/open/data/metrics")
 public class DataMetricsOpenController {
@@ -32,11 +36,17 @@ public class DataMetricsOpenController {
      */
     @Resource
     private DataMetricsService dataMetricsService;
+
     @Resource
     private DeviceService deviceService;
 
+    @Resource
+    private UserFlowService userFlowService;
+
+
     /**
-     * 新增数据
+     * 上报流量数据
+     *
      * @param dataMetrics 实体对象
      * @return 新增结果
      */
@@ -47,12 +57,31 @@ public class DataMetricsOpenController {
         if (device == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
+
         DataMetrics entity = new DataMetrics();
         BeanUtils.copyProperties(dataMetrics, entity);
         entity.setCreateTime(new Date());
         entity.setDeviceId(device.getId());
         entity.setUserId(device.getUserId());
-        return R.success(this.dataMetricsService.save(entity));
+        this.dataMetricsService.save(entity);
+
+        Long userId = device.getUserId();
+
+        // 扣取流量
+        Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+        userFlowService.getUserFlow(userId);
+
+        boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
+        if (!status) {
+            log.info("流量扣取失败了 userId={}", userId);
+            // 由于用户没有流量了，默认关闭所有映射
+            deviceBiz.closeAllMappingByUserId(userId);
+            return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
+        }
+        return R.success();
     }
+
+    @Resource
+    private DeviceBiz deviceBiz;
 
 }

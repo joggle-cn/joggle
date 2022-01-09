@@ -1,8 +1,10 @@
 package com.wuweibi.bullet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -102,6 +104,27 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     @Override
     public String getDeviceNoByMappingId(Long mappingId) {
         return this.baseMapper.selectDeviceNoById(mappingId);
+    }
+
+    @Override
+    public boolean hasOkMapping(Long userId) {
+        return this.baseMapper.selectCount(Wrappers.<DeviceMapping>lambdaQuery()
+                .eq(DeviceMapping::getUserId, userId)
+                .eq(DeviceMapping::getStatus, 1)
+        ) > 0;
+    }
+
+    @Override
+    public List<DeviceMappingDTO> getAllByUserId(Long userId) {
+        return this.baseMapper.selectAllByUserId(userId, 1);
+    }
+
+    @Override
+    public boolean updateDownByUserId(Long userId) {
+        return update(Wrappers.<DeviceMapping>lambdaUpdate()
+                .eq(DeviceMapping::getUserId, userId)
+                .set(DeviceMapping::getStatus, 0)
+        );
     }
 
 

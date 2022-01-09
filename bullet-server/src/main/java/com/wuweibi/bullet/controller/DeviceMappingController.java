@@ -10,6 +10,7 @@ import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
@@ -65,7 +66,6 @@ public class DeviceMappingController {
         // 验证设备映射是自己的
         boolean status = deviceMappingService.exists(userId, id);
         if(status){
-
             DeviceMapping entity = deviceMappingService.getById(id);
             deviceMappingService.removeById(id);
 
@@ -112,9 +112,11 @@ public class DeviceMappingController {
 
     @Resource
     private DomainMapper domainMapper;
+    @Resource
+    private UserFlowService userFlowService;
 
     /**
-     * 保存数据
+     * 保存或者更新数据
      * @param entity
      * @return
      */
@@ -140,58 +142,54 @@ public class DeviceMappingController {
             }
         }
 
-        boolean status = false;
+        // 如果没有流量了，不能操作映射，会有一个缓冲过程
+        if(!userFlowService.hasFlow(userId)){
+            return R.fail(SystemErrorType.FLOW_IS_DUE);
+        }
+
         if(entity.getId() != null){
-            status = deviceMappingService.updateById(entity);
+            deviceMappingService.updateById(entity);
         } else {
             // 验证域名是否被使用
             boolean isOk = deviceMappingService.existsDomain(entity.getDomain());
             if(isOk){
                 return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
             }
-
-            status = deviceMappingService.save(entity);
+            deviceMappingService.save(entity);
         }
-        if(status){
-            // 发送绑定数据
-            int mappingStatus = entity.getStatus();
 
 
-            String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
-            if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
-                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
-                if(annotation == null){// 设备不在线
-                    return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-                }
-
-                JSONObject data = (JSONObject)JSON.toJSON(entity);
-
-                Message msg;
-
-                if(mappingStatus == 1) { // 启用映射
-                    msg = new MsgMapping(data.toJSONString());
-                } else {
-                    log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
-                    msg = new MsgUnMapping(data.toJSONString());
-                }
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-
-                    annotation.sendBinary(buf);
-
-                } catch (IOException e) {
-                    log.error("", e);
-                } finally {
-                    IOUtils.closeQuietly(outputStream);
-                }
-
+        String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
+        if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
+            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+            if(annotation == null){// 设备不在线
+                return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
             }
 
+            JSONObject data = (JSONObject)JSON.toJSON(entity);
+
+            Message msg;
+
+            if(entity.getStatus() == 1) { // 启用映射
+                msg = new MsgMapping(data.toJSONString());
+            } else {
+                log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
+                msg = new MsgUnMapping(data.toJSONString());
+            }
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                msg.write(outputStream);
+                // 包装了Bullet协议的
+                byte[] resultBytes = outputStream.toByteArray();
+                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+
+                annotation.sendBinary(buf);
+            } catch (IOException e) {
+                log.error("", e);
+            } finally {
+                IOUtils.closeQuietly(outputStream);
+            }
             return R.success();
         }
         return R.fail("服务器错误");

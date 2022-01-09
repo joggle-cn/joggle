@@ -16,6 +16,8 @@ import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.entity.UserFlow;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -57,6 +59,8 @@ public class UserController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
+    @Resource
+    private UserFlowService userFlowService;
 
     /**
      * 获取登录的用户信息
@@ -72,6 +76,7 @@ public class UserController {
 
         // 验证邮箱正确性
         User user = userService.getById(userId);
+        UserFlow userFlow = userFlowService.getUserFlow(userId);
         user.setPassword(null);
 
         JSONObject result = (JSONObject) JSON.toJSON(user);
@@ -82,6 +87,7 @@ public class UserController {
 
         result.put("loginTime", sdf.format(user.getLoginTime()));
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
+        result.put("userFlow", userFlow.getFlow()/1024); //MB
 
 
         return R.success(result);

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -68,4 +69,12 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
 
     @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId})")
     String selectDeviceNoById(@Param("mappingId") Long mappingId);
+
+
+    @Select("select \n" +
+            "a.*,b.deviceId deviceNo\n" +
+            "from t_device_mapping a \n" +
+            "left join t_device b on a.device_id = b.id\n" +
+            "where a.userId = #{userId} and status = #{status}")
+    List<DeviceMappingDTO> selectAllByUserId(@Param("userId") Long userId, @Param("status") int status);
 }

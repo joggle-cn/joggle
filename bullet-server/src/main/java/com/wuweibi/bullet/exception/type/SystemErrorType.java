@@ -40,6 +40,8 @@ public enum SystemErrorType implements ErrorType {
     DOMAIN_IS_OTHER_BIND("100101", "域名已经被使用"),
     DOMAIN_IS_NOT_SUPPORT_ORDER("100102", "不支持续费"),
     DOMAIN_IS_DUE("100103", "域名已过期，请续费后启用！"),
+    FLOW_IS_DUE("100104", "您的流量使用完了,咱不能操作映射！"),
+    FLOW_IS_PAY_FAIL("100105", "流量扣取失败！"),
 
 
 

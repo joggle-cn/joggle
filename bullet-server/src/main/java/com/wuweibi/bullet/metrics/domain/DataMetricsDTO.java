@@ -30,6 +30,7 @@ public class DataMetricsDTO  {
      */
     @NotNull(message = "进入流量不能为空")
     private Long bytesIn;
+
     /**
      * 出口流量
      */
