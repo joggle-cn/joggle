@@ -82,9 +82,32 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//加�
             ]
         };
 
-        if (option && typeof option === 'object') {
-            myChart.setOption(option);
+
+        let params ={
+            deviceId: null,
         }
+        // 加载用户登录信息
+        faceinner.get(api['user.dashboard.device.trend'], params, function(res){
+            if(res.code == '040006'){ // 没有登录
+                window.location.href='#/login';
+            }
+            $scope.$apply(function(){
+                option.xAxis.data = [];
+                option.series[0].data = [];
+                for(let i =0; i<res.data.length; i++){
+                    let item = res.data[i];
+                    option.xAxis.data.push(item.time);
+                    option.series[0].data.push(item.flow);
+                }
+
+                if (option && typeof option === 'object') {
+                    myChart.setOption(option);
+                }
+
+            })
+        });
+
+
 
 
     }];

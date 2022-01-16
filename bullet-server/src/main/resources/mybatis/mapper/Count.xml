@@ -64,4 +64,28 @@
         GROUP BY a.device_id
         order by flow desc
     </select>
+
+<!--    统计设备流量趋势-->
+    <select id="selectUserDeviceTrend" resultType="com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO">
+        select a.create_date as time, round(a.flow,2)  flow  from
+        (
+            (select create_date, SUM(bytes_in+bytes_out)/1024/1024 flow from data_metrics
+                WHERE user_id = #{userId}
+                <if test="deviceId != null">
+                    and device_id = #{deviceId}
+                </if>
+                <![CDATA[ and create_date <= CURDATE() and create_date >= DATE_SUB(now(),INTERVAL 30 day) ]]>
+                GROUP BY create_date)
+            UNION  (
+                SELECT
+                date(@date := DATE_ADD( @date, INTERVAL - 1 DAY )) create_date,
+                0 flow
+                FROM
+                ( SELECT @date := DATE_ADD( now(), INTERVAL + 1 DAY ) FROM data_metrics ) days
+                LIMIT 30
+            )
+        ) a
+        GROUP BY a.create_date
+        ORDER BY a.create_date asc
+    </select>
 </mapper>

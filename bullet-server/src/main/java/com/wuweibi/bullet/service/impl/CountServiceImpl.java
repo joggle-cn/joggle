@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.mapper.CountMapper;
@@ -33,7 +34,12 @@ public class CountServiceImpl implements CountService {
 
     @Override
     public List<DeviceCountInfoVO> getUserDeviceRank(Long userId, Integer type) {
-        List<DeviceCountInfoVO> userCountVO =  countMapper.selectUserDeviceRank(userId, type);
+        List<DeviceCountInfoVO> userCountVO = countMapper.selectUserDeviceRank(userId, type);
         return userCountVO;
+    }
+
+    @Override
+    public List<DeviceDateItemVO> getUserDeviceTrend(Long userId, Long deviceId) {
+        return countMapper.selectUserDeviceTrend(userId, deviceId);
     }
 }

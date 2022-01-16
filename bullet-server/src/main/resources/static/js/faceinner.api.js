@@ -67,6 +67,7 @@ let api = {
 
     "user.dashboard.statistics": '/api/dashboard/statistics',
     "user.dashboard.device.rank": '/api/dashboard/device/rank',
+    "user.dashboard.device.trend": '/api/dashboard/device/trend',
 
 
 

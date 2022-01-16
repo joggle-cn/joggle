@@ -2,6 +2,7 @@ package com.wuweibi.bullet.dashboard.controller;
 
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
@@ -51,6 +52,23 @@ public class DashboardController {
         Long userId = session.getUserId();
         List<DeviceCountInfoVO> countVO = countService.getUserDeviceRank(userId, type);
         return R.success(countVO);
+    }
+
+
+
+    /**
+     * 统计设备流量排行
+     * @return
+     */
+    @ApiOperation("统计设备流量走势")
+    @GetMapping("/device/trend")
+    @ResponseBody
+    public R<List<DeviceCountInfoVO>> getUserDeviceTrend(
+            @RequestParam(value = "deviceId",required = false) Long deviceId,
+            @JwtUser Session session){
+        Long userId = session.getUserId();
+        List<DeviceDateItemVO> list = countService.getUserDeviceTrend(userId, deviceId);
+        return R.success(list);
     }
 
 }
