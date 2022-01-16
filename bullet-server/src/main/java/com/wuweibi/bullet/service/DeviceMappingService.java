@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
 
@@ -81,8 +82,25 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
 
     /**
      *
-     * @param mappingId
+     * @param mappingId 映射id
      * @return
      */
     String getDeviceNoByMappingId(Long mappingId);
+
+    /**
+     * 判断是否有开启的映射
+     * @param userId 用户Id
+     * @return
+     */
+    boolean hasOkMapping(Long userId);
+
+    List<DeviceMappingDTO> getAllByUserId(Long userId);
+
+    /**
+     * 批量下线映射 仅更变设备映射状态
+     * @param userId 用户Id
+     * @return
+     */
+    boolean updateDownByUserId(Long userId);
+
 }

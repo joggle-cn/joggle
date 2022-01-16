@@ -140,8 +140,6 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                     flushData();
                 } else{
                     layer.msg(res.msg);
-                    $scope.entity.status = false;
-
                 }
             });
 

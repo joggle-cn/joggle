@@ -19,6 +19,8 @@ import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.entity.UserFlow;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
@@ -29,7 +31,6 @@ import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,19 +55,19 @@ import java.util.*;
 @RequestMapping("/api/open")
 public class OpenController {
 
-    @Autowired
+    @Resource
     private OauthUserService oauthUserService;
 
     /**
      * 消息通知
      */
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
      * 密码加密器
      */
-    @Autowired
+    @Resource
     private PasswordEncoder passwordEncoder;
 
     @Resource
@@ -111,6 +112,9 @@ public class OpenController {
         return userService.applyChangePass(email, url, ip);
     }
 
+    @Resource
+    private UserFlowService userFlowService;
+
 
     /**
      * 注册账号
@@ -148,6 +152,14 @@ public class OpenController {
         user.setActivateCode(code);
 
         boolean status = userService.save(user);
+
+        // userflow
+        UserFlow userFlow = new UserFlow();
+        userFlow.setUserId(user.getId());
+        userFlow.setFlow(1048576L);// kb 默认赠送1G流量
+        userFlow.setUpdatedTime(new Date());
+        userFlowService.save(userFlow);
+
         if (status) {
             Long userId = user.getId();
             // 赋权用户端

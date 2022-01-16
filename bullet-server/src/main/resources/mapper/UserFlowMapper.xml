@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.flow.mapper.UserFlowMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.flow.entity.UserFlow">
+        <!--@Table -->
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="flow" column="flow" jdbcType="INTEGER"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+<!--    更新流量-->
+    <update id="updateFlow">
+        update user_flow set flow = flow + #{flow}, updated_time = now()
+        where user_id = #{userId} and (flow + #{flow}) >= 0
+    </update>
+
+</mapper>
+
