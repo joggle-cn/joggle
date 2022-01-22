@@ -6,14 +6,14 @@
 define([
    	    'angularAMD'
    	   , 'app'
-  	
+
   	], function (angularAMD, app) {//加载依赖js,
- 
-	
+
+
 /* 配置路由器 */
 
 app.config(['$routeProvider','$locationProvider', function($routeProvider, $locationProvider) {
-	
+
 	/* 主页 */
 	$routeProvider
 		// 主页
@@ -65,12 +65,17 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: 'view/profile/profile.htm'
 			, controllerUrl: 'view/profile/profile.js'
 		}))
-		/* 激活用户界面  */
+		/* 邀请界面  */
+		.when('/user/invite', router({
+			templateUrl: 'view/user/invite/invite.htm'
+			, controllerUrl: 'view/user/invite/invite.js'
+		}))
+		// 激活用户界面
 		.when('/user/activate', router({
 			templateUrl: 'view/user/activate/activate.htm'
 			, controllerUrl: 'view/user/activate/activate.js'
 		}))
-		
+
 		// 我的设备
 		.when('/user/device', router({
             minTitle: "我的设备"
@@ -131,38 +136,38 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , controllerUrl: 'view/system/ngrokd/ngrokd.js'
         }))
 
-		
+
 		.when('/register', router({
 			templateUrl: 'view/register/register.htm'
 		  , controllerUrl: 'view/register/register.js'
 		}))
-		
+
 
 		.when('/user/archives', router({
-			templateUrl: '/template/user/archives.htm' 
+			templateUrl: '/template/user/archives.htm'
 		  , controllerUrl: '/js/controllers/user/archives.js'
-				
+
 		}))
 		.when('/user/photos', router({
-			templateUrl: '/template/user/photos.htm' 
+			templateUrl: '/template/user/photos.htm'
 		}))
 		.when('/user/messages', router({
-			templateUrl: '/template/user/messages.htm' 
+			templateUrl: '/template/user/messages.htm'
 		}))
 		.when('/user/friends', router({
-			templateUrl: '/template/user/friends.htm' 
+			templateUrl: '/template/user/friends.htm'
 		}))
 		.when('/user/wishs', router({
-			templateUrl: '/template/user/wishs.htm' 
+			templateUrl: '/template/user/wishs.htm'
 		}))
-		
-		
+
+
 		/* 闪聊模式 */
 		.when('/flashchat/index', router({
 			templateUrl: '/template/flashchat/index.htm'
 		  , controllerUrl: '/js/controllers/flashchat.js'
 		}))
-		
+
 		/* 心愿墙 */
     	.when('/wishwall/build', router({
 			templateUrl: '/template/wishwall/build.htm'
@@ -175,14 +180,14 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: '/view/video/video.htm'
 			, controllerUrl: '/view/video/video.js'
 		}))
-		
-		
-		
+
+
+
 		.when('/wishwall/item/:objectId', router({
 			templateUrl: '/template/wishwall/item.htm'
 		  , controllerUrl: '/js/controllers/wishwall/item.js'
 		}))
-		
+
 		.when('/wishwall/index', router({
 			templateUrl: '/template/wishwall/index.htm'
 		  , controllerUrl: '/js/controllers/wishwall/index.js'
@@ -239,9 +244,9 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 
 	// 重写地址支持
     // $locationProvider5Mode(true).hashPrefix('#');
-    
-    
- 
+
+
+
 }]);
 
 
@@ -251,7 +256,7 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
  * 实现AMD规范异步加载数据
  */
 function router(config){
-	
+
 	// 生成独立URL，保证不缓存页面数据
 	var random = "?t=" + Math.random();
 	config.templateUrl = config.templateUrl + random;
@@ -260,32 +265,32 @@ function router(config){
 
 
 //.run(['$rootScope', function($rootScope) {
-//	
-//	
+//
+//
 //    $rootScope.$on('$routeChangeStart', function(evt, next, current) {
 //        // 如果用户未登录
 //    	var control = next.$$route.controller;// 控制器名称
-//    	
+//
 //        // alert(JSON.stringify(next.$$route.controller));
-//        
+//
 ////        console.log(control);
 ////        if(control  == 'RegisterController'){
-////        	
-////        
-////	        require([control],function(c){  
-////				
-////				console.log(c); 
-////			}); 
+////
+////
+////	        require([control],function(c){
+////
+////				console.log(c);
+////			});
 ////        }
-//		
-//        
-//        
+//
+//
+//
 //    });
-//    
-//    
-//    
+//
+//
+//
 //}]);
 
- 
+
 
 });

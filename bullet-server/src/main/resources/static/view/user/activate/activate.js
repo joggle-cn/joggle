@@ -10,13 +10,15 @@ define(['app', 'layer','css!./activate.css'], function (app, layer) {
 
 	    // 激活码
         let code = $routeParams.code;
+        let inviteCode = $routeParams.ic; // 邀请码
 
         /**
          * 激活用户
          */
         $scope.activateUser = function(){
             let params = {
-                code: code
+                code: code,
+                inviteCode: inviteCode
             }
 
             faceinner.post('/api/open/user/activate', params,function(result){

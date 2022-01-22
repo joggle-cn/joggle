@@ -6,8 +6,9 @@
  * @author marker
  */
 define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $, x18n,layer) {// 加载依赖模块
-	
-	return ['$scope','$http','$location','res','userService', function ($scope, $http, $location, res, userService) {
+
+	return ['$scope','$http','$location','res','userService',"$routeParams",
+		function ($scope, $http, $location, res, userService, $routeParams) {
 		$scope.agree = false; // 协议
 		$scope.isOk = false; // 是否可以提交表单
 		$scope.userLogin = {};
@@ -15,9 +16,10 @@ define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $,
 		    pass: ""
 		    ,sex: 0
 		    ,age: 18
+			,inviteCode: $routeParams.c
 		};// 密码
 		//$scope.user.name = "marker";
-		
+
 		// 获取用户信息
 		var params = $location.search();
 		if(params.from){// 如果from存在则调用,第三方平台注册
@@ -28,18 +30,18 @@ define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $,
 						$scope.user.sex = json.data.sex;
 						$scope.user.icon = json.data.icon;
 						$scope.user.openId = json.data.openId;
-						
+
 					});
 				}
 			});
-		} 
-		
-		
-		
-		
+		}
+
+
+
+
 		/* 注册 */
 		$scope.reg = function(){
-			
+
 			validate($scope.user);// 验证表单
 
 			if($scope.isOk){
@@ -76,32 +78,32 @@ define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $,
 				} else {
 					$scope.password2Msg = res.error(res.code.passwordInputNotEquals);
 				}
-				 
-			
+
+
 			}
-			 
-		}; 
-		
-		/* 确认注册 */ 
-		
-		
+
+		};
+
+		/* 确认注册 */
+
+
 		$scope.cancel = function(){
 			$scope.token = null;
 			$scope.password2 = "";// 清空密码数据
 			$scope.user.pass = "";
 			$("#registerModal").modal('hide');
 		};
-		
-		
-		
-		
-		
-		
-		/* 
+
+
+
+
+
+
+		/*
 		 * 验证表单正确性
 		 * */
 		function validate(user){
-			$scope.isOk = true; 
+			$scope.isOk = true;
 			if(user.email == null || '' == user.email){
 				$scope.emailMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
@@ -121,13 +123,13 @@ define(['app','jquery','x18n', 'layer', 'css!./register.css'], function (app, $,
 				$scope.passwordMsg = res.error(res.code.mustFillInput);
 				$scope.isOk = false;
 			}
-			
-			if(!$scope.user.agree){ 
+
+			if(!$scope.user.agree){
 				layer.msg(res.t('register.alertAgreeService'));
 				$scope.isOk = false;
-			} 
+			}
 		};
 
 	}];
-	
+
 });

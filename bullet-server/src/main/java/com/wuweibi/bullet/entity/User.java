@@ -58,7 +58,7 @@ public class User extends Model<User> {
 
 
 	/**
-	 * 激活码
+	 * 激活码/邀请码
 	 */
 	@TableField("activate_code")
 	private String activateCode;

@@ -93,8 +93,14 @@
                         <li><a href="#/user/device/bind">
                             <i class="fa fa-magnet"></i> <span ng-bind="res.t('home.btn.devicebind')"></span></a>
                         </li>
-                        <li><a href="#/user/device/wol">
-                            <i class="fa fa-heartbeat"></i> <span ng-bind="res.t('home.btn.wol')"></span></a>
+                        <li>
+                            <a href="#/user/device/wol">
+                                <i class="fa fa-heartbeat"></i> <span ng-bind="res.t('home.btn.wol')"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/user/invite"><i class="fa fa-american-sign-language-interpreting"></i> <span ng-bind="res.t('home.btn.invite')"></span>
+                            </a>
                         </li>
                         <li class="divider"></li>
                         <li><a ng-click="loginout()"><i class="fa fa-power-off"></i> <span
@@ -149,7 +155,8 @@
     window.UMEDITOR_HOME_URL = 'lib/umeditor/';
 </script>
 <script src="lib/require/require.js" data-main="js/main.js"></script>
-<!--		<script src="" ></script>-->
+<script src="lib/qrcodejs/qrcodejs.js"></script>
+<!--<script src="lib/qrcodejs/clipboard.min.js"></script>-->
 
 
 <script>

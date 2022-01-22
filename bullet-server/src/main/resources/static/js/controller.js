@@ -93,10 +93,10 @@ define([
 
 
         // 初始化数据
-        $scope.init = async function () {
+        $rootScope.init = function () {
 
             // 加载系统初始化信息
-            await faceinner.get(api['init'], function (res) {
+            faceinner.get(api['init'], {_async: true}, function (res) {
                 if (res.code == 'S00') {
                     $rootScope.$apply(function () {
                         $rootScope.config = res.data;
@@ -105,7 +105,7 @@ define([
             });
 
 
-            faceinner.get(api['user.login.info'], function (res) {
+            faceinner.get(api['user.login.info'], {_async: true},function (res) {
                 if (res.code == 'S00') {
                     $rootScope.user = res.data;
                     $rootScope.islogin = true;
@@ -113,11 +113,9 @@ define([
                 }
                 $rootScope.$apply();
             });
-
-
         }
 
-        $scope.init();
+        $rootScope.init();
 
 
         /**

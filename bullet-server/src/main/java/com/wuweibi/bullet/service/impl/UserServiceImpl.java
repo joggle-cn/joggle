@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.alias.State;
@@ -12,6 +13,7 @@ import com.wuweibi.bullet.entity.UserForget;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
 import com.wuweibi.bullet.service.MailService;
@@ -153,9 +155,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     }
 
+    @Resource
+    private UserFlowService userFlowService;
+
     @Override
     @Transactional
-    public R activate(String code) {
+    public R activate(String code, String inviteCode) {
 
         User user = this.baseMapper.getByActivateCode(code);
         if (user == null) {
@@ -165,9 +170,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long userId = user.getId();
         this.baseMapper.updateEnabled(userId);
 
-        // TODO 赠送随机域名1个月
-
-
+        // 如果存在邀请码的人存在，赠送流量给邀请人
+        User inviteUser = this.getByInviteCode(inviteCode);
+        if (inviteUser != null) {
+            userFlowService.updateFLow(inviteUser.getId(), 1048576L);
+        }
         return R.success();
     }
 
@@ -187,6 +194,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         this.baseMapper.updatePass(userId, passwordEncoder.encode(dto.getNewPassword()));
         return true;
+    }
+
+    @Override
+    public User getByInviteCode(String inviteCode) {
+        return this.baseMapper.selectOne(Wrappers.<User>lambdaQuery()
+                .eq(User::getActivateCode, inviteCode));
     }
 
 

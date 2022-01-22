@@ -75,10 +75,12 @@ public interface UserService extends IService<User> {
 
     /**
      * 激活用户
+     *
      * @param code 激活码
+     * @param ic 邀请码
      * @return
      */
-    R activate(String code);
+    R activate(String code, String ic);
 
     /**
      * 更新密码
@@ -87,4 +89,10 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean updatePassword(Long userId, PasswordParam dto);
+
+    /**
+     * 根据邀请码查询用户
+     */
+    User getByInviteCode(String inviteCode);
+
 }

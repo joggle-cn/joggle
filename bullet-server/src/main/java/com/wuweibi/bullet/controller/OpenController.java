@@ -121,10 +121,9 @@ public class OpenController {
      *
      * @return
      */
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("/register")
     @Transactional
     public Object register(HttpServletRequest request, @ModelAttribute User user, Errors errors) {
-
         // 验证邮箱正确性
         new RegisterValidator().validate(user, errors);
         if (errors.hasErrors()) {
@@ -132,6 +131,8 @@ public class OpenController {
         }
 
         String email = user.getEmail();
+        String inviteCode = request.getParameter("inviteCode"); // 邀请码
+
 
         // 验证是否存在
         User u = userService.getByEmail(email);
@@ -148,7 +149,7 @@ public class OpenController {
         user.setPassword(passwordEncoder.encode(password));
 
         // 生成修改密码验证串,生命周期为30分钟.
-        String code = UUID.randomUUID().toString();
+        String code = CodeHelper.makeNewCode();
         user.setActivateCode(code);
 
         boolean status = userService.save(user);
@@ -172,7 +173,7 @@ public class OpenController {
             if (StringUtil.isNotBlank(bulletConfig.getServerUrl())) {
                 url = bulletConfig.getServerUrl();
             }
-            String activateUrl = url + "#/user/activate?code=" + code;
+            String activateUrl = url + "#/user/activate?code=" + code+"&ic=" + inviteCode;
             params.put("url", url);
             params.put("activateUrl", activateUrl);
 
@@ -198,18 +199,22 @@ public class OpenController {
             domain.setStatus(1);
             domain.setType(2);
             domainService.save(domain);
+
         }
 
         return R.success();
     }
 
+
     /**
      * 激活用户
      */
     @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
-    public R activate(@RequestParam String code,
+    public R activate(
+            @RequestParam String code,// 激活码
+            @RequestParam(required = false) String inviteCode, // 邀请码
                       HttpServletRequest request) {
-        return userService.activate(code);
+        return userService.activate(code, inviteCode);
     }
 
 

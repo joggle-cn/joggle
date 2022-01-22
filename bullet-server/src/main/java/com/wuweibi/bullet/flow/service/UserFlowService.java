@@ -20,7 +20,7 @@ public interface UserFlowService extends IService<UserFlow> {
     UserFlow getUserFlow(Long userId);
 
     /**
-     * 更新流量
+     * 更新流量(增加)
      * @param userId 用户Id
      * @param bytes 流量 kb
      * @return

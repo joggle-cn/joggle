@@ -15,7 +15,7 @@ public interface UserFlowMapper extends BaseMapper<UserFlow> {
 
 
     /**
-     * 更新流量
+     * 更新流量(增加)
      * @param userId 用户Idd
      * @param flow 流量 kb
      * @return

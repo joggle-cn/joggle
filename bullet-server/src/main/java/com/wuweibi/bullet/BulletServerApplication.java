@@ -5,6 +5,7 @@ package com.wuweibi.bullet; /**
 import com.wuweibi.bullet.listener.CloseServerListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Bullet服务器端
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  **/
 
 
+@EnableTransactionManagement
 @SpringBootApplication
 public class BulletServerApplication  {
 
