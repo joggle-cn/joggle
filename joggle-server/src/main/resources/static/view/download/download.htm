@@ -1,0 +1,138 @@
+<!-- Docs page layout -->
+<div class="" id="download">
+
+    <div class="min-banner download-banner">
+        <div class="container">
+            <div class="row banner-text">
+                <h1>下载中心</h1>
+                <p>无论您身处何地，都可以使用电脑或您的移动设备，通过Joggle访问内网服务器。</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container index-textcenter">
+        <h2 class="index-bullet-title">Joggle Client [客户端]</h2>
+        <p class="index-bullet-desc">Joggle Client 是一个内网服务器的代理程序。</p>
+
+        <div class="row index-textcenter-bg">
+
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-windows"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  class="btn btn-default">Windows</a></h3>
+                <p>
+                    版本：{{config.clientVersion}} <br>
+                    支持：386、amd64
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-linux"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  target="_blank" class="btn btn-default">Linux</a></h3>
+                <p>
+                    版本：{{config.clientVersion}} <br>
+                    支持：386、amd64、arm64、arm32
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-apple"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  class="btn btn-default">Mac</a></h3>
+                <p>
+                    版本：{{config.clientVersion}} <br>
+                    支持：386、amd64
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <img src="resource/images/icon/icon-docker.png" />
+                </div>
+                <h3><a href="https://help.joggle.cn/docs/deploy/docker-deploy-client.html" target="_blank" class="btn btn-default">Docker</a></h3>
+                <p>
+                    版本：{{config.dockerClientVersion}} <br><br>
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-android"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  class="btn btn-default">Android</a></h3>
+                <p>
+                    版本：{{config.apkClientVersion}} <br>
+                    支持：amd64(arm64-v8a)<br>【全网首发Android设备客户端】
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-linux"></i>
+                </div>
+                <h3><a  ng-click="downloadClient()"  target="_blank" class="btn btn-default">玩客云armbain镜像</a></h3>
+                <p>
+                    版本：0.0.1 <br>
+                    镜像内置Bullet服务，通过U盘刷入玩客云可启用设备
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="container index-textcenter">
+        <h2 class="index-bullet-title">Joggle Server [服务端]</h2>
+        <p class="index-bullet-desc">Joggle Server 主要提供UI操作界面，控制客户端的代理程序。
+
+
+        </p>
+
+        <div class="row index-textcenter-bg">
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-windows"></i>
+                </div>
+                <h3><a href="" ng-click="downloadServer()" class="btn btn-default">Windows</a></h3>
+                <p>
+                    版本：{{config.serverVersion}} <br>
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-linux"></i>
+                </div>
+                <h3><a href="" ng-click="downloadServer()"  class="btn btn-default">Linux</a></h3>
+                <p>
+                    版本：{{config.serverVersion}} <br>
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <i class="fa fa-apple"></i>
+                </div>
+                <h3><a href="" ng-click="downloadServer()"  class="btn btn-default">Mac</a></h3>
+                <p>
+                    版本：{{config.serverVersion}} <br>
+                </p>
+            </div>
+            <div class="col-sm-3 download-item">
+                <div class="index-icon">
+                    <img src="resource/images/icon/icon-docker.png" />
+                </div>
+                <h3><a href="" target="_blank" class="btn btn-default">Docker</a></h3>
+                <p>
+                    版本：未发布 <br>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="height: 60px"></div>
+
+
+
+
+
+</div>

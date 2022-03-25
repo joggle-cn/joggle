@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    小技巧: 在根pom里面设置统一存放路径，统一管理方便维护
+    <properties>
+        <log-path>/Users/bimgis</log-path>
+    </properties>
+    1. 其他模块加日志输出，直接copy本文件放在resources 目录即可
+    2. 注意修改 <property name="${log-path}/log.path" value=""/> 的value模块
+-->
+<included>
+	<!-- 彩色日志格式 -->
+	<property name="CONSOLE_LOG_PATTERN"
+			  value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr([ %clr(requestId:) %X{requestId} ]) %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+	<!-- 彩色日志依赖的渲染类 -->
+	<conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+	<conversionRule conversionWord="wex"
+					converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+	<conversionRule conversionWord="wEx"
+					converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+
+	<!-- Console log output -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Log file debug output -->
+	<appender name="alone" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.path}/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.path}/%d{yyyy-MM, aux}/alone.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxFileSize>100MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>debug</level>
+		</filter>
+	</appender>
+
+
+	<!-- Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+	<logger name="org.activiti.engine.impl.db" level="DEBUG"> </logger>
+
+	<!--nacos 心跳 INFO 屏蔽-->
+	<logger name="com.alibaba.nacos" level="OFF"> </logger>
+	<logger name="com.alibaba.cloud.nacos" level="INFO"> </logger>
+
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="DEBUG"/>
+	<logger name="com.alibaba.nacos" level="OFF"> </logger>
+
+	<!--myibatis log configure-->
+	<logger name="com.apache.ibatis" level="INFO"/>
+	<logger name="java.sql.Connection" level="INFO"/>
+	<logger name="java.sql.Statement" level="INFO"/>
+	<logger name="java.sql.PreparedStatement" level="INFO"/>
+	<logger name="com.baomidou.mybatisplus" level="INFO"/>
+
+	<logger name="springfox.documentation" level="INFO"/>
+	<logger name="org.springframework.beans" level="INFO"/>
+	<logger name="org.springframework.data" level="INFO"/>
+	<logger name="org.springframework.security" level="INFO"/>
+	<logger name="org.springframework.context" level="INFO"/>
+	<logger name="org.springframework.jdbc" level="INFO"/>
+	<logger name="org.springframework.core" level="INFO"/>
+	<logger name="org.springframework.cloud" level="INFO"/>
+	<!--	<logger name="org.springframework.web" level="INFO"/>-->
+	<logger name="org.springframework.validation" level="INFO"/>
+	<logger name="org.springframework.boot" level="INFO"/>
+
+
+	<logger name="io.lettuce" level="INFO"/>
+	<logger name="io.undertow" level="INFO"/>
+	<logger name="org.xnio" level="INFO"/>
+	<logger name="io.netty" level="INFO"/>
+	<logger name="org.mybatis" level="INFO"/>
+	<logger name="weixin.popular.client" level="INFO"/>
+
+
+
+
+</included>

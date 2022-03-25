@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>Joggle 内网穿透</title>
+    <meta name="keywords" content="Joggle">
+    <meta name="description" content="Joggle">
+    <meta name="author" content="marker">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+
+    <link rel="stylesheet" href="lib/font-awesome4/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="lib/bootstrap3/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="lib/bootstrap3/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="lib/layer-v3.1.1/layer/theme/default/layer.css"/>
+    <link rel="stylesheet" href="lib/bootstrap3/plugins/bootstrap-switch/css/bootstrap-switch.min.css"/>
+    <link rel="stylesheet" href="css/checkboxstyles.css"/>
+    <link rel="stylesheet" href="css/argon.css"/>
+
+    <link rel="stylesheet" type="text/css" href="lib/umeditor/themes/default/css/umeditor.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+</head>
+
+<body ng-cloak ng-controller="navController">
+<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
+                    data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </button>
+            <a target="_self" href="./index.html" class="navbar-brand">
+                <img src="resource/images/logo.png" style="height: 26px"/>
+            </a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#/index" ng-bind="res.t('home.nav.index')"></a>
+                </li>
+                <!--				  <li>-->
+                <!--					  <a href="#/user/device">我的设备</a>-->
+                <!--				  </li>-->
+                <!--				<li>-->
+                <!--<a href="#/wishwall/index">心愿墙</a>-->
+                </li>
+                <li>
+                    <a href="#/document" ng-bind="res.t('home.nav.help')"></a>
+                </li>
+                <li>
+                    <a href="#/download" ng-bind="res.t('home.nav.download')"></a>
+                </li>
+                <li>
+                    <a href="#/hardware" ng-bind="res.t('home.nav.device')"></a>
+                </li>
+                <li>
+                    <a href="#/about" ng-bind="res.t('home.nav.about')"></a>
+                </li>
+<!--                <li>-->
+<!--                    <a href="#/feedback" ng-bind="res.t('home.nav.feedback')"></a>-->
+<!--                </li>-->
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class=" hidden-xs"></li>
+
+                <li ng-if="islogin">
+
+                    <!--<div>-->
+                    <!--<img style="height:50px;" src="" />-->
+
+                    <!--<span style='color:#fff; margin-top: 10px;'></span> -->
+                    <!--</div> -->
+                </li>
+                <li class="dropdown" ng-show="islogin" style="cursor: pointer">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <span ng-bind="user.email"></span> <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#/user/dashboard"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a>
+                        </li>
+                        <li><a href="#/user/profile">
+                            <i class="fa fa-user-o"></i> <span ng-bind="res.t('user.profile')"></span>
+                        </a></li>
+                        <li><a href="#/user/device">
+                            <i class="fa fa-server"></i> <span ng-bind="res.t('home.btn.device')"></span>
+                        </a></li>
+                        <li><a href="#/user/domain">
+                            <i class="fa fa-paper-plane"></i> <span ng-bind="res.t('home.btn.domain')"></span>
+                        </a></li>
+                        <li><a href="#/user/device/bind">
+                            <i class="fa fa-magnet"></i> <span ng-bind="res.t('home.btn.devicebind')"></span></a>
+                        </li>
+                        <li>
+                            <a href="#/user/device/wol">
+                                <i class="fa fa-heartbeat"></i> <span ng-bind="res.t('home.btn.wol')"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/user/invite"><i class="fa fa-american-sign-language-interpreting"></i> <span ng-bind="res.t('home.btn.invite')"></span>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a ng-click="loginout()"><i class="fa fa-power-off"></i> <span
+                                ng-bind="res.t('user.loginout')"></span></a></li>
+                    </ul>
+                </li>
+                <li ng-show="!islogin">
+                    <a href="#/login"> <span ng-bind="res.t('user.login')"></span></a>
+                </li>
+                <li ng-show="!islogin">
+                    <a href="#/register"> <span ng-bind="res.t('user.register')"></span></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div id="content" ng-view style="min-height:300px;"></div>
+
+
+<!-- 页尾 -->
+<div class="container" style="margin-top: 60px;">
+    <div class="language" ng-controller="languageController">
+        <a ng-click="change('en')">English</a>
+        <a ng-click="change('zh')">简体中文</a>
+    </div>
+</div>
+<div class="footerhr"></div>
+<footer class="container">
+    <p class="big">
+        <!--<a target="_self" href="/about.html" ng-bind="res.t('footer.nav.about')"></a>-->
+        <!--<a target="_self" href="/about/contact.html" ng-bind="res.t('footer.nav.contact')"></a> -->
+        <!--&lt;!&ndash; <a target="_self" href="/about/works.html">工作机会</a>  &ndash;&gt;-->
+        <!--<a target="_self" href="/about/privacy.html" ng-bind="res.t('footer.nav.privacy')"></a>-->
+        <!--<a target="_self" href="/about/terms.html" ng-bind="res.t('footer.nav.terms')"></a> -->
+        <!--<a target="_self" href="/about/feedback.html" ng-bind="res.t('footer.nav.feedback')"></a> -->
+        <!---->
+        <!---->
+    </p>
+    <div class="text-center">
+        © 2014 - 2022 www.{{config.domain}}
+        <span ng-show="islogin">
+				<a href="#"> conn= <span ng-bind="user.connNums"></span></a>
+			</span>
+    </div>
+</footer>
+
+
+<script>
+    var lang = '${lang}';// 语言
+    window.SERVER_URL = "${url}"; // 服务器地址
+    window.UMEDITOR_HOME_URL = 'lib/umeditor/';
+</script>
+<script src="lib/require/require.js" data-main="js/main.js"></script>
+<script src="lib/qrcodejs/qrcodejs.js"></script>
+<!--<script src="lib/qrcodejs/clipboard.min.js"></script>-->
+
+
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?17993d966c61da79e8fa1a062095101e";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+</body>
+</html>

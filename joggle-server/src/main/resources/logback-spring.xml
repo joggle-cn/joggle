@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    小技巧: 在根pom里面设置统一存放路径，统一管理方便维护
+    <properties>
+        <log-path>/Users/jiayu</log-path>
+    </properties>
+    1. 其他模块加日志输出，直接copy本文件放在resources 目录即可
+    2. 注意修改 <property name="${log-path}/log.path" value=""/> 的value模块
+-->
+<configuration debug="false" scan="false">
+
+    <!-- 读取spring配置 -->
+    <springProperty name="LOGGING_PATH" source="LOGGING_PATH"/>
+    <property name="log.path" value="${LOGGING_PATH}/${project.artifactId}"/>
+    <include resource="logback-common.xml"/>
+
+
+    <logger name="org.springframework.security.authentication" level="error"> </logger>
+    <logger name="org.springframework.amqp.rabbit.core" level="error"> </logger>
+    <logger name="org.springframework.web.servlet.DispatcherServlet" level="info"> </logger>
+    <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="info"> </logger>
+    <!-- no log   -->
+    <logger name="com.wuweibi.bullet.mapper.DomainMapper.selectDueDomain" level="ERROR" />
+
+
+    <!-- 多配制环境设置 -->
+    <springProfile name="dev">
+        <root level="debug">
+            <appender-ref ref="console"/>
+            <appender-ref ref="alone"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="alone"/>
+        </root>
+    </springProfile>
+
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="alone"/>
+        </root>
+    </springProfile>
+
+</configuration>

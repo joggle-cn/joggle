@@ -12,8 +12,8 @@
         <version>2.2.4.RELEASE</version>
     </parent>
 
-    <groupId>com.wuweibi.bullet</groupId>
-    <artifactId>bullet</artifactId>
+    <groupId>com.wuweibi</groupId>
+    <artifactId>joggle</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -85,11 +85,8 @@
     </dependencies>
 
     <modules>
-        <module>bullet-common</module>
-        <module>bullet-server</module>
-<!--        <module>bullet-client</module>-->
-<!--        使用easycode-->
-<!--        <module>bullet-codemaker</module>-->
+        <module>joggle-common</module>
+        <module>joggle-server</module>
     </modules>
 
     <dependencyManagement>

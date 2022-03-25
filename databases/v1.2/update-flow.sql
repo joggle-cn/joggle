@@ -1,7 +1,7 @@
 
 
 CREATE TABLE `user_flow`  (
-  `user_id` bigint(255) NOT NULL,
+  `user_id` bigint(22) NOT NULL,
   `flow` bigint(22) NULL DEFAULT NULL COMMENT '流量 kb',
   `updated_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`user_id`) USING BTREE
