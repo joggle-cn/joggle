@@ -7,3 +7,4 @@
 data
 logs
 target
+.run/*
