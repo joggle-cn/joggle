@@ -182,6 +182,26 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                 backdrop: false
             });
         }
+
+
+        /**
+         * 网络唤醒
+         */
+        $scope.sendMigicWolDevice = function(){
+            let macAdder = $scope.deviceInfo.macAddr;
+            if (!macAdder) {
+                layer.msg("mac地址未就绪");
+                return
+            }
+            faceinner.post(api['user.device.wol'], {mac: macAdder}, function(res) {
+                if (res.code == 'S00') {
+                    layer.msg("唤醒完成，请等待机器上线");
+                }
+            });
+        }
+
+
+
         /**
          * 关闭绑定域名弹框
          */

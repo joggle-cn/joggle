@@ -43,7 +43,8 @@
 			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
 			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
 			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
-			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">日志</a>
+			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a>
+			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
 		</div>
 	</div>
 
