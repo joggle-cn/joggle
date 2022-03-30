@@ -43,8 +43,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>false</fork>
-                    <!-- 你的启动类 -->
-                    <mainClass>com.wuweibi.bullet.BulletServerApplication</mainClass>
                 </configuration>
             </plugin>
 
