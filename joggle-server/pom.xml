@@ -25,7 +25,7 @@
     </properties>
 
     <build>
-        <finalName>bullet-server</finalName>
+        <finalName>joggle-server</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
