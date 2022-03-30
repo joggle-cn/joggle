@@ -37,7 +37,7 @@ https://www.oschina.net/p/bullet-joggle
 
 ![image](docs/images/WX20190603-173120.png)
 
-### Bullet 项目结构
+### Joggle 项目结构
 
 
 |目录 |说明|
@@ -47,7 +47,7 @@ https://www.oschina.net/p/bullet-joggle
 | bullet-server | Server端为服务端主控程序，提供系列接口供Web前端页面调用，控制Client操作Ngrok客户端|
 | databases | sql相关的（历史原因部分字段的设计采用驼峰）| 
 
-BulletServer占用的端口说明：
+JoggleServer占用的端口说明：
 |端口 |说明|
 |:---- |----   |
 | 8083 | Ngrok通道 |
@@ -56,12 +56,12 @@ BulletServer占用的端口说明：
 | 8081 | Bullet WEB管理服务（默认端口，可通过环境变量修改) |   
 
 
-### BulletClient 快速体验
+### JoggleClient 快速体验
 
 首先您需要登录到平台注册一个账号，激活后您将获得一个雪花域名并赠予一个月的使用权（激活账号后才有哦）。
 
 
-bullet-client的部署非常简单，百度网盘下载对应的client包
+joggle-client的部署非常简单，百度网盘下载对应的client包
 ```
 下载地址：https://pan.baidu.com/s/1dy2qzPtN3CmftuHGm3BJgA
 密码: h9hf
