@@ -51,7 +51,7 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
                             echo "发布前端页面"
-                            cd bullet-server/src/main/resources/static/
+                            cd joggle-server/src/main/resources/static/
                             ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
                             scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
 
@@ -63,7 +63,7 @@ pipeline {
 
                         if [ "$BRANCH_NAME"  = "build" ];then
                             echo "正在转移jar文件"
-                            mv ./bullet-server/target/bullet-server.jar ./build/server/lib/bullet-server.jar
+                            mv ./bullet-server/target/bullet-server.jar ./build/server/lib/joggle-server.jar
 
                             cd ./build/server/
 
