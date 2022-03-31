@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -60,11 +61,15 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         // 更新已绑定的设备
         QueryWrapper ew2 = new QueryWrapper();
         ew.eq("deviceId", deviceNo);
-        Device device = deviceMapper.selectOne(ew2);
-        if (device == null) return;
-        device.setIntranetIp(ip);
-        device.setMacAddr(mac);
-        deviceMapper.updateById(device);
+        List<Device> deviceList = deviceMapper.selectList(ew2);
+        if (deviceList.size() == 0) return;
+
+        deviceList.forEach(device->{
+            device.setIntranetIp(ip);
+            device.setMacAddr(mac);
+            deviceMapper.updateById(device);
+        });
+
     }
 
     @Override
