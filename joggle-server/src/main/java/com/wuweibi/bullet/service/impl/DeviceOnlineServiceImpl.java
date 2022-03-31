@@ -4,11 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
+import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
+import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -22,7 +26,12 @@ import java.util.Date;
 @Service
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
+    @Resource
+    private DeviceMapper deviceMapper;
+
+
     @Override
+    @Transactional
     public void saveOrUpdateOnline(String deviceNo, String ip, String mac, String clientVersion) {
 
         QueryWrapper ew = new QueryWrapper();
@@ -47,6 +56,15 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             deviceOnline.setClientVersion(clientVersion);
             this.baseMapper.updateById(deviceOnline);
         }
+
+        // 更新已绑定的设备
+        QueryWrapper ew2 = new QueryWrapper();
+        ew.eq("deviceId", deviceNo);
+        Device device = deviceMapper.selectOne(ew2);
+        if (device == null) return;
+        device.setIntranetIp(ip);
+        device.setMacAddr(mac);
+        deviceMapper.updateById(device);
     }
 
     @Override
@@ -89,7 +107,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         String deviceNo = deviceInfo.getDeviceNo();
         DeviceOnline deviceOnline = this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
                 .eq(DeviceOnline::getDeviceNo, deviceNo));
-        if(deviceOnline == null){
+        if (deviceOnline == null) {
             deviceOnline = new DeviceOnline();
             deviceOnline.setDeviceNo(deviceNo);
             deviceOnline.setStatus(1);// 等待被绑定（在线)
