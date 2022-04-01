@@ -60,15 +60,15 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
         // 更新已绑定的设备
         QueryWrapper ew2 = new QueryWrapper();
-        ew.eq("deviceId", deviceNo);
+        ew2.eq("deviceId", deviceNo);
         List<Device> deviceList = deviceMapper.selectList(ew2);
         if (deviceList.size() == 0) return;
 
-        deviceList.forEach(device->{
+        for (Device device : deviceList) {
             device.setIntranetIp(ip);
             device.setMacAddr(mac);
             deviceMapper.updateById(device);
-        });
+        }
 
     }
 
