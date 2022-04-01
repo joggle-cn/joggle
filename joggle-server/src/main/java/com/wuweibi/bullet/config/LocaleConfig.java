@@ -26,18 +26,4 @@ public class LocaleConfig {
         return localeResolver;
     }
 
-    /**
-     * 默认拦截器 其中lang表示切换语言的参数名
-     */
-    @Bean
-    public WebMvcConfigurer localeInterceptor() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addInterceptors(InterceptorRegistry registry) {
-                LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
-                localeInterceptor.setParamName("lang");
-                registry.addInterceptor(localeInterceptor);
-            }
-        };
-    }
 }

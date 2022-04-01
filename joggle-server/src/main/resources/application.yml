@@ -10,7 +10,7 @@ server:
 
 springfox:
   documentation:
-    enabled: true
+    enabled: false
     swagger-ui:
       enabled: true
       base-url: /api/v2/api-docs

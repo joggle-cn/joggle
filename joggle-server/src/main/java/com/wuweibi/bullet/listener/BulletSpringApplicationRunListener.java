@@ -16,16 +16,16 @@ public class BulletSpringApplicationRunListener implements SpringApplicationRunL
     public BulletSpringApplicationRunListener(SpringApplication application, String[] args){
     }
 
-    @Override
-    public void starting() {
-        System.out.println("SpringApplicationRunListener...starting...");
-    }
+//    @Override
+//    public void starting() {
+//        System.out.println("SpringApplicationRunListener...starting...");
+//    }
 
-    @Override
-    public void environmentPrepared(ConfigurableEnvironment environment) {
-        Object o = environment.getSystemProperties().get("os.name");
-        System.out.println("SpringApplicationRunListener...environmentPrepared.."+o);
-    }
+//    @Override
+//    public void environmentPrepared(ConfigurableEnvironment environment) {
+//        Object o = environment.getSystemProperties().get("os.name");
+//        System.out.println("SpringApplicationRunListener...environmentPrepared.."+o);
+//    }
 
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
