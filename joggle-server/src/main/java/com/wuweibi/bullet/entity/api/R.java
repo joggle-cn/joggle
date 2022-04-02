@@ -11,6 +11,7 @@ import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
@@ -28,6 +29,7 @@ import java.util.List;
  * @author marker
  * @param <T>
  */
+@Setter
 @Getter
 public class R<T> {
 
@@ -198,6 +200,11 @@ public class R<T> {
      */
     public static R fail(Object data) {
         return new R<>(SystemErrorType.SYSTEM_ERROR, data);
+    }
+
+
+    public static R fail(String msg) {
+        return new R<>(SystemErrorType.SYSTEM_ERROR, msg, null);
     }
 
 

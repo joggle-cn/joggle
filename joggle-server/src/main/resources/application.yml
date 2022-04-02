@@ -64,6 +64,16 @@ spring:
       mail.smtp.connectiontimeout: 30000
       mail.smtp.writetimeout: 30000
       mail.smtp.ssl.socketFactory.class: com.wuweibi.bullet.mail.MailSSLSocketFactory
+  # redis 配置
+  redis:
+    host: ${REDIS_HOST:192.168.1.6}
+    port: ${REDIS_PORT:32259}
+    password: ${REDIS_PASSWORD:masterPass123.}
+    lettuce:
+      pool:
+        maxTotal: 100
+        maxWaitMillis : 100000
+        max-idle: 10
 
   # 数据库配置
   datasource:

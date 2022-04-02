@@ -6,24 +6,17 @@ import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.domain.Role;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
-import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
-import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,14 +48,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 支持手机号和账号登录
         OauthUser user = oauthUserService.getByUsername(username);
-        if(user == null){
+        if (user == null) {
             throw new BaseException(AuthErrorType.ACCOUNT_PASSWORD_ERROR);
         }
         log.info("loadByUsername:{}", user.toString());
 
         // 判断用户是哪个端的用户
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String clientName = authentication.getName();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String clientName = authentication.getName();
 //        if("manager".equals(clientName)){// 运营端
 //            Set<GrantedAuthority> authList = this.obtainGrantedAuthorities(user);
 //            if(!hasRoleCode(authList, "operating")){// 没有运营端权限
@@ -71,18 +64,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 //        }
 
         // 验证验证码是否匹配
-        HttpServletRequest request =  ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+//        HttpServletRequest request =  ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
-        String password = request.getParameter("password");// 密码
-        String password2 = user.getPassword();
-
-
-        PasswordEncoder passwordEncoder = SpringUtils.getBean(PasswordEncoder.class);
-
-        if( passwordEncoder.matches(password, password2)){// 密码正确
-            // 更新登录时间
-            oauthUserService.updateLoginTime(user.getId());
-        }
 
         // 返回用户
         return new UserDetail(

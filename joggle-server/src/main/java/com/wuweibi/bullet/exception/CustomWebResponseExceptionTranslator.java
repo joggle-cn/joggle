@@ -7,9 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
+import org.springframework.security.web.util.ThrowableAnalyzer;
 
 
 /**
@@ -20,8 +23,27 @@ import org.springframework.security.oauth2.provider.error.WebResponseExceptionTr
 @Slf4j
 public class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
 
+
+
+    private ThrowableAnalyzer throwableAnalyzer = new DefaultThrowableAnalyzer();
+
+//    protected MessageSourceAccessor messages = SecurityMessageSourceUtil.getAccessor();
+
+
+
+
     @Override
     public ResponseEntity translate(Exception e) {
+
+
+        // Try to extract a SpringSecurityException from the stacktrace
+        Throwable[] causeChain = throwableAnalyzer.determineCauseChain(e);
+
+        Exception ase = (AuthenticationException) throwableAnalyzer
+                .getFirstThrowableOfType(AuthenticationException.class, causeChain);
+
+
+
 
         if (e instanceof OAuth2Exception) {
             log.warn("", e);
