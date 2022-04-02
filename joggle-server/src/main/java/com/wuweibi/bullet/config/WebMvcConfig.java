@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.List;
 
@@ -32,12 +33,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 跨域配置
+     * 升级springboot2.4.0后，  allowedOrigins更变为 allowedOriginPatterns
      * @param registry
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);
@@ -156,6 +158,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
 
 
+
+        LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
+        localeInterceptor.setParamName("lang");
+        registry.addInterceptor(localeInterceptor);
     }
 
 //    @Bean
@@ -231,5 +237,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //
 //        return servletRegistrationBean;
 //    }
+
 
 }
