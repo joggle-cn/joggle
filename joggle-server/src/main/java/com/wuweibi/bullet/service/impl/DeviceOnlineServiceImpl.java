@@ -121,6 +121,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnline.setUpdateTime(new Date());
 
         if (deviceOnline.getId() != null) {
+            deviceOnline.setStatus(1); // 更新一般是上线才会更新
             this.baseMapper.updateById(deviceOnline);
         } else {// save
             this.baseMapper.insert(deviceOnline);

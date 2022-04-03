@@ -98,7 +98,6 @@ public class BulletAnnotation {
         this.session = session;
         this.deviceNo = deviceNo;
 
-
         // 如果是首次链接，执行重新分配设备编码
         if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
             this.deviceNo = CodeHelper.makeNewCode();
