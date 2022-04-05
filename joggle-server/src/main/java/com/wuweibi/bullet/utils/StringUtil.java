@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -10,9 +11,9 @@ import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
- * 
+ *
  * @author marker
- * 
+ *
  */
 
 @Slf4j
@@ -28,13 +29,13 @@ public class StringUtil {
 	public static String emptyString(){
 	    return "";
 	}
-	
+
 	public static String newLine() {
 	    return System.getProperty("line.separator");
 	}
 	/**
 	 * 判断字符串是否为Null或trim后长度为0
-	 * 
+	 *
 	 * @param origin
 	 * @return
 	 */
@@ -42,7 +43,7 @@ public class StringUtil {
 		if( origin == null ) return true;
 		return origin.toString().trim().isEmpty();
 	}
-	
+
     /**
      * <p>Checks if a CharSequence is empty ("") or null.</p>
      *
@@ -75,7 +76,7 @@ public class StringUtil {
 	public static boolean isNotEmpty(final CharSequence origin) {
 		return !isEmpty(origin);
 	}
-	
+
 	/**
 	 * 判断字符串是否为空白
 	 * @param str
@@ -84,7 +85,7 @@ public class StringUtil {
 	public static boolean isBlank(String str){
 		return str == null || str.trim().length() == 0;
 	}
-	
+
 	/**
 	 * 判断字符串是否不为空白
 	 * @param str
@@ -130,7 +131,7 @@ public class StringUtil {
 
 	/**
 	 * 获取字符串的长度，如果有中文，则每个中文字符计为2位
-	 * 
+	 *
 	 * @param value
 	 *            指定的字符串
 	 * @return 字符串的长度
@@ -181,7 +182,7 @@ public class StringUtil {
 		}
 		return newStringBuilder.toString();
 	}
-	
+
 	public static String getString(String a,int length){
 		int len=a.length();
 		while(len<length){
@@ -198,29 +199,29 @@ public class StringUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isNumeric(String str){ 
+	public static boolean isNumeric(String str){
 		if(isEmpty(str)){
 			return false;
 		}
-		Pattern pattern = Pattern.compile("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$"); 
+		Pattern pattern = Pattern.compile("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
 		Matcher isNum = pattern.matcher(str);
 		return isNum.matches();
 	}
-	
+
 	/**
 	 * 判断一个字符串是否是数字（包括整数，负数，不包括小数）
 	 * @param str
 	 * @return
 	 */
-	public static boolean isNumber(String str){ 
+	public static boolean isNumber(String str){
 		if(isEmpty(str)){
 			return false;
 		}
-		Pattern pattern = Pattern.compile("^[-+]?[0-9]+"); 
+		Pattern pattern = Pattern.compile("^[-+]?[0-9]+");
 		Matcher isNum = pattern.matcher(str);
 		return isNum.matches();
 	}
-	
+
 	/**
 	 * 转化为String对象
 	 * @author 王文成
@@ -237,7 +238,7 @@ public class StringUtil {
 		}
 		return str;
 	}
-	
+
 	/**
 	 * 判断对象是否有效
 	 * @author 王文成
@@ -248,10 +249,10 @@ public class StringUtil {
 		if( value == null ) return false;
 		return isNotEmpty(value.toString());
 	}
-	
+
 	/**
 	 * 返回一个有效的对象 value != null && value.toString().length() > 0
-	 * 
+	 *
 	 * @param values
 	 */
 	public static String tryThese(Object... values) {
@@ -265,7 +266,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * 连接字符串 
+	 * 连接字符串
 	 * @author 王文成
 	 * @param list 列表
 	 * @param split 分隔符
@@ -274,7 +275,7 @@ public class StringUtil {
 	public static <T> String join(T[] list, String split) {
 		return join(list, split, "");
 	}
-	
+
 	/**
 	 * 连接字符串
 	 * @author 王文成
@@ -295,7 +296,7 @@ public class StringUtil {
 		}
 		return s.toString();
 	}
-	
+
 	/**
 	 * 连接字符串
 	 * @author 王文成
@@ -317,7 +318,7 @@ public class StringUtil {
 		}
 		return s.toString();
 	}
-	
+
 	/**
 	 * 连接字符串
 	 * @author 王文成
@@ -340,7 +341,7 @@ public class StringUtil {
 	public static String join(List<?> list, String split) {
 		return join(list.toArray(), split);
 	}
-	
+
 	/**
 	 * 连接字符串
 	 * @author 王文成
@@ -351,7 +352,7 @@ public class StringUtil {
 	public static String join(Collection<?> list, String split) {
 		return join(list.toArray(), split);
 	}
-	
+
 	/**
 	 * 连接字符串
 	 * @author 王文成
@@ -363,8 +364,8 @@ public class StringUtil {
 	public static String join(Collection<?> list, String split, String wrap) {
 		return join(list.toArray(), split, wrap);
 	}
-	
-	
+
+
 	/**
 	 * 包裹字符串 id:12, {, } 输出 {id:12}
 	 * @author 王文成
@@ -411,7 +412,7 @@ public class StringUtil {
 		}
 		return matches;
 	}
-	
+
 	/**
 	 * 首字母大写
 	 * @author 王文成
@@ -424,7 +425,7 @@ public class StringUtil {
 		}
 		return value;
 	}
-	
+
 	/**
 	 * 首字母小写
 	 * @author 王文成
@@ -437,7 +438,7 @@ public class StringUtil {
 		}
 		return value;
 	}
-	
+
 	/**
 	 * 填充字符串，非空返回本身，空则返回默认字符串
 	 * @param str 字符串
@@ -450,10 +451,10 @@ public class StringUtil {
 		}
 		return str;
 	}
-	
+
 	/**
 	 * 转换格式 CUST_INFO_ID - > custInfoId
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 */
@@ -472,10 +473,10 @@ public class StringUtil {
 		}
 		return b.toString();
 	}
-	
+
 	/**
 	 * 字符串转化为UUID
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */
@@ -484,7 +485,7 @@ public class StringUtil {
 			throw new RuntimeException("value is null!");
 		return UUID.nameUUIDFromBytes(value.getBytes()).toString();
 	}
-	
+
 	/**
 	 * 将一串以默认逗号分隔的数字转换为Integer的list
 	 * @param value
@@ -512,7 +513,7 @@ public class StringUtil {
 		}
 		return list;
 	}
-	
+
 	public static List<String> toStringList(String value, String regex) {
 		if (isEmpty(value)) {
 			return Collections.emptyList();
@@ -527,7 +528,7 @@ public class StringUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 将字符串转换为整型，转换失败返回null
 	 * @param str
@@ -540,7 +541,7 @@ public class StringUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 将字符串转换为Long，转换失败返回null
 	 * @param str
@@ -563,7 +564,7 @@ public class StringUtil {
 		if (isEmpty(longs)) {
 			return Collections.emptyList();
 		}
-		
+
 		String[] strNumbers = longs.split(",");
 		List<Long> list = new ArrayList<Long>(strNumbers.length);
 		for (String str : strNumbers) {
@@ -571,11 +572,11 @@ public class StringUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 根据Unicode编码完美的判断中文汉字和符号
 	 */
-	
+
     private static boolean isChinese(char c) {
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
         if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
@@ -586,12 +587,12 @@ public class StringUtil {
         }
         return false;
     }
- 
+
     /**
 	 * 判断字符串是否为中文
 	 */
     public static boolean isChinese(String strName) {
-    	
+
     	if (isEmpty(strName)) {
     		return false;
     	}
@@ -604,10 +605,10 @@ public class StringUtil {
         }
         return true;
     }
-    
-    public static boolean isEnglish(String word) {  
-        return word == null? false : word.matches(english);  
-    } 
+
+    public static boolean isEnglish(String word) {
+        return word == null? false : word.matches(english);
+    }
 
     public static String contactStr(Object ... objs) {
     	if(objs == null || objs.length == 0) return "";
@@ -624,7 +625,7 @@ public class StringUtil {
     	}
     	return sb.toString();
     }
-    
+
     /**
      * 获取字符串中的所有数字组成一个字符串
      * @param str  含有非数字的字符串
@@ -642,7 +643,7 @@ public class StringUtil {
     	}
     	return str2;
    }
-    
+
     /**
      * 字符串转换为  Properties
      * @param text format:id=102012 name=Hello World
@@ -657,7 +658,7 @@ public class StringUtil {
 		}
     	return p;
     }
-    
+
     /**
      * 字符串转换为  Properties
      * @param text format:id=102012 name=Hello World
@@ -670,7 +671,7 @@ public class StringUtil {
     	map.putAll(p);
     	return map;
     }
-    
+
     public static boolean isEmail(String str){
     	Pattern p = Pattern.compile(email);
         Matcher m = p.matcher(str);
@@ -867,5 +868,34 @@ public class StringUtil {
 			return isMatch;
 		}
 
+	}
+
+	public static String removeAllLineBreaks(String str) {
+		return removeAll(str, '\r', '\n');
+	}
+
+	public static String removeAll(CharSequence str, char... chars) {
+		if (null != str && !ArrayUtils.isEmpty(chars)) {
+			int len = str.length();
+			if (0 == len) {
+				return str(str);
+			} else {
+				StringBuilder builder =  new StringBuilder(len);
+
+				for(int i = 0; i < len; ++i) {
+					char c = str.charAt(i);
+					if (!ArrayUtils.contains(chars, c)) {
+						builder.append(c);
+					}
+				}
+
+				return builder.toString();
+			}
+		} else {
+			return str(str);
+		}
+	}
+	public static String str(CharSequence cs) {
+		return null == cs ? null : cs.toString();
 	}
 }

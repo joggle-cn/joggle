@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.filter;
+package com.wuweibi.bullet.web.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,9 +5,8 @@ package com.wuweibi.bullet.config;
 
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
-import com.wuweibi.bullet.controller.interceptor.RequestParamsInterceptor;
-import com.wuweibi.bullet.filter.CrossDomainFilter;
-import com.wuweibi.bullet.filter.WebsocketIPFilter;
+import com.wuweibi.bullet.web.filter.CrossDomainFilter;
+import com.wuweibi.bullet.web.filter.WebsocketIPFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -128,16 +127,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        return new SignInterceptor();
 //    }
 
-
-    /**
-     * 请求参数打印拦截器
-     * @return
-     */
-    @Bean
-    public RequestParamsInterceptor beanRequestParamsInterceptor(){
-        return new RequestParamsInterceptor();
-    }
-
     @Bean
     public AllInterceptor beanAllInterceptor(){
         return new AllInterceptor();
@@ -154,7 +143,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // excludePathPatterns 用户排除拦截
 //        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
 
-        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
+//        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
 //        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
 
 
