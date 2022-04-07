@@ -45,6 +45,11 @@ public class ClientVersion implements Serializable {
     @TableField("title")
     private String title;
 
+
+    private String os; // ":"darwin",
+    
+    private String arch; // ":"amd64",
+
     /**
      * 描述
      */

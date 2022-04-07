@@ -254,9 +254,8 @@ public class OpenController {
     @RequestMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO, HttpServletRequest request) {
 
-        ClientVersion clientVersion = clientVersionService.getNewVersion();
-
-
+        ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
+        
         ReleaseDetail releaseDetail = new ReleaseDetail();
 
         ReleaseInfo releaseInfo = new ReleaseInfo();
@@ -273,9 +272,14 @@ public class OpenController {
             path = "";
         }
 
-        releaseDetail.setDownload_url(clientVersion.getDownloadUrl() + path + "ngrok");
+        String fileName = "ngrok";
+        if("windows".equals(clientInfoDTO.getOs())){
+            fileName = "ngrok.exe";
+        }
+
+        releaseDetail.setDownload_url(clientVersion.getDownloadUrl() + path + fileName);
         releaseDetail.setChecksum(clientVersion.getChecksum());
-        releaseDetail.setSignature(null);
+//        releaseDetail.setSignature(null);
         releaseDetail.setPatch_type(null);
         releaseDetail.setAvailable(true);
 

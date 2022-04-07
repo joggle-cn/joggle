@@ -59,3 +59,11 @@ CREATE TABLE `data_metrics`  (
 
 
 ALTER TABLE `t_device_online` ADD COLUMN `client_version` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '客户端版本' AFTER `public_ip`;
+
+
+
+
+-- 2022-04-07 版本增加标识
+ALTER TABLE  `client_version`
+    ADD COLUMN `os` varchar(20) NULL COMMENT '操作系统' AFTER `title`,
+ADD COLUMN `arch` varchar(20) NULL COMMENT 'CPU架构' AFTER `os`;
