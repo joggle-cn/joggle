@@ -32,6 +32,7 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.mail.Header;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -179,7 +181,6 @@ public class OpenController {
 
             mailService.send(email, "Bullet账号激活", params, "register_mail.ftl");
 
-
             // 赠送域名
             Domain domain = new Domain();
 
@@ -287,4 +288,21 @@ public class OpenController {
     }
 
 
+    /**
+     * 检查请求头
+     *
+     * @return
+     */
+    @Profile("dev")
+    @RequestMapping(value = "/test")
+    public R checkUpdate(  HttpServletRequest request) {
+        Enumeration<String> e = request.getHeaderNames();
+        HashMap<String, String> data = new HashMap<>();
+        while (e.hasMoreElements()){
+            String headerName = e.nextElement();
+            String val = request.getHeader(headerName);
+            data.put(headerName,val);
+        }
+        return R.success(data);
+    }
 }

@@ -253,8 +253,9 @@ let faceinner = {
         let options = {
             url: faceinner.server + url  ,
             type: 'DELETE',
-            data: data ,
+            data: JSON.stringify(data) ,
             dataType: "json",
+            contentType: 'application/json',
             success:func,
             error: faceinner.errorfunc,
             crossDomain: true,

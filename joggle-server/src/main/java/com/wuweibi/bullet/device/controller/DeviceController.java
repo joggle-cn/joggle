@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
@@ -144,18 +145,19 @@ public class DeviceController {
      */
     @DeleteMapping(value = "")
     public Object delete(@JwtUser Session session,
-                       @RequestParam Long id,
+                       @RequestBody @Valid DeviceDelDTO dto,
                        HttpServletRequest request ){
         Long userId = session.getUserId();
+        Long dId = dto.getId();
 
         // 校验设备是否是他的
-        boolean status = deviceService.exists(userId, id);
+        boolean status = deviceService.exists(userId, dId);
         if(status){
-            Device device = deviceService.getById(id);
+            Device device = deviceService.getById(dId);
 
             // 删除映射
-            deviceMappingService.deleteByDeviceId(id);
-            deviceService.removeById(id);
+            deviceMappingService.deleteByDeviceId(dId);
+            deviceService.removeById(dId);
 
             try {
                 BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceNo());

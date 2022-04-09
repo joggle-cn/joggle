@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -19,10 +20,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
@@ -60,14 +58,14 @@ public class DeviceMappingController {
      * @return
      */
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public Object delete(@JwtUser Session session, @RequestParam Long id){
+    public Object delete(@JwtUser Session session, @RequestBody DeviceMappingDelDTO dto){
         Long userId = session.getUserId();
-
+        Long dmId = dto.getId();
         // 验证设备映射是自己的
-        boolean status = deviceMappingService.exists(userId, id);
+        boolean status = deviceMappingService.exists(userId, dmId);
         if(status){
-            DeviceMapping entity = deviceMappingService.getById(id);
-            deviceMappingService.removeById(id);
+            DeviceMapping entity = deviceMappingService.getById(dmId);
+            deviceMappingService.removeById(dmId);
 
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
