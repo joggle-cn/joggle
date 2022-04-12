@@ -67,3 +67,24 @@ ALTER TABLE `t_device_online` ADD COLUMN `client_version` varchar(10) CHARACTER 
 ALTER TABLE  `client_version`
     ADD COLUMN `os` varchar(20) NULL COMMENT '操作系统' AFTER `title`,
 ADD COLUMN `arch` varchar(20) NULL COMMENT 'CPU架构' AFTER `os`;
+
+-- 2022-04-12 新增流量日统计表
+CREATE TABLE `data_metrics_day`  (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户ID',
+    `device_id` bigint(20) NULL DEFAULT NULL COMMENT '设备ID',
+    `mapping_id` bigint(20) NULL DEFAULT NULL COMMENT '设备映射ID',
+    `create_date` date NULL DEFAULT NULL COMMENT '生成时间',
+    `create_month` date NULL DEFAULT NULL COMMENT '生成月',
+    `create_year` int(4) NULL DEFAULT NULL COMMENT '生成年',
+    `flow` decimal(20, 0) NULL DEFAULT NULL COMMENT '流量',
+    `link` bigint(22) NULL DEFAULT NULL COMMENT '连接数',
+    `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `idx_mapping_id_date`(`mapping_id`, `create_date`) USING BTREE,
+    INDEX `idx_user_id`(`user_id`) USING BTREE,
+    INDEX `idx_date`(`create_date`) USING BTREE,
+    INDEX `idx_month`(`create_month`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流量日统计表' ROW_FORMAT = Dynamic;
+
+
