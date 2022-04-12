@@ -14,6 +14,7 @@
           DATE_FORMAT(#{date},'%Y-%m-01'),
           DATE_FORMAT(#{date},'%Y'),
           sum(a.bytes_in+a.bytes_out),
+          count(*),
           now()
         from
           data_metrics a

@@ -19,24 +19,26 @@
             round(c.todayFlow,2) as todayFlow,
             round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
             round(c.monthFlow,2) as monthFlow,
-            round(ifnull((c.monthFlow - monthFlow2)/monthFlow2, IF(c.monthFlow=0, 0, 1)) * 100,2) as monthFlowOn,
+            round(ifnull(((c.monthFlow+c.todayFlow) - monthFlow2)/monthFlow2, IF((c.monthFlow+c.todayFlow)=0, 0, 1)) * 100,2) as monthFlowOn,
             round(c.yearFlow,2) as yearFlow,
-            round(ifnull((c.yearFlow - yearFlow2)/yearFlow2, IF(c.yearFlow=0, 0, 1)) * 100,2) as yearFlowOn,
+            round(ifnull(((c.yearFlow+c.todayFlow) - yearFlow2)/yearFlow2, IF((c.yearFlow+c.todayFlow)=0, 0, 1)) * 100,2) as yearFlowOn,
             round(c.monthLink,2) monthLink,
             round(ifnull((c.monthLink - monthLink2)/monthLink2, IF(c.monthLink=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
               a.user_id,
               IFNULL(sum(case when a.create_date = CURRENT_DATE then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow,
-              IFNULL(sum(case when a.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d') then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow2,
-              IFNULL(sum(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow,
-              IFNULL(sum(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01') then a.bytes_in+a.bytes_out end),0)/1024/1024 monthFlow2,
-              IFNULL(sum(case when a.create_year = DATE_FORMAT(CURRENT_DATE,'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow,
-              IFNULL(sum(case when a.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 YEAR),'%Y') then a.bytes_in+a.bytes_out end),0)/1024/1024 yearFlow2,
-              IFNULL(count(case when a.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01') then a.bytes_in+a.bytes_out end),0) monthLink,
-              IFNULL(count(case when a.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01') then a.bytes_in+a.bytes_out end),0) monthLink2
+              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
+              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
+              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,
+
+              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_year = DATE_FORMAT(CURRENT_DATE,'%Y')) as yearFlow,
+              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y')) as yearFlow2,
+
+              (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthLink,
+              (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthLink2
           from
               data_metrics a
-          WHERE a.user_id = #{userId}
+          WHERE a.user_id = #{userId} and a.create_date = CURRENT_DATE
           GROUP BY a.user_id) c
     </select>
 

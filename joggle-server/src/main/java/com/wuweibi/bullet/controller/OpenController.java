@@ -331,7 +331,6 @@ public class OpenController {
         while (true){
             Date time = calendar.getTime();
             boolean status = dataMetricsService.generateDayByTime(time);
-
             calendar.add(Calendar.DATE, 1);
             if (DateUtils.truncatedCompareTo(time, new Date(), Calendar.DATE) == 0) {
                 break;
@@ -340,4 +339,7 @@ public class OpenController {
 
         return R.success();
     }
+
+
+
 }
