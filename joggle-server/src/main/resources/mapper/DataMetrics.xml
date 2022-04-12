@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.metrics.mapper.DataMetricsMapper">
+
+
+
+    <update id="generateDayByTime">
+        insert into data_metrics_day (select
+          null,
+          a.user_id,
+          a.device_id,
+          a.mapping_id,
+          DATE_FORMAT(#{date},'%Y-%m-%d'),
+          DATE_FORMAT(#{date},'%Y-%m-01'),
+          DATE_FORMAT(#{date},'%Y'),
+          sum(a.bytes_in+a.bytes_out),
+          now()
+        from
+          data_metrics a
+        WHERE a.create_date = DATE_FORMAT(#{date},'%Y-%m-%d')
+        HAVING a.user_id is not null
+            )
+    </update>
+
+
+
+</mapper>

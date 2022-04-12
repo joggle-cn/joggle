@@ -3,6 +3,8 @@ package com.wuweibi.bullet.metrics.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 
+import java.util.Date;
+
 /**
  * 数据收集(DataMetrics)表服务接口
  *
@@ -11,4 +13,5 @@ import com.wuweibi.bullet.metrics.entity.DataMetrics;
  */
 public interface DataMetricsService extends IService<DataMetrics> {
 
+    boolean generateDayByTime(Date date);
 }

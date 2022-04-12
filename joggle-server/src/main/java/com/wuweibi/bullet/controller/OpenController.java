@@ -21,6 +21,8 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
+import com.wuweibi.bullet.metrics.entity.DataMetrics;
+import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
@@ -31,6 +33,7 @@ import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -304,5 +307,37 @@ public class OpenController {
             data.put(headerName,val);
         }
         return R.success(data);
+    }
+
+
+    @Resource
+    private DataMetricsService dataMetricsService;
+
+
+    /**
+     * 初始化数据
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/update-count/init")
+    public R updateCount(  HttpServletRequest request) {
+
+        String startTime  = "2021-11-09";
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, 8);
+        calendar.set(Calendar.MONTH, 10);
+        calendar.set(Calendar.YEAR, 2021);
+
+        while (true){
+            Date time = calendar.getTime();
+            boolean status = dataMetricsService.generateDayByTime(time);
+
+            calendar.add(Calendar.DATE, 1);
+            if (DateUtils.truncatedCompareTo(time, new Date(), Calendar.DATE) == 0) {
+                break;
+            }
+        }
+
+        return R.success();
     }
 }
