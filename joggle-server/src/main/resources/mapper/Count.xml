@@ -18,14 +18,15 @@
         select
             round(c.todayFlow,2) as todayFlow,
             round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
-            round(c.monthFlow,2) as monthFlow,
+            round((c.monthFlow+c.todayFlow),2) as monthFlow,
             round(ifnull(((c.monthFlow+c.todayFlow) - monthFlow2)/monthFlow2, IF((c.monthFlow+c.todayFlow)=0, 0, 1)) * 100,2) as monthFlowOn,
-            round(c.yearFlow,2) as yearFlow,
+            round((c.yearFlow+c.todayFlow),2) as yearFlow,
             round(ifnull(((c.yearFlow+c.todayFlow) - yearFlow2)/yearFlow2, IF((c.yearFlow+c.todayFlow)=0, 0, 1)) * 100,2) as yearFlowOn,
-            round(c.monthLink,2) monthLink,
-            round(ifnull((c.monthLink - monthLink2)/monthLink2, IF(c.monthLink=0, 0, 1)) * 100,2) as monthLinkOn
+            round((c.monthLink+c.todayLink),2) monthLink,
+            round(ifnull(((c.monthLink+c.todayLink) - monthLink2)/monthLink2, IF((c.monthLink+c.todayLink)=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
                   (select IFNULL(sum(b.bytes_in+b.bytes_out  ),0)/1024/1024 from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayFlow,
+                  (select IFNULL(count(*),0) from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayLink,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,
@@ -44,7 +45,7 @@
     <select id="selectUserDeviceRank" resultType="com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO">
         select
             a.device_id,
-            ifnull(b.`name`, `未知设备`) deviceName,
+            ifnull(b.`name`, "未知设备") deviceName,
             sum(a.bytes_in+a.bytes_out)/1024/1024 flow
         from data_metrics_day a
         left join t_device b on a.device_id = b.id
