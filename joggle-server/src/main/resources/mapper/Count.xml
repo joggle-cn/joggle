@@ -69,7 +69,7 @@
     <select id="selectUserDeviceTrend" resultType="com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO">
         select a.create_date as time, round(a.flow,2)  flow  from
         (
-            (select create_date, SUM(bytes_in+bytes_out)/1024/1024 flow from data_metrics
+            (select create_date, SUM(flow)/1024/1024 flow from data_metrics_day
                 WHERE user_id = #{userId}
                 <if test="deviceId != null">
                     and device_id = #{deviceId}
@@ -81,7 +81,7 @@
                 date(@date := DATE_ADD( @date, INTERVAL - 1 DAY )) create_date,
                 0 flow
                 FROM
-                ( SELECT @date := DATE_ADD( now(), INTERVAL + 1 DAY ) FROM data_metrics ) days
+                ( SELECT @date := DATE_ADD( now(), INTERVAL + 1 DAY ) FROM data_metrics_day ) days
                 LIMIT 30
             )
         ) a
