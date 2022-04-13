@@ -13,12 +13,13 @@
           DATE_FORMAT(#{date},'%Y-%m-%d'),
           DATE_FORMAT(#{date},'%Y-%m-01'),
           DATE_FORMAT(#{date},'%Y'),
-          sum(a.bytes_in+a.bytes_out),
+          sum(ifnull(a.bytes_in,0) + ifnull(a.bytes_out,0)),
           count(*),
           now()
         from
           data_metrics a
         WHERE a.create_date = DATE_FORMAT(#{date},'%Y-%m-%d')
+        GROUP BY a.user_id, a.device_id, a.mapping_id
         HAVING a.user_id is not null
             )
     </update>
