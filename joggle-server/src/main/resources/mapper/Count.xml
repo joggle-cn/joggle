@@ -25,21 +25,19 @@
             round(c.monthLink,2) monthLink,
             round(ifnull((c.monthLink - monthLink2)/monthLink2, IF(c.monthLink=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
-              a.user_id,
-              IFNULL(sum(case when a.create_date = CURRENT_DATE then a.bytes_in+a.bytes_out end),0)/1024/1024 todayFlow,
-              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
-              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
-              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,
+                  (select IFNULL(sum(b.bytes_in+b.bytes_out  ),0)/1024/1024 from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayFlow,
+                  (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
+                  (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
+                  (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,
 
-              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_year = DATE_FORMAT(CURRENT_DATE,'%Y')) as yearFlow,
-              (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = #{userId} and b.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y')) as yearFlow2,
+                  (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_year = DATE_FORMAT(CURRENT_DATE,'%Y')) as yearFlow,
+                  (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_year = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y')) as yearFlow2,
 
-              (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthLink,
-              (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = #{userId} and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthLink2
-          from
-              data_metrics a
-          WHERE a.user_id = #{userId} and a.create_date = CURRENT_DATE
-          GROUP BY a.user_id) c
+                  (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthLink,
+                  (select ifnull(sum(link),0) from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthLink2
+              from t_sys_users a
+              WHERE a.id = #{userId}
+              GROUP BY a.id) c
     </select>
 
 <!--    统计设备流量排行-->
