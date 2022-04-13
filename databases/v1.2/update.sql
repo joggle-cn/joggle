@@ -81,7 +81,7 @@ CREATE TABLE `data_metrics_day`  (
     `link` bigint(22) NULL DEFAULT NULL COMMENT '连接数',
     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `idx_mapping_id_date`(`mapping_id`, `create_date`) USING BTREE,
+    UNIQUE INDEX `idx_mapping_id_date`(`mapping_id`, `device_id`, `create_date`) USING BTREE,
     INDEX `idx_user_id`(`user_id`) USING BTREE,
     INDEX `idx_date`(`create_date`) USING BTREE,
     INDEX `idx_month`(`create_month`) USING BTREE
