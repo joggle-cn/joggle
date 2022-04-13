@@ -43,15 +43,25 @@
 
 <!--    统计设备流量排行-->
     <select id="selectUserDeviceRank" resultType="com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO">
-        select
+
+        <if test="type == 1">
+            select
             a.device_id,
             ifnull(b.`name`, "未知设备") deviceName,
-            sum(a.flow)/1024/1024 flow
-        from data_metrics_day a
-        left join t_device b on a.device_id = b.id
-        WHERE a.user_id = #{userId}
-        <if test="type == 1">
+            sum(a.bytes_in+a.bytes_out)/1024/1024 flow
+            from data_metrics a
+            left join t_device b on a.device_id = b.id
+            WHERE a.user_id = #{userId}
             and a.create_date = CURRENT_DATE
+        </if>
+        <if test="type != 1">
+            select
+                a.device_id,
+                ifnull(b.`name`, "未知设备") deviceName,
+                sum(a.flow)/1024/1024 flow
+            from data_metrics_day a
+            left join t_device b on a.device_id = b.id
+            WHERE a.user_id = #{userId}
         </if>
         <if test="type == 2">
             and a.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')
