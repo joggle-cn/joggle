@@ -46,7 +46,7 @@
         select
             a.device_id,
             ifnull(b.`name`, "未知设备") deviceName,
-            sum(a.bytes_in+a.bytes_out)/1024/1024 flow
+            sum(a.flow)/1024/1024 flow
         from data_metrics_day a
         left join t_device b on a.device_id = b.id
         WHERE a.user_id = #{userId}
