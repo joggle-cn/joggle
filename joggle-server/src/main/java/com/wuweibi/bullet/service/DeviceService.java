@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
@@ -55,4 +56,12 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     List<DeviceOnline> getDiscoveryDevice(String ip);
+
+
+    /**
+     * 获取设备详情
+     * @param deviceId 设备id
+     * @return
+     */
+    JSONObject getDeviceInfoById(Long deviceId);
 }

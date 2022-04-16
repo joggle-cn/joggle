@@ -3,12 +3,13 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <blockquote>
-                <p>设备绑定</p>
-            </blockquote>
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+                <li><a href="#/user/device">我的设备</a></li>
+                <li><a href="#/user/device/bind"><span ng-bind="res.t('home.btn.devicebind')"></span></a></li>
+            </ol>
         </div>
     </div>
-
 
 
     <div class="row">
@@ -34,6 +35,9 @@
                       </div>
                   </div>
                   <p style="text-align: center;" ng-bind="info">正在为链接校验服务器...</p>
+
+                  <p>说明：下载Joggle客户端程序，运行后基于设备发现可选择设备编码。</p>
+
               </div>
 
           </div>

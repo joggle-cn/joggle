@@ -1,14 +1,11 @@
 /**
  *
- * Home   模块
+ * 设备映射   模块
  *
  * @author marker
  * @date 2016-06-05
  */
 define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], function (app, $, layer) {//加载依赖js,
-
-
-
 
 	let callback = ["$scope","$routeParams","$location","$rootScope", function ($scope, $routeParams,$location,$rootScope) {
         $scope.active = 'device';
@@ -19,6 +16,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
             lineName: '-',
         }
         $scope.deviceInfo = {
+            lineName:"",
             status: null
         }
         $scope.deviceUpdate = {

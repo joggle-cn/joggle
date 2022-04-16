@@ -54,7 +54,13 @@
 		<div class="col-xs-3">
 			<div class="device-feature-item">
 				<h5>线路</h5>
-				<p>{{features.lineName}}</p>
+				<p>(<span ng-bind="deviceInfo.lineName"></span>)</p>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="device-feature-item">
+				<h5>宽带</h5>
+				<p>{{deviceInfo.broadband}}MB</p>
 			</div>
 		</div>
 		<div class="col-xs-3">
@@ -67,12 +73,6 @@
 			<div class="device-feature-item">
 				<h5>端口</h5>
 				<p>{{features.portCount}}个</p>
-			</div>
-		</div>
-		<div class="col-xs-3">
-			<div class="device-feature-item">
-				<h5>宽带</h5>
-				<p>{{features.broadband}}</p>
 			</div>
 		</div>
 	</div>

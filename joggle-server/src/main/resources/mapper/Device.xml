@@ -14,4 +14,15 @@
 	<select id="existsDevice" resultType="boolean" parameterType="map">
 		select count(1) from t_device where deviceId = #{deviceId}
 	</select>
+
+<!--	获取设备详情-->
+    <select id="selectDeviceInfoById" resultType="com.alibaba.fastjson.JSONObject">
+		select
+		   a.`id`, a.`name`, a.`deviceId`, a.`createTime`, a.`userId`, a.`intranet_ip`, a.`mac_addr`, a.`server_tunnel_id`, a.`device_secret`,
+		       b.name as lineName,
+		       b.broadband as broadband
+		from t_device a
+		left join t_server_tunnel b on a.server_tunnel_id = b.id
+		where a.id = #{deviceId}
+	</select>
 </mapper>

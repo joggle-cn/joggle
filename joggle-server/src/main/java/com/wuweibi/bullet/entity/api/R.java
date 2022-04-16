@@ -105,7 +105,7 @@ public class R<T> {
      * @return Result
      */
     public static R success(Object data) {
-        return new R<>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
+        return new R(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
     }
 
     /**

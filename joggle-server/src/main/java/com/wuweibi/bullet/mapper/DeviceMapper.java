@@ -1,7 +1,9 @@
 package com.wuweibi.bullet.mapper;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.entity.Device;
+import io.lettuce.core.dynamic.annotation.Param;
 
 import java.util.Map;
 
@@ -37,4 +39,12 @@ public interface DeviceMapper extends BaseMapper<Device> {
      * @return
      */
     boolean existsDevice(Map<String, Object> deviceId);
+
+
+    /**
+     * 获取设备详情
+     * @param deviceId 设备id
+     * @return
+     */
+    JSONObject selectDeviceInfoById(@Param("deviceId") Long deviceId);
 }

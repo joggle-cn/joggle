@@ -36,6 +36,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: 'view/about/about.htm'
 			, controllerUrl: 'view/about/about.js'
 		}))
+		// 用户协议
+		.when('/user/agreement', router({
+			templateUrl: 'view/user/agreement/agreement.htm'
+			, controllerUrl: 'view/user/agreement/agreement.js'
+		}))
 		// 下载中心
 		.when('/download', router({
 			templateUrl: 'view/download/download.htm'

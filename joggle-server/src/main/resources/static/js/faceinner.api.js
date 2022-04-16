@@ -17,6 +17,7 @@ let api = {
 
     /* 忘记密码 */
     "user.forget": '/api/open/forget',
+    "user.feedback": '/api/open/feedback/submit', // 意见反馈
 
     /* 注册 */
     "user.register": '/api/open/register',

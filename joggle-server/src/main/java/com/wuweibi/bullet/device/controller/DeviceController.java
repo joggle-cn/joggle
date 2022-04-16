@@ -55,12 +55,13 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 public class DeviceController {
 
 
-
     @Resource
     private CoonPool coonPool;
 
 
-    /** 设备管理 */
+    /**
+     * 设备管理
+     */
     @Resource
     private DeviceService deviceService;
 
@@ -74,14 +75,15 @@ public class DeviceController {
 
     /**
      * 设备列表
+     *
      * @return
      */
     @GetMapping
-    public Object device(@JwtUser Session session){
+    public Object device(@JwtUser Session session) {
 
         Long userId = session.getUserId();
 
-        List<Device> list  = deviceService.listByMap(newMap(1)
+        List<Device> list = deviceService.listByMap(newMap(1)
                 .setParam("userId", userId)
                 .build());
 
@@ -89,7 +91,7 @@ public class DeviceController {
 
         List<DeviceDto> deviceList = new ArrayList<>();
 
-        while (it.hasNext()){
+        while (it.hasNext()) {
             Device device = it.next();
 
             DeviceDto deviceDto = new DeviceDto(device);
@@ -98,11 +100,11 @@ public class DeviceController {
             int status = getStatus(deviceNo);
             deviceDto.setStatus(status);
             // TODO 性能问题
-           DeviceOnline deviceOnline =  deviceOnlineService.selectByDeviceNo( deviceNo);
-           if(deviceOnline != null){
-               deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
-               deviceDto.setOnlineTime(deviceOnline.getUpdateTime());
-           }
+            DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(deviceNo);
+            if (deviceOnline != null) {
+                deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
+                deviceDto.setOnlineTime(deviceOnline.getUpdateTime());
+            }
             deviceList.add(deviceDto);
         }
         return MessageFactory.get(deviceList);
@@ -111,28 +113,30 @@ public class DeviceController {
 
     /**
      * 获取设备状态
+     *
      * @param deviceCode
      * @return
      */
-    private int getStatus(String deviceCode){
+    private int getStatus(String deviceCode) {
         return coonPool.getDeviceStatus(deviceCode);
     }
 
 
     /**
      * 更新设备基本西新城
+     *
      * @return
      */
     @PostMapping()
     public R save(@JwtUser Session session,
-                  @RequestBody @Valid DeviceUpdateDTO dto){
+                  @RequestBody @Valid DeviceUpdateDTO dto) {
         Long userId = session.getUserId();
         Long deviceId = dto.getId();
         String name = dto.getName();
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
-        if(status){
+        if (status) {
             deviceService.updateName(deviceId, name);
         }
         return R.success();
@@ -141,18 +145,19 @@ public class DeviceController {
 
     /**
      * 删除设备
+     *
      * @return
      */
     @DeleteMapping(value = "")
     public Object delete(@JwtUser Session session,
-                       @RequestBody @Valid DeviceDelDTO dto,
-                       HttpServletRequest request ){
+                         @RequestBody @Valid DeviceDelDTO dto,
+                         HttpServletRequest request) {
         Long userId = session.getUserId();
         Long dId = dto.getId();
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, dId);
-        if(status){
+        if (status) {
             Device device = deviceService.getById(dId);
 
             // 删除映射
@@ -164,14 +169,14 @@ public class DeviceController {
 
                 MsgUnBind msg = new MsgUnBind();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                    bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
+                msg.write(outputStream);
+                // 包装了Bullet协议的
+                byte[] resultBytes = outputStream.toByteArray();
+                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
                 // 停止ws链接
-               bulletAnnotation.stop();
-            } catch (Exception e){
+                bulletAnnotation.stop();
+            } catch (Exception e) {
                 log.error("{}", e.getMessage());
             }
 
@@ -182,15 +187,16 @@ public class DeviceController {
 
     /**
      * 设备校验(绑定)
+     *
      * @return
      */
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
-    public R validate(@JwtUser Session session, String deviceId, HttpServletRequest request){
+    public R validate(@JwtUser Session session, String deviceId, HttpServletRequest request) {
         Long userId = session.getUserId();
 
         // 没有输入设备ID
-        if(StringUtils.isEmpty(deviceId)){
+        if (StringUtils.isEmpty(deviceId)) {
             return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
@@ -201,10 +207,10 @@ public class DeviceController {
 
         // 验证是否存在
         DeviceOnline deviceOnline = deviceOnlineService.getOne(wrapper2);
-        if(deviceOnline != null){
+        if (deviceOnline != null) {
             // 验证是否绑定
             boolean isBinded = deviceService.existsDevice(deviceId);
-            if(isBinded){
+            if (isBinded) {
                 return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
             }
 
@@ -225,7 +231,7 @@ public class DeviceController {
             // 发送消息通知设备秘钥
 
             BulletAnnotation annotation = coonPool.getByDeviceNo(deviceId);
-            if(annotation != null){
+            if (annotation != null) {
                 MsgDeviceSecret msg = new MsgDeviceSecret();
                 msg.setSecret(deviceSecret);
 
@@ -251,8 +257,8 @@ public class DeviceController {
 
     @RequestMapping(value = "/uuid", method = RequestMethod.GET)
     @ResponseBody
-    public Map uuid(HttpServletRequest request ){
-        String uuid = UUID.randomUUID().toString().replaceAll("-","");
+    public Map uuid(HttpServletRequest request) {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         JSONObject result = new JSONObject();
         result.put("uuid", uuid);
         return result;
@@ -261,15 +267,16 @@ public class DeviceController {
 
     /**
      * 获取设备信息
+     *
      * @param request
      * @param deviceId
      * @return
      */
-    @GetMapping(value = "/info" )
+    @GetMapping(value = "/info")
     @ResponseBody
     public Object device(HttpServletRequest request, @RequestParam Long deviceId,
-                         @JwtUser Session session){
-        if(session.isNotLogin()){
+                         @JwtUser Session session) {
+        if (session.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
         Long userId = session.getUserId();
@@ -278,16 +285,19 @@ public class DeviceController {
         MapBuilder mapBuilder = newMap(3);
 
         // 设备信息
-        Device device = deviceService.getById(deviceId);
-        JSONObject deviceInfo = (JSONObject) JSON.toJSON(device);
+        JSONObject deviceInfo = deviceService.getDeviceInfoById(deviceId);
+//        JSONObject deviceInfo = (JSONObject) JSON.toJSON(device);
 
-        if (!device.getUserId().equals(userId)) {
+        Long deviceUserId = deviceInfo.getLong("userId");
+        String deviceNo = deviceInfo.getString("deviceNo");
+
+        if (!deviceUserId.equals(userId)) {
             return R.fail("设备不存在");
         }
 
-        DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(device.getDeviceNo());
+        DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(deviceNo);
 
-        if(deviceOnline != null){
+        if (deviceOnline != null) {
             deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
             deviceInfo.put("clientVersion", deviceOnline.getClientVersion());
             deviceInfo.put("status", deviceOnline.getStatus());
@@ -308,18 +318,16 @@ public class DeviceController {
         QueryWrapper wrapper2 = new QueryWrapper();
         wrapper2.eq("userId", userId);
         wrapper2.eq("device_id", deviceId);
-        wrapper2.in("protocol", Arrays.asList(1, 3, 4) );
+        wrapper2.in("protocol", Arrays.asList(1, 3, 4));
 
         List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
 
 
-        mapBuilder.setParam("deviceInfo", deviceInfo);
-
+        mapBuilder
+                .setParam("deviceInfo", deviceInfo);
         mapBuilder.setParam("features", newMap(4)
                 .setParam("domainCount", domainList.size())
                 .setParam("portCount", portList.size())
-                .setParam("lineName", "成都")
-                .setParam("broadband", "10MB")
                 .build());
 
         // 端口
@@ -333,11 +341,12 @@ public class DeviceController {
 
     /**
      * 通过mac地址网络唤醒设备
+     *
      * @return
      */
     @RequestMapping(value = "/wol", method = RequestMethod.POST)
     @ResponseBody
-    public R WOL(@JwtUser Session session, String mac ){
+    public R WOL(@JwtUser Session session, String mac) {
         deviceService.wakeUp(session.getUserId(), mac);
         return R.success();
     }
@@ -345,17 +354,15 @@ public class DeviceController {
 
     /**
      * 设备发现接口
+     *
      * @return
      */
     @RequestMapping(value = "/discovery", method = RequestMethod.GET)
-    public R discovery(HttpServletRequest request){
+    public R discovery(HttpServletRequest request) {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
         return R.success(list);
     }
-
-
-
 
 
 }

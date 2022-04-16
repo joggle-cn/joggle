@@ -60,3 +60,9 @@
     text-align: center;
     margin-top: 7rem;
 }
+.device .bind-device{
+    float: right;
+}
+.device .bind-device:before{
+    content: '';
+}

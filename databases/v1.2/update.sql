@@ -87,4 +87,10 @@ CREATE TABLE `data_metrics_day`  (
     INDEX `idx_month`(`create_month`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '流量日统计表' ROW_FORMAT = Dynamic;
 
+-- fix old pass 长度
+ALTER TABLE `t_user_forget`
+    MODIFY COLUMN `oldPass` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `userId`;
 
+
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `broadband` int(11) NULL COMMENT '宽带 mb' AFTER `name`;

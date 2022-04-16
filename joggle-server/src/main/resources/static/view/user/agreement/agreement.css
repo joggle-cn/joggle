@@ -1,0 +1,32 @@
+
+
+
+#agreement .about-banner {
+    padding: 30px 0;
+}
+
+#agreement .masthead-button-links{
+
+    margin-top: 30px;
+}
+
+#agreement .masthead-links a{
+    color:#ffffff
+
+}
+#agreement .index-bullet-title{
+    margin: 30px 0;
+}
+#agreement .index-textcenter{
+    text-align: center;
+}
+#agreement .index-icon{
+    width: 100px;
+    margin: 0 auto;
+}
+#agreement .contact-support-icon{
+    width: 100px;
+}
+#agreement p{
+    line-height: 1.7em;
+}

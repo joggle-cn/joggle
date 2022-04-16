@@ -90,10 +90,13 @@ define([
 	// 到航控制器
 	app.controller('navController', ['$rootScope','$session', '$scope','$location',function ($rootScope, $session, $scope, $location) {
 
-
+        $rootScope.config = {
+            domain: 'joggle.cn'
+        }
 
         // 初始化数据
         $rootScope.init = function () {
+
 
             // 加载系统初始化信息
             faceinner.get(api['init'], {_async: true}, function (res) {

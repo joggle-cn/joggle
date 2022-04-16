@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
@@ -78,6 +79,11 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     public List<DeviceOnline> getDiscoveryDevice(String ip) {
         return this.deviceOnlineMapper.selectDiscoveryDevice(ip);
+    }
+
+    @Override
+    public JSONObject getDeviceInfoById(Long deviceId) {
+        return this.baseMapper.selectDeviceInfoById(deviceId);
     }
 
 
