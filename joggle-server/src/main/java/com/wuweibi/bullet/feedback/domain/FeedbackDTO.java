@@ -1,8 +1,10 @@
 package com.wuweibi.bullet.feedback.domain;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,6 +22,7 @@ public class FeedbackDTO implements Serializable {
     * 标题
     */
     @NotBlank(message = "标题不能为空")
+    @Length(max = 40, message = "标题过长，最长40字符")
     private String title;
 
     /**
@@ -32,6 +35,7 @@ public class FeedbackDTO implements Serializable {
     * 内容
     */
     @NotBlank(message = "内容不能为空")
+    @Length(max = 400, message = "内容过长，最长400字符")
     private String content;
 
 }
