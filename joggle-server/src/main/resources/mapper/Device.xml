@@ -18,7 +18,8 @@
 <!--	获取设备详情-->
     <select id="selectDeviceInfoById" resultType="com.alibaba.fastjson.JSONObject">
 		select
-		   a.`id`, a.`name`, a.`deviceId`, a.`createTime`, a.`intranet_ip` as intranetIp, a.`mac_addr` as macAddr,
+		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId, a.`intranet_ip` as intranetIp,
+		       a.`mac_addr` macAddr,
 		       b.name as lineName,
 		       b.broadband as broadband
 		from t_device a
