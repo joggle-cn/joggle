@@ -66,9 +66,9 @@ spring:
       mail.smtp.ssl.socketFactory.class: com.wuweibi.bullet.mail.MailSSLSocketFactory
   # redis 配置
   redis:
-    host: ${REDIS_HOST:192.168.1.6}
-    port: ${REDIS_PORT:32259}
-    password: ${REDIS_PASSWORD:masterPass123.}
+    host: ${JOGGLE_REDIS_HOST:192.168.1.6}
+    port: ${JOGGLE_REDIS_PORT:32259}
+    password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
     lettuce:
       pool:
         maxTotal: 100
