@@ -44,9 +44,7 @@ pipeline {
 
 
                         if [ "$BRANCH_NAME"  = "prod" ];then
-
                             scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
-
                             echo "bullet-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
@@ -57,9 +55,15 @@ pipeline {
 
                             echo "发布前端页面 to OSS"
                             ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
+                        fi
 
+                        if [ "$BRANCH_NAME"  = "test" ];then
+                            scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@192.168.1.6:/opt/data/joggle/app.tmp.jar
+                            echo "joggle-server restart ....."
+                            ssh -o StrictHostKeyChecking=no root@192.168.1.6 "cd /opt/data/joggle/ && mv -f app.tmp.jar app.jar && kubectl rollout restart deployment joggle-server --namespace home"
 
                         fi
+
 
                         if [ "$BRANCH_NAME"  = "build" ];then
                             echo "正在转移jar文件"
