@@ -21,4 +21,12 @@ public interface ClientVersionService extends IService<ClientVersion> {
      */
     ClientVersion getNewVersion(ClientInfoDTO clientInfoDTO);
 
+    /**
+     * 更新checksum
+     * @param os
+     * @param arch
+     * @param checksum
+     * @return
+     */
+    int updateChecksumByOsArch(String os, String arch, String checksum);
 }

@@ -62,6 +62,9 @@ public class ClientVersion implements Serializable {
     @TableField("create_time")
     private Date createTime;
 
+    @TableField("update_time")
+    private Date updateTime;
+
     /**
      * 下载URL地址
      */

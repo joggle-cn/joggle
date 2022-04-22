@@ -94,3 +94,19 @@ ALTER TABLE `t_user_forget`
 
 ALTER TABLE `t_server_tunnel`
     ADD COLUMN `broadband` int(11) NULL COMMENT '宽带 mb' AFTER `name`;
+
+
+
+ALTER TABLE `client_version`
+    ADD COLUMN `update_time` datetime NULL COMMENT '更新时间' AFTER `status`,
+COMMENT = '客户端版本';
+
+
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (1, '1.2.14', 'bullet', 'linux', 'amd64', 'linux 64位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '241f52b99a155680382353e18f104ccc861ffe1d46f7e34bfef4c751becdaf20', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (2, '1.2.14', 'bullet', 'linux', '386', 'linux x86 32位版本', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '160336d50dde5f8064008c05287c6f7f1c415ebe3acdc0e6c9fa0fb3e342c0c0', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (3, '1.2.14', 'bullet', 'linux', 'arm', 'linux 32位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '41ef9351094ae8c15c5101e5fea99f760059ab040715b176fe45e7b4fd8fb851', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (4, '1.2.14', 'bullet', 'linux', 'arm64', 'linux arm 64位版本', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '99ead4d62b34a3db887f307e675f0a24bb079ab8e9b96c3429fb1590814d4183', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (5, '1.2.14', 'bullet', 'windows', '386', 'windows 32位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '404a9d10ea0ef981a77dbf9b98062fb1623479b6d37d00f4a8864a7f6282b6e8', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (11, '1.2.14', 'bullet', 'windows', 'amd64', 'windows 64位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '8bc5473917a053c695902eec9f236f879b7f8f9040745b07df9abd42f55e1d63', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (12, '1.2.14', 'bullet', 'darwin', '386', 'mac 32位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '346df20ae885da8e7200be44206fe1920f31891a75dbf5934bb262aba98aed4d', 1);
+INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (13, '1.2.14', 'bullet', 'darwin', 'amd64', 'mac 64位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '7f1e617115689abd588591a99f9eda5cdcd770e2d9ef61ca669fc90971bc546c', 1);

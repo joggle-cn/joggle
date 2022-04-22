@@ -319,7 +319,7 @@ public class OpenController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update-count/init")
+//    @RequestMapping(value = "/update-count/init")
     public R updateCount(  HttpServletRequest request) {
 
         String startTime  = "2021-11-09";
