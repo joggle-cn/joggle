@@ -104,7 +104,7 @@
 			  <tbody>
 			  <tr ng-repeat="item in portList">
 				  <td>{{$index+1}}</td>
-				  <td>tcp://joggle.cn:{{item.remotePort}}</td>
+				  <td>{{item.domain}}</td>
 				  <td>
 					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
 				  </td>
@@ -149,8 +149,8 @@
 			  <tr ng-repeat="item in domainList">
 				  <td>{{$index+1}}</td>
 				  <td>
-					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{showDomain(item)}}">
-					  {{item.protocol | showProtocol}}://{{showDomain(item)}}
+					  <a target="_blank" href="{{item.protocol | showProtocol}}://{{item.domain}}">
+					  {{item.protocol | showProtocol}}://{{item.domain}}
 					  </a>
 				  </td>
 				  <td>

@@ -3,7 +3,6 @@ package com.wuweibi.bullet.device.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
@@ -26,6 +25,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
@@ -290,6 +290,7 @@ public class DeviceController {
 
         Long deviceUserId = deviceInfo.getLong("userId");
         String deviceNo = deviceInfo.getString("deviceNo");
+        String serverAddr = deviceInfo.getString("serverAddr"); // 通道顶级地址
 
         if (!deviceUserId.equals(userId)) {
             return R.fail("设备不存在");
@@ -306,22 +307,31 @@ public class DeviceController {
             deviceInfo.put("status", -1);
         }
 
-
+        // 端口
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("userId", userId);
         wrapper.eq("device_id", deviceId);
         wrapper.eq("protocol", 2);
 
         List<DeviceMapping> portList = deviceMappingService.list(wrapper);
+        portList.forEach(item->{
+            item.setDomain(serverAddr+":"+item.getRemotePort());
+        });
 
-
+        // 域名
         QueryWrapper wrapper2 = new QueryWrapper();
         wrapper2.eq("userId", userId);
         wrapper2.eq("device_id", deviceId);
         wrapper2.in("protocol", Arrays.asList(1, 3, 4));
 
         List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
-
+        domainList.forEach(item -> {
+            if (StringUtil.isNotBlank(item.getHostname())) {
+                item.setDomain(item.getHostname());
+            } else {
+                item.setDomain(item.getDomain() + "." + serverAddr);
+            }
+        });
 
         mapBuilder
                 .setParam("deviceInfo", deviceInfo);

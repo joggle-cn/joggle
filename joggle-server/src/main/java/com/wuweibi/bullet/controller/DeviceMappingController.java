@@ -125,9 +125,10 @@ public class DeviceMappingController {
 
         DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
         entity.setDomainId(deviceMapping.getDomainId());
-        entity.setDomain(entity.getDomain());
+        entity.setDomain(deviceMapping.getDomain());
         entity.setPort(entity.getPort());
         entity.setProtocol(entity.getProtocol());
+        entity.setRemotePort(deviceMapping.getRemotePort());
 
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){

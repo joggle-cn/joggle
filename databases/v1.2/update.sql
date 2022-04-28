@@ -110,3 +110,16 @@ INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `descriptio
 INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (11, '1.2.14', 'bullet', 'windows', 'amd64', 'windows 64位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '8bc5473917a053c695902eec9f236f879b7f8f9040745b07df9abd42f55e1d63', 1);
 INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (12, '1.2.14', 'bullet', 'darwin', '386', 'mac 32位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '346df20ae885da8e7200be44206fe1920f31891a75dbf5934bb262aba98aed4d', 1);
 INSERT INTO `client_version`(`id`, `version`, `title`, `os`, `arch`, `description`, `create_time`, `download_url`, `checksum`, `status`) VALUES (13, '1.2.14', 'bullet', 'darwin', 'amd64', 'mac 64位', '2021-08-12 20:36:45', 'https://www.joggle.cn/ngrok/', '7f1e617115689abd588591a99f9eda5cdcd770e2d9ef61ca669fc90971bc546c', 1);
+
+
+-- 多线路支持
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `country` varchar(255) NULL COMMENT '国家' AFTER `name`,
+    ADD COLUMN `area` varchar(255) NULL COMMENT '地区' AFTER `country`,
+    MODIFY COLUMN `create_time` datetime(0) NULL ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '上线时间' AFTER `server_addr`;
+
+ALTER TABLE `t_domain`
+    ADD COLUMN `server_tunnel_id` int NULL COMMENT '服务器id' AFTER `domain`;
+
+update `t_domain` set `server_tunnel_id` = 1;
+

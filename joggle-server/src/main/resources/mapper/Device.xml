@@ -21,7 +21,8 @@
 		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId, a.`intranet_ip` as intranetIp,
 		       a.`mac_addr` macAddr,
 		       b.name as lineName,
-		       b.broadband as broadband
+		       b.broadband as broadband,
+			   b.server_addr as serverAddr
 		from t_device a
 		left join t_server_tunnel b on a.server_tunnel_id = b.id
 		where a.id = #{deviceId}
