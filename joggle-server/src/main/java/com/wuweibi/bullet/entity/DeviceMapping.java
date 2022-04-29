@@ -98,7 +98,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	 * 服务通道ID
 	 */
 	@TableField("server_tunnel_id")
-	private Long serverTunnelId;
+	private Integer serverTunnelId;
 
 
 }

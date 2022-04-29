@@ -56,6 +56,9 @@ let api = {
     "user.device.mapping": '/api/user/device/mapping/',
     "user.device.wol": '/api/user/device/wol',
     "user.device.discovery": '/api/user/device/discovery',
+    "user.device.switch-line": '/api/user/device/switch-line',
+
+
     "system.ngrokd.check": '/api/system/ngrokd/check',
 
     /* 用户域名与端口 */
@@ -69,6 +72,9 @@ let api = {
     "user.dashboard.statistics": '/api/dashboard/statistics',
     "user.dashboard.device.rank": '/api/dashboard/device/rank',
     "user.dashboard.device.trend": '/api/dashboard/device/trend',
+
+
+    "device.tunnel": '/api/server/tunnel/list',
 
 
 

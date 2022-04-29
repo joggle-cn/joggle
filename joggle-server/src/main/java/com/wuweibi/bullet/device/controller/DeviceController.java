@@ -9,7 +9,10 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -20,6 +23,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
+import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -372,6 +376,69 @@ public class DeviceController {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
         return R.success(list);
+    }
+
+
+
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
+
+    /**
+     * 设备切换线路
+     *
+     * @return
+     */
+    @PostMapping("/switch-line")
+    public R<Boolean> switchLine(@JwtUser Session session,
+                  @RequestBody @Valid DeviceSwitchLineDTO dto) {
+        Long userId = session.getUserId();
+        Long deviceId = dto.getDeviceId();
+
+        // 校验设备是否是他的
+        boolean status = deviceService.exists(userId, deviceId);
+        if (!status) {
+            return R.fail("设备不存在");
+
+        }
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
+        if(serverTunnel == null){
+            return R.fail("通道不存在");
+        }
+
+        // 检查设备是否有映射
+        if (deviceMappingService.countByDeviceId(deviceId) > 0) {
+            return R.fail("存在映射，不支持切换通道");
+        }
+
+        Device device = deviceService.getById(deviceId);
+        String deviceNo = device.getDeviceNo();
+        device.setServerTunnelId(dto.getServerTunnelId());
+        deviceService.updateById(device);
+
+        // 发送切换消息给设备
+        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+        if (annotation != null) {
+            MsgSwitchLine msg = new MsgSwitchLine();
+            msg.setDeviceNo(deviceNo);
+            msg.setServerAddr(serverTunnel.getServerAddr());
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                msg.write(outputStream);
+                // 包装了Bullet协议的
+                byte[] resultBytes = outputStream.toByteArray();
+                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                annotation.getSession().getBasicRemote().sendBinary(buf);
+            } catch (IOException e) {
+                log.error("", e);
+            } finally {
+                IOUtils.closeQuietly(outputStream);
+            }
+        }
+
+        return R.success();
     }
 
 

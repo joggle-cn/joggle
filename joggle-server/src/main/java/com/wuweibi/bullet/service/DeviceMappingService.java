@@ -103,4 +103,10 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      */
     boolean updateDownByUserId(Long userId);
 
+    /**
+     * 统计设备下的映射数量
+     * @param deviceId 设备id
+     * @return
+     */
+    int countByDeviceId(Long deviceId);
 }

@@ -183,6 +183,24 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
 
         /**
+         * 切换线路
+         */
+        $scope.switchLineDialog = function(item){
+            faceinner.get(api["device.tunnel"], {}, function(res){
+                if (res.code == 'S00') {
+                    $scope.$apply(function() {
+                        $scope.list = res.data;
+                    });
+                }
+            });
+
+            $("#switchLineDialog").modal({
+                backdrop: false
+            });
+        }
+
+
+        /**
          * 网络唤醒
          */
         $scope.sendMigicWolDevice = function(){
@@ -199,12 +217,41 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         }
 
 
+        /**
+         * 切换线路提交
+         */
+        $scope.switchLine = function(){
+            if(!$scope.selectTunnelId){
+                return;
+            }
+            let params = {
+                deviceId: $scope.deviceInfo.id,
+                serverTunnelId: $scope.selectTunnelId,
+            }
+
+            faceinner.postJson(api["user.device.switch-line"], params , function(res) {
+                if (res.code == 'S00') {
+                    $scope.closeSwitchLine();
+                    flushData(); // 刷新数据
+
+                    delete $scope.selectTunnelId;
+                } else {
+                    layer.msg(res.msg);
+                }
+            });
+        }
+
+
 
         /**
          * 关闭绑定域名弹框
          */
         $scope.closeBindDomain = function(){
             $("#bindDomainDialog").modal('hide');
+        }
+
+        $scope.closeSwitchLine = function(){
+            $("#switchLineDialog").modal('hide');
         }
 
 

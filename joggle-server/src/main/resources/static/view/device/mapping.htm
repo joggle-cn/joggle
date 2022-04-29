@@ -53,7 +53,7 @@
 	<div class="row ">
 		<div class="col-xs-3">
 			<div class="device-feature-item">
-				<h5>线路</h5>
+				<h5 ng-click="switchLineDialog()">线路</h5>
 				<p>(<span ng-bind="deviceInfo.lineName"></span>)</p>
 			</div>
 		</div>
@@ -309,6 +309,40 @@
 			<div class="modal-footer">
 				<a ng-click="deviceBindDomain()" class="btn btn-default">确认绑定</a>
 				<a ng-click="closeBindDomain()"  class="btn btn-default">取消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- 切换线路弹框 -->
+<div id="switchLineDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">切换通道线路</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">通道</label>
+						<div class="col-sm-8">
+							<select class="form-control" ng-model="selectTunnelId" ng-options="item.id as item.name+'('+item.broadband+'MB) '+item.serverAddr for item in list">
+
+							</select>
+							<br/>
+							<br/>
+							<p>注意：切换通道线路需要设备没有绑定域名</p>
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="switchLine()" class="btn btn-default">确认切换</a>
+				<a ng-click="closeSwitchLine()"  class="btn btn-default">取消</a>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

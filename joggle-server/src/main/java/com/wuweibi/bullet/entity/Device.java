@@ -46,7 +46,7 @@ public class Device extends Model<Device> {
 	 * 服务通道ID
 	 */
 	@TableField("server_tunnel_id")
-	private Long serverTunnelId;
+	private Integer serverTunnelId;
 
 	@ApiModelProperty("设备秘钥")
 	@TableField("device_secret")

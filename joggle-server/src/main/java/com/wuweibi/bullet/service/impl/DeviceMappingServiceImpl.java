@@ -127,5 +127,12 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         );
     }
 
+    @Override
+    public int countByDeviceId(Long deviceId) {
+        return count(Wrappers.<DeviceMapping>lambdaQuery()
+                .eq(DeviceMapping::getDeviceId, deviceId)
+        );
+    }
+
 
 }
