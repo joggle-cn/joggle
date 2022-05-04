@@ -1,0 +1,102 @@
+<div style="margin-top:30px; "></div>
+<div class="container tunnels">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<ol class="breadcrumb">
+				<li><a href="#">首页</a></li>
+				<li><a href="#/user/device">套餐服务</a></li>
+
+			</ol>
+		</div>
+	</div>
+
+
+	<div class="no-device-info" ng-if="list.length == 0">
+		您还没有绑定设备，赶紧去<a href="#/download">下载客户端</a>程序运行并绑定吧!
+	</div>
+
+	<div class="row">
+		<div class="col-md-4" ng-repeat="item in list">
+			<div class="item-wrap">
+				<div class="row">
+					<div class="col-xs-12" style="padding-left: 0;">
+					 	<p class="item-text">别名：{{item.name}}</p>
+					 	<p class="item-text">宽带：{{item.broadband}}</p>
+					 	<p class="item-text">地区：{{item.country}}-{{item.area}}</p>
+					 	<p class="item-text">地址：{{item.serverAddr}}</p>
+						<p class="item-text">价格：{{item.salesPrice}} <i>{{item.originalPrice}}</i></p>
+					</div>
+
+					<a ng-click="switchLine()" class="btn btn-default">确认切换</a>
+				</div>
+			</div>
+
+		</div>
+
+
+		<!-- 状态说明 -->
+		<div class="row" style="
+    text-align: right;
+    padding: 10px 20px;">
+			<div class="col-md-12">
+				<div>
+					<span class="item-status label-success" style="display: inline-block; position: static"></span> 在线 &nbsp;
+					<span class="item-status" style="display: inline-block; position: static"></span> 下线
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+
+	<div style="display: none">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">我的设备</h3>
+			</div>
+			<div class="panel-body">
+
+
+
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>序号</th>
+						<th>设备名称</th>
+						<th>设备标识</th>
+						<th>IP地址</th>
+						<th>上线时间</th>
+						<th>状态</th>
+						<th width="200">操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="item in list">
+						<td>{{item.id}}</td>
+						<td>{{item.name}}</td>
+						<td>{{item.deviceId}}</td>
+						<td>{{item.intranetIp}}</td>
+						<td>{{item.onlineTimeStr}}</td>
+						<td>
+							<span class="label label-success" ng-if="item.status == 1">在线</span>
+							<span class="label label-default" ng-if="item.status != 1">离线</span>
+						</td>
+						<td>
+							<a href="#/user/device/{{item.id}}/mapping" class="btn btn-default">配置</a>
+							<a ng-click="editDevice(item)" class="btn btn-info">编辑</a>
+							<a ng-click="delDevice(item)" class="btn btn-danger">删除</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+
+

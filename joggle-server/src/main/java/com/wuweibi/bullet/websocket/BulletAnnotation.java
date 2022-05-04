@@ -132,6 +132,7 @@ public class BulletAnnotation {
     }
 
 
+
     @OnClose
     public void end(CloseReason closeReason) {
         // 这里是由于设备已经在线，其他设备将不允许关闭唯一的在线设备接入信息。
@@ -140,9 +141,8 @@ public class BulletAnnotation {
 //                    CloseReason.CloseCodes.NOT_CONSISTENT.getCode(), this.deviceNo, this.session.getId());
 //            return;
 //        }
-
-        logger.warn("BulletAnnotation deviceNo={} close");
-        logger.warn("BulletAnnotation deviceNo={},status={}", this.deviceNo, this.deviceStatus);
+        logger.warn("BulletAnnotation close({}) deviceNo={},status={}",
+                closeReason.toString(), this.deviceNo, this.deviceStatus);
         if (this.deviceStatus) { // 正常设备才能移除
             updateOutLine();
             this.deviceStatus = false;
@@ -329,8 +329,8 @@ public class BulletAnnotation {
             logger.error("", t);
         }
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
-        pool.removeConnection(this);
         if (this.deviceStatus) { // 正常设备才能移除
+            pool.removeConnection(this);
             updateOutLine();
         }
         this.deviceStatus = false;
@@ -372,9 +372,11 @@ public class BulletAnnotation {
      */
     public void stop() {
         try {
-            this.session.close(
-                    new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
-                            "服务器端主动关闭连接！"));
+            if(this.session.isOpen()){
+                this.session.close(
+                        new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
+                                "服务器端主动关闭连接！"));
+            }
         } catch (IOException e) {
             logger.error("", e);
         }

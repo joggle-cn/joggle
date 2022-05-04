@@ -26,6 +26,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: 'view/document/document.htm'
 			, controllerUrl: 'view/document/document.js'
 		}))
+		// 通道
+		.when('/tunnels', router({
+			templateUrl: 'view/tunnels/tunnels.htm'
+			, controllerUrl: 'view/tunnels/tunnels.js'
+		}))
 		// 硬件
 		.when('/hardware', router({
 			templateUrl: 'view/hardware/index.htm'

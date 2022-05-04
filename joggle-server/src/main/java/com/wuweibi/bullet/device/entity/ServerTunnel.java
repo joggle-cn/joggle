@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -29,5 +30,16 @@ public class ServerTunnel extends Model<ServerTunnel> {
     //上线时间
     private Date createTime;
 
+    // 价格类型 1免费 2包月 3包年
+    private Integer priceType;
+
+    // 销售价格（元/周期）
+    private BigDecimal salesPrice;
+
+    // 原价（元/周期）
+    private BigDecimal originalPrice;
+
+    // 是否可购买 1可 0不可
+    private Integer buyStatus;
 }
 

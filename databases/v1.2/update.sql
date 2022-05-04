@@ -123,3 +123,20 @@ ALTER TABLE `t_domain`
 
 update `t_domain` set `server_tunnel_id` = 1;
 
+-- 增加价格字段
+ALTER TABLE `t_server_tunnel`
+    MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT FIRST,
+    ADD COLUMN `price_type` int(1) NULL DEFAULT 1 COMMENT '价格类型 1免费 2包月 3包年 ' AFTER `create_time`,
+    ADD COLUMN `sales_price` decimal(10, 2) NULL COMMENT '销售价格（元/周期）' AFTER `price_type`,
+    ADD COLUMN `original_price` decimal(10, 2) NULL COMMENT '原价（元/周期）' AFTER `sales_price`,
+    ADD COLUMN `buy_status` int(1) NULL DEFAULT 1 COMMENT '是否可购买 1可 0不可' AFTER `original_price`;
+
+
+CREATE TABLE `user_tunnel`  (
+     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `user_id` bigint NULL COMMENT '用户id',
+     `server_tunnel_id` int NULL COMMENT '通道id',
+     `create_time` datetime NULL COMMENT '创建时间',
+     `update_time` datetime NULL COMMENT '更新时间',
+     PRIMARY KEY (`id`)
+) COMMENT = '用户的通道';
