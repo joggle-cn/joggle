@@ -153,7 +153,7 @@ bullet:
   serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
 
 
-# 微信配置
+# 微信配置（测试appid）
 weixin:
   appId: wxc8e74d5165c333e6
   appSecret: a33692209929308c336b167ba226785a
