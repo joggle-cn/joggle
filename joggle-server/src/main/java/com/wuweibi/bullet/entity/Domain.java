@@ -28,6 +28,11 @@ public class Domain extends Model<Domain> {
 	private Long id;
 
 	/**
+	 * 通道id
+	 */
+	private Integer serverTunnelId;
+
+	/**
 	 * 二级域名前缀或端口
 	 */
 	private String domain;

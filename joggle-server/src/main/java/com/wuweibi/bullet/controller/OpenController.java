@@ -21,7 +21,6 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -43,7 +42,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.mail.Header;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -194,6 +192,7 @@ public class OpenController {
 
             // 生成域名
             domain.setDomain(CodeHelper.makeNewCode());
+            domain.setServerTunnelId(1);// 默认通道
             domain.setUserId(userId);
             domain.setCreateTime(time);
             domain.setBuyTime(time);
