@@ -19,6 +19,7 @@ package com.wuweibi.bullet.websocket;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.DeviceStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -58,7 +59,7 @@ public class BulletAnnotation {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
+    private final Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
 
     /**
      * session
@@ -292,14 +293,22 @@ public class BulletAnnotation {
         if (pool.exists(deviceNo)) {
             logger.warn("{} 设备已经在线", deviceNo);
             // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
-            try {
-                this.session.close(new CloseReason(CloseReason.
-                        CloseCodes.NOT_CONSISTENT,
-                        deviceNo + " deviceNo is online! please try another deviceNo."));
-            } catch (IOException e) {
-                logger.error("", e);
+
+            DeviceStatus status = pool.getDeviceStatusEnum(deviceNo);
+            logger.info("设备[{}]状态:{}", deviceNo, status);
+            if(status == DeviceStatus.ONLINE){
+                try {
+                    this.session.close(new CloseReason(CloseReason.
+                            CloseCodes.NOT_CONSISTENT,
+                            deviceNo + " deviceNo is online! please try another deviceNo."));
+                } catch (IOException e) {
+                    logger.error("", e);
+                }
+                return;
             }
-            return;
+
+            // 移除存在的链接
+            pool.removeByDeviceNo(deviceNo);
         }
 
         String publicIp = getRemoteAddress(this.session);

@@ -1,7 +1,4 @@
-package com.wuweibi.bullet.conn;/**
- * Created by marker on 2018/1/10.
- */
-
+package com.wuweibi.bullet.conn;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.slf4j.Logger;
@@ -16,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  *
  * @author marker
- * @create 2018-01-10 下午9:12
+ *    2018-01-10 下午9:12
  **/
 public final class CoonPool {
     /** 日志 */
@@ -56,8 +53,23 @@ public final class CoonPool {
 
 
     /**
+     * 根据设备编号移除链接
+     * @param deviceNo 设备编号
+     */
+    public void removeByDeviceNo(String deviceNo) {
+        logger.info("连接池.removeByDeviceNo 设备[{}] ", deviceNo);
+        BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
+        if(bulletAnnotation  == null){
+            return;
+        }
+        clientConnections.remove(deviceNo); // 直接全部移除
+        bulletAnnotation.stop();
+    }
+
+
+    /**
      * 根据客户端ID获取一个可用的链接
-     * @param deviceNo
+     * @param deviceNo 设备编号
      * @return
      */
     public BulletAnnotation getByDeviceNo(String deviceNo) {
@@ -78,6 +90,16 @@ public final class CoonPool {
         }
         Session session = bulletAnnotation.getSession();
         return session.isOpen()? 1:-1;
+    }
+
+
+    public DeviceStatus getDeviceStatusEnum(String deviceNo) {
+        BulletAnnotation bulletAnnotation = this.clientConnections.get(deviceNo);
+        if(bulletAnnotation == null){
+            return DeviceStatus.OUTLINE;
+        }
+        Session session = bulletAnnotation.getSession();
+        return session.isOpen()? DeviceStatus.ONLINE:DeviceStatus.OUTLINE;
     }
 
 
@@ -126,4 +148,5 @@ public final class CoonPool {
         bulletAnnotation.sendMessage(msg);
 
     }
+
 }
