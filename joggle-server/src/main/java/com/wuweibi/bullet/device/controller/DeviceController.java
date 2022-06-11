@@ -127,7 +127,7 @@ public class DeviceController {
 
 
     /**
-     * 更新设备基本西新城
+     * 更新设备基本信息
      *
      * @return
      */
@@ -149,7 +149,6 @@ public class DeviceController {
 
     /**
      * 删除设备
-     *
      * @return
      */
     @DeleteMapping(value = "")
@@ -204,61 +203,62 @@ public class DeviceController {
             return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
-        QueryWrapper wrapper2 = new QueryWrapper();
-        wrapper2.eq("deviceNo", deviceId);
-        wrapper2.eq("status", 1);
-        wrapper2.orderByDesc("updateTime");
-
         // 验证是否存在
-        DeviceOnline deviceOnline = deviceOnlineService.getOne(wrapper2);
-        if (deviceOnline != null) {
-            // 验证是否绑定
-            boolean isBinded = deviceService.existsDevice(deviceId);
-            if (isBinded) {
-                return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
-            }
-
-            // 给当前用户存储最新的设备数据
-            Device device = new Device();
-            device.setDeviceNo(deviceId);
-            device.setUserId(userId);
-            device.setCreateTime(new Date());
-            device.setName("default");
-            device.setMacAddr(deviceOnline.getMacAddr());
-            device.setIntranetIp(deviceOnline.getIntranetIp());
-
-            // 生成设备秘钥
-            String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
-            device.setDeviceSecret(deviceSecret);
-
-            deviceService.save(device);
-            // 发送消息通知设备秘钥
-
-            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceId);
-            if (annotation != null) {
-                MsgDeviceSecret msg = new MsgDeviceSecret();
-                msg.setSecret(deviceSecret);
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                    annotation.getSession().getBasicRemote().sendBinary(buf);
-
-                } catch (IOException e) {
-                    log.error("", e);
-                } finally {
-                    IOUtils.closeQuietly(outputStream);
-                }
-            }
-            return R.success();
+        DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceId);
+        if (deviceOnline == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
-        return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        // 验证是否绑定
+        boolean isBind = deviceService.existsDevice(deviceId);
+        if (isBind) {
+            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
+        }
+        // 限制普通用户绑定设备的数量 排除自己的账号判断
+        int deviceNum = deviceService.getCountByUserId(userId);
+        if (deviceNum >= 10 && userId != 1) {
+            return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
+        }
+
+        // 给当前用户存储最新的设备数据
+        Device device = new Device();
+        device.setDeviceNo(deviceId);
+        device.setUserId(userId);
+        device.setCreateTime(new Date());
+        device.setName(deviceId);
+        device.setMacAddr(deviceOnline.getMacAddr());
+        device.setIntranetIp(deviceOnline.getIntranetIp());
+
+        // 生成设备秘钥
+        String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
+        device.setDeviceSecret(deviceSecret);
+
+        deviceService.save(device);
+        // 发送消息通知设备秘钥
+
+        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceId);
+        if (annotation != null) {
+            MsgDeviceSecret msg = new MsgDeviceSecret();
+            msg.setSecret(deviceSecret);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                msg.write(outputStream);
+                // 包装了Bullet协议的
+                byte[] resultBytes = outputStream.toByteArray();
+                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+                annotation.getSession().getBasicRemote().sendBinary(buf);
+
+            } catch (IOException e) {
+                log.error("", e);
+            } finally {
+                IOUtils.closeQuietly(outputStream);
+            }
+        }
+        return R.success();
     }
 
 
+    @Deprecated
     @RequestMapping(value = "/uuid", method = RequestMethod.GET)
     @ResponseBody
     public Map uuid(HttpServletRequest request) {

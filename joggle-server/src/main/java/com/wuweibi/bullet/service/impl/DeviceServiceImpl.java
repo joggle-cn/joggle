@@ -86,6 +86,12 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         return this.baseMapper.selectDeviceInfoById(deviceId);
     }
 
+    @Override
+    public int getCountByUserId(Long userId) {
+        return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery()
+                .eq(Device::getUserId, userId));
+    }
+
 
     private List<Device> getListByUserId(Long userId){
        return this.baseMapper.selectList(Wrappers.<Device>lambdaQuery().eq(Device::getUserId, userId));

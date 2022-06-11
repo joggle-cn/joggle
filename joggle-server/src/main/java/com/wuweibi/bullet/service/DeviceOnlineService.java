@@ -50,4 +50,12 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @return
      */
     boolean saveOrUpdate(DeviceOnlineInfoDTO deviceOnlineInfoDTO);
+
+    /**
+     * 获取在线设备信息
+     * @param deviceId 设备id
+     * @return
+     */
+    DeviceOnline getByDeviceNo(String deviceId);
+
 }

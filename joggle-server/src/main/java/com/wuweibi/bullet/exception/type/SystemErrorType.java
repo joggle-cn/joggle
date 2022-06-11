@@ -31,6 +31,7 @@ public enum SystemErrorType implements ErrorType {
     DEVICE_NOT_ONLINE("100003", "设备不在线"),
     DEVICE_NOT_EXIST("100004", "设备不存在"),
     DEVICE_SECRET_ERROR("100005", "设备秘钥错误"),
+    DEVICE_BIND_LIMIT_ERROR("100006", "普通用户的绑定被限制10个"),
 
 
     /**

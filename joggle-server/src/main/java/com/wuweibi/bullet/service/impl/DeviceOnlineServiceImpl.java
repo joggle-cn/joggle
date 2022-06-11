@@ -3,6 +3,7 @@ package com.wuweibi.bullet.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
@@ -127,5 +128,13 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             this.baseMapper.insert(deviceOnline);
         }
         return true;
+    }
+
+    @Override
+    public DeviceOnline getByDeviceNo(String deviceId) {
+        return this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
+                .eq(DeviceOnline::getDeviceNo, deviceId)
+                .eq(DeviceOnline::getStatus, DeviceOnlineStatus.ONLINE.status)
+                .orderByDesc(DeviceOnline::getUpdateTime));
     }
 }

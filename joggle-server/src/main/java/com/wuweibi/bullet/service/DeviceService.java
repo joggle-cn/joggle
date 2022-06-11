@@ -64,4 +64,12 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     JSONObject getDeviceInfoById(Long deviceId);
+
+    /**
+     * 获取用户绑定的设备数量
+     * @param userId 用户id
+     * @return 绑定设备的数量
+     */
+    int getCountByUserId(Long userId);
+
 }
