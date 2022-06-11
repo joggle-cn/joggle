@@ -107,6 +107,7 @@
 				  <td>{{item.domain}}</td>
 				  <td>
 					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
+					  <span ng-if="item.protocol == 5">udp://{{item.host}}:{{item.port}}</span>
 				  </td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
