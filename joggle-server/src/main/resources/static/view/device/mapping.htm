@@ -195,6 +195,7 @@
 								<option value="3" ng-if="entity.type == 2">HTTPS</option>
 								<option value="4" ng-if="entity.type == 2">HTTP/HTTPS</option>
 								<option value="2" ng-if="entity.type == 1">TCP</option>
+								<option value="5" ng-if="entity.type == 1">UDP</option>
 							</select>
 						</div>
 						<div class="col-sm-4"></div>
@@ -237,7 +238,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group" ng-show="entity.protocol == 2">
+					<div class="form-group" ng-show="entity.protocol == 2 || entity.protocol == 5">
 						<label for="b" class="col-sm-2 control-label">远端端口</label>
 						<div class="col-sm-6">
 							<input type="number" ng-model="entity.remotePort" readonly class="form-control" id="" placeholder="">

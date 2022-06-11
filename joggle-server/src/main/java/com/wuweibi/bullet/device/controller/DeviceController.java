@@ -315,7 +315,7 @@ public class DeviceController {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("userId", userId);
         wrapper.eq("device_id", deviceId);
-        wrapper.eq("protocol", 2);
+        wrapper.in("protocol", 2,5);
 
         List<DeviceMapping> portList = deviceMappingService.list(wrapper);
         portList.forEach(item->{
