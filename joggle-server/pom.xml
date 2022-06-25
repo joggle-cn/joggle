@@ -17,7 +17,7 @@
     <properties>
         <mybaitsplus.version>3.3.1</mybaitsplus.version>
         <aspectjweaver.version>1.8.8</aspectjweaver.version>
-        <mysql.version>8.0.26</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
 
         <swagger.core.version>1.5.22</swagger.core.version>
         <swagger.ui.version>3.0.0</swagger.ui.version>
@@ -156,7 +156,6 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.31</version>
         </dependency>
 
 
