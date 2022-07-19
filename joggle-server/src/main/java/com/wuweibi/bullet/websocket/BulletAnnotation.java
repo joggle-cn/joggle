@@ -68,9 +68,6 @@ public class BulletAnnotation {
 
     // 设备状态
     private boolean deviceStatus = false;
-    // 是否认证过
-    private boolean authStatus = false;
-
 
     /**
      * 设备ID
@@ -83,9 +80,11 @@ public class BulletAnnotation {
     private Long deviceId;
 
 
-    public BulletAnnotation() {
-    }
+    public BulletAnnotation() { }
 
+    public boolean getStatus(){
+        return this.deviceStatus;
+    }
 
     /**
      * 客户端打开连接
@@ -94,9 +93,9 @@ public class BulletAnnotation {
      */
     @OnOpen
     public void open(Session session,
-                     // 设备编号（服务器端生成)
-                     @PathParam("deviceNo") String deviceNo) {
-        this.session = session;
+                     @PathParam("deviceNo") String deviceNo // 设备编号（服务器端生成)
+    ) {
+        this.session  = session;
         this.deviceNo = deviceNo;
 
         // 如果是首次链接，执行重新分配设备编码
@@ -122,13 +121,11 @@ public class BulletAnnotation {
         if (device == null) { // 未绑定
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
-        }else{
+        } else {
             this.deviceId = device.getId();
         }
 
         // 需要认证(客户端主动发起)
-
-
 
     }
 
@@ -155,7 +152,6 @@ public class BulletAnnotation {
 
     @OnMessage
     public void incoming(byte[] bytes) {
-
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         MsgHead head = new MsgHead();
         try {
@@ -284,43 +280,48 @@ public class BulletAnnotation {
      * 设备上线
      */
     private void deviceOnline() {
-        // 因为认证通过了，采用剔除旧链接方式 可能会导致两个设备争夺链接的情况
-        // 因此采用后认证者直接掉线方式
-        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        // 进入同步锁
+        synchronized (this.deviceNo){
+            // 因为认证通过了，采用剔除旧链接方式 可能会导致两个设备争夺链接的情况
+            // 因此采用后认证者直接掉线方式
+            CoonPool pool = SpringUtils.getBean(CoonPool.class);
 
-        // 更新设备状态
-        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        if (pool.exists(deviceNo)) {
-            logger.warn("{} 设备已经在线", deviceNo);
-            // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
+            // 更新设备状态
+            DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+            if (pool.exists(deviceNo)) {
+                logger.warn("{} 设备已经在线", deviceNo);
+                pool.printDetailInfo();
+                // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
+                DeviceStatus status = pool.getDeviceStatusEnum(deviceNo);
+                logger.info("设备[{}]状态:{}", deviceNo, status);
+                if (status == DeviceStatus.ONLINE) {
+                    try {
 
-            DeviceStatus status = pool.getDeviceStatusEnum(deviceNo);
-            logger.info("设备[{}]状态:{}", deviceNo, status);
-            if(status == DeviceStatus.ONLINE){
-                try {
-                    this.session.close(new CloseReason(CloseReason.
-                            CloseCodes.NOT_CONSISTENT,
-                            deviceNo + " deviceNo is online! please try another deviceNo."));
-                } catch (IOException e) {
-                    logger.error("", e);
+                        this.session.close(new CloseReason(CloseReason.
+                                CloseCodes.NOT_CONSISTENT,
+                                deviceNo + " deviceNo is online! please try another deviceNo."));
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                    return;
                 }
-                return;
+
+                // 移除存在的链接
+                pool.removeByDeviceNo(deviceNo);
             }
 
-            // 移除存在的链接
-            pool.removeByDeviceNo(deviceNo);
+            String publicIp = getRemoteAddress(this.session);
+            // 设备在线
+            DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
+            deviceOnlineInfoDTO.setDeviceNo(deviceNo);
+            deviceOnlineInfoDTO.setPublicIp(publicIp);
+            deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
+            this.deviceStatus = true;
+
+            // 将链接添加到连接池
+            pool.addConnection(this);
+
         }
-
-        String publicIp = getRemoteAddress(this.session);
-        // 设备在线
-        DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
-        deviceOnlineInfoDTO.setDeviceNo(deviceNo);
-        deviceOnlineInfoDTO.setPublicIp(publicIp);
-        deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
-        this.deviceStatus = true;
-
-        // 将链接添加到连接池
-        pool.addConnection(this);
     }
 
 
@@ -333,7 +334,7 @@ public class BulletAnnotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-        logger.error("Bullet Client Error: " + t.toString());
+        logger.error("Bullet Client[{}] Error: {}", this.deviceNo,  t.toString());
         if (!(t instanceof EOFException)) {
             logger.error("", t);
         }

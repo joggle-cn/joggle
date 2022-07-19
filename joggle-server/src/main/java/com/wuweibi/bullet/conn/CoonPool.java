@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.conn;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author marker
  *    2018-01-10 下午9:12
  **/
+@Slf4j
 public final class CoonPool {
     /** 日志 */
     private Logger logger = LoggerFactory.getLogger(CoonPool.class);
@@ -147,6 +149,20 @@ public final class CoonPool {
 
         bulletAnnotation.sendMessage(msg);
 
+    }
+
+
+    /**
+     * 打印连接池信息
+     */
+    public void printDetailInfo(){
+        log.info("============= clientConnections size {} ============= ", this.clientConnections.size());
+        Set<String> sets = this.clientConnections.keySet();
+        for(String key:sets){
+            BulletAnnotation ba = this.clientConnections.get(key);
+            log.info("deviceNo={}, session[{}], status={}", ba.getDeviceNo(), ba.getSession().isOpen(),ba.getStatus());
+        }
+        log.info("============= clientConnections size {} ============= ", this.clientConnections.size());
     }
 
 }
