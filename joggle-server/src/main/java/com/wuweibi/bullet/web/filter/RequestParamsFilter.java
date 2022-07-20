@@ -84,10 +84,18 @@ public class RequestParamsFilter extends OncePerRequestFilter {
     }
 
 
-
+    /**
+     * 匹配就不记录日志
+     * @param uri 请求的uri
+     * @return boolean
+     */
     private boolean isNoLogger(String uri) {
+        boolean isMatch = false;
         for (String ignoreUrl : IGNORE_URLS) {
-            return pathMatcher.match(ignoreUrl, uri);
+            isMatch = pathMatcher.match(ignoreUrl, uri);
+            if(isMatch){
+                return true;
+            }
         }
         return false;
     }

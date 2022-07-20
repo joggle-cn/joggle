@@ -5,6 +5,7 @@ import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
@@ -69,13 +70,15 @@ public class DataMetricsOpenController {
 
         // 扣取流量
         Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
-        userFlowService.getUserFlow(userId);
+        UserFlow userFlow = userFlowService.getUserFlow(userId);
+        if (userFlow.getFlow() - bytes / 1024 <= 0) {
+            // 由于用户没有流量了，默认关闭所有映射
+            deviceBiz.closeAllMappingByUserId(userId);
+        }
 
         boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
         if (!status) {
-            log.info("流量扣取失败了 userId={}", userId);
-            // 由于用户没有流量了，默认关闭所有映射
-            deviceBiz.closeAllMappingByUserId(userId);
+            log.warn("流量扣取失败 userId={}", userId);
             return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
         }
         return R.success();

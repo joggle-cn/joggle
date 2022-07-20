@@ -30,6 +30,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
  * @author marker
  * @version 1.0
  */
+@Slf4j
 @ServerEndpoint(value = "/tunnel/{deviceNo}", configurator = WebSocketConfigurator.class)
 public class BulletAnnotation {
     /**
@@ -80,9 +82,10 @@ public class BulletAnnotation {
     private Long deviceId;
 
 
-    public BulletAnnotation() { }
+    public BulletAnnotation() {
+    }
 
-    public boolean getStatus(){
+    public boolean getStatus() {
         return this.deviceStatus;
     }
 
@@ -95,7 +98,7 @@ public class BulletAnnotation {
     public void open(Session session,
                      @PathParam("deviceNo") String deviceNo // 设备编号（服务器端生成)
     ) {
-        this.session  = session;
+        this.session = session;
         this.deviceNo = deviceNo;
 
         // 如果是首次链接，执行重新分配设备编码
@@ -128,7 +131,6 @@ public class BulletAnnotation {
         // 需要认证(客户端主动发起)
 
     }
-
 
 
     @OnClose
@@ -281,7 +283,7 @@ public class BulletAnnotation {
      */
     private void deviceOnline() {
         // 进入同步锁
-        synchronized (this.deviceNo){
+        synchronized (this.deviceNo) {
             // 因为认证通过了，采用剔除旧链接方式 可能会导致两个设备争夺链接的情况
             // 因此采用后认证者直接掉线方式
             CoonPool pool = SpringUtils.getBean(CoonPool.class);
@@ -331,10 +333,9 @@ public class BulletAnnotation {
     }
 
 
-
     @OnError
     public void onError(Throwable t) throws Throwable {
-        logger.error("Bullet Client[{}] Error: {}", this.deviceNo,  t.toString());
+        logger.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
         if (!(t instanceof EOFException)) {
             logger.error("", t);
         }
@@ -382,7 +383,7 @@ public class BulletAnnotation {
      */
     public void stop() {
         try {
-            if(this.session.isOpen()){
+            if (this.session.isOpen()) {
                 this.session.close(
                         new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
                                 "服务器端主动关闭连接！"));
@@ -429,10 +430,16 @@ public class BulletAnnotation {
     @SneakyThrows
     public void sendMessage(Message msg) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        msg.write(outputStream);
-        // 包装了Bullet协议的
-        byte[] resultBytes = outputStream.toByteArray();
-        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-        this.session.getBasicRemote().sendBinary(buf, true);
+        try {
+            msg.write(outputStream);
+            // 包装了Bullet协议的
+            byte[] resultBytes = outputStream.toByteArray();
+            ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+            this.session.getBasicRemote().sendBinary(buf);
+        } catch (Exception e) {
+            log.error("", e);
+        } finally {
+            IOUtils.closeQuietly(outputStream);
+        }
     }
 }

@@ -19,6 +19,8 @@
     <logger name="org.springframework.amqp.rabbit.core" level="error"> </logger>
     <logger name="org.springframework.web.servlet.DispatcherServlet" level="info"> </logger>
     <logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="info"> </logger>
+    <logger name="org.springframework.web.servlet.handler" level="info"> </logger>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation" level="info"> </logger>
     <!-- no log   -->
     <logger name="com.wuweibi.bullet.mapper.DomainMapper.selectDueDomain" level="ERROR" />
 

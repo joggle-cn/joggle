@@ -12,7 +12,7 @@
 <!--    更新流量-->
     <update id="updateFlow">
         update user_flow set flow = flow + #{flow}, updated_time = now()
-        where user_id = #{userId} and (flow + #{flow}) >= 0
+        where user_id = #{userId}
     </update>
 
 </mapper>
