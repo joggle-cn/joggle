@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.orders.dao.OrdersMapper">
+
+    <resultMap type="com.wuweibi.bullet.orders.entity.Orders" id="OrdersMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="resourceType" column="resource_type" jdbcType="INTEGER"/>
+        <result property="domainId" column="domain_id" jdbcType="INTEGER"/>
+        <result property="amount" column="amount" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="priceAmount" column="price_amount" jdbcType="NUMERIC"/>
+        <result property="discountAmount" column="discount_amount" jdbcType="NUMERIC"/>
+        <result property="payAmount" column="pay_amount" jdbcType="NUMERIC"/>
+        <result property="payType" column="pay_type" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="tradeNo" column="trade_no" jdbcType="VARCHAR"/>
+        <result property="payTime" column="pay_time" jdbcType="TIMESTAMP"/>
+        <result property="refundTime" column="refund_time" jdbcType="TIMESTAMP"/>
+        <result property="cancelTime" column="cancel_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into db_bullet.orders(order_no, user_id, resource_type, domain_id, amount, name, price_amount, discount_amount, pay_amount, pay_type, status, trade_no, pay_time, refund_time, cancel_time, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.orderNo}, #{entity.userId}, #{entity.resourceType}, #{entity.domainId}, #{entity.amount}, #{entity.name}, #{entity.priceAmount}, #{entity.discountAmount}, #{entity.payAmount}, #{entity.payType}, #{entity.status}, #{entity.tradeNo}, #{entity.payTime}, #{entity.refundTime}, #{entity.cancelTime}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into db_bullet.orders(order_no, user_id, resource_type, domain_id, amount, name, price_amount, discount_amount, pay_amount, pay_type, status, trade_no, pay_time, refund_time, cancel_time, create_time, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderNo}, #{entity.userId}, #{entity.resourceType}, #{entity.domainId}, #{entity.amount}, #{entity.name}, #{entity.priceAmount}, #{entity.discountAmount}, #{entity.payAmount}, #{entity.payType}, #{entity.status}, #{entity.tradeNo}, #{entity.payTime}, #{entity.refundTime}, #{entity.cancelTime}, #{entity.createTime}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+         order_no = values(order_no) , user_id = values(user_id) , resource_type = values(resource_type) , domain_id = values(domain_id) , amount = values(amount) , name = values(name) , price_amount = values(price_amount) , discount_amount = values(discount_amount) , pay_amount = values(pay_amount) , pay_type = values(pay_type) , status = values(status) , trade_no = values(trade_no) , pay_time = values(pay_time) , refund_time = values(refund_time) , cancel_time = values(cancel_time) , create_time = values(create_time) , update_time = values(update_time)     </insert>
+
+</mapper>
+

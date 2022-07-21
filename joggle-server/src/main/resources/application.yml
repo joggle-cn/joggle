@@ -19,7 +19,7 @@ spring:
     oauth2:
       jwt:
         signingKey: ${BULLET_SIGNNING_KEY:123456}
-      ignoreUrls: /api
+      ignoreUrls:   /api/orders/alipay
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠

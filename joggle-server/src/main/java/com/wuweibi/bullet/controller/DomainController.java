@@ -103,63 +103,44 @@ public class DomainController {
     private OrderPayBiz orderPayBiz;
 
 
-    /**
-     * 计算价格
-     * @param session
-     * @return
-     */
-    @RequestMapping(value = "/calculate", method = RequestMethod.POST)
-    public Object calculate(@JwtUser Session session,
-                          @RequestParam Integer time, // 3w
-                          @RequestParam Long domainId){
-
-        Long userId = session.getUserId();
-
-        // 检查是否该用户的域名
-        if(!domainService.checkDomain(userId, domainId)){
-            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
-        }
-
-
-        return orderPayBiz.calculate(domainId, time);
-    }
 
 
 
-    /**
-     * 支付接口
-     * @param session
-     * @return
-     */
-    @RequestMapping(value = "/pay", method = RequestMethod.POST)
-    public Object pay(@JwtUser Session session,
-                      @RequestParam(defaultValue = "1") Integer payType, // 3w
-                      @RequestParam Integer time, // 3w
-                      @RequestParam Long domainId){
 
-        Long userId = session.getUserId();
-
-        // 检查是否该用户的域名
-        if(!domainService.checkDomain(userId, domainId)){
-            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
-        }
-
-        // 计算价格
-        R r = orderPayBiz.calculate(domainId, time);
-
-        if(r.isSuccess()){
-            BigDecimal payMoney = r.getDataMapAsBigDecimal("payMoney");
-            Long  dueTime   = r.getDataMapAsLong("dueTime");
-            switch (payType){
-                case 1: // 余额支付
-                    return orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
-            }
-
-        }
-
-
-        return r;
-    }
+//    /**
+//     * 支付接口
+//     * @param session
+//     * @return
+//     */
+//    @RequestMapping(value = "/pay", method = RequestMethod.POST)
+//    public Object pay(@JwtUser Session session,
+//                      @RequestParam(defaultValue = "1") Integer payType, // 3w
+//                      @RequestParam Integer time, // 3w
+//                      @RequestParam Long domainId){
+//
+//        Long userId = session.getUserId();
+//
+//        // 检查是否该用户的域名
+//        if(!domainService.checkDomain(userId, domainId)){
+//            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+//        }
+//
+//        // 计算价格
+//        R r = orderPayBiz.calculate(domainId, time);
+//
+//        if(r.isSuccess()){
+//            BigDecimal payMoney = r.getDataMapAsBigDecimal("payMoney");
+//            Long  dueTime   = r.getDataMapAsLong("dueTime");
+//            switch (payType){
+//                case 1: // 余额支付
+//                    return orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
+//            }
+//
+//        }
+//
+//
+//        return r;
+//    }
 
 
     /**

@@ -44,13 +44,14 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
          */
         function calculate(newVal){
             let params = {
+                resourceType: 1,
                 time: newVal,
-                domainId: $scope.domainId
+                resId: $scope.domainId
             }
-            faceinner.post(api["user.domain.calculate"], params, function(res){
+            faceinner.postJson(api["user.orders.calculate"], params, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
-                        $scope.payMoney = res.data.payMoney;
+                        $scope.payMoney = res.data.payAmount;
                         $scope.dueTime = res.data.dueTime;
                     });
                 }
@@ -79,14 +80,18 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
 		$scope.pay = function(){
 
             let params = {
+                resourceType: 1,
                 time: $scope.payTime,
-                domainId: $scope.domainId,
-                payType: 1,
+                resId: $scope.domainId,
+                payType: 2,
             }
-            faceinner.post(api["user.domain.pay"], params, function(res){
+            faceinner.postJson(api["user.orders.create"], params, function(res){
                 if (res.code == 'S00') {
-                    layer.msg('支付成功');
-                    window.location.href = '#/user/domain/';
+                    if(params.payType == 2){// 支付宝
+                        window.location.href = faceinner.server + '/api/open/orders/alipay?orderId='+ res.data;
+                    }
+
+                    layer.msg('正在跳转支付宝付款网页');
                 }else{ //错误提示
                     layer.msg(res.msg);
                 }

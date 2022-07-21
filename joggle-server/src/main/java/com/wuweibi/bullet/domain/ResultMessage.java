@@ -8,6 +8,7 @@ package com.wuweibi.bullet.domain;
  * 
  * @update 2015-02-11 添加了code属性，描述错误码，绑定国际化资源
  */
+@Deprecated
 public class ResultMessage {
 
 	/** 状态 */

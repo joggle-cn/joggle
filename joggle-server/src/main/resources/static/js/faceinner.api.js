@@ -73,6 +73,8 @@ let api = {
     "user.dashboard.device.rank": '/api/dashboard/device/rank',
     "user.dashboard.device.trend": '/api/dashboard/device/trend',
 
+    "user.orders.calculate": '/api/orders/calculate',
+    "user.orders.create": '/api/orders/create',
 
     "device.tunnel": '/api/server/tunnel/list',
 

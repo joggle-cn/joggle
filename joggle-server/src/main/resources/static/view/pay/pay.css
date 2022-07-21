@@ -4,3 +4,36 @@
 .domain-pay .icheck-success{
     display: inline-block;
 }
+.domain-pay .pay-box{
+    border: 1px solid rgba(208, 208, 208, 0.8);
+    border-radius: 6px;
+    padding-top: 0px;
+}
+
+.domain-pay .pay-box label:before{
+    margin-top: 5px;
+}
+.domain-pay .pay-box label:after{
+    margin-top: 15px;
+    margin-left: 11px !important;
+}
+.domain-pay .pay-box label{
+    display: inline-block;
+    width: 160px;
+    height: 54px;
+    padding-top: 10px;
+    padding-left: 40px !important;
+}
+.domain-pay .original-price{
+    text-decoration: line-through;
+}
+.domain-pay .pay-box{
+   user-select:none;
+}.domain-pay .pay-box img{
+    width: 100px;
+}
+.domain-pay .pay-box span{
+    margin-top: 4px;
+    margin-left: 10px;
+    display: inline-block;
+}

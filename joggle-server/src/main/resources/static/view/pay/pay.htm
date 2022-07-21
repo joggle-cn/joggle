@@ -34,7 +34,7 @@
 					<label class="col-sm-3" style="text-align: right">价格:</label>
 					<div class="col-sm-9">
 						<div>
-							{{data.salesPrice}} 元/天
+							<b>{{data.salesPrice}}</b> 元/天 （原价：<span class="original-price">{{data.originalPrice}} 元/天</span>）
 						</div>
 					</div>
 				</div>
@@ -86,14 +86,16 @@
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">支付方式:</label>
 					<div class="col-sm-9">
-						<div style="  position: relative;  top: -6px;">
-							<div class="radio radio-success icheck-success">
+						<div style="position: relative;  top: -6px;">
+							<div class="radio radio-success icheck-success pay-box">
 								<input type="radio" id="inlineRadio1" value="option1" name="radioInline" checked>
-								<label for="inlineRadio1">余额支付</label>
+								<label for="inlineRadio1">
+								    <img src="resource/images/pay/alipay-icon.png" />
+								</label>
 							</div>
-							<div class="radio radio-success icheck-success">
-								<input type="radio" id="inlineRadio2" value="option2" disabled name="radioInline">
-								<label for="inlineRadio2">微信支付</label>
+							<div class="radio radio-success icheck-success pay-box">
+								<input type="radio" id="inlineRadio2" value="option2" name="radioInline" >
+								<label for="inlineRadio2"><span>余额支付</span></label>
 							</div>
 						</div>
 					</div>
