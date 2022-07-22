@@ -1,18 +1,20 @@
 package com.wuweibi.bullet.orders.controller;
 
 
-import com.alipay.easysdk.kernel.Config;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.domain.domain.session.Session;
+import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -47,8 +49,8 @@ public class OrdersController     {
      */
     @RequestMapping(value = "/calculate", method = RequestMethod.POST)
     public Object calculate(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO){
-
         Long userId = session.getUserId();
+        ordersDTO.setUserId(userId);
 
         // 检查是否该用户的域名
 //        if(!domainService.checkDomain(userId, domainId)){
@@ -57,8 +59,7 @@ public class OrdersController     {
         return orderPayBiz.calculate(ordersDTO);
     }
 
-    @Resource
-    private Config alipayConfig;
+
 
     /**
      * 下单接口
@@ -66,11 +67,14 @@ public class OrdersController     {
      * @return
      */
     @PostMapping(value = "/create")
+    @Transactional
     public R create(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) throws Exception {
-
         Long userId = session.getUserId();
-
+        ordersDTO.setUserId(userId);
         // 校验数据
+
+
+
 
         // 计算价格
         R<OrderPayInfo> r = orderPayBiz.calculate(ordersDTO);
@@ -79,10 +83,9 @@ public class OrdersController     {
         }
         OrderPayInfo orderPayInfo = r.getData();
 
-
         Orders orders = new Orders();
 
-        // TODO 订单号生成
+        // 订单号生成
         long id = CodeHelper.getIdWorker().nextId();
         orders.setOrderNo(String.valueOf(id));
         orders.setName(orderPayInfo.getName());
@@ -100,17 +103,23 @@ public class OrdersController     {
 
         ordersService.save(orders);
 
-        // 调用支付接口
 
-        Integer payType = orders.getPayType();
-        if(payType == 2){
-
-            return R.success(orders.getId());
+        switch (orders.getResourceType()) {
+            case 1: // 域名
+            case 2: // 端口
+                Domain domain = domainService.getById(orders.getDomainId());
+                // 校验域名是否存在
+                if (domain == null) {
+                    return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+                }
+                domainService.updateUserId(orders.getDomainId(), orders.getUserId());
+                break;
         }
 
 
 
-        return R.success();
+
+        return R.success(orders.getId());
     }
 
 

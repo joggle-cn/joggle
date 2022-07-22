@@ -20,3 +20,8 @@ CREATE TABLE `orders`  (
    `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+
+ALTER TABLE `t_domain`
+    MODIFY COLUMN `sales_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '销售价格（元/天）' AFTER `create_time`,
+    MODIFY COLUMN `original_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '原价（元/天）' AFTER `sales_price`;

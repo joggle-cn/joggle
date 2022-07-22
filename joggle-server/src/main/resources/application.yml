@@ -82,9 +82,9 @@ spring:
     url: jdbc:mysql://${BULLET_MYSQL_HOST:bullet-server}:${BULLET_MYSQL_PORT:3306}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${BULLET_MYSQL_USERNAME:root}
     password: ${BULLET_MYSQL_PASSWORD:123456}
-    initialSize: 10
+    initialSize: 20
     minIdle: 5
-    maxActive: 20
+    maxActive: 200
     maxWait: 60000
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
@@ -151,7 +151,12 @@ bullet:
   ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
   serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
-
+  alipay:
+    appId: ${ALIPAY_MERCHANT_APPID:2021000121630337}
+    privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
+    alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
+    notifyUrl: ${ALIPAY_NOTIFY_URL:"https://pay.joggle.cn/api/open/orders/alipay/callback"}
+    returnUrl: ${ALIPAY_RETURN_URL:"https://www.joggle.cn/"}
 
 # 微信配置（测试appid）
 weixin:

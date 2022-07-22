@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.orders.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
@@ -11,8 +12,11 @@ public class OrdersDTO {
     //支付方式 1余额 2支付宝
     private Integer payType;
 
-    private Integer time;
+    @ApiModelProperty("数量")
+    private Long amount;
 
     // 资源id
     private Long resId;
+
+    private Long userId;
 }

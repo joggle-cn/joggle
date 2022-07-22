@@ -2,6 +2,7 @@ package com.wuweibi.bullet.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.vo.DomainVO;
@@ -105,5 +106,13 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
         }
 
+    }
+
+    @Override
+    public boolean updateUserId(Long domainId, Long userId) {
+        return this.update(Wrappers.<Domain>lambdaUpdate()
+                .eq(Domain::getId, domainId)
+                .set(Domain::getUserId, userId)
+        );
     }
 }

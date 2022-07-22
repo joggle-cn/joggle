@@ -54,4 +54,11 @@ public interface DomainService extends IService<Domain> {
      */
     void checkStatus();
 
+    /**
+     * 更新用户
+     * @param domainId
+     * @param userId
+     * @return
+     */
+    boolean updateUserId(Long domainId, Long userId);
 }
