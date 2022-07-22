@@ -156,7 +156,7 @@ bullet:
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:"https://pay.joggle.cn/api/open/orders/alipay/callback"}
-    returnUrl: ${ALIPAY_RETURN_URL:"https://www.joggle.cn/"}
+    returnUrl: ${bullet.serverUrl}${ALIPAY_RETURN_URL}
 
 # 微信配置（测试appid）
 weixin:

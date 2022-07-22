@@ -51,7 +51,17 @@ public class OrdersController {
     @Resource
     private DomainService domainService;
 
+    /**
+     * 计算价格
+     *
+     * @param session
+     * @return
+     */
+    @GetMapping(value = "/list" )
+    public Object list(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) {
 
+        return R.success();
+    }
     /**
      * 计算价格
      *
@@ -63,10 +73,6 @@ public class OrdersController {
         Long userId = session.getUserId();
         ordersDTO.setUserId(userId);
 
-        // 检查是否该用户的域名
-//        if(!domainService.checkDomain(userId, domainId)){
-//            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
-//        }
         return orderPayBiz.calculate(ordersDTO);
     }
 
@@ -134,7 +140,7 @@ public class OrdersController {
 
 
     /**
-     * 下单接口
+     * 订单确认支付接口
      *
      * @param session
      * @return
@@ -143,8 +149,13 @@ public class OrdersController {
     public R confirm(@JwtUser Session session, @RequestBody @Valid OrdersConfirmDTO dto) throws Exception {
         Long userId = session.getUserId();
         // 校验数据
+        Orders orders;
+        if (dto.getOrderId() != null) {
+            orders = ordersService.getById(dto.getOrderId());
+        } else {
+            orders = ordersService.getByOrderNo(dto.getOrderNo());
+        }
 
-        Orders orders = ordersService.getById(dto.getOrderId());
         if (orders == null) {
             return R.fail("订单不存在");
         }
@@ -172,7 +183,7 @@ public class OrdersController {
             }
             return R.fail("订单未查询到支付信息");
         }
-        return R.success();
+        return R.success(orders);
     }
 
 

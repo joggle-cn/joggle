@@ -131,6 +131,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			, templateUrl: 'view/service/flow-cash/pay.htm'
 			, controllerUrl: 'view/service/flow-cash/pay.js'
 		}))
+		.when('/user/orders/pay/result', router({
+			minTitle: "支付结果"
+			, templateUrl: 'view/service/pay-result/pay-result.htm'
+			, controllerUrl: 'view/service/pay-result/pay-result.js'
+		}))
 
         // 系统配置
         .when('/system', router({
