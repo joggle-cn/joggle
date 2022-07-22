@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wuweibi.bullet.orders.dao.OrdersMapper">
+<mapper namespace="com.wuweibi.bullet.orders.mapper.OrdersMapper">
 
     <resultMap type="com.wuweibi.bullet.orders.entity.Orders" id="OrdersMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
@@ -40,6 +40,17 @@
         </foreach>
         on duplicate key update
          order_no = values(order_no) , user_id = values(user_id) , resource_type = values(resource_type) , domain_id = values(domain_id) , amount = values(amount) , name = values(name) , price_amount = values(price_amount) , discount_amount = values(discount_amount) , pay_amount = values(pay_amount) , pay_type = values(pay_type) , status = values(status) , trade_no = values(trade_no) , pay_time = values(pay_time) , refund_time = values(refund_time) , cancel_time = values(cancel_time) , create_time = values(create_time) , update_time = values(update_time)     </insert>
+
+
+<!--    分页查询-->
+    <select id="selectListPage" resultType="com.wuweibi.bullet.orders.domain.OrdersListVO">
+    select
+        *
+
+    from orders where user_id = #{params.userId}
+
+    order by create_time desc, id desc
+    </select>
 
 </mapper>
 

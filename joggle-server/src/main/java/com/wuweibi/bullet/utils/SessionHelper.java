@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
  *
  * Created by marker on 16/8/3.
  */
+@Deprecated
 public class SessionHelper {
 
     private static Logger logger = LoggerFactory.getLogger(SessionHelper.class);

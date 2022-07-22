@@ -5,6 +5,7 @@ import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;
 import com.alipay.easysdk.kernel.util.ResponseChecker;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
@@ -12,8 +13,11 @@ import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.orders.domain.OrdersConfirmDTO;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
+import com.wuweibi.bullet.orders.domain.OrdersListVO;
+import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
@@ -52,15 +56,17 @@ public class OrdersController {
     private DomainService domainService;
 
     /**
-     * 计算价格
+     * 分页查询订单
      *
-     * @param session
      * @return
      */
     @GetMapping(value = "/list" )
-    public Object list(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) {
+    public Object list(Page pageParams,OrdersParam params) {
+        params.setUserId(SecurityUtils.getUserId());
+        Page<OrdersListVO> page = ordersService.getListPage(pageParams, params);
 
-        return R.success();
+
+        return R.success(page);
     }
     /**
      * 计算价格
