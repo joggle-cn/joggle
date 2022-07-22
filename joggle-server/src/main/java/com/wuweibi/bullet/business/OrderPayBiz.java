@@ -5,6 +5,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  *
@@ -14,6 +15,14 @@ import java.math.BigDecimal;
  *
  */
 public interface OrderPayBiz {
+
+
+    /**
+     * 支付宝的通知
+     * @param params
+     * @return
+     */
+    boolean aliPayNotify(Map<String, Object> params);
 
     /**
      * 计算价格

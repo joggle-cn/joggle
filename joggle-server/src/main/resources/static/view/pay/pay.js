@@ -65,21 +65,6 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
         }
 
 
-
-        /**
-         * 去支付
-         */
-        $scope.orderPay = function(item){
-
-            item.createTimeStr = (new Date(item.createTime))
-                .format("yyyy-MM-dd hh:mm:ss");
-            $scope.item = item;
-            $("#editDevice").modal({
-                backdrop: false
-            });
-		}
-
-
         /**
          * 调用支付
          */
@@ -96,6 +81,8 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                     if(params.payType == 2){// 支付宝
                         window.location.href = faceinner.server + '/api/open/orders/alipay?orderId='+ res.data;
                     }
+
+                    // todo 跳转新页面，并弹出模态窗口，点击【已支付】
 
                     layer.msg('正在跳转支付宝付款网页');
                 }else{ //错误提示

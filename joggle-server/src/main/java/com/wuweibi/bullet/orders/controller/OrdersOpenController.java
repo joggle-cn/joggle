@@ -7,11 +7,8 @@ import com.alipay.easysdk.kernel.util.ResponseChecker;
 import com.alipay.easysdk.payment.page.models.AlipayTradePagePayResponse;
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
-import com.wuweibi.bullet.entity.Domain;
-import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.orders.domain.OrdersPayDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
-import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -21,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -63,61 +58,18 @@ public class OrdersOpenController {
     @Transactional
     public void alipayCallback(@RequestParam HashMap params, HttpServletResponse response) throws Exception {
         Factory.setOptions(alipayConfig);
-
         boolean status = Factory.Payment.Common().verifyNotify(params);
         if (!status) { // 验证签名失败
+            response.getWriter().write("fail");
+            response.getWriter().flush();
             return;
         }
-        // 成功
-        String outTradeNo = (String) params.get("out_trade_no");
-        String tradeNo = (String) params.get("trade_no");
+        boolean payResult = orderPayBiz.aliPayNotify(params);
 
-        Orders orders = ordersService.getByOrderNo(outTradeNo);
-        if (orders == null) {
-            return;
-        }
-
-        orders.setTradeNo(tradeNo);
-        orders.setPayTime(new Date());
-        orders.setStatus(OrdersStatusEnum.PAYED.getStatus());
-        orders.setUpdateTime(orders.getPayTime());
-
-        ordersService.updateById(orders);
-
-        // 发放资源；
-        switch (orders.getResourceType()) {
-            case 1: // 域名
-            case 2: // 端口
-                Domain domain = domainService.getById(orders.getDomainId());
-                // 校验域名是否存在
-                if (domain == null) {
-                   throw new RuntimeException("校验域名是否存在");
-                }
-
-                // 计算到期
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(domain.getDueTime());
-                calendar.add(Calendar.DATE, orders.getAmount().intValue());
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 59);
-                calendar.set(Calendar.SECOND, 59);
-                domainService.updateDueTime(orders.getDomainId(), calendar.getTime().getTime());
-                break;
-            case 3:
-                long flow = orders.getAmount()*1024*1024;
-                userFlowService.updateFLow(orders.getUserId(), flow);
-                break;
-        }
-
-
-
-
-        return;
-
+        response.getWriter().write(payResult?"success":"fail");
+        response.getWriter().flush();
     }
 
-    @Resource
-    private UserFlowService userFlowService;
 
 
     /**
