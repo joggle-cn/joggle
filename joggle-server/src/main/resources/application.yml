@@ -1,4 +1,7 @@
 
+## 支付宝回调PC网站的URL地址 [默认]
+ALIPAY_RETURN_URL: "/#/user/orders/pay/result"
+
 #
 # 服务器配置
 #
