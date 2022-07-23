@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.orders.enums;
+package com.wuweibi.bullet.domain2.enums;
 
 import com.wuweibi.bullet.utils.EnumUtil;
 import lombok.AllArgsConstructor;
@@ -7,17 +7,16 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
- * 资源类型 1域名 2端口 3流量 4 充值
+ * 类型： 1 端口 2域名
+ *
  * @author marker
  */
 @AllArgsConstructor
 @Getter
-public enum ResourceTypeEnum {
+public enum DomainTypeEnum {
 
-    DOMAIN(1, "端口"),
-    PORT(2, "域名"),
-    FLOW(3, "流量"),
-    CHARGE(4, "充值"),
+    PORT(1, "端口"),
+    DOMAIN(2, "域名"),
 
     ;
 
@@ -30,7 +29,7 @@ public enum ResourceTypeEnum {
      * 枚举数据map化处理，为便于获取枚举数据.
      */
     private static final Map<Integer, String> MAP = EnumUtil
-            .toMap(ResourceTypeEnum.class, ResourceTypeEnum::getType, ResourceTypeEnum::getName);
+            .toMap(DomainTypeEnum.class, DomainTypeEnum::getType, DomainTypeEnum::getName);
 
 
     /**

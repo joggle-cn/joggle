@@ -20,8 +20,9 @@
                       <th width="60">#</th>
                       <th width="170">订单号</th>
                       <th width="80">资源名</th>
-                      <th width="120">产品名称</th>
+                      <th width="200">产品名称</th>
                       <th width="80">价格</th>
+                      <th width="80">支付方式</th>
                       <th width="80">状态</th>
                       <th width="160">时间</th>
                       <th>操作</th>
@@ -36,6 +37,7 @@
                       <td ng-bind="item.resourceTypeName"></td>
                       <td ng-bind="item.name"></td>
                       <td>{{item.payAmount}}</td>
+                      <td>{{item.payTypeName}}</td>
                       <td>
                         <span ng-if="item.status == 1" class="label label-success">{{item.statusName}}</span>
                         <span ng-if="item.status != 1" class="label label-default">{{item.statusName}}</span>

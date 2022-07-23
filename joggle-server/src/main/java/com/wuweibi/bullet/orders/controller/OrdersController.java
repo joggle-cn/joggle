@@ -10,6 +10,7 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.domain.domain.session.Session;
+import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
@@ -135,7 +136,7 @@ public class OrdersController {
             }
         }
 
-        switch (orders.getResourceType()) {
+        switch (orderPayInfo.getResourceType()) {
             case 1: // 域名
             case 2: // 端口
                 Domain domain = domainService.getById(orders.getDomainId());
@@ -143,7 +144,7 @@ public class OrdersController {
                 if (domain == null) {
                     return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
                 }
-                domainService.updateUserId(orders.getDomainId(), orders.getUserId());
+                domainService.updateUserId(orders.getDomainId(), orders.getUserId(), DomainStatusEnum.SALE.getStatus());
                 break;
         }
 

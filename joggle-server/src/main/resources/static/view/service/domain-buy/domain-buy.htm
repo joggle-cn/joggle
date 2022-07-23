@@ -1,0 +1,67 @@
+<div style="margin-top:30px; "></div>
+<div class="container domain-buy">
+
+    <div class="row">
+        <div class="col-xs-12"><ol class="breadcrumb">
+			<li><a href="#">首页</a></li>
+            <li><a href="#/user/domain">我的域名</a></li>
+			<li class="active">购买域名</li>
+		</ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="col-sm-12">
+                       <div class="input-group">
+                          <input type="text" ng-model="keyword" class="form-control" aria-label="Text input with multiple buttons">
+                          <div class="input-group-btn">
+                              <button id="bindButton" ng-click="searchDomain(1)" type="button"   class="btn btn-success">搜索域名</button>
+                          </div>
+                      </div>
+                </div>
+            </div>
+
+
+
+             <div class="bs-example" data-example-id="hoverable-table">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th width="60">#</th>
+                      <th width="170">域名/端口</th>
+                      <th width="80">类型</th>
+                      <th width="120">价格</th>
+                      <th width="80">状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in page.records">
+                      <th scope="row">{{$index + 1}}</th>
+                      <td>
+                        <span ng-if="item.type == 1">{{item.domain}}</span>
+                        <span ng-if="item.type == 2">{{item.domain}}.joggle.cn</span>
+                      </td>
+                      <td ng-bind="item.typeName"></td>
+                      <td>{{item.salesPrice}} 元/天</td>
+                      <td>
+                        <span ng-if="item.status == 0" class="label label-success">可售</span>
+                      </td>
+                      <td>
+                            <a href="#/user/domain/pay?domainId={{item.id}}" >购买</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            <div class="text-center">
+                <ul id="pagination" class="pagination"></ul>
+            </div>
+        </div>
+    </div>
+</div>

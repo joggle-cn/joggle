@@ -1,8 +1,10 @@
 package com.wuweibi.bullet.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.entity.Domain;
 
 import java.util.List;
@@ -58,7 +60,16 @@ public interface DomainService extends IService<Domain> {
      * 更新用户
      * @param domainId
      * @param userId
+     * @param status
      * @return
      */
-    boolean updateUserId(Long domainId, Long userId);
+    boolean updateUserId(Long domainId, Long userId, int status);
+
+    /**
+     * 获取没有购买的域名列表
+     * @param pageParams 分页参数
+     * @param keyword 关键字
+     * @return
+     */
+    Page<DomainBuyListVO> getBuyList(Page pageParams, String keyword);
 }

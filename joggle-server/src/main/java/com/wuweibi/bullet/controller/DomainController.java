@@ -4,12 +4,13 @@ package com.wuweibi.bullet.controller;
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
-import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
@@ -19,20 +20,16 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
  * 我的域名接口
  *
  * @author marker
@@ -48,7 +45,9 @@ public class DomainController {
     private CoonPool coonPool;
 
 
-    /** 域名管理 */
+    /**
+     * 域名管理
+     */
     @Resource
     private DomainService domainService;
 
@@ -60,15 +59,15 @@ public class DomainController {
      * 我的域名列表
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Object device( @JwtUser Session session){
-        if(session.isNotLogin()){
+    public Object device(@JwtUser Session session) {
+        if (session.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
         Long userId = session.getUserId();
         List<DomainVO> list = domainService.getListByUserId(userId);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        list.forEach((item)->{
+        list.forEach((item) -> {
             Date dueTime = item.getDueDateTime();
             if (dueTime == null) {
                 item.setDueTime("永久有效");
@@ -84,78 +83,41 @@ public class DomainController {
     /**
      * 获取我的域名信息
      */
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public Object getInfo(@JwtUser Session session, @RequestParam Long domainId){
+    @ApiModelProperty("获取域名信息")
+    @GetMapping(value = "/info")
+    public Object getInfo(@JwtUser Session session, @RequestParam Long domainId) {
 
         Long userId = session.getUserId();
 
         // 检查是否该用户的域名
-        if(!domainService.checkDomain(userId, domainId)){
-            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
-        }
-        Domain domain = domainService.getById(domainId);
-
-        return R.success(domain);
-    }
-
-
-    @Resource
-    private OrderPayBiz orderPayBiz;
-
-
-
-
-
-
-//    /**
-//     * 支付接口
-//     * @param session
-//     * @return
-//     */
-//    @RequestMapping(value = "/pay", method = RequestMethod.POST)
-//    public Object pay(@JwtUser Session session,
-//                      @RequestParam(defaultValue = "1") Integer payType, // 3w
-//                      @RequestParam Integer time, // 3w
-//                      @RequestParam Long domainId){
-//
-//        Long userId = session.getUserId();
-//
-//        // 检查是否该用户的域名
 //        if(!domainService.checkDomain(userId, domainId)){
 //            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
 //        }
-//
-//        // 计算价格
-//        R r = orderPayBiz.calculate(domainId, time);
-//
-//        if(r.isSuccess()){
-//            BigDecimal payMoney = r.getDataMapAsBigDecimal("payMoney");
-//            Long  dueTime   = r.getDataMapAsLong("dueTime");
-//            switch (payType){
-//                case 1: // 余额支付
-//                    return orderPayBiz.balancePay(userId, domainId, payMoney, dueTime);
-//            }
-//
-//        }
-//
-//
-//        return r;
-//    }
-
+        Domain domain = domainService.getById(domainId);
+        if (domain == null) {
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+        // 能够查询被别人购买 或自己购买的域名
+        if (domain.getUserId() != null && !domain.getUserId().equals(userId)) {
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+        return R.success(domain);
+    }
 
     /**
      * 获取未绑定的域名列表
+     *
      * @param session
      * @return
      */
     @RequestMapping(value = "/nobind", method = RequestMethod.GET)
-    public Object getInfo(@JwtUser Session session){
+    public Object getInfo(@JwtUser Session session) {
         Long userId = session.getUserId();
         List<JSONObject> list = domainService.getListNotBindByUserId(userId);
 
-        list.forEach(item->{
-            if( item.getInteger("type") == 2){
-                item.put("domain", item.getString("domain")+".joggle.cn");
+        list.forEach(item -> {
+            if (item.getInteger("type") == 2) {
+                item.put("domain", item.getString("domain") + ".joggle.cn");
             }
         });
 
@@ -168,28 +130,28 @@ public class DomainController {
 
     /**
      * 域名绑定设备
+     *
      * @param session
      * @return
      */
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
     public Object getInfo(@JwtUser Session session,
                           @RequestParam Long domainId,
-                          @RequestParam Long deviceId){
+                          @RequestParam Long deviceId) {
         Long userId = session.getUserId();
 
 
-
         // 检查是否该用户的域名
-        if(!domainService.checkDomain(userId, domainId)){
+        if (!domainService.checkDomain(userId, domainId)) {
             return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
 
         // 检查设备是否该用户的
-        if(!deviceService.exists(userId, deviceId)){
+        if (!deviceService.exists(userId, deviceId)) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         // 检查域名是否已经绑定
-        if(deviceMappingService.existsDomainId(deviceId, domainId)){
+        if (deviceMappingService.existsDomainId(deviceId, domainId)) {
             return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
@@ -203,7 +165,7 @@ public class DomainController {
         mapping.setDeviceId(deviceId);
         mapping.setServerTunnelId(deviceInfo.getServerTunnelId());
         mapping.setDomainId(domainId);
-        if(domainInfo.getType() == 1){
+        if (domainInfo.getType() == 1) {
             mapping.setRemotePort(Integer.parseInt(domainInfo.getDomain()));
             mapping.setProtocol(DeviceMapping.PROTOCOL_TCP);
         } else {
@@ -215,7 +177,15 @@ public class DomainController {
     }
 
 
-
+    /**
+     * 搜索可购买的域名
+     */
+    @ApiModelProperty("搜索可购买的域名")
+    @GetMapping(value = "/search")
+    public R<Page<DomainBuyListVO>> searchDomain(Page pageParams, @RequestParam String keyword) {
+        Page<DomainBuyListVO> page = domainService.getBuyList(pageParams, keyword);
+        return R.success(page);
+    }
 
 
 }

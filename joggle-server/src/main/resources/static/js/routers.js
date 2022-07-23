@@ -121,6 +121,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			, templateUrl: 'view/domain/domain.htm'
 			, controllerUrl: 'view/domain/domain.js'
 		}))
+		.when('/user/domain/buy', router({
+			minTitle: "购买域名"
+			, templateUrl: 'view/service/domain-buy/domain-buy.htm'
+			, controllerUrl: 'view/service/domain-buy/domain-buy.js'
+		}))
 		.when('/user/domain/pay', router({
 			minTitle: "支付"
 			, templateUrl: 'view/pay/pay.htm'

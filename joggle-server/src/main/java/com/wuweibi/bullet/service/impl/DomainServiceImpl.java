@@ -3,9 +3,12 @@ package com.wuweibi.bullet.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
@@ -109,10 +112,20 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public boolean updateUserId(Long domainId, Long userId) {
+    public boolean updateUserId(Long domainId, Long userId, int status) {
         return this.update(Wrappers.<Domain>lambdaUpdate()
                 .eq(Domain::getId, domainId)
                 .set(Domain::getUserId, userId)
+                .set(Domain::getStatus, status)
         );
+    }
+
+    @Override
+    public Page<DomainBuyListVO> getBuyList(Page pageParams, String keyword) {
+        Page<DomainBuyListVO> page = this.baseMapper.selectBuyList(pageParams, keyword);
+        page.getRecords().forEach(item->{
+            item.setTypeName(DomainTypeEnum.toName(item.getType()));
+        });
+        return page;
     }
 }

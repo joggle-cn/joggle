@@ -2,7 +2,9 @@ package com.wuweibi.bullet.mapper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.entity.Domain;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -73,4 +75,13 @@ public interface DomainMapper extends BaseMapper<Domain> {
      */
     @Select("select count(1) from t_domain where (due_time is null or due_time >= SYSDATE()) and id = #{domainId}")
     boolean checkDoaminIdDue(@Param("domainId")Long domainId);
+
+
+    /**
+     * 获取没有购买的域名列表
+     * @param pageParams 分页参数
+     * @param keyword 关键字
+     * @return
+     */
+    Page<DomainBuyListVO> selectBuyList(Page pageParams,@Param("keyword") String keyword);
 }

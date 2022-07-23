@@ -25,4 +25,5 @@ public class OrderPayInfo {
     private String name;
 
     private Integer payType;
+    private Integer resourceType;
 }

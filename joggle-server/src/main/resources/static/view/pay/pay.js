@@ -14,6 +14,9 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
         $scope.payMoney = 0;
         $scope.amount  = 7; // 天
         $scope.payType  = 2; // 天
+        $scope.data = {
+            type: 1,
+        }
 
         $scope.domainId = $routeParams.domainId;
         let params = {
@@ -24,6 +27,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.data = res.data;
+                        calculate();
                     });
                 }
             });
@@ -49,7 +53,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
          */
         function calculate( ){
             let params = {
-                resourceType: 1,
+                resourceType: $scope.data.type,
                 amount: $scope.amount,
                 resId: $scope.domainId,
                 payType: $scope.payType,
@@ -69,9 +73,8 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
          * 调用支付
          */
 		$scope.pay = function(){
-
             let params = {
-                resourceType: 1,
+                resourceType: $scope.data.type,
                 amount: $scope.amount,
                 resId: $scope.domainId,
                 payType: $scope.payType,
@@ -83,12 +86,12 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                         layer.msg('正在跳转支付宝付款网页');
                         return;
                     }
+                    window.location.href = "#/user/domain";
                     layer.msg("购买成功");
                 }else{ //错误提示
                     layer.msg(res.msg);
                 }
             });
-
 
 
         }

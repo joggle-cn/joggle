@@ -11,6 +11,7 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
+import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
@@ -76,17 +77,24 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if(domain == null){
                     return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
                 }
-                if(!(domain.getUserId() != null && ordersDTO.getUserId().equals(domain.getUserId()))){
+                if(domain.getUserId() != null && !ordersDTO.getUserId().equals(domain.getUserId())){
                     return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
                 }
+                String text = "续费";
                 if (domain.getDueTime() == null) {
                     domain.setDueTime(new Date());
+                    text = "购买";
                 }
 
                 // 计算价格 单价 * 天数
                 BigDecimal price = domain.getSalesPrice();
                 BigDecimal payAmount = price.multiply(BigDecimal.valueOf(amount));
                 BigDecimal originalAmount = domain.getOriginalPrice().multiply(BigDecimal.valueOf(amount));
+
+                String name = ResourceTypeEnum.toName(resourceType);
+
+
+                orderPayInfo.setName(String.format("%s%s:%s", text, name ,domain.getDomain()));
 
                 // 计算到期
                 Calendar calendar = Calendar.getInstance();
@@ -98,17 +106,17 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 dueTime = calendar.getTime();
                 orderPayInfo.setDueTime(dueTime.getTime());
                 orderPayInfo.setAmount(amount*24*60*60l);
-                orderPayInfo.setName(domain.getDomain());
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
                 orderPayInfo.setPriceAmount(originalAmount);
                 orderPayInfo.setPayAmount(payAmount);
+                orderPayInfo.setResourceType(domain.getType());
                 break;
             case 3:
                 // 查询流量价格套餐 1.6元
                 BigDecimal priceAmount = BigDecimal.valueOf(1.6);
                 payAmount = priceAmount.multiply(BigDecimal.valueOf(amount));
 
-                orderPayInfo.setName("流量套餐");
+                orderPayInfo.setName(String.format("流量套餐:%dMB", amount));
                 orderPayInfo.setPriceAmount(payAmount);
                 orderPayInfo.setPayAmount(payAmount);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
@@ -151,6 +159,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 // 校验域名是否存在
                 if (domain == null) {
                     throw new RuntimeException("校验域名是否存在");
+                }
+                if(domain.getDueTime() == null){
+                    domain.setDueTime(new Date());
                 }
 
                 // 计算到期

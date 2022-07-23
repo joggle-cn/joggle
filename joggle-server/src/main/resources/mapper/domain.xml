@@ -6,4 +6,11 @@
 	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain.vo.DomainVO" parameterType="java.lang.Long">
 		select id, domain, type, status, due_time as dueDateTime from t_domain where user_id = #{userId}
 	</select>
+
+<!--	获取可购买的域名列表-->
+	<select id="selectBuyList" resultType="com.wuweibi.bullet.domain2.domain.DomainBuyListVO">
+		select id, domain, type, status, original_price,sales_price  from t_domain
+		where status = 0 and user_id is null
+		 	and domain like concat(#{keyword},'%')
+	</select>
 </mapper>

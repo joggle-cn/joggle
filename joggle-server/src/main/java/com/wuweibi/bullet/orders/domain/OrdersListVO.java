@@ -42,6 +42,7 @@ public class OrdersListVO {
     private BigDecimal payAmount;
     //支付方式 1余额 2支付宝
     private Integer payType;
+    private String payTypeName;
 
     @ApiModelProperty("订单状态 0待支付 1已支付 2 取消 3退款中 4已退款")
     private Integer status;

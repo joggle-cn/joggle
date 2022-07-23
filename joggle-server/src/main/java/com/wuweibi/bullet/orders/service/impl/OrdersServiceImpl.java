@@ -7,6 +7,7 @@ import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
+import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
 import com.wuweibi.bullet.orders.mapper.OrdersMapper;
 import com.wuweibi.bullet.orders.service.OrdersService;
@@ -34,6 +35,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         page.getRecords().forEach(item->{
             item.setStatusName(OrdersStatusEnum.toName(item.getStatus()));
             item.setResourceTypeName(ResourceTypeEnum.toName(item.getResourceType()));
+            item.setPayTypeName(PayTypeEnum.toName(item.getPayType()));
         });
         return page;
     }
