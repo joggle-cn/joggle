@@ -213,7 +213,7 @@ public class DeviceController {
         if (isBind) {
             return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
-        // 限制普通用户绑定设备的数量 排除自己的账号判断
+        // 限制普通用户绑定设备的数量10 排除自己的账号判断
         int deviceNum = deviceService.getCountByUserId(userId);
         if (deviceNum >= 10 && userId != 1) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);

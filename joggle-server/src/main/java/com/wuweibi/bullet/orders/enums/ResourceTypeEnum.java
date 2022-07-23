@@ -7,24 +7,22 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
- * 订单状态 0待支付 1已支付 2 取消 3退款中 4已退款
- *
+ * 资源类型 1域名 2端口 3流量 4 充值
  * @author marker
  */
 @AllArgsConstructor
 @Getter
-public enum OrdersStatusEnum {
+public enum ResourceTypeEnum {
 
-    WAIT_PAY(0, "待支付"),
-    PAYED(1, "已支付"),
-    CANCEL(2, "取消"),
-    REFUNDING(3, "退款中"),
-    REFUNDED(4, "已退款"),
+    DOMAIN(1, "域名"),
+    PORT(2, "端口"),
+    FLOW(3, "流量"),
+    CHARGE(4, "充值"),
 
     ;
 
 
-    private int status;
+    private int type;
     private String name;
 
 
@@ -32,7 +30,7 @@ public enum OrdersStatusEnum {
      * 枚举数据map化处理，为便于获取枚举数据.
      */
     private static final Map<Integer, String> MAP = EnumUtil
-            .toMap(OrdersStatusEnum.class, OrdersStatusEnum::getStatus, OrdersStatusEnum::getName);
+            .toMap(ResourceTypeEnum.class, ResourceTypeEnum::getType, ResourceTypeEnum::getName);
 
 
     /**

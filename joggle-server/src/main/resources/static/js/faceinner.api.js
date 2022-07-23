@@ -76,6 +76,7 @@ let api = {
     "user.orders.calculate": '/api/orders/calculate',
     "user.orders.create": '/api/orders/create',
     "user.orders.confirm": '/api/orders/confirm',
+    "user.orders.list": '/api/orders/list',
 
     "device.tunnel": '/api/server/tunnel/list',
 

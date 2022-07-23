@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
-import com.wuweibi.bullet.orders.mapper.OrdersMapper;
 import com.wuweibi.bullet.orders.entity.Orders;
+import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
+import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
+import com.wuweibi.bullet.orders.mapper.OrdersMapper;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Override
     public Page<OrdersListVO> getListPage(Page pageParams, OrdersParam params) {
-        return this.baseMapper.selectListPage(pageParams, params);
+        Page<OrdersListVO> page = this.baseMapper.selectListPage(pageParams, params);
+
+        page.getRecords().forEach(item->{
+            item.setStatusName(OrdersStatusEnum.toName(item.getStatus()));
+            item.setResourceTypeName(ResourceTypeEnum.toName(item.getResourceType()));
+        });
+        return page;
     }
 }
 

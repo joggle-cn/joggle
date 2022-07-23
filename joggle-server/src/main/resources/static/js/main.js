@@ -26,6 +26,7 @@ var options = {
         , 'loading': 'lib/jquery/jquery.loading'
         , 'amazeui':'lib/amazeui/js/amazeui.min'
         , 'dropload':'lib/jquery/plugins/dropload-gh-pages/dropload'
+        , 'pagintation':'lib/jquery/plugins-pagintation/jquery.twbsPagination.min'
         , 'bootstrap-switch':'lib/bootstrap3/plugins/bootstrap-switch/js/bootstrap-switch.min'
         , 'layer':'lib/layer-v3.1.1/layer/layer'
         , 'echarts':'lib/echarts/echarts.min'

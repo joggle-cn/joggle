@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.orders.domain;
 
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,7 +23,11 @@ public class OrdersListVO {
     private String orderNo;
 
     //资源类型 1域名 2端口 3流量 4 充值
+    @ApiModelProperty("资源类型")
     private Integer resourceType;
+
+    @ApiModelProperty("资源类型")
+    private String resourceTypeName;
     //资源id
     private Long domainId;
     //购买量 单位：秒、MB
@@ -37,8 +42,13 @@ public class OrdersListVO {
     private BigDecimal payAmount;
     //支付方式 1余额 2支付宝
     private Integer payType;
-    //订单状态 0待支付 1已支付 2 取消 3退款中 4已退款
+
+    @ApiModelProperty("订单状态 0待支付 1已支付 2 取消 3退款中 4已退款")
     private Integer status;
+
+    @ApiModelProperty("订单状态名称")
+    private String statusName;
+
     //三方交易号
     private String tradeNo;
     //支付时间
