@@ -3,6 +3,8 @@ package com.wuweibi.bullet.orders.domain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 public class OrdersDTO {
 
@@ -10,6 +12,7 @@ public class OrdersDTO {
     private Integer resourceType;
 
     //支付方式 1余额 2支付宝
+    @NotNull(message = "支付方式错误")
     private Integer payType;
 
     @ApiModelProperty("数量")
@@ -18,5 +21,6 @@ public class OrdersDTO {
     // 资源id
     private Long resId;
 
+    @ApiModelProperty("用户id 不传递")
     private Long userId;
 }

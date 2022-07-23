@@ -12,6 +12,7 @@ import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.orders.domain.OrdersConfirmDTO;
@@ -20,6 +21,7 @@ import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
+import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
@@ -60,14 +62,13 @@ public class OrdersController {
      *
      * @return
      */
-    @GetMapping(value = "/list" )
-    public Object list(Page pageParams,OrdersParam params) {
+    @GetMapping(value = "/list")
+    public Object list(Page pageParams, OrdersParam params) {
         params.setUserId(SecurityUtils.getUserId());
         Page<OrdersListVO> page = ordersService.getListPage(pageParams, params);
-
-
         return R.success(page);
     }
+
     /**
      * 计算价格
      *
@@ -94,11 +95,10 @@ public class OrdersController {
      */
     @PostMapping(value = "/create")
     @Transactional
-    public R create(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) throws Exception {
+    public R create(@JwtUser Session session, @RequestBody @Valid OrdersDTO ordersDTO) throws Exception {
         Long userId = session.getUserId();
         ordersDTO.setUserId(userId);
         // 校验数据
-
 
         // 计算价格
         R<OrderPayInfo> r = orderPayBiz.calculate(ordersDTO);
@@ -127,6 +127,13 @@ public class OrdersController {
 
         ordersService.save(orders);
 
+        // 余额支付方式 扣钱
+        if (orderPayInfo.getPayType() == PayTypeEnum.BALANCE.getType()) {
+            R r2 = orderPayBiz.balancePay(userId, orders.getPayAmount(), orders.getOrderNo());
+            if (r2.isFail()) {
+                throw new BaseException(r2);
+            }
+        }
 
         switch (orders.getResourceType()) {
             case 1: // 域名

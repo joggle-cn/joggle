@@ -78,14 +78,15 @@ public class DefaultGlobalExceptionHandlerAdvice {
 
 
     /**
-     * 系统基础异常处理
+     * 系统业务异常处理
      * @param ex
      * @return
      */
     @ExceptionHandler(value = {BaseException.class})
+    @ResponseStatus(HttpStatus.OK)
     public R baseException(BaseException ex) {
-        log.error("base exception:{}", ex.getMessage());
-        return R.fail(ex.getErrorType());
+        log.info("service exception:{}", ex.getMessage());
+        return ex.getResult();
     }
 
     @ExceptionHandler(value = {Exception.class})

@@ -144,7 +144,8 @@ public class R<T> {
      * @return Result
      */
     public static R fail(BaseException baseException, Object data) {
-        return new R<>(baseException.getErrorType(), data);
+         baseException.getResult().data = data;
+        return baseException.getResult();
     }
 
     /**

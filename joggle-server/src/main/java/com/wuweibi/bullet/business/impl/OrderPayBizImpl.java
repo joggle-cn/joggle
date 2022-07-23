@@ -5,6 +5,7 @@ import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
@@ -13,6 +14,7 @@ import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -64,6 +67,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
         Date dueTime = null;
 
         OrderPayInfo orderPayInfo = new OrderPayInfo();
+        orderPayInfo.setPayType(ordersDTO.getPayType());
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
@@ -152,10 +156,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 // 计算到期
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(domain.getDueTime());
-                calendar.add(Calendar.DATE, orders.getAmount().intValue());
                 calendar.set(Calendar.HOUR_OF_DAY, 23);
                 calendar.set(Calendar.MINUTE, 59);
                 calendar.set(Calendar.SECOND, 59);
+                calendar.add(Calendar.SECOND, orders.getAmount().intValue());
                 domainService.updateDueTime(orders.getDomainId(), calendar.getTime().getTime());
                 break;
             case 3: // 流量
@@ -169,17 +173,25 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
     @Override
     @Transactional
-    public R balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime) {
+    public R balancePay(Long userId, BigDecimal payMoney, String orderNo) {
         if(payMoney == null){
             return R.fail(SystemErrorType.PAY_MONEY_NOT_NULL);
         }
 
         // 扣减余额
         boolean status = userService.updateBalance(userId, payMoney.negate());
-        if(status){
-            domainService.updateDueTime(domainId, dueTime);
+        if (status) {
+            OrderPayBiz orderPayBiz = SpringUtils.getBean(OrderPayBiz.class);
+            Map<String, Object> params = new HashMap<>(3);
+            params.put("out_trade_no", orderNo);
+            params.put("trade_no", "余额流水号");
+            params.put("trade_status", "TRADE_SUCCESS");
+            boolean payStatus = orderPayBiz.aliPayNotify(params);
+            if (!payStatus) {
+                throw new BaseException("产品发放失败!");
+            }
             return R.success();
-        }else{
+        } else {
             return R.fail(SystemErrorType.PAY_MONEY_BALANCE_NOT_ENOUGH);
         }
     }

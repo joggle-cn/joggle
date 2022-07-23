@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.exception;
 
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.ErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.Getter;
@@ -15,13 +16,14 @@ public class BaseException extends RuntimeException {
     /**
      * 异常对应的错误类型
      */
-    private final ErrorType errorType;
+    private R result;
+
 
     /**
      * 默认是系统异常
      */
     public BaseException() {
-        this.errorType = SystemErrorType.SYSTEM_ERROR;
+        this.result = R.fail(SystemErrorType.SYSTEM_ERROR);
     }
 
     /**
@@ -30,7 +32,7 @@ public class BaseException extends RuntimeException {
      */
     public BaseException(ErrorType errorType) {
         super(errorType.getMsg());
-        this.errorType = errorType;
+        this.result = R.fail(errorType);
     }
 
     /**
@@ -39,7 +41,7 @@ public class BaseException extends RuntimeException {
      */
     public BaseException(ErrorType errorType, String message) {
         super(message);
-        this.errorType = errorType;
+        this.result = R.fail(errorType);
     }
 
     /**
@@ -48,6 +50,17 @@ public class BaseException extends RuntimeException {
      */
     public BaseException(ErrorType errorType, String message, Throwable cause) {
         super(message, cause);
-        this.errorType = errorType;
+        this.result = R.fail(errorType);
+    }
+
+
+    public BaseException(R r) {
+        super(r.getMsg());
+        this.result = r;
+    }
+
+    public BaseException(String msg) {
+        super(msg);
+        this.result = R.fail(msg);
     }
 }

@@ -35,12 +35,11 @@ public interface OrderPayBiz {
     /**
      * 余额支付
      * @param userId
-     * @param domainId
      * @param payMoney
-     * @param dueTime
+     * @param orderNo
      * @return
      */
-    R balancePay(Long userId, Long domainId, BigDecimal payMoney, Long dueTime);
+    R balancePay(Long userId, BigDecimal payMoney, String orderNo);
 
 
 }

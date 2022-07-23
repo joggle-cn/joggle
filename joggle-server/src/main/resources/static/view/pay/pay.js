@@ -80,11 +80,10 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                 if (res.code == 'S00') {
                     if(params.payType == 2){// 支付宝
                         window.location.href = faceinner.server + '/api/open/orders/alipay?orderId='+ res.data;
+                        layer.msg('正在跳转支付宝付款网页');
+                        return;
                     }
-
-                    // todo 跳转新页面，并弹出模态窗口，点击【已支付】
-
-                    layer.msg('正在跳转支付宝付款网页');
+                    layer.msg("购买成功");
                 }else{ //错误提示
                     layer.msg(res.msg);
                 }
