@@ -69,6 +69,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
         OrderPayInfo orderPayInfo = new OrderPayInfo();
         orderPayInfo.setPayType(ordersDTO.getPayType());
+        orderPayInfo.setResourceType(resourceType);
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
