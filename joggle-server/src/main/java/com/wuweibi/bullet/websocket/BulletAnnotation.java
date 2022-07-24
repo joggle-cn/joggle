@@ -23,6 +23,7 @@ import com.wuweibi.bullet.conn.DeviceStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -147,7 +148,7 @@ public class BulletAnnotation {
             updateOutLine();
             this.deviceStatus = false;
             CoonPool pool = SpringUtils.getBean(CoonPool.class);
-            pool.removeConnection(this);
+            pool.removeConnection(this, String.format("异常-%s", closeReason.toString()));
         }
     }
 
@@ -216,9 +217,10 @@ public class BulletAnnotation {
 
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
+        if (device == null) {
+            throw new BaseException("设备不存在");
+        }
         this.deviceId = device.getId();
-        String msg = "Device AuthToken Error!!!";
-
         // 认证成功 发送映射信息
         if (device != null && device.getDeviceSecret() != null && device.getDeviceSecret().equals(authToken)) {
 
@@ -231,12 +233,6 @@ public class BulletAnnotation {
             }
             MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
             sendMessage(authResp);
-
-            try {
-                Thread.sleep(3000l);
-            } catch (InterruptedException e) {
-                logger.error("", e);
-            }
             sendMappingInfo();
             return;
         }
@@ -260,18 +256,7 @@ public class BulletAnnotation {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-
-                    this.getSession().getBasicRemote().sendBinary(buf);
-
-                } catch (IOException e) {
-                    logger.error("", e);
-                }
+                this.sendMessage(msg);
             }
         }
 
@@ -341,7 +326,7 @@ public class BulletAnnotation {
         }
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         if (this.deviceStatus) { // 正常设备才能移除
-            pool.removeConnection(this);
+            pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
             updateOutLine();
         }
         this.deviceStatus = false;
@@ -381,12 +366,12 @@ public class BulletAnnotation {
     /**
      * 服务器端主动关闭连接
      */
-    public void stop() {
+    public void stop(String message) {
         try {
             if (this.session.isOpen()) {
                 this.session.close(
                         new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
-                                "服务器端主动关闭连接！"));
+                                "服务器主动关闭，原因: "+ message));
             }
         } catch (IOException e) {
             logger.error("", e);
@@ -429,6 +414,7 @@ public class BulletAnnotation {
      */
     @SneakyThrows
     public void sendMessage(Message msg) {
+        log.info("websocket send: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             msg.write(outputStream);

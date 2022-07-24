@@ -54,7 +54,7 @@ public class HomeController {
 	@ResponseBody
 	public R init(){
 		String domain = ConfigUtils.getBulletDomain();
-        Map map = new HashMap(3);
+        Map map = new HashMap(6);
         map.put("domain", domain);
         map.put("clientVersion", "v1.2.14");
         map.put("serverVersion", "v1.2.0");

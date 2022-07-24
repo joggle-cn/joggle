@@ -178,7 +178,7 @@ public class DeviceController {
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
                 bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
                 // 停止ws链接
-                bulletAnnotation.stop();
+                bulletAnnotation.stop("设备删除");
             } catch (Exception e) {
                 log.error("{}", e.getMessage());
             }

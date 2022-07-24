@@ -42,7 +42,7 @@
                       <th scope="row">{{$index + 1}}</th>
                       <td>
                         <span ng-if="item.type == 1">{{item.domain}}</span>
-                        <span ng-if="item.type == 2">{{item.domain}}.joggle.cn</span>
+                        <span ng-if="item.type == 2">{{item.domain}}.{{config.domain}}</span>
                       </td>
                       <td ng-bind="item.typeName"></td>
                       <td>{{item.salesPrice}} 元/天</td>

@@ -33,7 +33,7 @@ public final class CoonPool {
         String deviceNo = conn.getDeviceNo();
         BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
         if(bulletAnnotation != null){
-            conn.stop();
+            conn.stop(String.format("设备%s已经注册", deviceNo));
             return;
         }
         clientConnections.put(deviceNo, conn);
@@ -43,14 +43,15 @@ public final class CoonPool {
     /**
      * 移除一个链接
      * @param conn 链接对象
+     * @param message
      */
-    public void removeConnection(BulletAnnotation conn) {
+    public void removeConnection(BulletAnnotation conn, String message) {
         if(conn == null){
             return;
         }
         String deviceNo = conn.getDeviceNo();
         clientConnections.remove(deviceNo); // 直接全部移除
-        conn.stop();
+        conn.stop(message);
     }
 
 
@@ -65,7 +66,7 @@ public final class CoonPool {
             return;
         }
         clientConnections.remove(deviceNo); // 直接全部移除
-        bulletAnnotation.stop();
+        bulletAnnotation.stop("设备在线");
     }
 
 
@@ -113,11 +114,15 @@ public final class CoonPool {
         return clientConnections.size();
     }
 
+
+    /**
+     * 全局
+     */
     public void stop() {
         Set<String> sets = clientConnections.keySet();
         for(String key : sets){
             BulletAnnotation bulletAnnotation = clientConnections.get(key);
-            bulletAnnotation.stop();
+            bulletAnnotation.stop("批量下线");
         }
     }
 

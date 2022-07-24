@@ -91,7 +91,7 @@ define([
 	app.controller('navController', ['$rootScope','$session', '$scope','$location',function ($rootScope, $session, $scope, $location) {
 
         $rootScope.config = {
-            domain: 'joggle.cn'
+            domain: 'joggle.cn' // 默认，如果服务还没有返回读取的这个值
         }
 
         // 初始化数据
