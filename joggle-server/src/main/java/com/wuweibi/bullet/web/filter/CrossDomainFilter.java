@@ -50,7 +50,7 @@ public class CrossDomainFilter implements Filter {
         }
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");
         response.setHeader("Access-Control-Max-Age", "0"); // 单位秒
         logger.debug("response add cross-domain headers");
