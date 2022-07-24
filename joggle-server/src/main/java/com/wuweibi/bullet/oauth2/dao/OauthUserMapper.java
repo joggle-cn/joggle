@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.oauth2.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Update;
  * @author marker
  *
  */
-public interface OauthUserMapper{
+public interface OauthUserMapper extends BaseMapper<OauthUser> {
 
 
     /**
@@ -19,7 +20,7 @@ public interface OauthUserMapper{
      *
      * @return
      */
-    @Select("SELECT id,nickname,username,password,enabled,account_non_expired,credentials_non_expired,account_non_locked,created_time,updated_time,created_by,updated_by" +
+    @Select("SELECT id,nickname,username,password,enabled,account_non_expired,credentials_non_expired,account_non_locked,created_time,updated_time,created_by,updated_by,user_admin" +
             " FROM t_sys_users WHERE email = #{username} or username = #{username} limit 1")
     OauthUser getByUsername(String username);
 

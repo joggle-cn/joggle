@@ -9,6 +9,7 @@ import com.wuweibi.bullet.entity.Button;
 import com.wuweibi.bullet.entity.SysMenu;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.ISysMenuService;
+import com.wuweibi.bullet.system.domain.SysMenuDTO;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.web.bind.annotation.*;
 
@@ -193,7 +194,7 @@ public class SysMenuController {
      * @return
      */
     @PutMapping("/{id}")
-    public Object saveOrUpdate(SysMenu entity, @RequestParam("buttons") String buttonStr) {
+    public Object saveOrUpdate(SysMenuDTO entity) {
         entity.setUpdatedTime(new Date());
         if(StringUtil.isBlank(entity.getUrl())){
             entity.setUrl("");
@@ -201,7 +202,7 @@ public class SysMenuController {
         if(StringUtil.isBlank(entity.getIcon())){
             entity.setIcon("");
         }
-        List<Button> buttons = JSON.parseArray(buttonStr, Button.class);
+        List<Button> buttons = JSON.parseArray(entity.getButtons(), Button.class);
 //
         sysMenuService.save(entity, buttons);
 
@@ -219,5 +220,21 @@ public class SysMenuController {
         List<SysMenu> treeList = sysMenuService.getTwoLevelToTree();
         return R.success(treeList);
     }
+
+
+//    /**
+//     * 获取
+//     *
+//     * @param id id
+//     * @return
+//     */
+//    @GetMapping("/{id}/buttons")
+//    public Object getButtons(@PathVariable("id") int id) {
+//        List<Button> list = buttonService.selectByModuleId(id);
+//        return MessageResult.success(list);
+//    }
+//
+//    @Resource
+//    private ButtonService buttonService;
 
 }

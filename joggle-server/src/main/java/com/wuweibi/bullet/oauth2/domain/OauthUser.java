@@ -63,4 +63,9 @@ public class OauthUser extends BasePo {
      * 锁定账号
      */
     private Boolean accountNonLocked;
+
+    /**
+     * 是否 后台账号 1 是 0 否
+     */
+    private Integer userAdmin;
 }

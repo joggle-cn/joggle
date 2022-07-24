@@ -3,26 +3,34 @@ package com.wuweibi.bullet.oauth2.service.impl;
 
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
+import com.wuweibi.bullet.oauth2.consts.ClientScope;
 import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.domain.Role;
+import com.wuweibi.bullet.oauth2.exception.LoginException;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Spring权限框架用户详情服务
- *
  *
  * @author marker
  */
@@ -36,15 +44,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Resource
     private Oauth2RoleService oauth2RoleService;
 
+    @Resource
+    private ClientDetailsService clientDetailsService;
 
     /**
      * 包含注册账号（做了事务）
+     *
      * @param username
      * @return
      */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         // 支持手机号和账号登录
         OauthUser user = oauthUserService.getByUsername(username);
@@ -52,6 +64,17 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new BaseException(AuthErrorType.ACCOUNT_PASSWORD_ERROR);
         }
         log.info("loadByUsername:{}", user.toString());
+
+        // 如果登录的管理端
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String clientId = authentication.getName();
+        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+
+        // 校验管理端登录必须有管理标识的用户
+        if (clientDetails.getScope().contains(ClientScope.SCOPE_ADMIN) && 1 != user.getUserAdmin()) {
+            throw new LoginException("无权限登录");
+        }
+
 
         // 判断用户是哪个端的用户
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -99,13 +122,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /**
      * 是否包含指定的角色码
+     *
      * @param authorities
      * @param roleCode
      * @return
      */
-    protected boolean hasRoleCode(Set<GrantedAuthority> authorities, String roleCode){
-        for(GrantedAuthority auth : authorities){
-            if(auth.getAuthority().equals(roleCode)){
+    protected boolean hasRoleCode(Set<GrantedAuthority> authorities, String roleCode) {
+        for (GrantedAuthority auth : authorities) {
+            if (auth.getAuthority().equals(roleCode)) {
                 return true;
             }
         }

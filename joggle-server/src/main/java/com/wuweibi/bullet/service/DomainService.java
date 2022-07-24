@@ -72,4 +72,11 @@ public interface DomainService extends IService<Domain> {
      * @return
      */
     Page<DomainBuyListVO> getBuyList(Page pageParams, String keyword);
+
+    /**
+     * 释放域名
+     * @return
+     */
+    boolean release();
+
 }

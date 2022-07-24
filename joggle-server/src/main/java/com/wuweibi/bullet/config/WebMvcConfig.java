@@ -5,9 +5,10 @@ package com.wuweibi.bullet.config;
 
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
+import com.wuweibi.bullet.oauth2.filter.ApiAuthTokenFilter;
+import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
 import com.wuweibi.bullet.web.filter.CrossDomainFilter;
 import com.wuweibi.bullet.web.filter.WebsocketIPFilter;
-import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -199,6 +200,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return registration;
     }
 
+    @Bean
+    public FilterRegistrationBean ApiAuthTokenFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new ApiAuthTokenFilter());//添加过滤器
+        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+        registration.setName("ApiAuthTokenFilter");//设置优先级
+        return registration;
+    }
 
     @Bean
     public FilterRegistrationBean WebStatFilter() {

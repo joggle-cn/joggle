@@ -25,3 +25,10 @@ CREATE TABLE `orders`  (
 ALTER TABLE `t_domain`
     MODIFY COLUMN `sales_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '销售价格（元/天）' AFTER `create_time`,
     MODIFY COLUMN `original_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '原价（元/天）' AFTER `sales_price`;
+
+
+
+ALTER TABLE `t_sys_users`
+    ADD COLUMN `user_admin` tinyint(1) NULL DEFAULT 0 COMMENT '是否后台用户 1是 0否' AFTER `activate_code`;
+
+update t_sys_users set user_admin = 0 ;

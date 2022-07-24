@@ -7,7 +7,9 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,5 +46,12 @@ public final class SecurityUtils {
 
     public static Long getUserId(){
         return getLoginUser().getUserId();
+    }
+
+    public static void getClienScope() {
+        OAuth2Authentication authentication = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
+        String clientId = authentication.getOAuth2Request().getClientId();
+
+
     }
 }

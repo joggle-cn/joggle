@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.domain2.controller;
 /**
  * Created by marker on 2017/12/6.
  */

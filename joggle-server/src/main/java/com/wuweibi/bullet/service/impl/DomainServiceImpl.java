@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
@@ -16,13 +17,16 @@ import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Iterator;
@@ -127,5 +131,22 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             item.setTypeName(DomainTypeEnum.toName(item.getType()));
         });
         return page;
+    }
+
+    @Override
+    @Transactional
+    public boolean release() {
+        for (int i=0 ;i< 10;i++){
+            Domain domain = new Domain();
+            domain.setType(DomainTypeEnum.DOMAIN.getType());
+            domain.setCreateTime(new Date());
+            domain.setDomain(CodeHelper.makeNewCode());
+            domain.setOriginalPrice(BigDecimal.ONE);
+            domain.setSalesPrice(BigDecimal.valueOf(0.15));
+            domain.setStatus(DomainStatusEnum.SALE.getStatus());
+            domain.setServerTunnelId(1);// 默认通道
+            this.baseMapper.insert(domain);
+        }
+        return true;
     }
 }
