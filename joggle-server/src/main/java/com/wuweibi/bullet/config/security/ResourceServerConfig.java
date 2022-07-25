@@ -81,13 +81,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 ;
 //
         // 允许跨域
-        http.anonymous().and()
-                .authorizeRequests()
-                //处理跨域请求中的Preflight请求
-//                .antMatchers(HttpMethod.OPTIONS).permitAll()
+        http.authorizeRequests()
+                // 特殊接口
+                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**","/swagger-ui/**","/api/v2/api-docs").permitAll()
 
-                .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**", "/swagger-ui/**","/api/v2/api-docs")
-                .permitAll()
+                // 放过静态资源
+                .antMatchers("/lib/**", "/js/**","/css/**","/template/**","/resource/**","/view/**", "/index.html").permitAll()
+
                 .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
 
         ;
