@@ -3,7 +3,6 @@ package com.wuweibi.bullet.config;
  * Created by marker on 2018/3/16.
  */
 
-import com.alibaba.druid.support.http.WebStatFilter;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
 import com.wuweibi.bullet.oauth2.filter.ApiAuthTokenFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
@@ -36,14 +35,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * 升级springboot2.4.0后，  allowedOrigins更变为 allowedOriginPatterns
      * @param registry
      */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOriginPatterns("*")
+//                .allowedMethods("*")
+//                .allowedHeaders("*")
+//                .allowCredentials(true);
+//    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -184,7 +183,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public FilterRegistrationBean FilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new CrossDomainFilter());
-        registration.addUrlPatterns("/oauth/*"); // oauth token
+        registration.addUrlPatterns("/*"); // oauth token
         registration.setName("CrossDomainFilter");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);//设置最高优先级
         return registration;
@@ -209,15 +208,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return registration;
     }
 
-    @Bean
-    public FilterRegistrationBean WebStatFilter() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new WebStatFilter());//添加过滤器
-        registration.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
-        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
-        registration.setName("WebStatFilter");//设置优先级
-        return registration;
-    }
+//    @Bean
+//    public FilterRegistrationBean WebStatFilter() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(new WebStatFilter());//添加过滤器
+//        registration.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+//        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+//        registration.setName("WebStatFilter");//设置优先级
+//        return registration;
+//    }
 
 //    @Bean
 //    public ServletRegistrationBean druidServlet() {

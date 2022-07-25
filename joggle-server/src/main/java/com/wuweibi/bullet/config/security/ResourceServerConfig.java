@@ -21,8 +21,8 @@ import javax.sql.DataSource;
  * @author marker
  *
  */
-@Configuration
 @EnableResourceServer
+@Configuration
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${spring.security.oauth2.jwt.signingKey}")
@@ -51,31 +51,69 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .resourceId("WEBS");
     }
 
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Collections.singletonList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.addExposedHeader("X-Authenticate");
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+
+
     /**
      * 资源的HttpSecurity 配置
      *
      * @param http
      * @throws Exception
      */
+
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.cors();
+        // 关闭HTTP Basic认证
+        http.httpBasic().disable();
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
+                ;
+//
+        // 允许跨域
+        http.anonymous().and()
+                .authorizeRequests()
+                //处理跨域请求中的Preflight请求
+//                .antMatchers(HttpMethod.OPTIONS).permitAll()
 
-        http.authorizeRequests()
+                .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**", "/swagger-ui/**","/api/v2/api-docs")
+                .permitAll()
+                .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
 
-                // 特殊接口
-                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**","/swagger-ui/**","/api/v2/api-docs").permitAll()
-
-                // 放过静态资源
-                .antMatchers("/lib/**", "/js/**","/css/**","/template/**","/resource/**","/view/**", "/index.html").permitAll()
-
-                // 其他接口全部走认证
-                .anyRequest().authenticated()
-
-                // 关闭session
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
         ;
     }
+//    @Override
+//    public void configure(HttpSecurity http) throws Exception {
+//        // 关闭HTTP Basic认证
+//        http.httpBasic().disable();
+//    }
+//        http.cors().configurationSource(corsConfigurationSource());
+
+//        http.authorizeRequests()
+//
+//                // 特殊接口
+//                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**","/swagger-ui/**","/api/v2/api-docs").permitAll()
+//
+//                // 放过静态资源
+//                .antMatchers("/lib/**", "/js/**","/css/**","/template/**","/resource/**","/view/**", "/index.html").permitAll()
+//
+//                // 其他接口全部走认证
+//                .anyRequest().authenticated()
+//
+//                // 关闭session
+//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
+//        ;
+//    }
 
 
 }

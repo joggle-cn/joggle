@@ -52,7 +52,7 @@ import java.util.List;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Resource(name="authenticationManagerBean")
+    @Resource( )
     private AuthenticationManager authenticationManager;
 
     @Resource
@@ -70,9 +70,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private String signingKey;
 
 
-
-
-
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
 
@@ -82,6 +79,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         //只允许验证用户访问令牌解析端点（/oauth/check_token）
         oauthServer.tokenKeyAccess("isAuthenticated()")
                 .checkTokenAccess("permitAll()");
+
     }
 
 
@@ -219,5 +217,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         return new CompositeTokenGranter(granters);
     }
+
+
+
 
 }
