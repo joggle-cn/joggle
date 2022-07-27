@@ -78,12 +78,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.httpBasic().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
-                ;
+        ;
 //
         // 允许跨域
         http.authorizeRequests()
                 // 特殊接口
-                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**","/swagger-ui/**","/api/v2/api-docs").permitAll()
+                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**","/swagger-ui/**").permitAll()
 
                 // 放过静态资源
                 .antMatchers("/lib/**", "/js/**","/css/**","/template/**","/resource/**","/view/**", "/index.html").permitAll()

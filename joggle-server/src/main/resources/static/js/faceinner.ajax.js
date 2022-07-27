@@ -249,7 +249,6 @@ let faceinner = {
         if(!data){
             data = {}
         }
-        data._method = "DELETE";
         let options = {
             url: faceinner.server + url  ,
             type: 'DELETE',

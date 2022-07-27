@@ -36,7 +36,7 @@ import java.util.Date;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/role")
+@RequestMapping("/admin/role")
 public class RoleController {
 
 

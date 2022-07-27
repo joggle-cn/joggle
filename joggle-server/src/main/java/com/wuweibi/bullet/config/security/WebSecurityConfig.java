@@ -45,10 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 关闭HTTP Basic认证
         http.httpBasic().disable();
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
-//        http.cors()
-//                .configurationSource(corsConfigurationSource())
-        ;  http .anonymous().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable();
+        http .anonymous().disable();
 
         // 允许跨域
         http .addFilterBefore(corsFilter(), WebAsyncManagerIntegrationFilter.class)

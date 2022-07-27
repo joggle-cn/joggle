@@ -26,7 +26,7 @@ import java.util.List;
  * @since 2020-03-16
  */
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/admin/menu")
 public class SysMenuController {
 
     @Resource
