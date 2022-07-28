@@ -143,7 +143,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             domain.setDomain(CodeHelper.makeNewCode());
             domain.setOriginalPrice(BigDecimal.ONE);
             domain.setSalesPrice(BigDecimal.valueOf(0.15));
-            domain.setStatus(DomainStatusEnum.SALE.getStatus());
+            domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(1);// 默认通道
             this.baseMapper.insert(domain);
         }
