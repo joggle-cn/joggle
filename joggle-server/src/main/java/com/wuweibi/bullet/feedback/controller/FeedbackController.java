@@ -1,20 +1,21 @@
 package com.wuweibi.bullet.feedback.controller;
 
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
-import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.feedback.domain.FeedbackDTO;
 import com.wuweibi.bullet.feedback.entity.Feedback;
 import com.wuweibi.bullet.feedback.service.FeedbackService;
-
-
+import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 /**
@@ -23,6 +24,8 @@ import java.util.Date;
  * @author marker
  * @since 2022-04-01 17:32:37
  */
+@WebApi
+@Api(tags = "意见反馈")
 @RestController
 @RequestMapping("/api/open/feedback")
 public class FeedbackController {

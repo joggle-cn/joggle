@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.entity.Domain;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -15,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
-  *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author marker
@@ -26,6 +27,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 根据用户ID查询归属域名
+     *
      * @param userId 用户ID
      * @return
      */
@@ -33,7 +35,8 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 检查域名是否和用户绑定
-     * @param userId 用户ID
+     *
+     * @param userId   用户ID
      * @param domainId 域名ID
      * @return
      */
@@ -43,6 +46,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 获取未绑定的域名列表
+     *
      * @param userId 用户ID
      * @return
      */
@@ -51,6 +55,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 更新域名有效期
+     *
      * @param domainId
      * @param dueTime
      */
@@ -59,6 +64,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 查询过期的域名
+     *
      * @return
      */
     @Select("select b.id mappingId, a.domain, a.due_time dueTime,c.deviceId deviceNo  from t_domain a \n" +
@@ -70,18 +76,30 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 检查域名是否过期
+     *
      * @param domainId 域名ID
      * @return
      */
     @Select("select count(1) from t_domain where (due_time is null or due_time >= SYSDATE()) and id = #{domainId}")
-    boolean checkDoaminIdDue(@Param("domainId")Long domainId);
+    boolean checkDoaminIdDue(@Param("domainId") Long domainId);
 
 
     /**
      * 获取没有购买的域名列表
+     *
      * @param pageParams 分页参数
-     * @param keyword 关键字
+     * @param params     搜索条件
+     * @return Page<DomainBuyListVO>
+     */
+    Page<DomainBuyListVO> selectBuyList(Page pageParams, @Param("params") DomainSearchParam params);
+
+
+    /**
+     * 获取最大的端口号
+     *
      * @return
      */
-    Page<DomainBuyListVO> selectBuyList(Page pageParams,@Param("keyword") String keyword);
+    Integer selectMaxPort();
+
+
 }

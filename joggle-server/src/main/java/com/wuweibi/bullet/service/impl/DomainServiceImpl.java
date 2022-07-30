@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -31,6 +32,7 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>
@@ -125,8 +127,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public Page<DomainBuyListVO> getBuyList(Page pageParams, String keyword) {
-        Page<DomainBuyListVO> page = this.baseMapper.selectBuyList(pageParams, keyword);
+    public Page<DomainBuyListVO> getBuyList(Page pageParams, DomainSearchParam params) {
+        Page<DomainBuyListVO> page = this.baseMapper.selectBuyList(pageParams, params);
         page.getRecords().forEach(item->{
             item.setTypeName(DomainTypeEnum.toName(item.getType()));
         });
@@ -135,7 +137,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     @Transactional
-    public boolean release() {
+    public synchronized boolean release() {
         for (int i=0 ;i< 10;i++){
             Domain domain = new Domain();
             domain.setType(DomainTypeEnum.DOMAIN.getType());
@@ -143,6 +145,27 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             domain.setDomain(CodeHelper.makeNewCode());
             domain.setOriginalPrice(BigDecimal.ONE);
             domain.setSalesPrice(BigDecimal.valueOf(0.15));
+            domain.setStatus(DomainStatusEnum.BUY.getStatus());
+            domain.setServerTunnelId(1);// 默认通道
+            this.baseMapper.insert(domain);
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public synchronized boolean releasePort() {
+        // 获取最大的端口号
+        Integer port = this.baseMapper.selectMaxPort();
+
+        AtomicInteger atomicInteger = new AtomicInteger(port);
+        for (int i=0 ;i< 10;i++){
+            Domain domain = new Domain();
+            domain.setType(DomainTypeEnum.PORT.getType());
+            domain.setCreateTime(new Date());
+            domain.setDomain(String.valueOf(atomicInteger.incrementAndGet()));
+            domain.setOriginalPrice(BigDecimal.valueOf(0.5));
+            domain.setSalesPrice(BigDecimal.valueOf(0.25)); //半价
             domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(1);// 默认通道
             this.baseMapper.insert(domain);

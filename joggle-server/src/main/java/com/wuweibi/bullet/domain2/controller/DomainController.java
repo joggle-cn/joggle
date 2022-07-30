@@ -6,11 +6,13 @@ package com.wuweibi.bullet.domain2.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.Domain;
@@ -36,6 +38,7 @@ import java.util.List;
  * @create 2019-12-26 下午9:19
  **/
 @Slf4j
+@WebApi
 @RestController
 @RequestMapping("/api/user/domain")
 public class DomainController {
@@ -182,8 +185,8 @@ public class DomainController {
      */
     @ApiModelProperty("搜索可购买的域名")
     @GetMapping(value = "/search")
-    public R<Page<DomainBuyListVO>> searchDomain(Page pageParams, @RequestParam String keyword) {
-        Page<DomainBuyListVO> page = domainService.getBuyList(pageParams, keyword);
+    public R<Page<DomainBuyListVO>> searchDomain(Page pageParams, DomainSearchParam params) {
+        Page<DomainBuyListVO> page = domainService.getBuyList(pageParams, params);
         return R.success(page);
     }
 

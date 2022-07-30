@@ -1,9 +1,10 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.system.controller;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.Button;
 import com.wuweibi.bullet.entity.SysMenu;
@@ -11,9 +12,11 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.ISysMenuService;
 import com.wuweibi.bullet.system.domain.SysMenuDTO;
 import com.wuweibi.bullet.utils.StringUtil;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +28,8 @@ import java.util.List;
  * @author marker
  * @since 2020-03-16
  */
+@AdminApi
+@Api(tags = "菜单管理")
 @RestController
 @RequestMapping("/admin/menu")
 public class SysMenuController {
@@ -69,9 +74,6 @@ public class SysMenuController {
      */
     @GetMapping("/lookup")
     public Object lookup(@RequestParam("url") String url) {
-
-
-
         SysMenu module = sysMenuService.selectByUrl(url);
         if(module == null){
             module = new SysMenu();
@@ -107,9 +109,6 @@ public class SysMenuController {
             }
 
         }
-
-
-
         return R.success(data);
     }
 
@@ -193,8 +192,8 @@ public class SysMenuController {
      * @param entity 实体
      * @return
      */
-    @PutMapping("/{id}")
-    public Object saveOrUpdate(SysMenuDTO entity) {
+    @PostMapping("/{id}")
+    public Object saveOrUpdate(@RequestBody @Valid SysMenuDTO entity) {
         entity.setUpdatedTime(new Date());
         if(StringUtil.isBlank(entity.getUrl())){
             entity.setUrl("");

@@ -10,7 +10,19 @@
 <!--	获取可购买的域名列表-->
 	<select id="selectBuyList" resultType="com.wuweibi.bullet.domain2.domain.DomainBuyListVO">
 		select id, domain, type, status, original_price,sales_price  from t_domain
-		where status = 0 and user_id is null
-		 	and domain like concat(#{keyword},'%')
+		<where>
+		 	status = 0 and user_id is null
+			<if test="params.type != null">
+				and type = #{params.type}
+			</if>
+			<if test="params.keyword != null and params.keyword != ''">
+				and domain like concat(#{keyword},'%')
+			</if>
+		</where>
+	</select>
+
+<!--	获取最大的端口号-->
+    <select id="selectMaxPort" resultType="java.lang.Integer">
+		select max(domain) from t_domain WHERE type = 1
 	</select>
 </mapper>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.entity.Domain;
 
 import java.util.List;
@@ -71,12 +72,18 @@ public interface DomainService extends IService<Domain> {
      * @param keyword 关键字
      * @return
      */
-    Page<DomainBuyListVO> getBuyList(Page pageParams, String keyword);
+    Page<DomainBuyListVO> getBuyList(Page pageParams, DomainSearchParam keyword);
 
     /**
      * 释放域名
      * @return
      */
     boolean release();
+
+    /**
+     * 释放端口
+     * @return
+     */
+    boolean releasePort();
 
 }

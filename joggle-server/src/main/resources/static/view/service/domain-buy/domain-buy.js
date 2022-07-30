@@ -10,6 +10,7 @@ define(['app','jquery','layer','pagintation', 'css!./domain-buy.css'], function 
         $scope.orderNo = $routeParams.out_trade_no;
         $scope.payMoney = 2;
         $scope.payType = 2;
+        $scope.type = "";
         $scope.keyword = "";
 
         /**
@@ -19,6 +20,7 @@ define(['app','jquery','layer','pagintation', 'css!./domain-buy.css'], function 
         $scope.searchDomain = function(page){
             let params = {
                 keyword: $scope.keyword,
+                type: $scope.type,
                 current: page,
             }
             faceinner.get(api["user.domain.search"], params, function(res){
@@ -31,6 +33,7 @@ define(['app','jquery','layer','pagintation', 'css!./domain-buy.css'], function 
                         $pager.unbind("page");
                         $pager.twbsPagination({
                             totalPages: res.data.pages,
+                            startPage: res.data.current,
                             visiblePages: 10,
                             href: "",
                             first:"首页",

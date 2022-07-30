@@ -2,6 +2,7 @@ package com.wuweibi.bullet.metrics.controller;
 
 
 import com.wuweibi.bullet.business.DeviceBiz;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -11,6 +12,7 @@ import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.service.DeviceService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +31,8 @@ import java.util.Date;
  * @since 2021-11-07 14:17:51
  */
 @Slf4j
+@WebApi
+@Api(tags = "数据收集")
 @RestController
 @RequestMapping("/api/open/data/metrics")
 public class DataMetricsOpenController {

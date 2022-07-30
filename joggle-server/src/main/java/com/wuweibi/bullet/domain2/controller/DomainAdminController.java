@@ -3,9 +3,8 @@ package com.wuweibi.bullet.domain2.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
@@ -24,6 +23,7 @@ import javax.annotation.Resource;
  * @create 2019-12-26 下午9:19
  **/
 @Slf4j
+@AdminApi
 @RestController
 @RequestMapping("/admin/domain")
 public class DomainAdminController {
@@ -47,10 +47,19 @@ public class DomainAdminController {
      */
     @ApiOperation(value = "发放域名", tags="后台")
     @PostMapping("/release")
-    public R<Page<DomainBuyListVO>> releaseDomain() {
+    public R<Boolean> releaseDomain() {
         boolean status = domainService.release();
-        return R.success();
+        return R.success(status);
     }
 
+    /**
+     * 搜索可购买的域名
+     */
+    @ApiOperation(value = "发放端口", tags="发放端口")
+    @PostMapping("/port/release")
+    public R<Boolean> releasePort() {
+        boolean status = domainService.releasePort();
+        return R.success(status);
+    }
 
 }

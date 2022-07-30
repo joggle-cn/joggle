@@ -2,6 +2,9 @@
 ## 支付宝回调PC网站的URL地址 [默认]
 ALIPAY_RETURN_URL: "/#/user/orders/pay/result"
 
+## Swagger文档启用
+SWAGGER_DOC_ENABLE: false
+
 #
 # 服务器配置
 #
@@ -13,11 +16,23 @@ server:
 
 springfox:
   documentation:
-    enabled: false
+    enabled: ${SWAGGER_DOC_ENABLE:true}
     swagger-ui:
-      enabled: true
-      base-url: /api/v2/api-docs
+      enabled: ${SWAGGER_DOC_ENABLE:true}
+#      base-url: /api/v2/api-docs
+
+knife4j:
+  enable: ${SWAGGER_DOC_ENABLE:true}
+  setting:
+    enableFooter: false
+    enableFooterCustom: true
+    footerCustomContent: Apache License 2.0
+
+
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #swagger3 需配置，不然展示不了列表
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

@@ -6,6 +6,7 @@ package com.wuweibi.bullet.device.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
@@ -31,6 +32,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.io.IOUtils;
@@ -54,6 +56,8 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
  * @create 2017-12-06 下午9:19
  **/
 @Slf4j
+@WebApi
+@Api(tags = "设备管理")
 @RestController
 @RequestMapping("/api/user/device")
 public class DeviceController {

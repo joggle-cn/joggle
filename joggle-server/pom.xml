@@ -18,8 +18,8 @@
         <mybaitsplus.version>3.3.1</mybaitsplus.version>
         <aspectjweaver.version>1.8.8</aspectjweaver.version>
         <mysql.version>8.0.28</mysql.version>
-        <swagger.core.version>1.5.22</swagger.core.version>
-        <swagger.ui.version>3.0.0</swagger.ui.version>
+        <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
 
     </properties>
 
@@ -238,13 +238,20 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--swagger 最新依赖内置版本-->
+        <!--swagger相关依赖 - 开始-->
+        <!--Knife4j增强，根据个人喜好决定是否增加-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>${knife4j-spring-boot-starter.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox-boot-starter.version}</version>
         </dependency>
+        <!--swagger相关依赖 - 结束-->
 
         <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
         <dependency>

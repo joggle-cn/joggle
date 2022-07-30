@@ -2,10 +2,12 @@ package com.wuweibi.bullet.device.controller;
 
 
 import com.baomidou.mybatisplus.extension.api.ApiController;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelVO;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
+import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
  * @author makejava
  * @since 2022-04-28 21:27:30
  */
+@WebApi
+@Api(tags = "通道管理")
 @RestController
 @RequestMapping("/api/server/tunnel")
 public class ServerTunnelController extends ApiController {

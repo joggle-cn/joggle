@@ -1,16 +1,18 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.system.controller;
 /**
  * Created by marker on 2018/3/6.
  */
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.alias.Var;
+import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.domain.domain.LayPage;
 import com.wuweibi.bullet.entity.Role;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.RoleService;
 import com.wuweibi.bullet.utils.StringUtil;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -35,6 +37,8 @@ import java.util.Date;
  **/
 
 @Slf4j
+@AdminApi
+@Api(tags = "角色管理")
 @RestController
 @RequestMapping("/admin/role")
 public class RoleController {
