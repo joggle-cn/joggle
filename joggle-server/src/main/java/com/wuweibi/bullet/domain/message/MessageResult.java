@@ -122,6 +122,16 @@ public class MessageResult {
 		this.data = data;
 	}
 
+	public MessageResult(boolean status, Object data, String msg) {
+		if(status){
+			this.status = State.OperationSuccess;
+		}else{
+			this.status = State.OperationFieldError;
+		}
+		this.data = data;
+		this.msg = msg;
+	}
+
 
 
 	public int getStatus() {

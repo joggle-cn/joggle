@@ -16,5 +16,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserForgetServiceImpl extends ServiceImpl<UserForgetMapper, UserForget> implements UserForgetService {
-	
+
+    @Override
+    public boolean checkApply(String email, int time) {
+        return this.baseMapper.checkApply(email, time);
+    }
 }

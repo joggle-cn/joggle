@@ -10,7 +10,6 @@ import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.R;
@@ -21,6 +20,7 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.StringUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
@@ -133,10 +133,11 @@ public class UserController {
 
 
     /**
-     * 注销操作
+     * 注销登录操作
      */
-    @RequestMapping(value = "/loginout", method = RequestMethod.POST)
-    public R loginout(HttpServletRequest request) {
+    @ApiOperation("注销登录操作")
+    @PostMapping(value = "/loginout")
+    public R loginOut(HttpServletRequest request) {
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenValue = StringUtils.substring(authentication, AuthenticationService.BEARER_BEGIN_INDEX);
         if (consumerTokenServices.revokeToken(tokenValue)) {
@@ -147,17 +148,17 @@ public class UserController {
     }
 
 
-    /**
-     * 修改密码
-     */
-    @RequestMapping(value = "/changepass", method = RequestMethod.POST)
-    public MessageResult changepass(@RequestParam String pass,
-                                    @RequestParam String code,
-                                    HttpServletRequest request) {
-        // 根据code查询用户信息
-        return userService.changePass4Code(code, pass);
-    }
-
+//    /**
+//     * 修改密码
+//     */
+//    @RequestMapping(value = "/changepass", method = RequestMethod.POST)
+//    public MessageResult changepass(@RequestParam String pass,
+//                                    @RequestParam String code,
+//                                    HttpServletRequest request) {
+//        // 根据code查询用户信息
+//        return userService.changePass4Code(code, pass);
+//    }
+//
 
 
     /**

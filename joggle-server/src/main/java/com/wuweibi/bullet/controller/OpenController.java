@@ -9,9 +9,6 @@ import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
-import com.wuweibi.bullet.domain.message.FormFieldMessage;
-import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
 import com.wuweibi.bullet.entity.Device;
@@ -29,7 +26,6 @@ import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
-import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -94,26 +90,6 @@ public class OpenController {
         binder.setValidator(new LoginParamValidator()); //添加一个spring自带的validator
     }
 
-
-    /**
-     * 忘记密码
-     *
-     * @return
-     */
-    @RequestMapping(value = "/forget", method = RequestMethod.POST)
-    public MessageResult forget(@RequestParam String email,
-                                HttpServletRequest request) {
-        // 验证邮箱正确性
-        if (email.indexOf("@") == -1 && !SpringUtils.emailFormat(email)) {// 邮箱格式不正确
-            FormFieldMessage ffm = new FormFieldMessage();
-            ffm.setField("email");
-            ffm.setStatus(State.RegEmailError);
-            return MessageFactory.getForm(ffm);
-        }
-        String ip = HttpUtils.getRemoteHost(request);
-        String url = HttpUtils.getRequestURL(request);
-        return userService.applyChangePass(email, url, ip);
-    }
 
     @Resource
     private UserFlowService userFlowService;

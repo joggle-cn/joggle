@@ -32,8 +32,8 @@ public interface UserService extends IService<User> {
 
     /***
      * 修改密码
-     * @param code
-     * @param pass
+     * @param code 修改码
+     * @param pass 明文密码
      * @return
      */
     MessageResult changePass4Code(String code, String pass);

@@ -29,6 +29,11 @@
 		where  status = 0 and code = #{code}
 	</select>
 
+<!--	检查最近是否申请过忘记密码-->
+    <select id="checkApply" resultType="java.lang.Boolean">
+		select count(1) from t_user_forget
+		where status = 0 and email = #{email} and createTime > date_add(now(), interval -#{time} second)
+	</select>
 
 
     <!-- 更新用户密码 -->

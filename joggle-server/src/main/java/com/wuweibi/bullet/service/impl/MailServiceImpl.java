@@ -39,7 +39,7 @@ import java.util.Map;
 public class MailServiceImpl implements MailService {
 
 
-    private static final String NORMAL_SUBJECT = "Bullet服务通知";
+    private static final String NORMAL_SUBJECT = "Joggle服务通知";
 
 
     @Autowired
@@ -182,7 +182,7 @@ public class MailServiceImpl implements MailService {
 
             InternetAddress from = new InternetAddress();
             try {
-                from.setPersonal("Bullet服务中心");
+                from.setPersonal("Joggle服务中心");
             } catch (UnsupportedEncodingException e) {
                 log.error("", e);
             }

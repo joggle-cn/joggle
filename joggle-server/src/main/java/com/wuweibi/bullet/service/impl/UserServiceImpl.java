@@ -56,14 +56,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
 
 
+
+    @Transactional
     public MessageResult applyChangePass(String email, String url, String ip) {
-
-        QueryWrapper ew = new QueryWrapper();
-        ew.eq("email", email);
-
-
-        // 验证是否存在
-        User user = this.baseMapper.selectOne(ew);
+        // 验证账号是否存在
+        User user = this.baseMapper.selectOne(Wrappers.<User>lambdaQuery()
+                .eq(User::getEmail, email));
         if (user == null) {// 邮箱账号不存在
             return MessageFactory.get(State.RegEmailNotExist);
         }
@@ -91,26 +89,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String forgetUrl = url + "#/forget?code=" + apply.getCode();
         params.put("forgetUrl", forgetUrl);
         params.put("url", url);
-
-        mailService.send(email, params, "forget_mail.ftl");
-
+        String subject = "忘记密码申请 - Joggle服务通知";
+        mailService.send(email, subject, params, "forget_mail.ftl");
 
         // 发送密码修改链接到邮箱
-
         return MessageFactory.getOperationSuccess();
     }
 
     @Override
     public MessageResult changePass4Code(String code, String pass) {
+        // 密码加密
+        String newPassword = pass;
+        String passwordEncode = passwordEncoder.encode(newPassword);
+
         // 查询code信息
         UserForget userApply = userForgetMapper.findByCode(code);
         if (userApply == null) {//
             return MessageFactory.get(State.CodeInvalid);
         }
         long userId = userApply.getUserId();// 用户Id
-        // 直接修改密码
-        userMapper.updatePass(userId, pass);
 
+        // 直接修改密码
+        userMapper.updatePass(userId, passwordEncode);
         userForgetMapper.updateStatus(code);
 
         return MessageFactory.getOperationSuccess();

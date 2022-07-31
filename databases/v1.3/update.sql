@@ -32,3 +32,8 @@ ALTER TABLE `t_sys_users`
     ADD COLUMN `user_admin` tinyint(1) NULL DEFAULT 0 COMMENT '是否后台用户 1是 0否' AFTER `activate_code`;
 
 update t_sys_users set user_admin = 0 ;
+
+-- 2022-07-31 忘记密码增加索引
+ALTER TABLE `t_user_forget`
+    ADD INDEX `idx_code`(`code`),
+ADD INDEX `idx_email`(`email`);

@@ -39,11 +39,11 @@ public class MessageFactory {
 	
 	/**
 	 * 获取错误消息对象
-	 * @param messgae 错误消息内容
+	 * @param message 错误消息内容
 	 * @return
 	 */
-	public static MessageResult getErrorMessage(String messgae){
-		return new MessageResult(false, messgae);
+	public static MessageResult getErrorMessage(String message){
+		return new MessageResult(false, null, message);
 	}
 
 	/**

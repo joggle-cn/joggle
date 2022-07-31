@@ -16,14 +16,14 @@ let api = {
     "statistics": '/api/open/statistics',
 
     /* 忘记密码 */
-    "user.forget": '/api/open/forget',
+    "user.forget": '/api/open/user/forget',
     "user.feedback": '/api/open/feedback/submit', // 意见反馈
 
     /* 注册 */
     "user.register": '/api/open/register',
 
     /* 修改密码 */
-    "user.changepass": '/api/user/changepass',
+    "user.changepass": '/api/open/user/changepass',
 
     /* 登录接口 */
     "user.login": '/api/login',
