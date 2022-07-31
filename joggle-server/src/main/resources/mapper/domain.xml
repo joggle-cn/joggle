@@ -16,7 +16,7 @@
 				and type = #{params.type}
 			</if>
 			<if test="params.keyword != null and params.keyword != ''">
-				and domain like concat(#{keyword},'%')
+				and domain like concat(#{params.keyword},'%')
 			</if>
 		</where>
 	</select>
