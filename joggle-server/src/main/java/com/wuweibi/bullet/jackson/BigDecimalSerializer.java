@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @JsonComponent
 public class BigDecimalSerializer extends JsonSerializer<BigDecimal> implements ContextualSerializer {
-    private String format = "###,##0.00";
+    private String format = "#####0.00";
 
     @Override
     public void serialize(BigDecimal bigDecimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
