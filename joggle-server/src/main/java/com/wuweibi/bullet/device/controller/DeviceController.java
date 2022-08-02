@@ -375,7 +375,7 @@ public class DeviceController {
      *
      * @return
      */
-    @RequestMapping(value = "/discovery", method = RequestMethod.GET)
+    @GetMapping(value = "/discovery" )
     public R discovery(HttpServletRequest request) {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
