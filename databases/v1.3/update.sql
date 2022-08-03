@@ -37,3 +37,15 @@ update t_sys_users set user_admin = 0 ;
 ALTER TABLE `t_user_forget`
     ADD INDEX `idx_code`(`code`),
 ADD INDEX `idx_email`(`email`);
+
+-- 2022-08-03 设备任意门文件服务器
+CREATE TABLE `t_device_door`  (
+  `id` bigint(22) NOT NULL COMMENT 'id',
+  `device_id` bigint(20) NULL DEFAULT NULL COMMENT '设备id',
+  `local_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '本地服务路径',
+  `server_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务端路径',
+  `enable` int(1) NULL DEFAULT 0 COMMENT '启用状态 1启用 0停用',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '设备任意门' ROW_FORMAT = Dynamic;

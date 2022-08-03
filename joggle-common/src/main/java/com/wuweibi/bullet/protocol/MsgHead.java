@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class MsgHead {
-
 	private int  length;//消息长度
 	private int  command;//消息命令
 	private long sequence1;// 命令产生的日期和时间

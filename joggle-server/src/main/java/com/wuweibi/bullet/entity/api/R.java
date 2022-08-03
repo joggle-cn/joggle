@@ -117,6 +117,13 @@ public class R<T> {
         return success(null);
     }
 
+    public static <T> R<T> ok() {
+        return success(null);
+    }
+    public static <T> R<T> ok(T data) {
+        return success(data);
+    }
+
     /**
      * 系统异常类没有返回数据
      *

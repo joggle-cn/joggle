@@ -45,6 +45,7 @@
 			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
 			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a>
 			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
+			<a class="btn btn-default" ng-click="openDeviceDoorDialog(deviceInfo)">任意门</a>
 		</div>
 	</div>
 
@@ -429,6 +430,63 @@
 			<div class="modal-footer">
 				<a ng-click="saveDevice()" class="btn btn-default">保 存</a>
 				<a ng-click="exitDevice()"  class="btn btn-default">取 消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+<!-- 绑定域名弹框 -->
+<div id="deviceDoorDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">开启任意门</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">域名/端口</label>
+						<div class="col-sm-6">
+							<select class="form-control" ng-model="deviceDoor.domainId" ng-options="item.id as item.domain for item in domainNoBindList">
+
+							</select>
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="deviceName" class="col-sm-2 control-label">本地路径</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceDoor.localPath" class="form-control" placeholder="D://">
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+                    <div class="form-group">
+                        <label for="stautsCheckbox" class="col-sm-2 control-label" >状态</label>
+                        <div class="col-sm-10">
+                            <div class="switch">
+                                <input id="deviceDoorEnableCheckbox" type="checkbox" checked />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="submitDeviceDoor()" class="btn btn-default">确认绑定</a>
+				<a ng-click="closeDeviceDoorDialog()"  class="btn btn-default">取消</a>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

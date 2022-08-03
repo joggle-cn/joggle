@@ -57,6 +57,7 @@ let api = {
     "user.device.wol": '/api/user/device/wol',
     "user.device.discovery": '/api/user/device/discovery',
     "user.device.switch-line": '/api/user/device/switch-line',
+    "device.door.config": '/api/device/door/config/one',
 
 
     "system.ngrokd.check": '/api/system/ngrokd/check',

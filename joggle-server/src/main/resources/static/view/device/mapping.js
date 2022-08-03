@@ -23,6 +23,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
             id: null,
             name: null
         }
+        $scope.deviceDoor = {
+            status : 0
+        }
 
 
 
@@ -149,6 +152,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 		$scope.exit = function(){
             $("#addMapping").modal('hide');
         }
+		$scope.closeDeviceDoorDialog = function(){
+            $("#deviceDoorDialog").modal('hide');
+        }
 
 
 
@@ -182,6 +188,49 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         }
 
 
+
+        /**
+         * 任意门弹框
+         */
+        $scope.openDeviceDoorDialog = function(item){
+            $scope.deviceDoor.deviceId = item.id;
+            faceinner.get(api['user.domain.nobind'], {}, function(res){
+                if (res.code == 'S00') {
+                    $scope.$apply(function() {
+                        $scope.domainNoBindList = res.data;
+                    });
+                }
+            });
+
+            $("#deviceDoorDialog").modal({
+                backdrop: false
+            });
+
+            $('#deviceDoorDialog').on('shown.bs.modal', function () {
+                $("#deviceDoorEnableCheckbox").bootstrapSwitch({
+                    state: $scope.deviceDoor.status,
+                    onSwitchChange:function (event, state) {
+                        $scope.deviceDoor.status = state;
+                    }
+                });
+                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.status, true);
+            })
+        }
+        /**
+         * 保存Device
+         */
+        $scope.submitDeviceDoor = function(){
+            faceinner.postJson(api['device.door.config'], $scope.deviceDoor , function(res) {
+                if (res.code == 'S00') {
+                    $("#deviceDoorDialog").modal('hide');
+                    flushData();
+                }else{
+                    layer.msg(res.msg);
+                }
+            });
+        }
+
+
         /**
          * 切换线路
          */
@@ -194,7 +243,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                 }
             });
 
-            $("#switchLineDialog").modal({
+            $("#deviceDoorDialog").modal({
                 backdrop: false
             });
         }
@@ -255,6 +304,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         }
 
 
+
+
         /**
          * 设备绑定域名
          */
@@ -297,6 +348,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                 }
             });
         }
+
+
 
 
 

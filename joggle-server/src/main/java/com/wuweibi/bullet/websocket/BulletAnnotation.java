@@ -421,7 +421,7 @@ public class BulletAnnotation {
             // 包装了Bullet协议的
             byte[] resultBytes = outputStream.toByteArray();
             ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-            this.session.getBasicRemote().sendBinary(buf);
+            this.session.getBasicRemote().sendBinary(buf, true);
         } catch (Exception e) {
             log.error("", e);
         } finally {
