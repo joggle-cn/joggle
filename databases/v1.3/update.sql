@@ -40,7 +40,7 @@ ADD INDEX `idx_email`(`email`);
 
 -- 2022-08-03 设备任意门文件服务器
 CREATE TABLE `t_device_door`  (
-  `id` bigint(22) NOT NULL COMMENT 'id',
+  `id` bigint(22) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `device_id` bigint(20) NULL DEFAULT NULL COMMENT '设备id',
   `local_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '本地服务路径',
   `server_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '服务端路径',
