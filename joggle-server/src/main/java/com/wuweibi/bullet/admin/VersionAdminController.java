@@ -44,7 +44,7 @@ public class VersionAdminController {
      */
     @PostMapping(value = "/update")
     public R update(@RequestBody String text, HttpServletRequest request) {
-        String[] lines = text.split("\n");
+        String[] lines = text.split("\r\n");
         for(String line: lines){
             String[] strings = line.split(":");
             String[] binPath = strings[0].split("/");
