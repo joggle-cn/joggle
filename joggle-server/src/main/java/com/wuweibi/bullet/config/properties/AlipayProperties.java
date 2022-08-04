@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Data
 @Configuration(proxyBeanMethods = false)
-@ConfigurationProperties(prefix = "bullet.alipay")
+@ConfigurationProperties(prefix = "joggle.alipay")
 public class AlipayProperties {
 
 

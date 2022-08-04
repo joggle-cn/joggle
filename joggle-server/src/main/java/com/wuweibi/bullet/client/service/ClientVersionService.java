@@ -23,10 +23,13 @@ public interface ClientVersionService extends IService<ClientVersion> {
 
     /**
      * 更新checksum
+     *
+     * @param version
      * @param os
      * @param arch
      * @param checksum
+     * @param binFilePath 二进制文件路径
      * @return
      */
-    int updateChecksumByOsArch(String os, String arch, String checksum);
+    int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum);
 }

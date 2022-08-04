@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "bullet")
+@ConfigurationProperties(prefix = "joggle")
 public class BulletConfig {
 
 

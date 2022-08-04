@@ -166,8 +166,8 @@ gate:
     authentication:
       startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template
 
-# bullet 配置
-bullet:
+# joggle 配置
+joggle:
   # ngrokd服务路径
   ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
@@ -178,6 +178,13 @@ bullet:
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:"https://pay.joggle.cn/api/open/orders/alipay/callback"}
     returnUrl: ${bullet.serverUrl}${ALIPAY_RETURN_URL}
+  # oss 配置
+  ali-oss:
+    publicServerUrl: ${ALI_OSS_PUBLIC_URL:https://www.joggle.cn}
+    accessKeyId: ${ALI_OSS_ACCESSKEY:xxx}
+    accessKeySecret: ${ALI_OSS_KEYSECRET:xxx}
+    publicBucketName: ${ALI_OSS_BUCKET:xxx}
+
 
 # 微信配置（测试appid）
 weixin:

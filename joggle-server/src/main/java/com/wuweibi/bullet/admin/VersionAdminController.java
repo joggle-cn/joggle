@@ -21,7 +21,7 @@ import java.util.Date;
  * @version 1.0
  */
 @RestController
-@RequestMapping("/api/admin/version")
+@RequestMapping("/admin/version")
 public class VersionAdminController {
 
     @Resource
@@ -44,15 +44,17 @@ public class VersionAdminController {
      */
     @PostMapping(value = "/update")
     public R update(@RequestBody String text, HttpServletRequest request) {
-        String[] s = text.split("\n");
-        for(String ss:s){
-            String[] lines = ss.split(":");
-            String[] binPath = lines[0].split("/");
+        String[] lines = text.split("\n");
+        for(String line: lines){
+            String[] strings = line.split(":");
+            String[] binPath = strings[0].split("/");
             String[] oss = binPath[0].split("_");
             String os = oss[0];
             String arch = oss[1];
-            String checksum = lines[1];
-            clientVersionService.updateChecksumByOsArch(os,arch, checksum);
+            String checksum = strings[1];
+            String version = strings[2];
+            String binFilePath = strings[0];
+            clientVersionService.updateChecksumByOsArch(version, os, arch,binFilePath, checksum);
         }
         return R.success();
     }

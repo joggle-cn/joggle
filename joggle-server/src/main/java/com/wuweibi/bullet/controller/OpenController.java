@@ -6,6 +6,7 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.client.entity.ClientVersion;
 import com.wuweibi.bullet.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
@@ -19,7 +20,6 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
-import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
@@ -27,6 +27,8 @@ import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -45,17 +47,16 @@ import java.util.*;
 
 
 /**
- * 登录读物
+ * 开放接口
  *
  * @author marker
  * @version 1.0
  */
+@WebApi
+@Api(tags = "开放接口")
 @RestController
 @RequestMapping("/api/open")
 public class OpenController {
-
-    @Resource
-    private OauthUserService oauthUserService;
 
     /**
      * 消息通知
@@ -75,6 +76,10 @@ public class OpenController {
     @Resource
     private DomainService domainService;
 
+    @Resource
+    private DeviceService deviceService;
+    @Resource
+    private ClientVersionService clientVersionService;
 
     @Resource
     private BulletConfig bulletConfig;
@@ -152,7 +157,7 @@ public class OpenController {
             if (StringUtil.isNotBlank(bulletConfig.getServerUrl())) {
                 url = bulletConfig.getServerUrl();
             }
-            String activateUrl = url + "#/user/activate?code=" + code+"&ic=" + inviteCode;
+            String activateUrl = url + "#/user/activate?code=" + code + "&ic=" + inviteCode;
             params.put("url", url);
             params.put("activateUrl", activateUrl);
 
@@ -192,16 +197,18 @@ public class OpenController {
     public R activate(
             @RequestParam String code,// 激活码
             @RequestParam(required = false) String inviteCode, // 邀请码
-                      HttpServletRequest request) {
+            HttpServletRequest request) {
         return userService.activate(code, inviteCode);
     }
 
 
     /**
      * 设备秘钥校验
+     * TODO 安全性升级
      *
      * @return
      */
+    @ApiOperation("设备秘钥校验【服务端调用校验】")
     @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
     public R devicesecret(@RequestParam String clientNo,
                           @RequestParam String secret,
@@ -220,48 +227,32 @@ public class OpenController {
         return R.fail(SystemErrorType.DEVICE_SECRET_ERROR);
     }
 
-    @Resource
-    private DeviceService deviceService;
-    @Resource
-    private ClientVersionService clientVersionService;
 
     /**
      * 检查客户端更新
      *
      * @return
      */
+    @ApiOperation("客户端检查更新接口")
     @RequestMapping(value = "/checkUpdate")
-    public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO, HttpServletRequest request) {
+    public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
 
         ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
-        
-        ReleaseDetail releaseDetail = new ReleaseDetail();
 
+        ReleaseDetail releaseDetail = new ReleaseDetail();
         ReleaseInfo releaseInfo = new ReleaseInfo();
         releaseInfo.setDescription(clientVersion.getDescription());
         releaseInfo.setTitle(clientVersion.getTitle());
         releaseInfo.setVersion(clientVersion.getVersion());
-        String createTime = DateFormatUtils.ISO_DATE_FORMAT.format(clientVersion.getCreateTime());
+        String createTime = DateFormatUtils.ISO_DATE_FORMAT.format(clientVersion.getUpdateTime());
         releaseInfo.setCreateDate(createTime);
         releaseDetail.setRelease(releaseInfo);
 
-
-        String path = clientInfoDTO.getOs() + "_" + clientInfoDTO.getArch() + "/";
-        if (clientInfoDTO.getOs().equals("linux") && clientInfoDTO.getArch().equals("amd64")) {
-            path = "";
-        }
-
-        String fileName = "ngrok";
-        if("windows".equals(clientInfoDTO.getOs())){
-            fileName = "ngrok.exe";
-        }
-
-        releaseDetail.setDownload_url(clientVersion.getDownloadUrl() + path + fileName);
+        releaseDetail.setDownload_url(clientVersion.getDownloadUrl());
         releaseDetail.setChecksum(clientVersion.getChecksum());
 //        releaseDetail.setSignature(null);
         releaseDetail.setPatch_type(null);
         releaseDetail.setAvailable(true);
-
         return releaseDetail;
     }
 
@@ -273,13 +264,13 @@ public class OpenController {
      */
     @Profile("dev")
     @RequestMapping(value = "/test")
-    public R checkUpdate(  HttpServletRequest request) {
+    public R checkUpdate(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
         HashMap<String, String> data = new HashMap<>();
-        while (e.hasMoreElements()){
+        while (e.hasMoreElements()) {
             String headerName = e.nextElement();
             String val = request.getHeader(headerName);
-            data.put(headerName,val);
+            data.put(headerName, val);
         }
         return R.success(data);
     }
@@ -291,19 +282,20 @@ public class OpenController {
 
     /**
      * 初始化数据
+     *
      * @param request
      * @return
      */
 //    @RequestMapping(value = "/update-count/init")
-    public R updateCount(  HttpServletRequest request) {
+    public R updateCount(HttpServletRequest request) {
 
-        String startTime  = "2021-11-09";
+        String startTime = "2021-11-09";
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DATE, 8);
         calendar.set(Calendar.MONTH, 10);
         calendar.set(Calendar.YEAR, 2021);
 
-        while (true){
+        while (true) {
             Date time = calendar.getTime();
             boolean status = dataMetricsService.generateDayByTime(time);
             calendar.add(Calendar.DATE, 1);
@@ -314,7 +306,6 @@ public class OpenController {
 
         return R.success();
     }
-
 
 
 }
