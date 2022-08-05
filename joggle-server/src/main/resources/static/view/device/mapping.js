@@ -24,7 +24,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
             name: null
         }
         $scope.deviceDoor = {
-            status : 0
+            enable : false
         }
 
 
@@ -208,18 +208,19 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
             $('#deviceDoorDialog').on('shown.bs.modal', function () {
                 $("#deviceDoorEnableCheckbox").bootstrapSwitch({
-                    state: $scope.deviceDoor.status,
+                    state: $scope.deviceDoor.enable,
                     onSwitchChange:function (event, state) {
-                        $scope.deviceDoor.status = state;
+                        $scope.deviceDoor.enable = state;
                     }
                 });
-                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.status, true);
+                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.enable, true);
             })
         }
         /**
          * 保存Device
          */
         $scope.submitDeviceDoor = function(){
+            $scope.deviceDoor.enable = $scope.deviceDoor.enable?1:0;
             faceinner.postJson(api['device.door.config'], $scope.deviceDoor , function(res) {
                 if (res.code == 'S00') {
                     $("#deviceDoorDialog").modal('hide');
