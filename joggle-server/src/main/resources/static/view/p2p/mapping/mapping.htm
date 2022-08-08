@@ -1,0 +1,110 @@
+<div style="margin-top:30px; "></div>
+<div class="container p2p-mapping ">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+			<li><a href="#">首页</a></li>
+			<li><a href="#/p2p/mapping/list">P2P映射管理</a></li>
+
+            <li class="bind-device">
+                <a href ng-click="createP2pMapping()">
+                <i class="fa fa-magnet"></i> <span>创建P2P映射</span>
+                </a>
+            </li>
+		</ol>
+        </div>
+    </div>
+
+    <div class="row">
+<!--         <div class="col-md-2"> -->
+<!--         </div> -->
+        <div class="col-md-12">
+            <div class="bs-example" data-example-id="hoverable-table">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th width="60">#</th>
+                      <th width="170">ID</th>
+                      <th width="80">服务侧</th>
+                      <th width="200">客户侧</th>
+                      <th width="80">状态</th>
+                      <th width="160">操作时间</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in page.records">
+                      <th scope="row">{{$index + 1}}</th>
+                      <td>
+                        <a href ng-click="">{{item.orderNo}}</a>
+                      </td>
+                      <td ng-bind="item.resourceTypeName"></td>
+                      <td ng-bind="item.name"></td>
+                      <td>{{item.payAmount}}</td>
+                      <td>{{item.payTypeName}}</td>
+                      <td>
+                        <span ng-if="item.status == 1" class="label label-success">{{item.statusName}}</span>
+                        <span ng-if="item.status != 1" class="label label-default">{{item.statusName}}</span>
+                      </td>
+                      <td>{{item.createTime}}</td>
+                      <td>
+<!--                         <a ng-if="item.status == 0" href >取消</a> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+                <div class="text-center">
+                    <ul id="pagination" class="pagination"></ul>
+                </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+<!-- 创建p2p弹框 -->
+<div id="createP2pMappingDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">创建P2P映射</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">服务侧</label>
+						<div class="col-sm-8">
+							<select class="form-control" ng-model="selectTunnelId" ng-options="item.id as item.name+'('+item.broadband+'MB) '+item.serverAddr for item in list">
+
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+                        <label class="col-sm-2 control-label">客户侧</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" ng-model="selectTunnelId" ng-options="item.id as item.name+'('+item.broadband+'MB) '+item.serverAddr for item in list">
+
+                            </select>
+                        </div>
+                    </div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="submitP2pMapping()" class="btn btn-default">提交映射</a>
+				<a ng-click="closeP2pMappingDialog()"  class="btn btn-default">取消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>

@@ -191,6 +191,13 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: '/template/user/wishs.htm'
 		}))
 
+		// p2p 点对点映射
+		.when('/p2p/mapping/list', router({
+			templateUrl: 'view/p2p/mapping/mapping.htm'
+			, controllerUrl: 'view/p2p/mapping/mapping.js'
+		}))
+
+
 
 		/* 闪聊模式 */
 		.when('/flashchat/index', router({
