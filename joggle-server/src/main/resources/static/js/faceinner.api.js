@@ -57,7 +57,12 @@ let api = {
     "user.device.wol": '/api/user/device/wol',
     "user.device.discovery": '/api/user/device/discovery',
     "user.device.switch-line": '/api/user/device/switch-line',
+
+    "device.options": '/api/user/device/options',
     "device.door.config": '/api/device/door/config/one',
+    "device.peer.list": '/api/device/peers/list',
+    "device.peer.save": '/api/device/peers',
+    "device.peer.detail": '/api/device/peers/detail',
 
 
     "system.ngrokd.check": '/api/system/ngrokd/check',

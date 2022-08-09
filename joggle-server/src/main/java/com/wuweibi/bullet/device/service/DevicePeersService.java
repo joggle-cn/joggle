@@ -26,5 +26,5 @@ public interface DevicePeersService extends IService<DevicePeers> {
 
 
 
-    boolean savePeers(Long userId, DevicePeersDTO dto);
+    Long savePeers(Long userId, DevicePeersDTO dto);
 }

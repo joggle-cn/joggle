@@ -30,6 +30,9 @@ public class DevicePeers {
      */
     @ApiModelProperty("用户id")
  	private Long userId;
+
+    @ApiModelProperty("p2p应用名称")
+ 	private String appName;
     
     /**
      * 服务侧设备id

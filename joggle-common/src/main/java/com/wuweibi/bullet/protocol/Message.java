@@ -27,6 +27,7 @@ public abstract class Message {
     public static final int LOG_MAPPING_LOG = 0x10000011; // 日志 消息
     public static final int SWITCH_LINE = 0x10000012; // 切换线路消息
     public static final int DEVICE_DOOR = 0x10000013; // 设备任意门
+    public static final int P2P_STUN = 0x10000014; // p2p
 
 
     public static final int NEW_MAPPING = 0x6;

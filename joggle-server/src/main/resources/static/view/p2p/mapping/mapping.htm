@@ -25,9 +25,9 @@
                   <thead>
                     <tr>
                       <th width="60">#</th>
-                      <th width="170">ID</th>
-                      <th width="80">服务侧</th>
-                      <th width="200">客户侧</th>
+                      <th width="60">ID</th>
+                      <th width="130">AppName</th>
+                      <th width="300">服务模型</th>
                       <th width="80">状态</th>
                       <th width="160">操作时间</th>
                       <th>操作</th>
@@ -36,20 +36,16 @@
                   <tbody>
                     <tr ng-repeat="item in page.records">
                       <th scope="row">{{$index + 1}}</th>
-                      <td>
-                        <a href ng-click="">{{item.orderNo}}</a>
-                      </td>
-                      <td ng-bind="item.resourceTypeName"></td>
-                      <td ng-bind="item.name"></td>
-                      <td>{{item.payAmount}}</td>
-                      <td>{{item.payTypeName}}</td>
+                      <td>{{item.id}} </td>
+                      <td>{{item.appName}} </td>
+                      <td> 服务侧:{{item.serverLocalPort}} == 客户侧:{{item.clientProxyPort}}</td>
                       <td>
                         <span ng-if="item.status == 1" class="label label-success">{{item.statusName}}</span>
                         <span ng-if="item.status != 1" class="label label-default">{{item.statusName}}</span>
                       </td>
-                      <td>{{item.createTime}}</td>
+                      <td>{{item.updateTime}}</td>
                       <td>
-<!--                         <a ng-if="item.status == 0" href >取消</a> -->
+                        <a href ng-click="createP2pMapping(item.id)">编辑</a>
                       </td>
                     </tr>
                   </tbody>
@@ -81,20 +77,43 @@
 
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">服务侧</label>
+						<label class="col-sm-3 control-label">服务侧</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-model="selectTunnelId" ng-options="item.id as item.name+'('+item.broadband+'MB) '+item.serverAddr for item in list">
+							<select class="form-control" ng-model="entity.serverDeviceId" ng-options="item.id as item.name+'<'+item.deviceNo+'> '+item.intranetIp for item in list">
 
 							</select>
 						</div>
 					</div>
 
 					<div class="form-group">
-                        <label class="col-sm-2 control-label">客户侧</label>
+                        <label class="col-sm-3 control-label">服务侧端口</label>
                         <div class="col-sm-8">
-                            <select class="form-control" ng-model="selectTunnelId" ng-options="item.id as item.name+'('+item.broadband+'MB) '+item.serverAddr for item in list">
+                            <input type="text" ng-model="entity.serverLocalPort" class="form-control" placeholder="客户侧本地端口,例如3389">
+                        </div>
+                    </div>
+
+					<div class="form-group">
+                        <label class="col-sm-3 control-label">客户侧</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" ng-model="entity.clientDeviceId" ng-options="item.id as item.name+'['+item.deviceNo+'] '+item.intranetIp for item in list">
 
                             </select>
+                        </div>
+                    </div>
+
+					<div class="form-group">
+                        <label class="col-sm-3 control-label">客户侧代理端口</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="entity.clientProxyPort" class="form-control" placeholder="客户侧本地端口,例如12330">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="devicePeerEnableCheckbox" class="col-sm-3 control-label" >状态</label>
+                        <div class="col-sm-8">
+                            <div class="switch">
+                                <input id="devicePeerEnableCheckbox" type="checkbox" checked />
+                            </div>
                         </div>
                     </div>
 				</form>

@@ -27,6 +27,9 @@ public class DevicePeersVO {
     @ApiModelProperty("用户id")
     private Long userId;
 
+    @ApiModelProperty("p2p应用名称")
+    private String appName;
+
     /**
      * 服务侧设备id
      */
@@ -56,6 +59,9 @@ public class DevicePeersVO {
      */
     @ApiModelProperty("状态 1启用 0禁用")
     private Integer status;
+
+    @ApiModelProperty("状态名称")
+    private String statusName;
 
     /**
      * 创建时间
