@@ -131,7 +131,10 @@ public class DevicePeersController {
         if (annotation != null) {
             PeerConfig doorConfig = new PeerConfig();
             doorConfig.setAppName(appName);
-            doorConfig.setPort(dto.getServerLocalPort());
+            doorConfig.setPort(dto.getClientProxyPort());
+            if (PeerConfig.SERVER.equals(type)) {
+                doorConfig.setPort(dto.getServerLocalPort());
+            }
             doorConfig.setType(type);
             doorConfig.setEnable(dto.getStatus());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
