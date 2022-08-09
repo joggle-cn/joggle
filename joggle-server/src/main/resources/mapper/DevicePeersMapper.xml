@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.device.mapper.DevicePeersMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.device.entity.DevicePeers">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="serverDeviceId" column="server_device_id" jdbcType="INTEGER"/>
+        <result property="clientDeviceId" column="client_device_id" jdbcType="INTEGER"/>
+        <result property="serverLocalPort" column="server_local_port" jdbcType="INTEGER"/>
+        <result property="clientProxyPort" column="client_proxy_port" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <select id="selectListPage" resultType="com.wuweibi.bullet.device.entity.DevicePeers">
+        select * from device_peers
+        where user_id = #{params.userId}
+    </select>
+
+</mapper>
+

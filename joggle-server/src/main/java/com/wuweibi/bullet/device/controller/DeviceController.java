@@ -12,6 +12,7 @@ import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
@@ -23,6 +24,7 @@ import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
@@ -80,6 +82,17 @@ public class DeviceController {
     @Resource
     private DeviceMappingService deviceMappingService;
 
+    /**
+     * 设备列表
+     *
+     * @return
+     */
+    @GetMapping("/options")
+    public R<List<DeviceOption>> deviceOptions( ) {
+        Long userId = SecurityUtils.getUserId();
+        List<DeviceOption> list = deviceService.getOptionListByUserId(userId);
+        return R.ok(list);
+    }
 
     /**
      * 设备列表

@@ -49,3 +49,18 @@ CREATE TABLE `t_device_door`  (
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '设备任意门' ROW_FORMAT = Dynamic;
+
+
+
+CREATE TABLE `device_peers`  (
+     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+     `server_device_id` bigint(11) NULL DEFAULT NULL COMMENT '服务侧设备id',
+     `client_device_id` bigint(11) NULL DEFAULT NULL COMMENT '客户侧设备id',
+     `server_local_port` int(11) NULL DEFAULT NULL COMMENT '服务侧本地端口',
+     `client_proxy_port` int(11) NULL DEFAULT NULL COMMENT '客户侧代理端口',
+     `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态 1启用 0禁用',
+     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+     `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;

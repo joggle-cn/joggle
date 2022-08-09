@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
@@ -90,6 +91,16 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public int getCountByUserId(Long userId) {
         return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery()
                 .eq(Device::getUserId, userId));
+    }
+
+    @Override
+    public List<DeviceOption> getOptionListByUserId(Long userId) {
+        return this.baseMapper.selectOptionListByUserId(userId);
+    }
+
+    @Override
+    public boolean existsDeviceId(Long deviceId) {
+        return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery().eq(Device::getId, deviceId)) > 0;
     }
 
 
