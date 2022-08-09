@@ -118,21 +118,21 @@ public class DevicePeersController {
         String appName = DigestUtils.md5Hex(String.valueOf(peerMappingId));
 
         // 服务侧发送peer消息
-        sendMsgPeerConfig(dto, deviceServer, appName);
+        sendMsgPeerConfig(dto, deviceServer, appName, PeerConfig.SERVER);
         // 客户侧发送peer消息
-        sendMsgPeerConfig(dto, deviceClient, appName);
+        sendMsgPeerConfig(dto, deviceClient, appName, PeerConfig.CLIENT);
 
         return R.ok();
     }
 
-    private void sendMsgPeerConfig(DevicePeersDTO dto, Device deviceServer, String appName) {
+    private void sendMsgPeerConfig(DevicePeersDTO dto, Device deviceServer, String appName, String type) {
         String deviceNo = deviceServer.getDeviceNo();
         BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
         if (annotation != null) {
             PeerConfig doorConfig = new PeerConfig();
             doorConfig.setAppName(appName);
             doorConfig.setPort(dto.getServerLocalPort());
-            doorConfig.setType(PeerConfig.SERVER);
+            doorConfig.setType(type);
             doorConfig.setEnable(dto.getStatus());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
@@ -186,9 +186,9 @@ public class DevicePeersController {
         Device deviceClient = deviceService.getById(dto.getClientDeviceId());
 
         // 服务侧发送peer消息
-        sendMsgPeerConfig(dto, deviceServer, appName);
+        sendMsgPeerConfig(dto, deviceServer, appName, PeerConfig.SERVER);
         // 客户侧发送peer消息
-        sendMsgPeerConfig(dto, deviceClient, appName);
+        sendMsgPeerConfig(dto, deviceClient, appName, PeerConfig.CLIENT);
 
         return R.ok();
     }
