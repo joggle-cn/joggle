@@ -63,13 +63,6 @@ pipeline {
                            rm -rf bullet-client-linux_amd64.tar.gz
                            rm -rf bin/ngrok
 
-                          echo "从服务器下载Mac 386版本的ngrok文件"
-                          scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_386/ngrok ./bin/ngrok
-                            ssh -o StrictHostKeyChecking=no root@192.168.1.5 "cd $workdir && tar -zcvf bullet-client-darwin_386.tar.gz --xform 's#^#bullet-client/#' *"
-                          scp -o StrictHostKeyChecking=no bullet-client-darwin_386.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
-                          rm -rf bullet-client-darwin_386.tar.gz
-                          rm -rf bin/ngrok
-
                            echo "从服务器下载Mac 64版本的ngrok文件"
                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrok ./bin/ngrok
                             ssh -o StrictHostKeyChecking=no root@192.168.1.5 "cd $workdir && tar -zcvf bullet-client-darwin_amd64.tar.gz --xform 's#^#bullet-client/#' *"
