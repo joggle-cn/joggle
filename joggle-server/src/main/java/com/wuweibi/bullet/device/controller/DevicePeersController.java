@@ -1,29 +1,22 @@
 package com.wuweibi.bullet.device.controller;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.service.DevicePeersService;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
-import com.wuweibi.bullet.protocol.MsgPeer;
-import com.wuweibi.bullet.protocol.domain.PeerConfig;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,43 +101,22 @@ public class DevicePeersController {
             return R.fail("客户侧设备不存在");
         }
 
-        Long peerMappingId = this.devicePeersService.savePeers(userId, dto);
+        // 校验客户端口唯一性
 
 
-        Device deviceServer = deviceService.getById(dto.getServerDeviceId());
-        Device deviceClient = deviceService.getById(dto.getClientDeviceId());
 
 
-        String appName = DigestUtils.md5Hex(String.valueOf(peerMappingId));
+        DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
 
-        // 服务侧发送peer消息
-        sendMsgPeerConfig(dto, deviceServer, appName, PeerConfig.SERVER);
-        // 客户侧发送peer消息
-        sendMsgPeerConfig(dto, deviceClient, appName, PeerConfig.CLIENT);
+        DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(peers.getId());
+
+        // 发送peer消息
+        devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
 
         return R.ok();
     }
 
-    private void sendMsgPeerConfig(DevicePeersDTO dto, Device deviceServer, String appName, String type) {
-        String deviceNo = deviceServer.getDeviceNo();
-        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
-        if (annotation != null) {
-            PeerConfig doorConfig = new PeerConfig();
-            doorConfig.setAppName(appName);
-            doorConfig.setPort(dto.getClientProxyPort());
-            if (PeerConfig.SERVER.equals(type)) {
-                doorConfig.setPort(dto.getServerLocalPort());
-            }
-            doorConfig.setType(type);
-            doorConfig.setEnable(dto.getStatus());
-            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-            MsgPeer msg = new MsgPeer(data.toJSONString());
-            annotation.sendMessage(msg);
-        }
-    }
 
-    @Resource
-    private CoonPool coonPool;
 
     /**
      * 修改数据
@@ -179,22 +151,18 @@ public class DevicePeersController {
         BeanUtils.copyProperties(dto, entity);
         entity.setUserId(userId);
         entity.setUpdateTime(entity.getCreateTime());
-
-
         this.devicePeersService.updateById(entity);
 
-        String appName = entity.getAppName();
 
-        Device deviceServer = deviceService.getById(dto.getServerDeviceId());
-        Device deviceClient = deviceService.getById(dto.getClientDeviceId());
+        DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
 
-        // 服务侧发送peer消息
-        sendMsgPeerConfig(dto, deviceServer, appName, PeerConfig.SERVER);
-        // 客户侧发送peer消息
-        sendMsgPeerConfig(dto, deviceClient, appName, PeerConfig.CLIENT);
+        // 发送peer消息
+        devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
+
 
         return R.ok();
     }
+
 
 
 //    /**

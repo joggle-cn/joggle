@@ -20,7 +20,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.conn.DeviceStatus;
+import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
+import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.exception.BaseException;
@@ -260,6 +262,12 @@ public class BulletAnnotation {
             }
         }
 
+        // P2P 设备通道
+        DevicePeersService devicePeersService = SpringUtils.getBean(DevicePeersService.class);
+        List<DevicePeersConfigDTO> peersList = devicePeersService.getListByDeviceNo(deviceNo);
+        for (DevicePeersConfigDTO configDTO : peersList){
+            devicePeersService.sendMsgPeerConfig(configDTO);
+        }
 
     }
 

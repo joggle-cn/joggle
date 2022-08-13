@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @SuppressWarnings("serial")
 @Data
-public class DevicePeersVO {
+public class DevicePeersConfigDTO {
 
     /**
      * id
@@ -36,11 +36,17 @@ public class DevicePeersVO {
     @ApiModelProperty("服务侧设备id")
     private Long serverDeviceId;
 
+    @ApiModelProperty("服务侧设备No")
+    private String serverDeviceNo;
+
     /**
      * 客户侧设备id
      */
     @ApiModelProperty("客户侧设备id")
     private Long clientDeviceId;
+
+    @ApiModelProperty("客户侧设备No")
+    private String clientDeviceNo;
 
     /**
      * 服务侧本地端口

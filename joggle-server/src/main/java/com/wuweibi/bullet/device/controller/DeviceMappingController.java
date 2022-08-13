@@ -1,9 +1,10 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.device.controller;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
@@ -18,6 +19,7 @@ import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,8 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
  * @since 2017-12-09
  */
 @Slf4j
+@Api(tags = "设备映射")
+@WebApi
 @RestController
 @RequestMapping("/api/user/device/mapping")
 public class DeviceMappingController {

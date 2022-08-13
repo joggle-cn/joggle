@@ -10,5 +10,9 @@ public class PeerConfig {
     private String type;
     private String appName;
     private Integer port;
+
+    // 本地Host
+    private String host;
+
     private Integer enable;
 }

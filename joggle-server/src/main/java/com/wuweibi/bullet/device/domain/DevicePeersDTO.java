@@ -43,12 +43,22 @@ public class DevicePeersDTO {
     @NotNull(message = "服务侧本地端口不能为空")
  	private Integer serverLocalPort;
 
+    @ApiModelProperty("服务侧本地Host 默认: 0.0.0.0")
+    private String serverLocalHost = "0.0.0.0";
+
     /**
      * 客户侧代理端口
      */        
     @ApiModelProperty("客户侧代理端口")
     @NotNull(message = "客户侧代理端口不能为空")
  	private Integer clientProxyPort;
+
+
+    @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
+ 	private String clientProxyHost = "127.0.0.1";
+
+    @ApiModelProperty("备注")
+    private String remark;
 
     /**
      * 状态 1启用 0禁用

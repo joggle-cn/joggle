@@ -57,7 +57,19 @@ public class DevicePeers {
      */
     @ApiModelProperty("客户侧代理端口")
  	private Integer clientProxyPort;
-    
+
+
+    @ApiModelProperty("服务侧本地Host 默认: 0.0.0.0")
+    private String serverLocalHost;
+
+
+    @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
+    private String clientProxyHost;
+
+
+    @ApiModelProperty("备注")
+    private String remark;
+
     /**
      * 状态 1启用 0禁用
      */
@@ -75,5 +87,7 @@ public class DevicePeers {
      */
     @ApiModelProperty("更新时间")
  	private Date updateTime;
+
+
 
 }

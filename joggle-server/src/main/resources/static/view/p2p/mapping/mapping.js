@@ -81,6 +81,11 @@ define(['app','jquery','layer','pagintation','bootstrap-switch', 'css!./mapping.
                         layer.msg(res.msg);
                     }
                 });
+            }else{
+                $scope.entity = {
+                    clientProxyHost: "127.0.0.1",
+                    serverLocalHost: "127.0.0.1"
+                }
             }
             faceinner.get(api["device.options"], {}, function(res){
                 if (res.code == 'S00') {

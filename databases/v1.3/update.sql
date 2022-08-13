@@ -68,3 +68,9 @@ CREATE TABLE `device_peers`  (
 
 ALTER TABLE  `device_peers`
     ADD COLUMN `app_name` varchar(200) NULL COMMENT 'p2pAppName' AFTER `user_id`;
+
+-- 2022-08-12 marker 新增特定IP
+ALTER TABLE `device_peers`
+    ADD COLUMN `server_local_host` varchar(20) NULL COMMENT '服务侧本地host' AFTER `server_local_port`,
+    ADD COLUMN `client_proxy_host` varchar(20) NULL COMMENT '客户侧代理host' AFTER `client_proxy_port`,
+    ADD COLUMN `remark` varchar(220) NULL COMMENT '备注' AFTER `client_proxy_host`;

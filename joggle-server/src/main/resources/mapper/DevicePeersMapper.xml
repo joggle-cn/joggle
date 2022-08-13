@@ -14,12 +14,43 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
+    
+     
 
 
     <select id="selectListPage" resultType="com.wuweibi.bullet.device.entity.DevicePeers">
         select * from device_peers
         where user_id = #{params.userId}
     </select>
+
+    <sql id="peersConfigSql">
+        distinct dp.`id`, dp.`user_id`, dp.`app_name`, dp.`server_device_id`, dp.`client_device_id`,
+               dp.`server_local_port`, dp.`server_local_host`, dp.`client_proxy_port`,
+               dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
+               dp.`update_time`,
+               dc.deviceId clientDeviceNo,
+               ds.deviceId serverDeviceNo
+    </sql>
+
+    <select id="selectPeersConfig" resultType="com.wuweibi.bullet.device.domain.DevicePeersConfigDTO">
+        select
+            <include refid="peersConfigSql" />
+        from device_peers dp
+        left join t_device dc on dc.id = dp.client_device_id
+        left join t_device ds on ds.id = dp.server_device_id
+        where dp.id = #{id}
+    </select>
+
+
+    <select id="selectListByDeviceNo" resultType="com.wuweibi.bullet.device.domain.DevicePeersConfigDTO">
+        select
+        <include refid="peersConfigSql" />
+        from device_peers dp
+        left join t_device dc on dc.id = dp.client_device_id
+        left join t_device ds on ds.id = dp.server_device_id
+        where dc.deviceId = #{deviceNo} or  ds.deviceId = #{deviceNo}
+    </select>
+
 
 </mapper>
 

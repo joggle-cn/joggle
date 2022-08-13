@@ -2,10 +2,13 @@ package com.wuweibi.bullet.device.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
+
+import java.util.List;
 
 /**
  * (DevicePeers)表服务接口
@@ -26,5 +29,13 @@ public interface DevicePeersService extends IService<DevicePeers> {
 
 
 
-    Long savePeers(Long userId, DevicePeersDTO dto);
+    DevicePeers savePeers(Long userId, DevicePeersDTO dto);
+
+    DevicePeersConfigDTO getPeersConfig(Long id);
+
+
+
+    public void sendMsgPeerConfig(DevicePeersConfigDTO devicePeersConfigDTO);
+
+    List<DevicePeersConfigDTO> getListByDeviceNo(String deviceNo);
 }
