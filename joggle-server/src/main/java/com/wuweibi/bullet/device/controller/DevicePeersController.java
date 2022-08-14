@@ -101,7 +101,7 @@ public class DevicePeersController {
             return R.fail("客户侧设备不存在");
         }
 
-        // 校验客户端口唯一性
+        // TODO 校验客户端口唯一性
 
 
 

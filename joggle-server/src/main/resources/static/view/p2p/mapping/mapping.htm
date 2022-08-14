@@ -25,10 +25,8 @@
                   <thead>
                     <tr>
                       <th width="60">#</th>
-                      <th width="60">ID</th>
-                      <th width="130">AppName</th>
-                      <th width="300">服务模型</th>
                       <th width="200">备注</th>
+                      <th width="300">服务模型</th>
                       <th width="80">状态</th>
                       <th width="165">操作时间</th>
                       <th>操作</th>
@@ -37,11 +35,8 @@
                   <tbody>
                     <tr ng-repeat="item in page.records">
                       <th scope="row">{{$index + 1}}</th>
-                      <td>{{item.id}} </td>
-                      <td>{{item.appName}} </td>
-                      <td> 服务侧:{{item.serverLocalPort}} == 客户侧:{{item.clientProxyPort}}</td>
-
                       <td>{{item.remark}} </td>
+                      <td>tcp://{{item.serverLocalHost}}:{{item.serverLocalPort}} == tcp://{{item.clientDeviceIp}}:{{item.clientProxyPort}}</td>
                       <td>
                         <span ng-if="item.status == 1" class="label label-success">{{item.statusName}}</span>
                         <span ng-if="item.status != 1" class="label label-default">{{item.statusName}}</span>
@@ -125,7 +120,7 @@
 					<div class="form-group">
                         <label class="col-sm-3 control-label">备注</label>
                         <div class="col-sm-8">
-                            <input type="text" ng-model="entity.remark" class="form-control" placeholder="客户侧本地端口,例如12330">
+                            <input type="text" ng-model="entity.remark" class="form-control" placeholder="">
                         </div>
                     </div>
 

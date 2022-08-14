@@ -14,13 +14,17 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
-    
-     
+
+
 
 
     <select id="selectListPage" resultType="com.wuweibi.bullet.device.entity.DevicePeers">
-        select * from device_peers
-        where user_id = #{params.userId}
+        select
+        <include refid="peersConfigSql" />
+        from device_peers dp
+        left join t_device dc on dc.id = dp.client_device_id
+        left join t_device ds on ds.id = dp.server_device_id
+        where dp.user_id = #{params.userId}
     </select>
 
     <sql id="peersConfigSql">
@@ -29,6 +33,7 @@
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
                dc.deviceId clientDeviceNo,
+               dc.intranet_ip clientDeviceIp,
                ds.deviceId serverDeviceNo
     </sql>
 
