@@ -81,6 +81,13 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
     boolean existsDomainId(Long deviceId, Long domainId);
 
     /**
+     * 域名id是否被使用
+     * @param domainId 域名id
+     * @return
+     */
+    boolean existsDomainId( Long domainId);
+
+    /**
      *
      * @param mappingId 映射id
      * @return

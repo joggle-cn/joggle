@@ -100,6 +100,11 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public boolean existsDomainId(Long deviceId, Long domainId) {
         return  this.baseMapper.existsDomainId(deviceId, domainId);
     }
+    @Override
+    public boolean existsDomainId( Long domainId) {
+        return this.baseMapper.selectCount(Wrappers.<DeviceMapping>lambdaQuery()
+                .eq(DeviceMapping::getDomainId, domainId))>0;
+    }
 
     @Override
     public String getDeviceNoByMappingId(Long mappingId) {

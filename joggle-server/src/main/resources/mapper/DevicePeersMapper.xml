@@ -18,7 +18,7 @@
 
 
 
-    <select id="selectListPage" resultType="com.wuweibi.bullet.device.entity.DevicePeers">
+    <select id="selectListPage" resultType="com.wuweibi.bullet.device.domain.DevicePeersVO">
         select
         <include refid="peersConfigSql" />
         from device_peers dp

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
+import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,7 +20,7 @@ public interface DevicePeersMapper extends BaseMapper<DevicePeers> {
 
 
 
-    Page<DevicePeers> selectListPage(Page pageInfo, @Param("params") DevicePeersParam params);
+    Page<DevicePeersVO> selectListPage(Page pageInfo, @Param("params") DevicePeersParam params);
 
     DevicePeersConfigDTO selectPeersConfig( @Param("id") Long id);
 

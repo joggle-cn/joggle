@@ -39,14 +39,12 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
     @Override
     public Page<DevicePeersVO> getPage(Page pageInfo, DevicePeersParam params) {
 
-        Page<DevicePeers> page = this.baseMapper.selectListPage(pageInfo, params);
+        Page<DevicePeersVO> page = this.baseMapper.selectListPage(pageInfo, params);
 
         Page<DevicePeersVO> pageResult = new Page<>(pageInfo.getCurrent(), pageInfo.getSize(), pageInfo.getTotal());
         pageResult.setRecords(page.getRecords().stream().map(entity->{
-            DevicePeersVO vo = new DevicePeersVO();
-            BeanUtils.copyProperties(entity, vo);
-            vo.setStatusName(DevicePeerStatusEnum.toName(vo.getStatus()));
-            return vo;
+            entity.setStatusName(DevicePeerStatusEnum.toName(entity.getStatus()));
+            return entity;
         }).collect(Collectors.toList()));
         return pageResult;
     }

@@ -12,6 +12,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.MsgDeviceDoor;
 import com.wuweibi.bullet.protocol.domain.DoorConfig;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.swagger.annotations.Api;
@@ -49,6 +50,9 @@ public class DeviceDoorController {
     @Resource
     private CoonPool coonPool;
 
+    @Resource
+    private DeviceMappingService deviceMappingService;
+
     /**
      * 配置任意门
      *
@@ -68,7 +72,10 @@ public class DeviceDoorController {
             return R.fail("设备不存在");
         }
 
-        // TODO 验证domainId是否绑定
+        // 验证domainId是否绑定
+        if (deviceMappingService.existsDomainId(dto.getDomainId())) {
+            return R.fail("域名不存在");
+        }
 
         // TODO 调用绑定映射关系
 
