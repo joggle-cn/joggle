@@ -59,6 +59,10 @@ public class DevicePeersVO {
     private String serverLocalHost;
 
 
+    @ApiModelProperty("客户侧设备内网Ip")
+    private String clientDeviceIp;
+
+
     @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
     private String clientProxyHost;
 
