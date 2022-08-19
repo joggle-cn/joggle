@@ -61,8 +61,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public List<JSONObject> getListNotBindByUserId(Long userId) {
-        return this.baseMapper.selectListNotBindByUserId(userId);
+    public List<JSONObject> getListNotBindByUserId(Long userId, Integer type) {
+        return this.baseMapper.selectListNotBindByUserId(userId,type);
     }
 
     @Override

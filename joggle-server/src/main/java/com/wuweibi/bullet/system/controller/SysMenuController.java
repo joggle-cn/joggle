@@ -209,6 +209,23 @@ public class SysMenuController {
     }
 
 
+    @PutMapping("/{id}")
+    public R update(@RequestBody @Valid SysMenuDTO entity) {
+        entity.setUpdatedTime(new Date());
+        if(StringUtil.isBlank(entity.getUrl())){
+            entity.setUrl("");
+        }
+        if(StringUtil.isBlank(entity.getIcon())){
+            entity.setIcon("");
+        }
+        List<Button> buttons = JSON.parseArray(entity.getButtons(), Button.class);
+//
+        sysMenuService.save(entity, buttons);
+
+        return R.success();
+    }
+
+
 
     /**
      * 获取二级菜单树

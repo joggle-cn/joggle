@@ -19,10 +19,13 @@ import com.wuweibi.bullet.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -109,21 +112,20 @@ public class DomainController {
 
     /**
      * 获取未绑定的域名列表
-     *
-     * @param session
      * @return
      */
-    @RequestMapping(value = "/nobind", method = RequestMethod.GET)
-    public Object getInfo(@JwtUser Session session) {
-        Long userId = session.getUserId();
-        List<JSONObject> list = domainService.getListNotBindByUserId(userId);
-
+    @ApiOperation("获取未绑定的域名/端口列表")
+    @GetMapping(value = "/nobind")
+    public R getInfo(
+            @ApiParam("类型： 1端口 2域名")
+            @RequestParam Integer type) {
+        Long userId = SecurityUtils.getUserId();
+        List<JSONObject> list = domainService.getListNotBindByUserId(userId, type);
         list.forEach(item -> {
             if (item.getInteger("type") == 2) {
-                item.put("domain", item.getString("domain") + ".joggle.cn");
+                item.put("domain", item.getString("domain") + "." + item.getString("serverAddr"));
             }
         });
-
         return R.success(list);
     }
 

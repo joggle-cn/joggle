@@ -48,10 +48,10 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * 获取未绑定的域名列表
      *
      * @param userId 用户ID
+     * @param type
      * @return
      */
-    @Select("select id,domain, type from t_domain where user_id = #{userId} and id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})")
-    List<JSONObject> selectListNotBindByUserId(@Param("userId") Long userId);
+    List<JSONObject> selectListNotBindByUserId(@Param("userId") Long userId, @Param("type") Integer type);
 
     /**
      * 更新域名有效期

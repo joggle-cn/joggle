@@ -173,8 +173,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         /**
          * 绑定域名弹框
          */
-        $scope.bindDomainDialog = function(item){
-            faceinner.get(api['user.domain.nobind'], {}, function(res){
+        $scope.bindDomainDialog = function(item, type){
+            faceinner.get(api['user.domain.nobind'], {type:type}, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;

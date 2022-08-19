@@ -74,3 +74,6 @@ ALTER TABLE `device_peers`
     ADD COLUMN `server_local_host` varchar(20) NULL COMMENT '服务侧本地host' AFTER `server_local_port`,
     ADD COLUMN `client_proxy_host` varchar(20) NULL COMMENT '客户侧代理host' AFTER `client_proxy_port`,
     ADD COLUMN `remark` varchar(220) NULL COMMENT '备注' AFTER `client_proxy_host`;
+
+
+ALTER TABLE `device_peers` COMMENT = 'P2P映射';

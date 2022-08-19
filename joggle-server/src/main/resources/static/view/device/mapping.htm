@@ -13,10 +13,7 @@
 
 	<div class="row" style="margin-top: 10px;">
 		<div class="col-sm-9">
-
 			<div class="row">
-
-
 				<div class="col-xs-3">
 					<div class="item-server">
 						<i class="fa fa-server item-icon"></i>
@@ -42,7 +39,6 @@
 		<div class="col-sm-3">
 			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
 			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
-			<a class="btn btn-primary" ng-click="bindDomainDialog(deviceInfo)">绑定域名</a>
 			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a>
 			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
 			<a class="btn btn-default" ng-click="openDeviceDoorDialog(deviceInfo)">任意门</a>
@@ -83,10 +79,13 @@
 
 	<!-- 端口映射 -->
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-10">
 			<blockquote>
 				<p>端口映射</p>
 			</blockquote>
+		</div>
+		<div class="col-xs-2">
+			<a class="btn btn-default" ng-click="bindDomainDialog(deviceInfo, 1)">绑定端口</a>
 		</div>
 	</div>
 	<div class="row">
@@ -128,10 +127,13 @@
 	</div>
 	<!-- 域名映射 -->
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-10">
 			<blockquote>
 				<p>域名映射</p>
 			</blockquote>
+		</div>
+		<div class="col-xs-2">
+			<a class="btn btn-default" ng-click="bindDomainDialog(deviceInfo, 2)">绑定域名</a>
 		</div>
 	</div>
 	<div class="row">

@@ -40,9 +40,10 @@ public interface DomainService extends IService<Domain> {
     /**
      * 获取未绑定的域名列表
      * @param userId 用户ID
+     * @param type
      * @return
      */
-    List<JSONObject> getListNotBindByUserId(Long userId);
+    List<JSONObject> getListNotBindByUserId(Long userId, Integer type);
 
 
     /**
