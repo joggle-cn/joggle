@@ -213,12 +213,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
             $('#deviceProxyDialog').on('shown.bs.modal', function () {
                 $("#deviceProxyEnableCheckbox").bootstrapSwitch({
-                    state: $scope.deviceProxy.enable,
+                    state: $scope.deviceProxy.status,
                     onSwitchChange:function (event, state) {
-                        $scope.deviceProxy.enable = state;
+                        $scope.deviceProxy.status = state;
                     }
                 });
-                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceProxy.enable, true);
+                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceProxy.status, true);
             })
         }
         /**
