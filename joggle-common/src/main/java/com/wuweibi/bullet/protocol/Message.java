@@ -13,7 +13,7 @@ public abstract class Message {
 
     public static final int DEVICE_NO = 0x8;
     public static final int CONNECT_RESP = 0x80000001;
-    public static final int Proxy_Http = 0x2;
+    public static final int PROXY = 0x2;
     public static final int TERMINATE_RESP = 0x80000002;
     public static final int Heart = 0x3;// 心跳消息
     public static final int SUBMIT_RESP = 0x80000003;

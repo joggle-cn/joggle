@@ -42,6 +42,7 @@
 			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a>
 			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
 			<a class="btn btn-default" ng-click="openDeviceDoorDialog(deviceInfo)">任意门</a>
+			<a class="btn btn-default" ng-click="openDeviceProxyDialog(deviceInfo)">内网代理</a>
 		</div>
 	</div>
 
@@ -489,6 +490,59 @@
 			<div class="modal-footer">
 				<a ng-click="submitDeviceDoor()" class="btn btn-default">确认绑定</a>
 				<a ng-click="closeDeviceDoorDialog()"  class="btn btn-default">取消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- 内网代理 弹框 -->
+<div id="deviceProxyDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">开启内网代理</h4>
+			</div>
+			<div class="modal-body">
+                <p>注意：外部端口占未启动自动绑定，还请手动映射。</p>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">外部端口</label>
+						<div class="col-sm-6">
+							<select class="form-control" ng-model="deviceProxy.domainId" ng-options="item.id as item.domain for item in domainNoBindList">
+
+							</select>
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="deviceName" class="col-sm-2 control-label">本地端口</label>
+						<div class="col-sm-6">
+							<input type="text" ng-model="deviceProxy.deviceProxyPort" class="form-control" placeholder="3000">
+						</div>
+						<div class="col-sm-4">
+
+						</div>
+					</div>
+                    <div class="form-group">
+                        <label for="deviceProxyEnableCheckbox" class="col-sm-2 control-label" >状态</label>
+                        <div class="col-sm-10">
+                            <div class="switch">
+                                <input id="deviceProxyEnableCheckbox" type="checkbox" checked />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<a ng-click="submitDeviceProxy()" class="btn btn-default">提交代理</a>
+				<a ng-click="closeDeviceProxyDialog()"  class="btn btn-default">取消</a>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

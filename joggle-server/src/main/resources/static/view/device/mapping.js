@@ -27,6 +27,10 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
             enable : false
         }
 
+        $scope.deviceProxy = {
+            status : false
+        }
+
 
 
         $("[name='my-checkbox']").bootstrapSwitch();
@@ -190,6 +194,51 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
 
         /**
+         * 内网代理弹框
+         */
+        $scope.openDeviceProxyDialog = function(item){
+            $scope.deviceProxy.deviceId = item.id;
+            $scope.deviceProxy.deviceProxyPort = 3000;
+            faceinner.get(api['user.domain.nobind'], {type: 1}, function(res){
+                if (res.code == 'S00') {
+                    $scope.$apply(function() {
+                        $scope.domainNoBindList = res.data;
+                    });
+                }
+            });
+
+            $("#deviceProxyDialog").modal({
+                backdrop: false
+            });
+
+            $('#deviceProxyDialog').on('shown.bs.modal', function () {
+                $("#deviceProxyEnableCheckbox").bootstrapSwitch({
+                    state: $scope.deviceProxy.enable,
+                    onSwitchChange:function (event, state) {
+                        $scope.deviceProxy.enable = state;
+                    }
+                });
+                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceProxy.enable, true);
+            })
+        }
+        /**
+         * 提交代理
+         */
+        $scope.submitDeviceProxy = function(){
+            $scope.deviceProxy.type = "socks5";
+            $scope.deviceProxy.status = $scope.deviceProxy.status?1:0;
+            faceinner.putJson(api['device.proxy.config'], $scope.deviceProxy , function(res) {
+                if (res.code == 'S00') {
+                    $("#deviceProxyDialog").modal('hide');
+                    flushData();
+                }else{
+                    layer.msg(res.msg);
+                }
+            });
+        }
+
+
+        /**
          * 任意门弹框
          */
         $scope.openDeviceDoorDialog = function(item){
@@ -302,6 +351,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
         $scope.closeSwitchLine = function(){
             $("#switchLineDialog").modal('hide');
+        }
+        /**
+         * 关闭绑定域名弹框
+         */
+        $scope.closeDeviceProxyDialog = function(){
+            $("#deviceProxyDialog").modal('hide');
         }
 
 

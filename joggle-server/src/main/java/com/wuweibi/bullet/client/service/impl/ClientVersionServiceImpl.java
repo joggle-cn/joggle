@@ -7,6 +7,7 @@ import com.wuweibi.bullet.client.service.ClientVersionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.config.properties.AliOssProperties;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
+import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,8 +44,12 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
                 .eq(ClientVersion::getOs, os)
                 .eq(ClientVersion::getArch, arch));
         if (clientVersion == null) return 0;
-        String downloadURL = String.format("%s/client/%s/%s", aliOssProperties.getPublicServerUrl(), version, binFilePath);
-        clientVersion.setDownloadUrl(downloadURL);
+
+        // 生产环境才做URL更新
+        if (SpringUtils.isProduction()) {
+            String downloadURL = String.format("%s/client/%s/%s", aliOssProperties.getPublicServerUrl(), version, binFilePath);
+            clientVersion.setDownloadUrl(downloadURL);
+        }
         clientVersion.setChecksum(checksum);
         clientVersion.setTitle(String.format("JoggleClient-v%s", version));
         clientVersion.setVersion(version);

@@ -60,6 +60,7 @@ let api = {
 
     "device.options": '/api/user/device/options',
     "device.door.config": '/api/device/door/config/one',
+    "device.proxy.config": '/api/device/proxy/config/one',
     "device.peer.list": '/api/device/peers/list',
     "device.peer.save": '/api/device/peers',
     "device.peer.detail": '/api/device/peers/detail',

@@ -77,3 +77,17 @@ ALTER TABLE `device_peers`
 
 
 ALTER TABLE `device_peers` COMMENT = 'P2P映射';
+
+
+-- 2022-08-21 marker 设备socks5代理
+CREATE TABLE `device_proxy`  (
+     `id` bigint(22) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `device_id` bigint(22) NULL DEFAULT NULL COMMENT '设备id',
+     `device_proxy_port` int(11) NULL DEFAULT NULL COMMENT '设备代理服务端口',
+     `domain_id` int(11) NULL DEFAULT NULL COMMENT '端口id',
+     `type` varchar(20) NULL DEFAULT NULL COMMENT '代理协议：http/https/socks5',
+     `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态 1启用 0禁用',
+     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+     `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '设备代理' ROW_FORMAT = Dynamic;

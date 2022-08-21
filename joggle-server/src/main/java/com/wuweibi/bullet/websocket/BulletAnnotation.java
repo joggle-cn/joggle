@@ -162,10 +162,10 @@ public class BulletAnnotation {
         try {
             head.read(bis);//读取消息头
             switch (head.getCommand()) {
-                case Message.Proxy_Http:// Bind响应命令
+                case Message.PROXY:// Bind响应命令
 
-                    MsgProxyHttp msgProxyHttp = new MsgProxyHttp(head);
-                    msgProxyHttp.read(bis);
+                    MsgProxy msgProxy = new MsgProxy(head);
+                    msgProxy.read(bis);
                     break;
                 case Message.AUTH:// 认证
                     MsgAuth msgAuth = new MsgAuth(head);
