@@ -15,7 +15,9 @@ import com.wuweibi.bullet.device.mapper.DevicePeersMapper;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.protocol.MsgPeer;
 import com.wuweibi.bullet.protocol.domain.PeerConfig;
+import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
  * @author marker
  * @since 2022-08-09 10:49:46
  */
+@Slf4j
 @Service
 public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, DevicePeers> implements DevicePeersService {
 
@@ -80,6 +83,10 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
 
     public void sendMsgPeerConfig(DevicePeersConfigDTO dto) {
+        if(StringUtil.isBlank(dto.getClientDeviceNo()) || StringUtil.isBlank(dto.getServerDeviceNo())){
+            log.debug("P2P Conf Error AppName={}, ClientDeviceNo={}, ServerDeviceNo={}", dto.getAppName(), dto.getClientDeviceNo(), dto.getServerDeviceNo() );
+           return;
+        }
 
         String clientDeviceNo = dto.getClientDeviceNo();
         String serverDeviceNo = dto.getServerDeviceNo();
