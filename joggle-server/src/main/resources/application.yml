@@ -170,7 +170,7 @@ gate:
 # joggle 配置
 joggle:
   # ngrokd服务路径
-  ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
+  # ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
   serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
   alipay:
@@ -178,7 +178,7 @@ joggle:
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:"https://pay.joggle.cn/api/open/orders/alipay/callback"}
-    returnUrl: ${bullet.serverUrl}${ALIPAY_RETURN_URL}
+    returnUrl: ${joggle.serverUrl}${ALIPAY_RETURN_URL}
   # oss 配置
   ali-oss:
     publicServerUrl: ${ALI_OSS_PUBLIC_URL:https://www.joggle.cn}
