@@ -44,7 +44,6 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -329,9 +328,10 @@ public class BulletAnnotation {
     @OnError
     public void onError(Throwable t) throws Throwable {
         logger.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
-        if (!(t instanceof EOFException)) {
-            logger.error("", t);
-        }
+//        if (!(t instanceof EOFException)) {
+//            logger.error("", t);
+//        }
+        logger.error("", t);
         CoonPool pool = SpringUtils.getBean(CoonPool.class);
         if (this.deviceStatus) { // 正常设备才能移除
             pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
