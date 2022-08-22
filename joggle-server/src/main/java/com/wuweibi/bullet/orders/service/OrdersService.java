@@ -2,6 +2,8 @@ package com.wuweibi.bullet.orders.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.orders.domain.OrdersAdminParam;
+import com.wuweibi.bullet.orders.domain.OrdersListAdminVO;
 import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
@@ -23,5 +25,13 @@ public interface OrdersService extends IService<Orders> {
      * @return
      */
     Page<OrdersListVO> getListPage(Page pageParams, OrdersParam params);
+
+    /**
+     * 后台订单分页查询
+     * @param pageInfo 分页对象
+     * @param params 条件参数
+     * @return
+     */
+    Page<OrdersListAdminVO> getAdminPage(Page pageInfo, OrdersAdminParam params);
 }
 

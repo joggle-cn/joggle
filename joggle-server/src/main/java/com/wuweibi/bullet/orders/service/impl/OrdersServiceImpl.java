@@ -3,6 +3,8 @@ package com.wuweibi.bullet.orders.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.orders.domain.OrdersAdminParam;
+import com.wuweibi.bullet.orders.domain.OrdersListAdminVO;
 import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
@@ -31,6 +33,18 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     public Page<OrdersListVO> getListPage(Page pageParams, OrdersParam params) {
         Page<OrdersListVO> page = this.baseMapper.selectListPage(pageParams, params);
+
+        page.getRecords().forEach(item->{
+            item.setStatusName(OrdersStatusEnum.toName(item.getStatus()));
+            item.setResourceTypeName(ResourceTypeEnum.toName(item.getResourceType()));
+            item.setPayTypeName(PayTypeEnum.toName(item.getPayType()));
+        });
+        return page;
+    }
+
+    @Override
+    public Page<OrdersListAdminVO> getAdminPage(Page pageInfo, OrdersAdminParam params) {
+        Page<OrdersListAdminVO> page = this.baseMapper.selectAdminList(pageInfo, params);
 
         page.getRecords().forEach(item->{
             item.setStatusName(OrdersStatusEnum.toName(item.getStatus()));

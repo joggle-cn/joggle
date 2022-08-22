@@ -2,6 +2,8 @@ package com.wuweibi.bullet.orders.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.orders.domain.OrdersAdminParam;
+import com.wuweibi.bullet.orders.domain.OrdersListAdminVO;
 import com.wuweibi.bullet.orders.domain.OrdersListVO;
 import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
@@ -42,5 +44,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @return
      */
     Page<OrdersListVO> selectListPage(Page pageParams, @Param("params") OrdersParam params);
+
+    Page<OrdersListAdminVO> selectAdminList(Page pageInfo, @Param("params") OrdersAdminParam params);
 }
 

@@ -52,5 +52,21 @@
     order by create_time desc, id desc
     </select>
 
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.orders.domain.OrdersListAdminVO">
+        select
+            *
+        from orders
+        <where>
+            <if test="params.orderNo != null and params.orderNo != '' ">
+                and order_no = #{params.orderNo}
+            </if>
+            <if test="params.status != null">
+                and status = #{params.status}
+            </if>
+        </where>
+        order by create_time desc, id desc
+    </select>
+
 </mapper>
 
