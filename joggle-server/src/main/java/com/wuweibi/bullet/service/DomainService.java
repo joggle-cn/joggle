@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
-import com.wuweibi.bullet.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.Domain;
 
 import java.util.List;
 
@@ -87,4 +88,13 @@ public interface DomainService extends IService<Domain> {
      */
     boolean releasePort();
 
+    /**
+     * 校验用户是否拥有域名
+     * @param userId 用户id
+     * @param domainId 域名id
+     * @return
+     */
+    boolean exists(Long userId, Long domainId);
+
+    DomainDetail getDetail(Long domainId);
 }

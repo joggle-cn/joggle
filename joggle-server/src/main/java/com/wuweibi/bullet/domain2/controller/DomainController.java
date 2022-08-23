@@ -15,7 +15,7 @@ import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -135,15 +135,12 @@ public class DomainController {
 
     /**
      * 域名绑定设备
-     *
-     * @param session
      * @return
      */
+    @ApiOperation("域名绑定设备")
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
-    public Object getInfo(@JwtUser Session session,
-                          @RequestParam Long domainId,
-                          @RequestParam Long deviceId) {
-        Long userId = session.getUserId();
+    public R bind(@RequestParam Long domainId, @RequestParam Long deviceId) {
+        Long userId = SecurityUtils.getUserId();
 
 
         // 检查是否该用户的域名
@@ -178,7 +175,7 @@ public class DomainController {
             mapping.setProtocol(DeviceMapping.PROTOCOL_HTTP);
         }
         deviceMappingService.save(mapping);
-        return R.success();
+        return R.success(mapping.getId());
     }
 
 

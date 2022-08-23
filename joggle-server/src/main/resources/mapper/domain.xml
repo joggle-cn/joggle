@@ -34,4 +34,12 @@
 		 and d.id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})
 
 	</select>
+
+
+    <select id="selectDetail" resultType="com.wuweibi.bullet.domain2.domain.DomainDetail">
+		select d.*,concat(d.domain,'.',st.server_addr) as domainFull from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		where d.id = #{domainId}
+	</select>
+
 </mapper>

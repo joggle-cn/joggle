@@ -14,6 +14,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.mapper.DomainMapper;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
@@ -123,8 +124,8 @@ public class DeviceMappingController {
      * @return
      */
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public R save(@JwtUser Session session, DeviceMapping entity ){
-        Long userId = session.getUserId();
+    public R save(DeviceMapping entity ){
+        Long userId = SecurityUtils.getUserId();
         entity.setUserId(userId);
 
         DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());

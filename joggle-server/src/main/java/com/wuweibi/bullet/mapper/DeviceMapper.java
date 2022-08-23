@@ -40,7 +40,7 @@ public interface DeviceMapper extends BaseMapper<Device> {
      * @param deviceId
      * @return
      */
-    boolean existsDevice(Map<String, Object> deviceId);
+    boolean existsNoBindDevice(Map<String, Object> deviceId);
 
 
     /**

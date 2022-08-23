@@ -3,7 +3,7 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
-import com.wuweibi.bullet.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.SystemErrorType;

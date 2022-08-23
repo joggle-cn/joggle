@@ -8,11 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
@@ -171,5 +172,17 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             this.baseMapper.insert(domain);
         }
         return true;
+    }
+
+    @Override
+    public boolean exists(Long userId, Long domainId) {
+        return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
+                .eq(Domain::getUserId, userId)
+                .eq(Domain::getId, domainId)) > 0;
+    }
+
+    @Override
+    public DomainDetail getDetail(Long domainId) {
+        return this.baseMapper.selectDetail(domainId);
     }
 }

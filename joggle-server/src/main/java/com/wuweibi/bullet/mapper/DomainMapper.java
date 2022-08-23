@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
+import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
-import com.wuweibi.bullet.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -102,4 +103,5 @@ public interface DomainMapper extends BaseMapper<Domain> {
     Integer selectMaxPort();
 
 
+    DomainDetail selectDetail(@Param("domainId") Long domainId);
 }

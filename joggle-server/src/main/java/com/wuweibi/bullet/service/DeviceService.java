@@ -40,7 +40,7 @@ public interface DeviceService extends IService<Device> {
      * @param deviceId
      * @return
      */
-    boolean existsDevice(String deviceId);
+    boolean existsNoBindDevice(String deviceId);
 
     void wakeUp(Long userId, String mac);
 
@@ -86,4 +86,6 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     boolean existsDeviceId(Long deviceId);
+
+    boolean removeUserId(Long deviceId);
 }

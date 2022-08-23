@@ -52,8 +52,8 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public boolean existsDevice(String deviceId) {
-        return this.baseMapper.existsDevice(newMap(1)
+    public boolean existsNoBindDevice(String deviceId) {
+        return this.baseMapper.existsNoBindDevice(newMap(1)
                 .setParam("deviceId",deviceId)
                 .build());
     }
@@ -101,6 +101,14 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     public boolean existsDeviceId(Long deviceId) {
         return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery().eq(Device::getId, deviceId)) > 0;
+    }
+
+    @Override
+    public boolean removeUserId(Long deviceId) {
+        return this.update(Wrappers.<Device>lambdaUpdate()
+                .eq(Device::getId, deviceId)
+                .set(Device::getUserId, null)
+        );
     }
 
 

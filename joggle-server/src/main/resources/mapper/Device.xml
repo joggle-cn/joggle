@@ -11,8 +11,9 @@
 	<select id="exists" resultType="boolean" parameterType="map">
 		select count(1) from t_device where userId = #{userId} and id = #{id}
 	</select>
-	<select id="existsDevice" resultType="boolean" parameterType="map">
-		select count(1) from t_device where deviceId = #{deviceId}
+
+	<select id="existsNoBindDevice" resultType="boolean" parameterType="map">
+		select count(1) from t_device where deviceId = #{deviceId} and userId > 0
 	</select>
 
 <!--	获取设备详情-->

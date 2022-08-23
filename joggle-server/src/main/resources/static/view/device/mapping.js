@@ -243,7 +243,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          */
         $scope.openDeviceDoorDialog = function(item){
             $scope.deviceDoor.deviceId = item.id;
-            faceinner.get(api['user.domain.nobind'], {}, function(res){
+            faceinner.get(api['user.domain.nobind'], {type: 2}, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;

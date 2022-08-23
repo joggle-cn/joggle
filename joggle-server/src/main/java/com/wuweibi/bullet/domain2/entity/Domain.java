@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.entity;
+package com.wuweibi.bullet.domain2.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

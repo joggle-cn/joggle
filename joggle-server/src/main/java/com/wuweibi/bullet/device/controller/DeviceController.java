@@ -35,10 +35,10 @@ import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.io.IOUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -87,6 +87,7 @@ public class DeviceController {
      *
      * @return
      */
+    @ApiOperation("设备下拉列表")
     @GetMapping("/options")
     public R<List<DeviceOption>> deviceOptions( ) {
         Long userId = SecurityUtils.getUserId();
@@ -99,10 +100,11 @@ public class DeviceController {
      *
      * @return
      */
+    @ApiOperation("用户的设备列表")
     @GetMapping
-    public Object device(@JwtUser Session session) {
+    public Object device( ) {
 
-        Long userId = session.getUserId();
+        Long userId = SecurityUtils.getUserId();
 
         List<Device> list = deviceService.listByMap(newMap(1)
                 .setParam("userId", userId)
@@ -148,10 +150,10 @@ public class DeviceController {
      *
      * @return
      */
+    @ApiOperation("更新设备信息")
     @PostMapping()
-    public R save(@JwtUser Session session,
-                  @RequestBody @Valid DeviceUpdateDTO dto) {
-        Long userId = session.getUserId();
+    public R save(@RequestBody @Valid DeviceUpdateDTO dto) {
+        Long userId = SecurityUtils.getUserId();
         Long deviceId = dto.getId();
         String name = dto.getName();
 
@@ -168,25 +170,25 @@ public class DeviceController {
      * 删除设备
      * @return
      */
+    @ApiOperation("删除设备")
     @DeleteMapping(value = "")
     public Object delete(@JwtUser Session session,
                          @RequestBody @Valid DeviceDelDTO dto,
                          HttpServletRequest request) {
         Long userId = session.getUserId();
-        Long dId = dto.getId();
+        Long deviceId = dto.getId();
 
         // 校验设备是否是他的
-        boolean status = deviceService.exists(userId, dId);
+        boolean status = deviceService.exists(userId, deviceId);
         if (status) {
-            Device device = deviceService.getById(dId);
+            Device device = deviceService.getById(deviceId);
 
             // 删除映射
-            deviceMappingService.deleteByDeviceId(dId);
-            deviceService.removeById(dId);
+            deviceMappingService.deleteByDeviceId(deviceId);
+            deviceService.removeUserId(deviceId);
 
             try {
                 BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceNo());
-
                 MsgUnBind msg = new MsgUnBind();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 msg.write(outputStream);
@@ -195,7 +197,7 @@ public class DeviceController {
                 ByteBuffer buf = ByteBuffer.wrap(resultBytes);
                 bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
                 // 停止ws链接
-                bulletAnnotation.stop("设备删除");
+//                bulletAnnotation.stop("设备删除");
             } catch (Exception e) {
                 log.error("{}", e.getMessage());
             }
@@ -212,47 +214,51 @@ public class DeviceController {
      */
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
-    public R validate(@JwtUser Session session, String deviceId, HttpServletRequest request) {
-        Long userId = session.getUserId();
-
+    public R validate(String deviceId, HttpServletRequest request) {
+        Long userId = SecurityUtils.getUserId();
+        String deviceNo = deviceId;
         // 没有输入设备ID
-        if (StringUtils.isEmpty(deviceId)) {
+        if (StringUtil.isBlank(deviceNo)) {
             return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
         // 验证是否存在
-        DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceId);
+        DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceNo);
         if (deviceOnline == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
-        // 验证是否绑定
-        boolean isBind = deviceService.existsDevice(deviceId);
-        if (isBind) {
+        // 获取设备信息
+        Device device = deviceService.getByDeviceNo(deviceNo);
+        if (device == null) {
+            // 给当前用户存储最新的设备数据
+            device = new Device();
+            device.setDeviceNo(deviceId);
+            device.setUserId(userId);
+            device.setCreateTime(new Date());
+            device.setName(deviceId);
+            device.setMacAddr(deviceOnline.getMacAddr());
+            device.setIntranetIp(deviceOnline.getIntranetIp());
+        }
+
+        if (device.getUserId() != null && !userId.equals(device.getUserId())) {
             return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
+
         // 限制普通用户绑定设备的数量10 排除自己的账号判断
         int deviceNum = deviceService.getCountByUserId(userId);
         if (deviceNum >= 10 && userId != 1) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
 
-        // 给当前用户存储最新的设备数据
-        Device device = new Device();
-        device.setDeviceNo(deviceId);
-        device.setUserId(userId);
-        device.setCreateTime(new Date());
-        device.setName(deviceId);
-        device.setMacAddr(deviceOnline.getMacAddr());
-        device.setIntranetIp(deviceOnline.getIntranetIp());
-
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
+        device.setUserId(userId);
 
-        deviceService.save(device);
+        deviceService.saveOrUpdate(device);
         // 发送消息通知设备秘钥
 
-        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceId);
+        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
         if (annotation != null) {
             MsgDeviceSecret msg = new MsgDeviceSecret();
             msg.setSecret(deviceSecret);
@@ -322,7 +328,9 @@ public class DeviceController {
         if (deviceOnline != null) {
             deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
             deviceInfo.put("clientVersion", deviceOnline.getClientVersion());
-            deviceInfo.put("status", deviceOnline.getStatus());
+
+            int status = getStatus(deviceNo);
+            deviceInfo.put("status", status);
         } else {
             deviceInfo.put("clientVersion", "");
             deviceInfo.put("status", -1);

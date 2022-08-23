@@ -20,7 +20,7 @@
 		left join t_device b on a.deviceNo = b.deviceId
 		WHERE  a.`status` = 1
 		  and a.public_ip = #{ip}
-		  and  b.id  is null
+		  and  b.userId is null
 	</select>
 
 </mapper>
