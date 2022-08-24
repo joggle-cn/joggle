@@ -1,5 +1,5 @@
 !!com.wuweibi.bullet.client.domain.NgrokConf
-bullet_server: ws://joggle.cn:8081/tunnel
+bullet_server: joggle.cn:8081
 console_ui: false
 server_addr: ngrok.joggle.cn:8083
 trust_host_root_certs: false
