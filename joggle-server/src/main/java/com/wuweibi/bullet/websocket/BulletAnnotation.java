@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.conn.DeviceStatus;
+import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.device.service.DevicePeersService;
@@ -265,6 +266,9 @@ public class BulletAnnotation {
         DevicePeersService devicePeersService = SpringUtils.getBean(DevicePeersService.class);
         List<DevicePeersConfigDTO> peersList = devicePeersService.getListByDeviceNo(deviceNo);
         for (DevicePeersConfigDTO configDTO : peersList){
+            if (configDTO.getStatus() == DevicePeerStatusEnum.DISABLE.getStatus()) {
+                continue;
+            }
             devicePeersService.sendMsgPeerConfig(configDTO);
         }
 

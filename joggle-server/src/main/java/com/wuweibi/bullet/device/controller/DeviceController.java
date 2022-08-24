@@ -229,6 +229,9 @@ public class DeviceController {
         }
         // 获取设备信息
         Device device = deviceService.getByDeviceNo(deviceNo);
+        if (device!= null && device.getUserId() != null) {
+            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
+        }
         if (device == null) {
             // 给当前用户存储最新的设备数据
             device = new Device();
@@ -238,10 +241,6 @@ public class DeviceController {
             device.setName(deviceId);
             device.setMacAddr(deviceOnline.getMacAddr());
             device.setIntranetIp(deviceOnline.getIntranetIp());
-        }
-
-        if (device.getUserId() != null && !userId.equals(device.getUserId())) {
-            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
         // 限制普通用户绑定设备的数量10 排除自己的账号判断
