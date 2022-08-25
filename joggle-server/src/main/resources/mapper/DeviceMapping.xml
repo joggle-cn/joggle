@@ -52,4 +52,28 @@
 
 	</select>
 
+	<select id="selectByDeviceId" resultType="com.wuweibi.bullet.device.domain.vo.MappingDeviceVO">
+		select
+			dm.id,
+			dm.device_id,
+			dm.domain,
+			dm.port,
+			dm.host,
+			dm.createTime,
+			dm.protocol,
+			dm.description,
+			dm.userId,
+			dm.remote_port,
+			dm.hostname,
+		   dm.auth,
+		   dm.status,
+		   dm.server_tunnel_id,
+		   domain_id,
+			ifnull((select sum( a.bytes_in + a.bytes_out )/ 1024 / 1024 from data_metrics a
+					where a.mapping_id = dm.id  AND a.create_date = CURRENT_DATE ),0) todayFlow
+		from t_device_mapping dm
+		where dm.device_id = #{deviceId}
+
+	</select>
+
 </mapper>

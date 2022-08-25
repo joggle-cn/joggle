@@ -1,12 +1,9 @@
-package com.wuweibi.bullet.entity;
+package com.wuweibi.bullet.device.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -18,19 +15,8 @@ import java.util.Date;
  * @since 2017-12-09
  */
 @Data
-@TableName("t_device_mapping")
-public class DeviceMapping extends Model<DeviceMapping> {
+public class MappingDeviceVO {
 
-    private static final long serialVersionUID = 1L;
-
-    public static final int PROTOCOL_HTTP  = 1;
-    public static final int PROTOCOL_TCP   = 2;
-    public static final int PROTOCOL_HTTPS = 3;
-    public static final int PROTOCOL_HTTP_HTTPS = 4;
-	public static final int PROTOCOL_UDP   = 5;
-
-
-	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	@TableField("device_id")
 	private Long deviceId;
@@ -54,29 +40,24 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/**
 	 * hostname
 	 */
-    @TableField("hostname")
 	private String hostname;
 
 	/**
 	 * 简单认证
 	 * "demo:secret"
 	 */
-	@TableField("auth")
 	private String auth;
 
 	/**
 	 * 服务器地址
 	 * （null 为本机）
 	 */
-    @TableField("host")
 	private String host;
 
 
-	@TableField("bind_tls")
 	private Boolean bindTls;
 
 
-	@TableField("userId")
 	private Long userId;
 
 	/** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
@@ -92,14 +73,15 @@ public class DeviceMapping extends Model<DeviceMapping> {
     /**
      * 创建时间
      */
-	@TableField("createTime")
 	private Date createTime;
 
 	/**
 	 * 服务通道ID
 	 */
-	@TableField("server_tunnel_id")
 	private Integer serverTunnelId;
+
+
+	private BigDecimal todayFlow;
 
 
 }

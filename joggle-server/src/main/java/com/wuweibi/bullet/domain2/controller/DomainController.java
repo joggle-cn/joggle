@@ -138,10 +138,9 @@ public class DomainController {
      * @return
      */
     @ApiOperation("域名绑定设备")
-    @RequestMapping(value = "/bind", method = RequestMethod.POST)
+    @PostMapping(value = "/bind" )
     public R bind(@RequestParam Long domainId, @RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
-
 
         // 检查是否该用户的域名
         if (!domainService.checkDomain(userId, domainId)) {
@@ -167,12 +166,17 @@ public class DomainController {
         mapping.setDeviceId(deviceId);
         mapping.setServerTunnelId(deviceInfo.getServerTunnelId());
         mapping.setDomainId(domainId);
+        mapping.setCreateTime(new Date());
         if (domainInfo.getType() == 1) {
             mapping.setRemotePort(Integer.parseInt(domainInfo.getDomain()));
             mapping.setProtocol(DeviceMapping.PROTOCOL_TCP);
+            mapping.setHost("127.0.0.1");
+            mapping.setPort(3389);
         } else {
             mapping.setDomain(domainInfo.getDomain());
-            mapping.setProtocol(DeviceMapping.PROTOCOL_HTTP);
+            mapping.setProtocol(DeviceMapping.PROTOCOL_HTTP_HTTPS);
+            mapping.setHost("127.0.0.1");
+            mapping.setPort(80);
         }
         deviceMappingService.save(mapping);
         return R.success(mapping.getId());

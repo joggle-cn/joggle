@@ -94,9 +94,10 @@
 		  <table class="table table-hover">
 			  <thead>
 			  <tr>
-				  <th>序号</th>
+				  <th width=60>序号</th>
 				  <th>协议地址</th>
-				  <th>内网服务</th>
+				  <th>内网地址</th>
+				  <th>今日流量</th>
 				  <th>状态</th>
 				  <th>备注</th>
 				  <th width="200">操作</th>
@@ -110,6 +111,7 @@
 					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
 					  <span ng-if="item.protocol == 5">udp://{{item.host}}:{{item.port}}</span>
 				  </td>
+				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
 					  <span class="" ng-if="item.status != 1"> - </span>
@@ -142,9 +144,10 @@
 		  <table class="table table-hover">
 			  <thead>
 			  <tr>
-				  <th>序号</th>
+				  <th width=60>序号</th>
 				  <th>外网地址</th>
-				  <th>内网服务</th>
+				  <th>内网地址</th>
+				  <th>今日流量</th>
 				  <th>状态</th>
 				  <th>备注</th>
 				  <th width="200">操作</th>
@@ -161,6 +164,7 @@
 				  <td>
 					  <span ng-if="item.protocol == 1 || item.protocol == 3 || item.protocol == 4 ">{{item.host}}:{{item.port}}</span>
 				  </td>
+				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
 					  <span class="" ng-if="item.status != 1"> - </span>
@@ -187,7 +191,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">添加端口映射</h4>
+                <h4 class="modal-title">编辑端口映射</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -206,7 +210,7 @@
 						<div class="col-sm-4"></div>
 					</div>
                     <div class="form-group" ng-show="entity.protocol == 1 || entity.protocol == 3">
-                        <label for="b" class="col-sm-2 control-label">域名</label>
+                        <label for="b" class="col-sm-2 control-label">自定义域名</label>
                         <div class="col-sm-6">
                             <div>
                                 <input ng-model="entity.hostname" type="text" class="form-control"
@@ -218,7 +222,7 @@
                         <div class="col-sm-4"></div>
                     </div>
                     <div class="form-group" >
-                        <label for="b" class="col-sm-2 control-label" >子域名</label>
+                        <label for="b" class="col-sm-2 control-label" >平台域名</label>
                         <div class="col-sm-6">
                             <div>
                                 <input ng-model="entity.domain" type="text" class="form-control"
@@ -230,27 +234,27 @@
                         <div class="col-sm-4"></div>
                     </div>
 					<div class="form-group">
-						<label for="b" class="col-sm-2 control-label">内网HOST</label>
+						<label for="b" class="col-sm-2 control-label">内网Host</label>
 						<div class="col-sm-6">
 							<input type="text" ng-model="entity.host"  class="form-control" placeholder="">
 						</div>
                         <div class="col-sm-4"></div>
 					</div>
 					<div class="form-group">
-						<label for="b" class="col-sm-2 control-label">端口</label>
+						<label for="b" class="col-sm-2 control-label">Host端口</label>
 						<div class="col-sm-6">
 							<input type="number" ng-model="entity.port"  class="form-control" id="b" placeholder="">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group" ng-show="entity.protocol == 2 || entity.protocol == 5">
+					<div class="form-group" ng-show="entity.protocol == 111 ">
 						<label for="b" class="col-sm-2 control-label">远端端口</label>
 						<div class="col-sm-6">
 							<input type="number" ng-model="entity.remotePort" readonly class="form-control" id="" placeholder="">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="form-group" ng-show="entity.protocol == 1 || entity.protocol == 3">
+					<div class="form-group" ng-show="entity.protocol == 1 || entity.protocol == 3 || entity.protocol == 4">
 						<label for="b" class="col-sm-2 control-label">简单认证</label>
 						<div class="col-sm-6">
 							<input type="text" ng-model="entity.auth"  class="form-control" placeholder="user:password">
@@ -443,7 +447,7 @@
 
 
 
-<!-- 绑定域名弹框 -->
+<!-- 任意门弹框 -->
 <div id="deviceDoorDialog" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">

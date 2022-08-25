@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import org.apache.ibatis.annotations.Param;
@@ -77,4 +78,11 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
             "left join t_device b on a.device_id = b.id\n" +
             "where a.userId = #{userId} and status = #{status}")
     List<DeviceMappingDTO> selectAllByUserId(@Param("userId") Long userId, @Param("status") int status);
+
+    /**
+     * 根据设备id查询映射集合
+     * @param deviceId 设备ID
+     * @return
+     */
+    List<MappingDeviceVO> selectByDeviceId(@Param("deviceId") Long deviceId);
 }

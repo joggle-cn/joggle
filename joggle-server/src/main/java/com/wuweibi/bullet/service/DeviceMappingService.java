@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -116,4 +117,11 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     int countByDeviceId(Long deviceId);
+
+    /**
+     * 根据设备id查询映射集合
+     * @param deviceId 设备ID
+     * @return
+     */
+    List<MappingDeviceVO> getByDeviceId(Long deviceId);
 }

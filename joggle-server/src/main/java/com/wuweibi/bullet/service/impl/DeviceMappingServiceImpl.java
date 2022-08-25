@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.Device;
@@ -137,6 +138,11 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         return count(Wrappers.<DeviceMapping>lambdaQuery()
                 .eq(DeviceMapping::getDeviceId, deviceId)
         );
+    }
+
+    @Override
+    public List<MappingDeviceVO> getByDeviceId(Long deviceId) {
+        return this.baseMapper.selectByDeviceId(deviceId);
     }
 
 

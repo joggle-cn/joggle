@@ -4,7 +4,6 @@ package com.wuweibi.bullet.device.controller;
  */
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.CoonPool;
@@ -13,13 +12,13 @@ import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
+import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
-import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -39,6 +38,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -48,6 +48,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
@@ -300,7 +301,7 @@ public class DeviceController {
      */
     @GetMapping(value = "/info")
     @ResponseBody
-    public Object device(HttpServletRequest request, @RequestParam Long deviceId,
+    public R device(HttpServletRequest request, @RequestParam Long deviceId,
                          @JwtUser Session session) {
         if (session.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
@@ -335,24 +336,32 @@ public class DeviceController {
             deviceInfo.put("status", -1);
         }
 
-        // 端口
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("userId", userId);
-        wrapper.eq("device_id", deviceId);
-        wrapper.in("protocol", 2,5);
+        List<MappingDeviceVO> mappingList = deviceMappingService.getByDeviceId(deviceId);
 
-        List<DeviceMapping> portList = deviceMappingService.list(wrapper);
+        List<MappingDeviceVO> portList = mappingList.stream()
+                .filter(item-> ArrayUtils.contains(new Integer[]{2, 5},item.getProtocol()))
+                .collect(Collectors.toList());
+        List<MappingDeviceVO> domainList = mappingList.stream()
+                .filter(item-> ArrayUtils.contains(new Integer[]{1, 3, 4},item.getProtocol()))
+                .collect(Collectors.toList());
+
+        // 端口
+//        QueryWrapper wrapper = new QueryWrapper();
+//        wrapper.eq("userId", userId);
+//        wrapper.eq("device_id", deviceId);
+//        wrapper.in("protocol", 2, 5);
+//        List<DeviceMapping> portList = deviceMappingService.list(wrapper);
         portList.forEach(item->{
-            item.setDomain(serverAddr+":"+item.getRemotePort());
+            item.setDomain(serverAddr + ":" + item.getRemotePort());
         });
 
         // 域名
-        QueryWrapper wrapper2 = new QueryWrapper();
-        wrapper2.eq("userId", userId);
-        wrapper2.eq("device_id", deviceId);
-        wrapper2.in("protocol", Arrays.asList(1, 3, 4));
-
-        List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
+//        QueryWrapper wrapper2 = new QueryWrapper();
+//        wrapper2.eq("userId", userId);
+//        wrapper2.eq("device_id", deviceId);
+//        wrapper2.in("protocol", Arrays.asList(1, 3, 4));
+//
+//        List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
         domainList.forEach(item -> {
             if (StringUtil.isNotBlank(item.getHostname())) {
                 item.setDomain(item.getHostname());
@@ -373,7 +382,7 @@ public class DeviceController {
         // 域名
         mapBuilder.setParam("domainList", domainList);
 
-        return MessageFactory.get(mapBuilder.build());
+        return R.ok(mapBuilder.build());
     }
 
 

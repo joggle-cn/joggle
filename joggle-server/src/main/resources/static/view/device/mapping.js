@@ -39,7 +39,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
 
         function flushData(){
             faceinner.get(api['user.device.info'], {deviceId:deviceId}, function(res){
-                if (res.status == 0) {
+                if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.deviceInfo = res.data.deviceInfo;
                         $scope.features = res.data.features;
@@ -242,7 +242,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          * 任意门弹框
          */
         $scope.openDeviceDoorDialog = function(item){
-            $scope.deviceDoor.deviceId = item.id;
+            $scope.deviceDoor = {
+                deviceId: item.id
+            }
             faceinner.get(api['user.domain.nobind'], {type: 2}, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
@@ -269,6 +271,11 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          * 保存Device
          */
         $scope.submitDeviceDoor = function(){
+            if(!$scope.deviceDoor.domainId){
+                layer.msg("请选择域名")
+                return;
+            }
+
             $scope.deviceDoor.enable = $scope.deviceDoor.enable?1:0;
             faceinner.postJson(api['device.door.config'], $scope.deviceDoor , function(res) {
                 if (res.code == 'S00') {
@@ -367,6 +374,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          */
         $scope.deviceBindDomain = function(){
             if(!$scope.selectDomainId){
+                layer.msg("请选择域名或端口")
                 return;
             }
             let params = {
