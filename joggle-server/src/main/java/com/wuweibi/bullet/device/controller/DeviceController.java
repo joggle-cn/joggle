@@ -408,6 +408,11 @@ public class DeviceController {
     public R discovery(HttpServletRequest request) {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
+
+        // 筛选在线设备
+        list = list.stream().filter(item-> coonPool.exists(item.getDeviceNo()))
+                .collect(Collectors.toList());
+
         return R.success(list);
     }
 
