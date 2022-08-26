@@ -95,6 +95,13 @@ spring:
         maxTotal: 100
         maxWaitMillis : 100000
         max-idle: 10
+  # 限流器配置
+  rate-limiter:
+    enabled: true
+    rate: 10
+    interval: 1000
+    type: PER_CLIENT
+
 
   # 数据库配置
   datasource:

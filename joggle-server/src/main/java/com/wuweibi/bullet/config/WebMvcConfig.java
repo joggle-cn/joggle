@@ -6,6 +6,7 @@ package com.wuweibi.bullet.config;
 import com.wuweibi.bullet.controller.interceptor.AllInterceptor;
 import com.wuweibi.bullet.oauth2.filter.ApiAuthTokenFilter;
 import com.wuweibi.bullet.oauth2.handler.JwtUserHandlerMethodArgumentResolver;
+import com.wuweibi.bullet.ratelimiter.handler.MyInterceptor;
 import com.wuweibi.bullet.web.filter.CrossDomainFilter;
 import com.wuweibi.bullet.web.filter.WebsocketIPFilter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
@@ -105,6 +107,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    }
 
 
+
+
     /**
      * 参数定义
      * @param argumentResolvers
@@ -157,6 +161,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        registry.addInterceptor(beanRequestParamsInterceptor()).addPathPatterns("/**");
 //        registry.addInterceptor(beanAllInterceptor()).addPathPatterns("/**");
 
+//        registry.addInterceptor(myInterceptor());
 
 
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
@@ -164,6 +169,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeInterceptor);
     }
 
+    @Bean
+    public HandlerInterceptor myInterceptor(){
+        return new MyInterceptor();
+    }
 //    @Bean
 //    public HandlerInterceptor authInterceptor(){
 //        return new AuthInterceptor();
