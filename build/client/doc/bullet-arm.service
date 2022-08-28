@@ -1,0 +1,12 @@
+[Unit]
+Description=bullet service
+Wants=networking.service
+After=multi-user.target network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/bullet/bin/bullet
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

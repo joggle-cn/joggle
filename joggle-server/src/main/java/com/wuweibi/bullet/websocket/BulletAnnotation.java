@@ -101,6 +101,7 @@ public class BulletAnnotation {
     public void open(Session session,
                      @PathParam("deviceNo") String deviceNo // 设备编号（服务器端生成)
     ) {
+        session.setMaxIdleTimeout(10000l); // 超时时间10s
         this.session = session;
         this.deviceNo = deviceNo;
 
@@ -110,12 +111,7 @@ public class BulletAnnotation {
 
             // 发送配置到客户端
             MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
-            try {
-                sendObject(msgDeviceNo);
-            } catch (IOException e) {
-                logger.error("", e);
-            }
-
+            this.sendMessage(msgDeviceNo);
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
             return;
@@ -124,7 +120,7 @@ public class BulletAnnotation {
         // 检查是否绑定
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
-        if (device == null) { // 未绑定
+        if (device == null || device.getUserId() == null) { // 未绑定
             // 待绑定的设备，无需认证执行上线
             deviceOnline();
         } else {
@@ -220,6 +216,7 @@ public class BulletAnnotation {
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         Device device = deviceService.getByDeviceNo(this.deviceNo);
         if (device == null) {
+            log.warn("设备不存在 {}", this.deviceNo);
             throw new BaseException("设备不存在");
         }
         this.deviceId = device.getId();
@@ -227,7 +224,9 @@ public class BulletAnnotation {
         if (device != null && device.getDeviceSecret() != null && device.getDeviceSecret().equals(authToken)) {
 
             // 设备上线（包含设备校验）
-            deviceOnline();
+            if (device.getUserId() != null) {
+                deviceOnline();
+            }
             if (!this.deviceStatus) { // 如果没有上线成功
                 MsgAuthResp authResp = new MsgAuthResp("Device " + this.deviceNo + " is Online!!!");
                 sendMessage(authResp);
@@ -235,7 +234,11 @@ public class BulletAnnotation {
             }
             MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
             sendMessage(authResp);
-            sendMappingInfo();
+
+            if (device.getUserId() != null) {
+                log.debug("UserId[{}], device[{}] sendMapping.", device.getUserId(), this.deviceNo);
+                sendMappingInfo();
+            }
             return;
         }
 
