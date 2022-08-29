@@ -30,4 +30,5 @@ public interface DevicePeersMapper extends BaseMapper<DevicePeers> {
      * @return
      */
     List<DevicePeersConfigDTO> selectListByDeviceNo(@Param("deviceNo") String deviceNo);
+
 }

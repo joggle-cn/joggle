@@ -94,17 +94,17 @@ public class DevicePeersController {
         }
 
         // 校验设备
-        if (!deviceService.existsDeviceId(dto.getServerDeviceId())) {
+        if (!deviceService.existsUserDeviceId(userId, dto.getServerDeviceId())) {
             return R.fail("服务侧设备不存在");
         }
-        if (!deviceService.existsDeviceId(dto.getClientDeviceId())) {
+        if (!deviceService.existsUserDeviceId(userId, dto.getClientDeviceId())) {
             return R.fail("客户侧设备不存在");
         }
 
-        // TODO 校验客户端口唯一性
-
-
-
+        // 校验客户端口唯一性
+        if (this.devicePeersService.checkLocalPortDuplicate(dto.getClientDeviceId(), dto.getClientProxyPort(), dto.getId())) {
+            return R.fail("代理端口存在冲突，请更换");
+        }
 
         DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
 
@@ -135,12 +135,18 @@ public class DevicePeersController {
             return R.fail("请选择不同设备");
         }
         // 校验设备
-        if (!deviceService.existsDeviceId(dto.getServerDeviceId())) {
+        if (!deviceService.existsUserDeviceId(userId, dto.getServerDeviceId())) {
             return R.fail("服务侧设备不存在");
         }
-        if (!deviceService.existsDeviceId(dto.getClientDeviceId())) {
+        if (!deviceService.existsUserDeviceId(userId, dto.getClientDeviceId())) {
             return R.fail("客户侧设备不存在");
         }
+
+        // 校验客户端口唯一性
+        if (this.devicePeersService.checkLocalPortDuplicate(dto.getClientDeviceId(), dto.getClientProxyPort(), dto.getId())) {
+            return R.fail("代理端口存在冲突，请更换");
+        }
+
         DevicePeers entity = devicePeersService.getById(dto.getId());
         if (entity == null) {
             return R.fail("数据不存在");
@@ -152,7 +158,6 @@ public class DevicePeersController {
         entity.setUserId(userId);
         entity.setUpdateTime(entity.getCreateTime());
         this.devicePeersService.updateById(entity);
-
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
 

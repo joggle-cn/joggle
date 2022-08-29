@@ -104,6 +104,13 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
+    public boolean existsUserDeviceId(Long userId, Long deviceId) {
+        return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery()
+                .eq(Device::getUserId, userId)
+                .eq(Device::getId, deviceId)) > 0;
+    }
+
+    @Override
     public boolean removeUserId(Long deviceId) {
         return this.update(Wrappers.<Device>lambdaUpdate()
                 .eq(Device::getId, deviceId)

@@ -38,4 +38,13 @@ public interface DevicePeersService extends IService<DevicePeers> {
     public void sendMsgPeerConfig(DevicePeersConfigDTO devicePeersConfigDTO);
 
     List<DevicePeersConfigDTO> getListByDeviceNo(String deviceNo);
+
+    /**
+     * 检查代理端口冲突
+     * @param clientDeviceId  客户侧设备id
+     * @param clientProxyPort 本地的代理端口
+     * @param id
+     * @return
+     */
+    boolean checkLocalPortDuplicate(Long clientDeviceId, Integer clientProxyPort, Long id);
 }

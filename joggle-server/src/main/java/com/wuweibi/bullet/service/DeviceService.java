@@ -87,5 +87,14 @@ public interface DeviceService extends IService<Device> {
      */
     boolean existsDeviceId(Long deviceId);
 
+
+    /**
+     * 用户的设备id是否存在判断
+     * @param deviceId 设备id
+     * @return
+     */
+    boolean existsUserDeviceId(Long userId, Long deviceId);
+
     boolean removeUserId(Long deviceId);
+
 }

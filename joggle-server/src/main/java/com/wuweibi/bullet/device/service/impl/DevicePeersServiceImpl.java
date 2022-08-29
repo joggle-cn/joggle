@@ -2,6 +2,8 @@ package com.wuweibi.bullet.device.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.CoonPool;
@@ -120,5 +122,16 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
     @Override
     public List<DevicePeersConfigDTO> getListByDeviceNo(String deviceNo) {
         return this.baseMapper.selectListByDeviceNo(deviceNo);
+    }
+
+    @Override
+    public boolean checkLocalPortDuplicate(Long clientDeviceId, Integer clientProxyPort, Long id) {
+        LambdaQueryWrapper<DevicePeers> lmq = Wrappers.<DevicePeers>lambdaQuery()
+                .eq(DevicePeers::getClientDeviceId, clientDeviceId)
+                .eq(DevicePeers::getClientProxyPort, clientProxyPort);
+        if (id != null) {
+            lmq.ne(DevicePeers::getId, id);
+        }
+        return this.baseMapper.selectCount(lmq) > 0;
     }
 }
