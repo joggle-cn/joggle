@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
-            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**", "/swagger-ui/**","/api/v2/api-docs")
+            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**","/admin/open/**", "/swagger-ui/**","/api/v2/api-docs")
             .permitAll()
             .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
         ;

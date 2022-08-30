@@ -2,6 +2,7 @@ package com.wuweibi.bullet.metrics.controller;
 
 
 import com.wuweibi.bullet.business.DeviceBiz;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
@@ -15,10 +16,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -34,8 +32,8 @@ import java.util.Date;
 @WebApi
 @Api(tags = "数据收集")
 @RestController
-@RequestMapping("/api/open/data/metrics")
-public class DataMetricsOpenController {
+@RequestMapping("/admin/open/data/metrics")
+public class DataMetricsOpenAdminController {
     /**
      * 服务对象
      */
@@ -48,6 +46,8 @@ public class DataMetricsOpenController {
     @Resource
     private UserFlowService userFlowService;
 
+    @Resource
+    private BulletConfig bulletConfig;
 
     /**
      * 上报流量数据
@@ -55,12 +55,15 @@ public class DataMetricsOpenController {
      * @param dataMetrics 实体对象
      * @return 新增结果
      */
-    @Deprecated
-    @PostMapping()
-    public R insert(@RequestBody @Valid DataMetricsDTO dataMetrics) {
-//        if (dataMetrics.getCloseTime() <= dataMetrics.getOpenTime()){
-//            return R.fail("链接时长错误");
-//        }
+    @PostMapping("/up")
+    public R insert(@RequestHeader String authorization,
+                    @RequestBody @Valid DataMetricsDTO dataMetrics) {
+        if (!bulletConfig.getAdminApiToken().equals(authorization)) {
+            return R.fail("无接口调用权限");
+        }
+        if (dataMetrics.getCloseTime() <= dataMetrics.getOpenTime()){
+            return R.fail("链接时长错误");
+        }
 
         String deviceNo = dataMetrics.getDeviceNo();
         Device device = deviceService.getByDeviceNo(deviceNo);
@@ -73,9 +76,9 @@ public class DataMetricsOpenController {
         entity.setCreateTime(new Date());
         entity.setDeviceId(device.getId());
         entity.setUserId(device.getUserId());
-        entity.setOpenTime(new Date( ));
-        entity.setCloseTime(new Date( ));
-        entity.setDuration(0l);
+        entity.setOpenTime(new Date(dataMetrics.getOpenTime()));
+        entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
+        entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
         entity.setRemoteAddr(dataMetrics.getRemoteAddr());
 
         this.dataMetricsService.save(entity);

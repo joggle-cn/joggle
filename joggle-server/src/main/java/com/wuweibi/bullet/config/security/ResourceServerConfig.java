@@ -83,7 +83,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         // 允许跨域
         http.authorizeRequests()
                 // 特殊接口
-                .antMatchers("/","/api/open/**", "/logout", "/tunnel/**", "/_ws/log/**", "/swagger-resources", "/webjars/**", "/v3/api-docs").permitAll()
+                .antMatchers("/","/api/open/**","/admin/open/**", "/logout", "/tunnel/**", "/_ws/log/**", "/swagger-resources", "/webjars/**", "/v3/api-docs").permitAll()
 
                 // 放过静态资源
                 .antMatchers("/lib/**", "/js/**","/css/**","/template/**", "/resource/**","/view/**", "/doc.html", "/index.html", "/favicon.ico").permitAll()

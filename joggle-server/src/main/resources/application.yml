@@ -180,6 +180,8 @@ joggle:
   # ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
   serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
+  # 调用接口的Token
+  adminApiToken: ${JOGGLE_API_TOKEN:123456}
   alipay:
     appId: ${ALIPAY_MERCHANT_APPID:2021000121630337}
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}

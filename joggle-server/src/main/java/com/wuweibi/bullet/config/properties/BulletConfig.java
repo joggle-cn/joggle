@@ -30,4 +30,9 @@ public class BulletConfig {
      */
     private String serverUrl;
 
+    /**
+     * 调用接口的Token
+     */
+    private String adminApiToken;
+
 }
