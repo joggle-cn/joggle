@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @SuppressWarnings("serial")
 @Data
-public class DataMetricsDTO  {
+public class DataMetricsOldDTO {
 
     /**
      * 设备编号
@@ -37,13 +37,10 @@ public class DataMetricsDTO  {
     @NotNull(message = "出口流量不能为空")
     private Long bytesOut;
 
-    @NotNull(message = "链接打开时间不能为空")
     private Long openTime;
 
-    @NotNull(message = "链接关闭时间不能为空")
     private Long closeTime;
 
-    @NotBlank(message = "远端地址不能为空")
     private String remoteAddr;
 
 }

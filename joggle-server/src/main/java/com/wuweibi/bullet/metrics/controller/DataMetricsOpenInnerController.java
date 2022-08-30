@@ -32,8 +32,8 @@ import java.util.Date;
 @WebApi
 @Api(tags = "数据收集")
 @RestController
-@RequestMapping("/admin/open/data/metrics")
-public class DataMetricsOpenAdminController {
+@RequestMapping("/inner/open/data/metrics")
+public class DataMetricsOpenInnerController {
     /**
      * 服务对象
      */

@@ -8,7 +8,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsOldDTO;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -57,7 +57,7 @@ public class DataMetricsOpenController {
      */
     @Deprecated
     @PostMapping()
-    public R insert(@RequestBody @Valid DataMetricsDTO dataMetrics) {
+    public R insert(@RequestBody @Valid DataMetricsOldDTO dataMetrics) {
 //        if (dataMetrics.getCloseTime() <= dataMetrics.getOpenTime()){
 //            return R.fail("链接时长错误");
 //        }
