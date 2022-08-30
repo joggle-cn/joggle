@@ -37,4 +37,13 @@ public class DataMetricsDTO  {
     @NotNull(message = "出口流量不能为空")
     private Long bytesOut;
 
+    @NotNull(message = "打开链接时间")
+    private Long openTime;
+
+    @NotNull(message = "关闭链接时间")
+    private Long closeTime;
+
+    @NotNull(message = "远端链接的地址")
+    private String remoteAddr;
+
 }

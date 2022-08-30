@@ -57,6 +57,10 @@ public class DataMetricsOpenController {
      */
     @PostMapping()
     public R insert(@RequestBody @Valid DataMetricsDTO dataMetrics) {
+        if (dataMetrics.getCloseTime() <= dataMetrics.getOpenTime()){
+            return R.fail("链接时长错误");
+        }
+
         String deviceNo = dataMetrics.getDeviceNo();
         Device device = deviceService.getByDeviceNo(deviceNo);
         if (device == null) {
@@ -68,6 +72,11 @@ public class DataMetricsOpenController {
         entity.setCreateTime(new Date());
         entity.setDeviceId(device.getId());
         entity.setUserId(device.getUserId());
+        entity.setOpenTime(new Date(dataMetrics.getOpenTime()));
+        entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
+        entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
+        entity.setRemoteAddr(dataMetrics.getRemoteAddr());
+
         this.dataMetricsService.save(entity);
 
         Long userId = device.getUserId();

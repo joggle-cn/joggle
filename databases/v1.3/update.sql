@@ -91,3 +91,12 @@ CREATE TABLE `device_proxy`  (
      `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '设备代理' ROW_FORMAT = Dynamic;
+
+-- 2022-08-30 marker 数据收集的扩展字段
+ALTER TABLE `data_metrics`
+    ADD COLUMN `duration` int(11) NULL COMMENT '链接占用时长' AFTER `bytes_out`,
+    ADD COLUMN `open_time` datetime NULL COMMENT '打开链接时间' AFTER `duration`,
+    ADD COLUMN `close_time` datetime NULL COMMENT '关闭链接时间' AFTER `open_time`,
+    ADD COLUMN `remote_addr` varchar(24) NULL COMMENT '远端地址' AFTER `close_time`;
+-- 历史数据处理
+update data_metrics set duration = 0, open_time = create_time, close_time = create_time;

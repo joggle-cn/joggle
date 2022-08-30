@@ -3,6 +3,7 @@ package com.wuweibi.bullet.metrics.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Calendar;
@@ -63,6 +64,17 @@ public class DataMetrics extends Model<DataMetrics> {
      */
     private Integer createYear;
 
+    @ApiModelProperty("打开链接时间")
+    private Date openTime;
+
+    @ApiModelProperty("关闭链接时间")
+    private Date closeTime;
+
+    @ApiModelProperty("远端链接的地址")
+    private String remoteAddr;
+
+    @ApiModelProperty("链接时长")
+    private Long duration;
 
 
 
