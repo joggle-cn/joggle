@@ -101,7 +101,8 @@ spring:
     rate: 10
     interval: 1000
     type: PER_CLIENT
-
+    ignoreUrls:
+      - /inner/**
 
   # 数据库配置
   datasource:

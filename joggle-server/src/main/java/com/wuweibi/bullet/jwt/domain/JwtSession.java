@@ -15,6 +15,7 @@ import java.io.Serializable;
  * @create 2018-05-28 13:40
  **/
 @Data
+@Deprecated
 @Accessors(chain = true, fluent = true)
 public class JwtSession implements Serializable {
 

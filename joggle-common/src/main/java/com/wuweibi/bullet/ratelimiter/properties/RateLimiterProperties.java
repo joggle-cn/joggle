@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.wuweibi.bullet.ratelimiter.properties.RateLimiterProperties.PREFIX;
 
 /**
@@ -44,6 +47,10 @@ public class RateLimiterProperties {
      * 类型
      */
     private RateType type = RateType.PER_CLIENT;
+
+
+
+    private List<String> ignoreUrls = new ArrayList<>();
 
 
     /**
