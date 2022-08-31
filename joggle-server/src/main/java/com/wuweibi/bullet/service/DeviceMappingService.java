@@ -124,4 +124,6 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @return
      */
     List<MappingDeviceVO> getByDeviceId(Long deviceId);
+
+    DeviceMapping getByDomainId(Long deviceId, Long domainId);
 }

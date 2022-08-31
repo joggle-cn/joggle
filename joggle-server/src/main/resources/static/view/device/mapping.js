@@ -246,27 +246,42 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                 deviceId: item.id,
                 enable: false
             }
-            faceinner.get(api['user.domain.nobind'], {type: 2}, function(res){
+            faceinner.get(api['user.domain.nobind'], {type: 2,}, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;
                     });
                 }
+
+
+                faceinner.get(api['device.door.config'], {deviceId: item.id}, function(res){
+                    if (res.code == 'S00') {
+                        $scope.$apply(function() {
+                            $scope.deviceDoor = res.data;
+                            $scope.deviceDoor.enable = res.data.enable == 1;
+                            $scope.domainNoBindList.push({id: res.data.domainId, domain: res.data.domain})
+
+                            $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.enable, true);
+                        });
+                    }
+                });
             });
+
+            $("#deviceDoorEnableCheckbox").bootstrapSwitch({
+                state: $scope.deviceDoor.enable,
+                onSwitchChange:function (event, state) {
+                    $scope.$apply(function() {
+                        $scope.deviceDoor.enable = state;
+                    });
+                }
+            });
+            $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.enable, true);
+
 
             $("#deviceDoorDialog").modal({
                 backdrop: false
             });
 
-            $('#deviceDoorDialog').on('shown.bs.modal', function () {
-                $("#deviceDoorEnableCheckbox").bootstrapSwitch({
-                    state: $scope.deviceDoor.enable,
-                    onSwitchChange:function (event, state) {
-                        $scope.deviceDoor.enable = state;
-                    }
-                });
-                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceDoor.enable, true);
-            })
         }
         /**
          * 保存Device

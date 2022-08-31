@@ -100,3 +100,8 @@ ALTER TABLE `data_metrics`
     ADD COLUMN `remote_addr` varchar(24) NULL COMMENT '远端地址' AFTER `close_time`;
 -- 历史数据处理
 update data_metrics set duration = 0, open_time = create_time, close_time = create_time;
+
+
+-- 2022-08-31 marker 任意门新增domainid字段
+ALTER TABLE `t_device_door`
+    ADD COLUMN `domain_id` bigint(22) NULL COMMENT '域名id' AFTER `device_id`;

@@ -33,6 +33,9 @@ public class DeviceDoor {
     @ApiModelProperty("设备id")
     private Long deviceId;
 
+    @ApiModelProperty("域名id")
+    private Long domainId;
+
     /**
      * 本地服务路径
      */

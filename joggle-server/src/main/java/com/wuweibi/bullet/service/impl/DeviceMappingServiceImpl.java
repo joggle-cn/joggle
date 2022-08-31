@@ -145,5 +145,13 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         return this.baseMapper.selectByDeviceId(deviceId);
     }
 
+    @Override
+    public DeviceMapping getByDomainId(Long deviceId, Long domainId) {
+        return this.baseMapper.selectOne(Wrappers.<DeviceMapping>lambdaQuery()
+                .eq(DeviceMapping::getDeviceId, deviceId)
+                .eq(DeviceMapping::getDomainId, domainId)
+        );
+    }
+
 
 }

@@ -152,8 +152,9 @@ public class DomainController {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         // 检查域名是否已经绑定
-        if (deviceMappingService.existsDomainId(deviceId, domainId)) {
-            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
+        DeviceMapping deviceMapping = deviceMappingService.getByDomainId(deviceId, domainId);
+        if (deviceMapping != null) {
+            return R.fail(SystemErrorType.DEVICE_OTHER_BIND, deviceMapping.getId());
         }
 
         // 执行绑定
