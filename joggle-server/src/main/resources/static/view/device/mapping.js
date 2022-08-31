@@ -218,7 +218,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
                         $scope.deviceProxy.status = state;
                     }
                 });
-                $("#deviceDoorEnableCheckbox").bootstrapSwitch('state', $scope.deviceProxy.status, true);
+                $("#deviceProxyEnableCheckbox").bootstrapSwitch('state', $scope.deviceProxy.status, true);
             })
         }
         /**
@@ -243,7 +243,8 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          */
         $scope.openDeviceDoorDialog = function(item){
             $scope.deviceDoor = {
-                deviceId: item.id
+                deviceId: item.id,
+                enable: false
             }
             faceinner.get(api['user.domain.nobind'], {type: 2}, function(res){
                 if (res.code == 'S00') {

@@ -1,3 +1,5 @@
+## Swagger文档启用
+SWAGGER_DOC_ENABLE: false
 
 #
 # Spring 配置
