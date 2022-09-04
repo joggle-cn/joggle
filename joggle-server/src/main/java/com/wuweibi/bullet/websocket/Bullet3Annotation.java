@@ -1,23 +1,8 @@
-/*
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package com.wuweibi.bullet.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
@@ -33,8 +18,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -53,18 +36,15 @@ import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
 
 
 /**
- * Bullet WebSocket服务
- *
+ * 基于Ngrokd的Websocket链接
+ * 
  * @author marker
  * @version 1.0
  */
 @Slf4j
 @ServerEndpoint(value = "/inner/open/ws/{tunnelId}", configurator = WebSocketConfigurator.class)
 public class Bullet3Annotation {
-    /**
-     * 日志
-     */
-    private final Logger logger = LoggerFactory.getLogger(Bullet3Annotation.class);
+ 
 
     /**
      * session
@@ -77,9 +57,7 @@ public class Bullet3Annotation {
     private Integer tunnelId;
 
 
-
-    public Bullet3Annotation() {
-    }
+    public Bullet3Annotation() {  }
 
 
 
@@ -95,6 +73,16 @@ public class Bullet3Annotation {
         this.session = session;
         this.tunnelId = tunnelId;
 
+        String authorization = (String) session.getUserProperties().get("authorization");
+        BulletConfig config = SpringUtils.getBean(BulletConfig.class);
+        // 校验Token
+        if(!config.getAdminApiToken().equals(authorization)){
+            log.error("websocket api token error session[{}]", session.getId());
+            this.stop(CloseReason.CloseCodes.CANNOT_ACCEPT ,"Auth Token Error...");
+            return;
+        }
+
+
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         pool.addConnection(this);
 
@@ -105,20 +93,7 @@ public class Bullet3Annotation {
 
     @OnClose
     public void end(CloseReason closeReason) {
-        // 这里是由于设备已经在线，其他设备将不允许关闭唯一的在线设备接入信息。
-//        if (CloseReason.CloseCodes.NOT_CONSISTENT.equals(closeReason.getCloseCode())) {
-//            logger.warn("CloseReason({}) deviceNo=[{}] is online, sessionId[{}] is closed!",
-//                    CloseReason.CloseCodes.NOT_CONSISTENT.getCode(), this.deviceNo, this.session.getId());
-//            return;
-//        }
-//        logger.warn("BulletAnnotation close({}) deviceNo={},status={}",
-//                closeReason.toString(), this.deviceNo, this.deviceStatus);
-//        if (this.deviceStatus) { // 正常设备才能移除
-//            updateOutLine();
-//            this.deviceStatus = false;
-//            CoonPool pool = SpringUtils.getBean(CoonPool.class);
-//            pool.removeConnection(this, String.format("异常-%s", closeReason.toString()));
-//        }
+
     }
 
 
@@ -133,7 +108,7 @@ public class Bullet3Annotation {
                     MsgProxy msgProxy = new MsgProxy(head);
                     msgProxy.read(bis);
                     break;
-                case Message.AUTH_RESP:// 认证成功
+                case Message.AUTH_RESP:// 设备认证成功
                     MsgAuthResp msgAuthResp = new MsgAuthResp(head);
                     msgAuthResp.read(bis);
 
@@ -156,7 +131,7 @@ public class Bullet3Annotation {
                         ByteBuffer buf = ByteBuffer.wrap(resultBytes);
                         this.getSession().getBasicRemote().sendPong(buf);
                     } catch (IOException e) {
-                        logger.error("", e);
+                        log.error("", e);
                     } finally {
                         IOUtils.closeQuietly(outputStream);
                     }
@@ -199,7 +174,7 @@ public class Bullet3Annotation {
 //                    LogAnnotation.broadcast(this.deviceId, msgCommandLog.getLine());
             }
         } catch (IOException e) {
-            logger.error("", e);
+            log.error("", e);
         } finally {
             IOUtils.closeQuietly(bis);
         }
@@ -246,11 +221,11 @@ public class Bullet3Annotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-//        logger.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
+//        log.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
 ////        if (!(t instanceof EOFException)) {
-////            logger.error("", t);
+////            log.error("", t);
 ////        }
-//        logger.error("", t);
+//        log.error("", t);
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
 //        if (this.deviceStatus) { // 正常设备才能移除
             pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
@@ -276,15 +251,14 @@ public class Bullet3Annotation {
     /**
      * 服务器端主动关闭连接
      */
-    public void stop(String message) {
+    public void stop(CloseReason.CloseCode closeCode, String message) {
+        CloseReason closeReason = new CloseReason(closeCode, message);
         try {
             if (this.session.isOpen()) {
-                this.session.close(
-                        new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,
-                                "服务器主动关闭，原因: "+ message));
+                this.session.close(closeReason);
             }
         } catch (IOException e) {
-            logger.error("", e);
+            log.error("", e);
         }
     }
 
@@ -352,5 +326,9 @@ public class Bullet3Annotation {
             IOUtils.closeQuietly(outputStream);
         }
 
+    }
+
+    public void stop(String message) {
+        this.stop(CloseReason.CloseCodes.NORMAL_CLOSURE, message);
     }
 }

@@ -56,19 +56,7 @@ public final class WebsocketPool {
     }
 
 
-    /**
-     * 根据设备编号移除链接
-     * @param deviceNo 设备编号
-     */
-    public void removeByDeviceNo(String deviceNo) {
-        logger.info("连接池.removeByDeviceNo 设备[{}] ", deviceNo);
-        Bullet3Annotation bulletAnnotation = clientConnections.get(deviceNo);
-        if(bulletAnnotation  == null){
-            return;
-        }
-        clientConnections.remove(deviceNo); // 直接全部移除
-        bulletAnnotation.stop("设备在线");
-    }
+
 
 
     /**
@@ -93,19 +81,7 @@ public final class WebsocketPool {
     }
 
 
-    /**
-     * 获取设备状态
-     * @param deviceNo 设备编号
-     * @return
-     */
-    public int getDeviceStatus(String deviceNo) {
-        Bullet3Annotation bulletAnnotation = this.clientConnections.get(deviceNo);
-        if(bulletAnnotation == null){
-            return -1;
-        }
-        Session session = bulletAnnotation.getSession();
-        return session.isOpen()? 1:-1;
-    }
+
 
 
     public DeviceStatus getDeviceStatusEnum(String deviceNo) {
