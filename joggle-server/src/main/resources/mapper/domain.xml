@@ -9,14 +9,25 @@
 
 <!--	获取可购买的域名列表-->
 	<select id="selectBuyList" resultType="com.wuweibi.bullet.domain2.domain.DomainBuyListVO">
-		select id, domain, type, status, original_price,sales_price  from t_domain
+		select d.id,
+		IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domain ,
+		d.type, d.status, d.original_price,d.sales_price,
+		st.country tunnelCountry,
+		st.area tunnelArea,
+		st.name tunnelName,
+		st.broadband tunnelBroadband
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
 		<where>
-		 	status = 0 and user_id is null
+			d.status = 0 and d.user_id is null
 			<if test="params.type != null">
-				and type = #{params.type}
+				and d.type = #{params.type}
+			</if>
+				<if test="params.serverTunnelId != null">
+				and d.server_tunnel_id = #{params.serverTunnelId}
 			</if>
 			<if test="params.keyword != null and params.keyword != ''">
-				and domain like concat(#{params.keyword},'%')
+				and d.domain like concat(#{params.keyword},'%')
 			</if>
 		</where>
 	</select>

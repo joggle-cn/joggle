@@ -15,4 +15,10 @@ public class DeviceOnlineInfoDTO {
      * 公网IP地址
      */
     private String publicIp;
+
+    private String intranetIp;
+
+    private String clientVersion;
+
+    private String macAddr;
 }

@@ -208,6 +208,7 @@ public class OpenController {
      *
      * @return
      */
+    @Deprecated
     @ApiOperation("设备秘钥校验【服务端调用校验】")
     @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
     public R devicesecret(@RequestParam String clientNo,

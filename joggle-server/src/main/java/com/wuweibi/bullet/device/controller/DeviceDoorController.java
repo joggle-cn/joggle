@@ -3,7 +3,7 @@ package com.wuweibi.bullet.device.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.dto.DeviceDoorDTO;
 import com.wuweibi.bullet.device.domain.vo.DeviceDoorVO;
 import com.wuweibi.bullet.device.entity.DeviceDoor;
@@ -19,7 +19,7 @@ import com.wuweibi.bullet.protocol.domain.DoorConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -55,7 +55,7 @@ public class DeviceDoorController {
     private DomainService domainService;
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool coonPool;
 
     @Resource
     private DeviceMappingService deviceMappingService;
@@ -103,14 +103,11 @@ public class DeviceDoorController {
             return R.fail("域名已绑定");
         }
 
-
-
-
         boolean status = this.deviceDoorService.saveOrUpdate(deviceDoor);
 
         // 设备发送消息开启任意门
         String deviceNo = device.getDeviceNo();
-        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+        Bullet3Annotation annotation = coonPool.getByTunnelId(device.getServerTunnelId());
         if (annotation != null) {
             DoorConfig doorConfig = new DoorConfig();
             doorConfig.setDeviceId(device.getId());
@@ -120,7 +117,7 @@ public class DeviceDoorController {
 
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgDeviceDoor msg = new MsgDeviceDoor(data.toJSONString());
-            annotation.sendMessage(msg);
+            annotation.sendMessage(deviceNo, msg);
         }
 
         // 调用绑定映射关系

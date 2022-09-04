@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
@@ -18,7 +18,7 @@ import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.protocol.MsgPeer;
 import com.wuweibi.bullet.protocol.domain.PeerConfig;
 import com.wuweibi.bullet.utils.StringUtil;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
@@ -81,7 +81,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool coonPool;
 
 
     public void sendMsgPeerConfig(DevicePeersConfigDTO dto) {
@@ -93,19 +93,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         String clientDeviceNo = dto.getClientDeviceNo();
         String serverDeviceNo = dto.getServerDeviceNo();
 
-        BulletAnnotation annotation = coonPool.getByDeviceNo(clientDeviceNo);
-        if (annotation != null) {
-            PeerConfig doorConfig = new PeerConfig();
-            doorConfig.setAppName(dto.getAppName());
-            doorConfig.setPort(dto.getClientProxyPort());
-            doorConfig.setHost(dto.getClientProxyHost());
-            doorConfig.setType(PeerConfig.CLIENT);
-            doorConfig.setEnable(dto.getStatus());
-            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-            MsgPeer msg = new MsgPeer(data.toJSONString());
-            annotation.sendMessage(msg);
-        }
-        annotation = coonPool.getByDeviceNo(serverDeviceNo);
+        Bullet3Annotation annotation = coonPool.getByTunnelId(dto.getServerDeviceTunnelId());
         if (annotation != null) {
             PeerConfig doorConfig = new PeerConfig();
             doorConfig.setAppName(dto.getAppName());
@@ -115,7 +103,20 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setEnable(dto.getStatus());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
-            annotation.sendMessage(msg);
+            annotation.sendMessage(serverDeviceNo, msg);
+        }
+
+        annotation = coonPool.getByTunnelId(dto.getClientDeviceTunnelId());
+        if (annotation != null) {
+            PeerConfig doorConfig = new PeerConfig();
+            doorConfig.setAppName(dto.getAppName());
+            doorConfig.setPort(dto.getClientProxyPort());
+            doorConfig.setHost(dto.getClientProxyHost());
+            doorConfig.setType(PeerConfig.CLIENT);
+            doorConfig.setEnable(dto.getStatus());
+            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
+            MsgPeer msg = new MsgPeer(data.toJSONString());
+            annotation.sendMessage(clientDeviceNo, msg);
         }
     }
 

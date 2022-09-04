@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
@@ -17,7 +18,6 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
-import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
@@ -32,6 +32,7 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +48,10 @@ import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -68,6 +72,8 @@ public class DeviceController {
 
     @Resource
     private CoonPool coonPool;
+    @Resource
+    private WebsocketPool websocketPool;
 
 
     /**
@@ -103,47 +109,13 @@ public class DeviceController {
      */
     @ApiOperation("用户的设备列表")
     @GetMapping
-    public Object device( ) {
-
+    public R<List<DeviceDto>> device() {
         Long userId = SecurityUtils.getUserId();
-
-        List<Device> list = deviceService.listByMap(newMap(1)
-                .setParam("userId", userId)
-                .build());
-
-        Iterator<Device> it = list.iterator();
-
-        List<DeviceDto> deviceList = new ArrayList<>();
-
-        while (it.hasNext()) {
-            Device device = it.next();
-
-            DeviceDto deviceDto = new DeviceDto(device);
-            String deviceNo = device.getDeviceNo();
-
-            int status = getStatus(deviceNo);
-            deviceDto.setStatus(status);
-            // TODO 性能问题
-            DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(deviceNo);
-            if (deviceOnline != null) {
-                deviceDto.setIntranetIp(deviceOnline.getIntranetIp());
-                deviceDto.setOnlineTime(deviceOnline.getUpdateTime());
-            }
-            deviceList.add(deviceDto);
-        }
-        return MessageFactory.get(deviceList);
+        List<DeviceDto> list = deviceService.getWebListByUserId(userId);
+        return R.ok(list);
     }
 
 
-    /**
-     * 获取设备状态
-     *
-     * @param deviceCode
-     * @return
-     */
-    private int getStatus(String deviceCode) {
-        return coonPool.getDeviceStatus(deviceCode);
-    }
 
 
     /**
@@ -168,12 +140,12 @@ public class DeviceController {
 
 
     /**
-     * 删除设备
+     * 删除设备 解绑
      * @return
      */
     @ApiOperation("删除设备")
     @DeleteMapping(value = "")
-    public Object delete(@JwtUser Session session,
+    public R<Boolean> delete(@JwtUser Session session,
                          @RequestBody @Valid DeviceDelDTO dto,
                          HttpServletRequest request) {
         Long userId = session.getUserId();
@@ -183,28 +155,16 @@ public class DeviceController {
         boolean status = deviceService.exists(userId, deviceId);
         if (status) {
             Device device = deviceService.getById(deviceId);
+            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+            MsgUnBind msg = new MsgUnBind();
+            bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
 
             // 删除映射
             deviceMappingService.deleteByDeviceId(deviceId);
+
             deviceService.removeUserId(deviceId);
-
-            try {
-                BulletAnnotation bulletAnnotation = coonPool.getByDeviceNo(device.getDeviceNo());
-                MsgUnBind msg = new MsgUnBind();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                msg.write(outputStream);
-                // 包装了Bullet协议的
-                byte[] resultBytes = outputStream.toByteArray();
-                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                bulletAnnotation.getSession().getBasicRemote().sendBinary(buf);
-                // 停止ws链接
-//                bulletAnnotation.stop("设备删除");
-            } catch (Exception e) {
-                log.error("{}", e.getMessage());
-            }
-
         }
-        return MessageFactory.getOperationSuccess();
+        return R.ok();
     }
 
 
@@ -258,24 +218,11 @@ public class DeviceController {
         deviceService.saveOrUpdate(device);
         // 发送消息通知设备秘钥
 
-        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+        Bullet3Annotation annotation = websocketPool.getByDeviceNo("1");
         if (annotation != null) {
             MsgDeviceSecret msg = new MsgDeviceSecret();
             msg.setSecret(deviceSecret);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try {
-                msg.write(outputStream);
-                // 包装了Bullet协议的
-                byte[] resultBytes = outputStream.toByteArray();
-                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                annotation.getSession().getBasicRemote().sendBinary(buf);
-
-            } catch (IOException e) {
-                log.error("", e);
-            } finally {
-                IOUtils.closeQuietly(outputStream);
-            }
+            annotation.sendMessage(deviceNo, msg);
         }
         return R.success();
     }
@@ -318,8 +265,10 @@ public class DeviceController {
         Long deviceUserId = deviceInfo.getLong("userId");
         String deviceNo = deviceInfo.getString("deviceNo");
         String serverAddr = deviceInfo.getString("serverAddr"); // 通道顶级地址
-
-        if (!deviceUserId.equals(userId)) {
+        if(deviceNo == null){
+            return R.fail("设备不存在");
+        }
+        if (!userId.equals(deviceUserId)) {
             return R.fail("设备不存在");
         }
 
@@ -328,9 +277,8 @@ public class DeviceController {
         if (deviceOnline != null) {
             deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
             deviceInfo.put("clientVersion", deviceOnline.getClientVersion());
-
-            int status = getStatus(deviceNo);
-            deviceInfo.put("status", status);
+            deviceInfo.put("macAddr", deviceOnline.getMacAddr());
+            deviceInfo.put("status", deviceOnline.getStatus());
         } else {
             deviceInfo.put("clientVersion", "");
             deviceInfo.put("status", -1);
@@ -346,22 +294,11 @@ public class DeviceController {
                 .collect(Collectors.toList());
 
         // 端口
-//        QueryWrapper wrapper = new QueryWrapper();
-//        wrapper.eq("userId", userId);
-//        wrapper.eq("device_id", deviceId);
-//        wrapper.in("protocol", 2, 5);
-//        List<DeviceMapping> portList = deviceMappingService.list(wrapper);
         portList.forEach(item->{
             item.setDomain(serverAddr + ":" + item.getRemotePort());
         });
 
         // 域名
-//        QueryWrapper wrapper2 = new QueryWrapper();
-//        wrapper2.eq("userId", userId);
-//        wrapper2.eq("device_id", deviceId);
-//        wrapper2.in("protocol", Arrays.asList(1, 3, 4));
-//
-//        List<DeviceMapping> domainList = deviceMappingService.list(wrapper2);
         domainList.forEach(item -> {
             if (StringUtil.isNotBlank(item.getHostname())) {
                 item.setDomain(item.getHostname());
@@ -408,11 +345,6 @@ public class DeviceController {
     public R discovery(HttpServletRequest request) {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
-
-        // 筛选在线设备
-        list = list.stream().filter(item-> coonPool.exists(item.getDeviceNo()))
-                .collect(Collectors.toList());
-
         return R.success(list);
     }
 

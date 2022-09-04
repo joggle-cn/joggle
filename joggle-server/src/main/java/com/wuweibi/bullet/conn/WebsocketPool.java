@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.conn;
 
 import com.wuweibi.bullet.protocol.Message;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,25 +18,25 @@ import java.util.concurrent.ConcurrentHashMap;
  *    2018-01-10 下午9:12
  **/
 @Slf4j
-public final class CoonPool {
+public final class WebsocketPool {
     /** 日志 */
-    private Logger logger = LoggerFactory.getLogger(CoonPool.class);
+    private Logger logger = LoggerFactory.getLogger(WebsocketPool.class);
 
     /** 根据客户端缓存链接 */
-    public final Map<String, BulletAnnotation> clientConnections = new ConcurrentHashMap<>();
+    public final Map<String, Bullet3Annotation> clientConnections = new ConcurrentHashMap<>();
 
 
     /**
      * 新增一个链接
      * @param conn 链接对象
      */
-    public void addConnection(BulletAnnotation conn){
-        String deviceNo = conn.getDeviceNo();
-        BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
-        if(bulletAnnotation != null){
-            conn.stop(String.format("设备%s已经注册", deviceNo));
-            return;
-        }
+    public void addConnection(Bullet3Annotation conn){
+        String deviceNo = "1";
+        Bullet3Annotation bulletAnnotation = clientConnections.get(deviceNo);
+//        if(bulletAnnotation != null){
+//            conn.stop(String.format("设备%s已经注册", deviceNo));
+//            return;
+//        }
         clientConnections.put(deviceNo, conn);
     }
 
@@ -46,11 +46,11 @@ public final class CoonPool {
      * @param conn 链接对象
      * @param message
      */
-    public void removeConnection(BulletAnnotation conn, String message) {
+    public void removeConnection(Bullet3Annotation conn, String message) {
         if(conn == null){
             return;
         }
-        String deviceNo = conn.getDeviceNo();
+        String deviceNo = "1";
         clientConnections.remove(deviceNo); // 直接全部移除
         conn.stop(message);
     }
@@ -62,7 +62,7 @@ public final class CoonPool {
      */
     public void removeByDeviceNo(String deviceNo) {
         logger.info("连接池.removeByDeviceNo 设备[{}] ", deviceNo);
-        BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
+        Bullet3Annotation bulletAnnotation = clientConnections.get(deviceNo);
         if(bulletAnnotation  == null){
             return;
         }
@@ -76,8 +76,19 @@ public final class CoonPool {
      * @param deviceNo 设备编号
      * @return
      */
-    public BulletAnnotation getByDeviceNo(String deviceNo) {
-        BulletAnnotation bulletAnnotation = clientConnections.get(deviceNo);
+    @Deprecated
+    public Bullet3Annotation getByDeviceNo(String deviceNo) {
+        Bullet3Annotation bulletAnnotation = clientConnections.get(deviceNo);
+        return bulletAnnotation;
+    }
+
+    /**
+     * 根据通道id获取设备
+     * @param tunnelId 通道id
+     * @return
+     */
+    public Bullet3Annotation getByTunnelId(Integer tunnelId) {
+        Bullet3Annotation bulletAnnotation = clientConnections.get(tunnelId.toString());
         return bulletAnnotation;
     }
 
@@ -88,7 +99,7 @@ public final class CoonPool {
      * @return
      */
     public int getDeviceStatus(String deviceNo) {
-        BulletAnnotation bulletAnnotation = this.clientConnections.get(deviceNo);
+        Bullet3Annotation bulletAnnotation = this.clientConnections.get(deviceNo);
         if(bulletAnnotation == null){
             return -1;
         }
@@ -98,7 +109,7 @@ public final class CoonPool {
 
 
     public DeviceStatus getDeviceStatusEnum(String deviceNo) {
-        BulletAnnotation bulletAnnotation = this.clientConnections.get(deviceNo);
+        Bullet3Annotation bulletAnnotation = this.clientConnections.get(deviceNo);
         if(bulletAnnotation == null){
             return DeviceStatus.OUTLINE;
         }
@@ -122,7 +133,7 @@ public final class CoonPool {
     public void stop() {
         Set<String> sets = clientConnections.keySet();
         for(String key : sets){
-            BulletAnnotation bulletAnnotation = clientConnections.get(key);
+            Bullet3Annotation bulletAnnotation = clientConnections.get(key);
             bulletAnnotation.stop("批量下线");
         }
     }
@@ -144,16 +155,11 @@ public final class CoonPool {
      * @param msg
      */
     public void boradcast(String deviceNo, Message msg) {
-//        Bullet3Annotation bulletAnnotation = this.getByDeviceNo("1");
-//        if(bulletAnnotation == null){
-//            return;
-//        }
-//        if(!bulletAnnotation.getSession().isOpen()){
-//            return;
-//        }
-//
-//        bulletAnnotation.sendMessage(msg);
-
+        Bullet3Annotation bulletAnnotation = this.getByDeviceNo("1");
+        if (bulletAnnotation == null) {
+            return;
+        }
+        bulletAnnotation.sendMessage(deviceNo, msg);
     }
 
 
@@ -164,8 +170,8 @@ public final class CoonPool {
         log.info("============= clientConnections size {} ============= ", this.clientConnections.size());
         Set<String> sets = this.clientConnections.keySet();
         for(String key:sets){
-            BulletAnnotation ba = this.clientConnections.get(key);
-            log.info("deviceNo={}, session[{}], status={}", ba.getDeviceNo(), ba.getSession().isOpen(),ba.getStatus());
+            Bullet3Annotation ba = this.clientConnections.get(key);
+            log.info("deviceNo={}, session[{}]", 1, ba.getSession().isOpen());
         }
         log.info("============= clientConnections size {} ============= ", this.clientConnections.size());
     }

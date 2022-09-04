@@ -56,10 +56,10 @@ public class HomeController {
 		String domain = ConfigUtils.getBulletDomain();
         Map map = new HashMap(6);
         map.put("domain", domain);
-        map.put("clientVersion", "v1.2.14");
+        map.put("clientVersion", "v1.3.0");
         map.put("serverVersion", "v1.2.0");
         map.put("dockerClientVersion", "0.0.7");
-        map.put("apkClientVersion", "0.0.1");
+        map.put("apkClientVersion", "0.0.2");
 		resourceManager.loadResource();
 		return R.success(map);
 	}

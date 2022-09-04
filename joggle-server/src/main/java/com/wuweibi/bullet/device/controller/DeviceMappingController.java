@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -19,16 +19,12 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -55,7 +51,7 @@ public class DeviceMappingController {
 
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool coonPool;
 
 
     /**
@@ -74,24 +70,11 @@ public class DeviceMappingController {
 
             String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
             if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
-                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+                Bullet3Annotation annotation = coonPool.getByDeviceNo("1");
                 if(annotation != null){
                     JSONObject data = (JSONObject)JSON.toJSON(entity);
                     MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    try {
-                        msg.write(outputStream);
-                        // 包装了Bullet协议的
-                        byte[] resultBytes = outputStream.toByteArray();
-                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-
-                        annotation.getSession().getBasicRemote().sendBinary(buf);
-
-                    } catch (IOException e) {
-                        log.error("", e);
-                    } finally {
-                        IOUtils.closeQuietly(outputStream);
-                    }
+                    annotation.sendMessage(deviceNo, msg);
                 }
             }
         }
@@ -165,7 +148,7 @@ public class DeviceMappingController {
 
         String deviceNo = deviceMappingService.getDeviceNo(entity.getDeviceId());
         if(!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)){
-            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+            Bullet3Annotation annotation = coonPool.getByDeviceNo("1");
             if(annotation == null){// 设备不在线
                 return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
             }
@@ -180,20 +163,8 @@ public class DeviceMappingController {
                 log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
                 msg = new MsgUnMapping(data.toJSONString());
             }
+            annotation.sendMessage(deviceNo, msg);
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try {
-                msg.write(outputStream);
-                // 包装了Bullet协议的
-                byte[] resultBytes = outputStream.toByteArray();
-                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-
-                annotation.sendBinary(buf);
-            } catch (IOException e) {
-                log.error("", e);
-            } finally {
-                IOUtils.closeQuietly(outputStream);
-            }
             return R.success();
         }
         return R.fail("服务器错误");

@@ -13,4 +13,7 @@ public class DomainSearchParam {
     @ApiModelProperty("类型：1 端口 2域名")
     private Integer type;
 
+    @ApiModelProperty("通道id")
+    private Integer serverTunnelId;
+
 }

@@ -15,7 +15,20 @@
 	</update>
 
 
-    <select id="selectDiscoveryDevice" resultType="com.wuweibi.bullet.entity.DeviceOnline">
+	<update id="updateDeviceStatus">
+		update t_device_online set status=#{status}, updateTime=sysdate() where deviceNo=#{deviceNo}
+	</update>
+
+<!--	批量更新设备状态-->
+	<update id="batchUpdateStatus">
+		update t_device_online set status=#{status}, updateTime=sysdate() where deviceNo in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+		  #{item}
+		</foreach>
+	</update>
+
+
+	<select id="selectDiscoveryDevice" resultType="com.wuweibi.bullet.entity.DeviceOnline">
 		select distinct a.* from t_device_online a
 		left join t_device b on a.deviceNo = b.deviceId
 		WHERE  a.`status` = 1

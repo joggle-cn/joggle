@@ -38,4 +38,19 @@
 		where d.userId = #{userId}
         order by do.status asc , do.`updateTime` desc
 	</select>
+
+
+    <select id="selectWebListByUserId" resultType="com.wuweibi.bullet.domain.dto.DeviceDto">
+		select
+			d.`id`, d.`name`, d.`deviceId` as deviceNo,
+		   do.`status`, do.`public_ip`, do.`intranet_ip`,do.mac_addr,
+		   do.updateTime onlineTime
+
+		from t_device d
+		 left join t_device_online do on d.deviceId = do.deviceNo
+		where d.userId = #{userId}
+		order by do.status desc , do.`updateTime` desc
+	</select>
+
+
 </mapper>

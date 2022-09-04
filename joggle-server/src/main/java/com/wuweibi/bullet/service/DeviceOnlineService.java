@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -58,4 +60,21 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      */
     DeviceOnline getByDeviceNo(String deviceId);
 
+    /**
+     * 检查设备状态
+     * @return
+     */
+    boolean checkDeviceStatus();
+
+
+    boolean updateDeviceStatus(String deviceNo, int status);
+
+
+    /**
+     * 批量更新设备状态
+     * @param deviceNoList 设备清单
+     * @param status 设备状态
+     * @return
+     */
+    int batchUpdateStatus(List<String> deviceNoList, int status);
 }

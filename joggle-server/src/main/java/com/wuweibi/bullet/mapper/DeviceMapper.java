@@ -3,6 +3,7 @@ package com.wuweibi.bullet.mapper;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
+import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.Device;
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -56,4 +57,7 @@ public interface DeviceMapper extends BaseMapper<Device> {
      * @return
      */
     List<DeviceOption> selectOptionListByUserId(@Param("userId") Long userId);
+
+    List<DeviceDto> selectWebListByUserId(@Param("userId")Long userId);
+
 }

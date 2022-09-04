@@ -3,6 +3,7 @@ package com.wuweibi.bullet.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
+import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
@@ -97,4 +98,5 @@ public interface DeviceService extends IService<Device> {
 
     boolean removeUserId(Long deviceId);
 
+    List<DeviceDto> getWebListByUserId(Long userId);
 }

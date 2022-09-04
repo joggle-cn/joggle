@@ -18,21 +18,17 @@ package com.wuweibi.bullet.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.conn.DeviceStatus;
+import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.device.service.DevicePeersService;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
-import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.utils.Utils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -47,8 +43,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.wuweibi.bullet.protocol.Message.CONTROL_CLIENT_WRAPPER;
+import static com.wuweibi.bullet.protocol.Message.CONTROL_SERVER_WRAPPER;
 import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
 
 
@@ -59,76 +59,47 @@ import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
  * @version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/tunnel/{deviceNo}", configurator = WebSocketConfigurator.class)
-public class BulletAnnotation {
+@ServerEndpoint(value = "/inner/open/ws/{tunnelId}", configurator = WebSocketConfigurator.class)
+public class Bullet3Annotation {
     /**
      * 日志
      */
-    private final Logger logger = LoggerFactory.getLogger(BulletAnnotation.class);
+    private final Logger logger = LoggerFactory.getLogger(Bullet3Annotation.class);
 
     /**
      * session
      */
     private Session session;
 
-    // 设备状态
-    private boolean deviceStatus = false;
-
     /**
      * 设备ID
      */
-    private String deviceNo;
-
-    /**
-     * 设备ID
-     */
-    private Long deviceId;
+    private Integer tunnelId;
 
 
-    public BulletAnnotation() {
+
+    public Bullet3Annotation() {
     }
 
-    public boolean getStatus() {
-        return this.deviceStatus;
-    }
+
 
     /**
      * 客户端打开连接
      *
      * @param session session
+     * @param tunnelId 通道id
      */
     @OnOpen
-    public void open(Session session,
-                     @PathParam("deviceNo") String deviceNo // 设备编号（服务器端生成)
-    ) {
+    public void open(Session session, @PathParam("tunnelId") Integer tunnelId) {
         session.setMaxIdleTimeout(10000l); // 超时时间10s
         this.session = session;
-        this.deviceNo = deviceNo;
+        this.tunnelId = tunnelId;
 
-        // 如果是首次链接，执行重新分配设备编码
-        if (StringUtils.isBlank(deviceNo) || "null".equals(deviceNo)) {
-            this.deviceNo = CodeHelper.makeNewCode();
+        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
+        pool.addConnection(this);
 
-            // 发送配置到客户端
-            MsgDeviceNo msgDeviceNo = new MsgDeviceNo(this.deviceNo);
-            this.sendMessage(msgDeviceNo);
-            // 待绑定的设备，无需认证执行上线
-            deviceOnline();
-            return;
-        }
-
-        // 检查是否绑定
-        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
-        Device device = deviceService.getByDeviceNo(this.deviceNo);
-        if (device == null || device.getUserId() == null) { // 未绑定
-            // 待绑定的设备，无需认证执行上线
-            deviceOnline();
-        } else {
-            this.deviceId = device.getId();
-        }
-
-        // 需要认证(客户端主动发起)
-
+//        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+//        deviceOnlineService.checkDeviceStatus();
     }
 
 
@@ -140,14 +111,14 @@ public class BulletAnnotation {
 //                    CloseReason.CloseCodes.NOT_CONSISTENT.getCode(), this.deviceNo, this.session.getId());
 //            return;
 //        }
-        logger.warn("BulletAnnotation close({}) deviceNo={},status={}",
-                closeReason.toString(), this.deviceNo, this.deviceStatus);
-        if (this.deviceStatus) { // 正常设备才能移除
-            updateOutLine();
-            this.deviceStatus = false;
-            CoonPool pool = SpringUtils.getBean(CoonPool.class);
-            pool.removeConnection(this, String.format("异常-%s", closeReason.toString()));
-        }
+//        logger.warn("BulletAnnotation close({}) deviceNo={},status={}",
+//                closeReason.toString(), this.deviceNo, this.deviceStatus);
+//        if (this.deviceStatus) { // 正常设备才能移除
+//            updateOutLine();
+//            this.deviceStatus = false;
+//            CoonPool pool = SpringUtils.getBean(CoonPool.class);
+//            pool.removeConnection(this, String.format("异常-%s", closeReason.toString()));
+//        }
     }
 
 
@@ -159,15 +130,21 @@ public class BulletAnnotation {
             head.read(bis);//读取消息头
             switch (head.getCommand()) {
                 case Message.PROXY:// Bind响应命令
-
                     MsgProxy msgProxy = new MsgProxy(head);
                     msgProxy.read(bis);
+                    break;
+                case Message.AUTH_RESP:// 认证成功
+                    MsgAuthResp msgAuthResp = new MsgAuthResp(head);
+                    msgAuthResp.read(bis);
+
+                    String clientNo = msgAuthResp.getClientNo();
+
+                    this.sendMappingInfo(clientNo);
+
                     break;
                 case Message.AUTH:// 认证
                     MsgAuth msgAuth = new MsgAuth(head);
                     msgAuth.read(bis);
-
-                    deviceAuth(msgAuth);
                     break;
                 case Message.Heart:// 心跳消息
                     MsgHeart msgHeart = new MsgHeart(head);
@@ -191,15 +168,35 @@ public class BulletAnnotation {
 
                     // 更新设备状态
                     DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac(), msg2.getVersion());
+//                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac(), msg2.getVersion());
 
                     return;
-                case Message.LOG_MAPPING_LOG:// 日志消息
-                    MsgCommandLog msgCommandLog = new MsgCommandLog(head);
-                    msgCommandLog.read(bis);
-                    // 转移消息到另外一个通道
+                case Message.GET_DEVICE_STATUS_RESP:// 获取设备状态响应所有设备状态
+                    MsgGetDeviceStatusResp msgGetDeviceStatusResp = new MsgGetDeviceStatusResp(head);
+                    msgGetDeviceStatusResp.read(bis);
+                    JSONObject jsonObject = msgGetDeviceStatusResp.getData();
+                    // 更新在线状态
+                    deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+                    List<String> deviceNoList = new ArrayList<>(jsonObject.size());
+                    jsonObject.forEach((item, v)->{
+                        deviceNoList.add(item);
+                    });
+                    deviceOnlineService.batchUpdateStatus(deviceNoList, DeviceOnlineStatus.ONLINE.status);
 
-                    LogAnnotation.broadcast(this.deviceId, msgCommandLog.getLine());
+                    return;
+                case Message.DEVICE_DOWN: // 设备下线
+                    MsgDeviceDown msgDeviceDown = new MsgDeviceDown(head);
+                    msgDeviceDown.read(bis);
+                    String deviceNo = msgDeviceDown.getDeviceNo();
+                    deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
+                    deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.OUTLINE.status);
+                    return;
+//                case Message.LOG_MAPPING_LOG:// 日志消息
+//                    MsgCommandLog msgCommandLog = new MsgCommandLog(head);
+//                    msgCommandLog.read(bis);
+//                    // 转移消息到另外一个通道
+//
+//                    LogAnnotation.broadcast(this.deviceId, msgCommandLog.getLine());
             }
         } catch (IOException e) {
             logger.error("", e);
@@ -209,50 +206,12 @@ public class BulletAnnotation {
 
     }
 
-    private void deviceAuth(MsgAuth msgAuth) {
-        String authToken = msgAuth.getAuthToken();
-        logger.debug("device auth deviceNo={} authToken={}", this.deviceNo, authToken);
-
-        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
-        Device device = deviceService.getByDeviceNo(this.deviceNo);
-        if (device == null) {
-            log.warn("设备不存在 {}", this.deviceNo);
-            throw new BaseException("设备不存在");
-        }
-        this.deviceId = device.getId();
-        // 认证成功 发送映射信息
-        if (device != null && device.getDeviceSecret() != null && device.getDeviceSecret().equals(authToken)) {
-
-            // 设备上线（包含设备校验）
-            if (device.getUserId() != null) {
-                deviceOnline();
-            }
-            if (!this.deviceStatus) { // 如果没有上线成功
-                MsgAuthResp authResp = new MsgAuthResp("Device " + this.deviceNo + " is Online!!!");
-                sendMessage(authResp);
-                return;
-            }
-            MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
-            sendMessage(authResp);
-
-            if (device.getUserId() != null) {
-                log.debug("UserId[{}], device[{}] sendMapping.", device.getUserId(), this.deviceNo);
-                sendMappingInfo();
-            }
-            return;
-        }
-
-        // 发送认证结果消息
-        MsgAuthResp authResp = new MsgAuthResp("SUCCESS");
-        sendMessage(authResp);
-
-    }
 
 
     /**
      * 发送映射信息
      */
-    private void sendMappingInfo() {
+    public void sendMappingInfo(String deviceNo) {
         // 获取设备的配置数据,并将映射配置发送到客户端
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
         List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
@@ -261,7 +220,7 @@ public class BulletAnnotation {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
-                this.sendMessage(msg);
+                this.sendMessage(deviceNo, msg);
             }
         }
 
@@ -277,53 +236,6 @@ public class BulletAnnotation {
 
     }
 
-    /**
-     * 设备上线
-     */
-    private void deviceOnline() {
-        // 进入同步锁
-        synchronized (this.deviceNo) {
-            // 因为认证通过了，采用剔除旧链接方式 可能会导致两个设备争夺链接的情况
-            // 因此采用后认证者直接掉线方式
-            CoonPool pool = SpringUtils.getBean(CoonPool.class);
-
-            // 更新设备状态
-            DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-            if (pool.exists(deviceNo)) {
-                logger.warn("{} 设备已经在线", deviceNo);
-                pool.printDetailInfo();
-                // 这里判断的前提是设备被绑定后，不能有其他设备用同样的NO链接
-                DeviceStatus status = pool.getDeviceStatusEnum(deviceNo);
-                logger.info("设备[{}]状态:{}", deviceNo, status);
-//                if (status == DeviceStatus.ONLINE) {
-//                    try {
-//
-//                        this.session.close(new CloseReason(CloseReason.
-//                                CloseCodes.NOT_CONSISTENT,
-//                                deviceNo + " deviceNo is online! please try another deviceNo."));
-//                    } catch (IOException e) {
-//                        logger.error("", e);
-//                    }
-//                    return;
-//                }
-
-                // 移除存在的链接
-                pool.removeByDeviceNo(deviceNo);
-            }
-
-            String publicIp = getRemoteAddress(this.session);
-            // 设备在线
-            DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
-            deviceOnlineInfoDTO.setDeviceNo(deviceNo);
-            deviceOnlineInfoDTO.setPublicIp(publicIp);
-            deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
-            this.deviceStatus = true;
-
-            // 将链接添加到连接池
-            pool.addConnection(this);
-
-        }
-    }
 
 
     @SneakyThrows
@@ -334,29 +246,20 @@ public class BulletAnnotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-        logger.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
-//        if (!(t instanceof EOFException)) {
-//            logger.error("", t);
-//        }
-        logger.error("", t);
-        CoonPool pool = SpringUtils.getBean(CoonPool.class);
-        if (this.deviceStatus) { // 正常设备才能移除
+//        logger.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
+////        if (!(t instanceof EOFException)) {
+////            logger.error("", t);
+////        }
+//        logger.error("", t);
+        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
+//        if (this.deviceStatus) { // 正常设备才能移除
             pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
-            updateOutLine();
-        }
-        this.deviceStatus = false;
+//
+//        }
+//        this.deviceStatus = false;
     }
 
 
-    /**
-     * 更新为离线状态
-     */
-    private void updateOutLine() {
-        logger.warn("数据库操作设备[{}]下线！", this.deviceNo);
-        // 更新设备状态
-        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-        deviceOnlineService.updateOutLine(this.deviceNo);
-    }
 
 
     /**
@@ -369,14 +272,6 @@ public class BulletAnnotation {
     }
 
 
-    /**
-     * 获取设备ID
-     *
-     * @return
-     */
-    public String getDeviceNo() {
-        return this.deviceNo;
-    }
 
     /**
      * 服务器端主动关闭连接
@@ -393,15 +288,7 @@ public class BulletAnnotation {
         }
     }
 
-    /**
-     * 发送数据
-     *
-     * @param buf
-     * @throws IOException
-     */
-    public void sendBinary(ByteBuffer buf) throws IOException {
-        this.session.getBasicRemote().sendBinary(buf, true);
-    }
+
 
 
     /**
@@ -428,11 +315,13 @@ public class BulletAnnotation {
      * @param msg
      */
     @SneakyThrows
-    @Deprecated
-    public void sendMessage(Message msg) {
-        log.info("websocket send: {} {}", msg.getCommand(),msg.getSequence());
+    public void sendMessage(String clientNo, Message msg) {
+        log.info("Control -> Server -> Client: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
+            outputStream.write(Utils.IntToBytes4(CONTROL_CLIENT_WRAPPER));
+            outputStream.write(Utils.IntToBytes4(clientNo.length()));
+            outputStream.write(clientNo.getBytes(StandardCharsets.UTF_8));
             msg.write(outputStream);
             // 包装了Bullet协议的
             byte[] resultBytes = outputStream.toByteArray();
@@ -443,5 +332,25 @@ public class BulletAnnotation {
         } finally {
             IOUtils.closeQuietly(outputStream);
         }
+    }
+
+
+
+    public void sendMessageToServer(MsgGetDeviceStatus msg) {
+        log.info("Control -> Server: {} {}", msg.getCommand(),msg.getSequence());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            outputStream.write(Utils.IntToBytes4(CONTROL_SERVER_WRAPPER));
+            msg.write(outputStream);
+            // 包装了Bullet协议的
+            byte[] resultBytes = outputStream.toByteArray();
+            ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+            this.session.getBasicRemote().sendBinary(buf, true);
+        } catch (Exception e) {
+            log.error("", e);
+        } finally {
+            IOUtils.closeQuietly(outputStream);
+        }
+
     }
 }

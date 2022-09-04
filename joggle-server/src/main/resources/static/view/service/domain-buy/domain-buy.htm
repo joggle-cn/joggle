@@ -16,8 +16,14 @@
                 <div class="col-sm-12">
                    <div class="form-inline">
                        <div class="input-group">
+                            <span class="input-group-addon">区域</span>
+                           <select class="form-control" ng-model="params.serverTunnelId" ng-options="item.id as item.name for item in tunnels">
+
+                           </select>
+                       </div>
+                       <div class="input-group">
                             <span class="input-group-addon">类型</span>
-                           <select class="form-control" ng-model="type">
+                           <select class="form-control" ng-model="params.type">
                              <option value="">全部</option>
                              <option value="1">端口</option>
                              <option value="2">域名</option>
@@ -25,7 +31,7 @@
                        </div>
                        <div class="input-group">
                             <span class="input-group-addon">关键字</span>
-                            <input type="text" ng-model="keyword" class="form-control" aria-label="Text input with multiple buttons">
+                            <input type="text" ng-model="params.keyword" class="form-control" aria-label="Text input with multiple buttons">
                       </div>
                       <button id="bindButton" ng-click="searchDomain(1)" type="button"   class="btn btn-success">搜索域名</button>
 
@@ -40,22 +46,26 @@
                   <thead>
                     <tr>
                       <th width="60">#</th>
-                      <th width="170">域名/端口</th>
+                      <th width="200">服务器地区</th>
+                      <th width="60">宽带</th>
+                      <th width="200">域名/端口</th>
                       <th width="80">类型</th>
-                      <th width="120">价格</th>
+                      <th width="200">价格</th>
                       <th width="80">状态</th>
                       <th>操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr ng-repeat="item in page.records">
-                      <th scope="row">{{$index + 1}}</th>
+                      <th scope="row">{{$index + 1+(page.current -1) * page.size}}</th>
                       <td>
-                        <span ng-if="item.type == 1">{{item.domain}}</span>
-                        <span ng-if="item.type == 2">{{item.domain}}.{{config.domain}}</span>
+                        <span class="label label-info">{{item.tunnelArea}}</span> {{item.tunnelName}}</td>
+                      <td>{{item.tunnelBroadband}}mb/s</td>
+                      <td>
+                        <span class="label label-default item-domain">{{item.domain}}</span>
                       </td>
                       <td ng-bind="item.typeName"></td>
-                      <td>{{item.salesPrice}} 元/天</td>
+                      <td><i style="text-decoration: line-through;">{{item.originalPrice}}元/天</i> <b>{{item.salesPrice}}</b>元/天</td>
                       <td>
                         <span ng-if="item.status == 0" class="label label-success">可售</span>
                       </td>

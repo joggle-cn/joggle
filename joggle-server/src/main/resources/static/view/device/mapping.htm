@@ -39,10 +39,10 @@
 		<div class="col-sm-3">
 			<a class="btn btn-default" ng-click="delDevice(deviceInfo)">解绑设备</a>
 			<a class="btn btn-default" ng-click="editDevice(deviceInfo)">编辑设备</a>
-			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a>
+<!-- 			<a href="#/user/device/{{deviceInfo.id}}/mapping/1/log" class="btn btn-default">实时日志</a> -->
 			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
 			<a class="btn btn-default" ng-click="openDeviceDoorDialog(deviceInfo)">任意门</a>
-			<a class="btn btn-default" ng-click="openDeviceProxyDialog(deviceInfo)">内网代理</a>
+<!-- 			<a class="btn btn-default" ng-click="openDeviceProxyDialog(deviceInfo)">内网代理</a> -->
 		</div>
 	</div>
 
@@ -314,10 +314,12 @@
 						</div>
 					</div>
 				</form>
-
+                <p>
+                </p>
 			</div>
 			<div class="modal-footer">
-				<a ng-click="deviceBindDomain()" class="btn btn-default">确认绑定</a>
+                <a href="#/user/domain/buy" class="btn btn-info">没有？去购买资源</a>
+				<a ng-click="deviceBindDomain()" class="btn btn-success">确认绑定</a>
 				<a ng-click="closeBindDomain()"  class="btn btn-default">取消</a>
 			</div>
 		</div><!-- /.modal-content -->

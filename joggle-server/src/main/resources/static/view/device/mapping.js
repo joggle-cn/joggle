@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], function (app, $, layer) {//加载依赖js,
+define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], function (app, $, layer) {//加载依赖js,
 
 	let callback = ["$scope","$routeParams","$location","$rootScope", function ($scope, $routeParams,$location,$rootScope) {
         $scope.active = 'device';
@@ -449,7 +449,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          */
         $scope.confirmDeleteDevice = function(){
             faceinner.delete(api['user.device'], $scope.deviceInfo , function(res) {
-                if (res.status == 0) {
+                if (res.code == 'S00') {
                     $("#delDevice").modal('hide');
                    window.history.back();
                 }

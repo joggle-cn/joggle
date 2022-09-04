@@ -4,10 +4,12 @@ package com.wuweibi.bullet.device.controller;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelVO;
+import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,19 @@ public class ServerTunnelController extends ApiController {
      */
     @Resource
     private ServerTunnelService serverTunnelService;
+
+
+    /**
+     * 设备列表
+     *
+     * @return
+     */
+    @ApiOperation("通道区域下拉列表")
+    @GetMapping("/options")
+    public R<List<TunnelOption>> deviceOptions( ) {
+        List<TunnelOption> list = serverTunnelService.getOptionList();
+        return R.ok(list);
+    }
 
     /**
      * 获取所有数据

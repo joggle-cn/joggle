@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.config;
 
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import com.wuweibi.bullet.websocket.LogAnnotation;
 import com.wuweibi.bullet.websocket.VideoAnnotation;
@@ -32,6 +33,10 @@ public class WebSocketConfig {
     @Bean
     public BulletAnnotation serverEndpointBulletAnnotation() {
         return new BulletAnnotation();
+    }
+    @Bean
+    public Bullet3Annotation serverEndpoin2tBulletAnnotation() {
+        return new Bullet3Annotation();
     }
 
 
