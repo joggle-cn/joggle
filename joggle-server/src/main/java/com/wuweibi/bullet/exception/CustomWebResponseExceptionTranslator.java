@@ -34,19 +34,13 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
 
     @Override
     public ResponseEntity translate(Exception e) {
-
-
         // Try to extract a SpringSecurityException from the stacktrace
         Throwable[] causeChain = throwableAnalyzer.determineCauseChain(e);
 
         Exception ase = (AuthenticationException) throwableAnalyzer
                 .getFirstThrowableOfType(AuthenticationException.class, causeChain);
 
-
-
-
         if (e instanceof OAuth2Exception) {
-            log.warn("", e);
             OAuth2Exception oAuth2Exception = (OAuth2Exception) e;
             if (oAuth2Exception instanceof InvalidGrantException) {
                 if ("User is disabled".equals(oAuth2Exception.getMessage())) {

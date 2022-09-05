@@ -1,2 +1,68 @@
 
+.mapping .item-text{
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+.mapping .item-wrap{
+    border: 1px #ccc solid;
+    padding: 10px 20px;
+    overflow: hidden;
+    height: 90px;
+    margin-bottom: 20px;
+    display: block;
+    color:#000;
+}
 
+.mapping .item-wrap:hover{
+    cursor: pointer;
+    background: #efefef;
+    border: 1px #4CAF50 solid;
+}
+.mapping .item-server{
+    position: relative;
+    margin: 0 auto;
+    height: 66px;
+    width: 80px;
+}
+.mapping .item-icon {
+    font-size: 80px; color:#383838;
+    position: absolute;
+    top: -3px;
+}
+.mapping .item-status.label-success{
+    background: #0de216;
+}
+.mapping .item-status{
+    display: block;
+    background: #ffe300;
+    width: 7px;
+    height: 7px;
+    z-index: 999;
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    border-radius: 4px;
+}
+
+
+
+
+.mapping .mapping-feature-item{
+    border:1px #ccc  solid;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.mapping .mapping-feature-item p{
+    color: #929292;
+}
+.mapping .no-device-info{
+    text-align: center;
+    margin-top: 7rem;
+}
+.mapping .bind-device{
+    float: right;
+}
+.mapping .bind-device:before{
+    content: '';
+}

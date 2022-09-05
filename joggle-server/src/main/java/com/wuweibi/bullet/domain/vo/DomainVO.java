@@ -9,6 +9,7 @@ public class DomainVO {
 
  private Long    id;
  private String domain;
+ private String domainFull;
  private Integer type;
  private Integer status;
  private Date dueDateTime;

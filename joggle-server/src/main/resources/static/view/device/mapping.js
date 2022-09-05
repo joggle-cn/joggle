@@ -56,19 +56,19 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
         flushData();
 
 
-        /**
-         * 展示域名
-         * @param item
-         * @returns {*|string}
-         */
-        $scope.showDomain = function (item) {
-            if (item.domain) {// 子域名
-                return item.domain + '.' + $rootScope.config.domain;
-            }
-            if (item.hostname) {// 自定义域名 CNAME指向
-                return item.hostname;
-            }
-        }
+        // /**
+        //  * 展示域名
+        //  * @param item
+        //  * @returns {*|string}
+        //  */
+        // $scope.showDomain = function (item) {
+        //     if (item.domain) {// 子域名
+        //         return item.domain + '.' + $rootScope.config.domain;
+        //     }
+        //     if (item.hostname) {// 自定义域名 CNAME指向
+        //         return item.hostname;
+        //     }
+        // }
 
         /**
          * 展示映射状态

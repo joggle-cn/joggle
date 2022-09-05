@@ -4,7 +4,15 @@
 
 	<!--	根据用户ID查询归属域名-->
 	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain.vo.DomainVO" parameterType="java.lang.Long">
-		select id, domain, type, status, due_time as dueDateTime from t_domain where user_id = #{userId}
+		select d.id, d.domain,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
+			   d.type, d.status, d.due_time as dueDateTime
+
+		from t_domain  d
+	    left join t_server_tunnel st on st.id = d.server_tunnel_id
+
+
+		where d.user_id = #{userId}
 	</select>
 
 <!--	获取可购买的域名列表-->

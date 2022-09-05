@@ -18,15 +18,11 @@
 		<div class="col-md-4" ng-repeat="item in list">
 			<div class="item-wrap">
 				<div class="row">
-					<div class="col-xs-8">
+					<div class="col-xs-12">
 						<div style="">
-							<p ng-if="item.type == 2" class="item-text" style="font-size: 20px;line-height: 20px;">
+							<p class="item-text" style="font-size: 20px;line-height: 20px;">
 								<span class="domain_leftline"></span>
-								{{item.domain +'.' + config.domain}}
-							</p>
-							<p ng-if="item.type == 1" class="item-text" style="font-size: 20px;line-height: 20px;">
-								<span class="domain_leftline"></span>
-								{{item.domain}}
+								{{item.domainFull}}
 							</p>
 							<p class="item-text" style="color: #8c8c8c">
 								<i class="fa fa-clock-o"></i> {{item.dueTime}}</p>
