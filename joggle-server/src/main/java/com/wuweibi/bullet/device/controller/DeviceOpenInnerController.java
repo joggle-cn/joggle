@@ -89,13 +89,9 @@ public class DeviceOpenInnerController {
         deviceOnlineInfoDTO.setIntranetIp(deviceAuthDTO.getIpAddr());
         deviceOnlineInfoDTO.setMacAddr(deviceAuthDTO.getMac());
         deviceOnlineInfoDTO.setClientVersion(deviceAuthDTO.getVersion());
+        deviceOnlineInfoDTO.setOs(deviceAuthDTO.getOs());
+        deviceOnlineInfoDTO.setArch(deviceAuthDTO.getArch());
         deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
-
-
-
-
-
-
 
         return R.ok(authVO);
     }

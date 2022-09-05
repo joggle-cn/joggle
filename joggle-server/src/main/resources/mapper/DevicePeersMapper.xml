@@ -53,6 +53,10 @@
     <select id="selectListByDeviceNo" resultType="com.wuweibi.bullet.device.domain.DevicePeersConfigDTO">
         select
         <include refid="peersConfigSql" />
+        ,
+        dc.server_tunnel_id  as clientDeviceTunnelId,
+        ds.server_tunnel_id  as serverDeviceTunnelId
+
         from device_peers dp
         left join t_device dc on dc.id = dp.client_device_id
         left join t_device ds on ds.id = dp.server_device_id

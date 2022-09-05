@@ -156,6 +156,8 @@ public class Bullet3Annotation {
                     jsonObject.forEach((item, v)->{
                         deviceNoList.add(item);
                     });
+
+                    deviceOnlineService.updateOutLineByTunnelId(this.tunnelId);
                     deviceOnlineService.batchUpdateStatus(deviceNoList, DeviceOnlineStatus.ONLINE.status);
 
                     return;

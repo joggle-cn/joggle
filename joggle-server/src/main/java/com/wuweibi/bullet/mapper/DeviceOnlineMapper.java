@@ -45,4 +45,13 @@ public interface DeviceOnlineMapper extends BaseMapper<DeviceOnline> {
      * @return
      */
     int batchUpdateStatus(@Param("list") List<String> deviceNoList,@Param("status") int status);
+
+    /**
+     * 根据通道id批量更新设备状态为下线
+     *
+     * @param tunnelId 通道id
+     * @return
+     */
+    int updateOutLineByTunnelId(@Param("tunnelId") Integer tunnelId);
+
 }

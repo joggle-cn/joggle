@@ -15,7 +15,6 @@ import java.io.OutputStream;
  **/
 public class MsgGetDeviceStatusResp extends Message {
 
-
     private JSONObject data;
 
     /**

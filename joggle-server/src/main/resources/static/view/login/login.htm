@@ -37,6 +37,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <button ng-click="login()" class="btn btn-success btn-lg btn-block"
+                                                ng-disabled="loginBtnDisable"
                                                 data-loading-text="登录中..." ng-bind="res.t('user.login')"></button>
                                     </div>
                                 </div>

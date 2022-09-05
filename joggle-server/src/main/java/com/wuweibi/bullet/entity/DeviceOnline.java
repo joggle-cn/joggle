@@ -62,6 +62,15 @@ public class DeviceOnline extends Model<DeviceOnline> {
 	@ApiModelProperty("客户端版本")
 	private String clientVersion;
 
+	@ApiModelProperty("通道id")
+	private Integer serverTunnelId;
+
+	@ApiModelProperty("操作系统")
+	private String os;
+
+	@ApiModelProperty("CPU架构")
+	private String arch;
+
 
 	/**
 	 * 默认构造

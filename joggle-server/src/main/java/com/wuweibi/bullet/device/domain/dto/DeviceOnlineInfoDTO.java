@@ -21,4 +21,8 @@ public class DeviceOnlineInfoDTO {
     private String clientVersion;
 
     private String macAddr;
+
+    private String os;
+
+    private String arch;
 }

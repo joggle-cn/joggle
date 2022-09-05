@@ -17,5 +17,12 @@ public interface ServerTunnelService extends IService<ServerTunnel> {
     List<TunnelOption> getOptionList();
 
 
+    /**
+     * 获取所有可用区域清单
+     * @return
+     */
+    List<ServerTunnel> getListEnable();
+
+
 }
 

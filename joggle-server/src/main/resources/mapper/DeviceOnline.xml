@@ -26,9 +26,13 @@
 		  #{item}
 		</foreach>
 	</update>
+<!--	根据通道id批量更新设备状态为下线-->
+    <update id="updateOutLineByTunnelId">
+		update t_device_online set status=-1, updateTime=sysdate() where server_tunnel_id=#{tunnelId}
+	</update>
 
 
-	<select id="selectDiscoveryDevice" resultType="com.wuweibi.bullet.entity.DeviceOnline">
+    <select id="selectDiscoveryDevice" resultType="com.wuweibi.bullet.entity.DeviceOnline">
 		select distinct a.* from t_device_online a
 		left join t_device b on a.deviceNo = b.deviceId
 		WHERE  a.`status` = 1

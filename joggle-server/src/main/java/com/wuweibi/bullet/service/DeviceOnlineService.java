@@ -77,4 +77,11 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @return
      */
     int batchUpdateStatus(List<String> deviceNoList, int status);
+
+    /**
+     * 下线通道的所有设备
+     * @param tunnelId 通道id
+     * @return
+     */
+    int updateOutLineByTunnelId(Integer tunnelId);
 }

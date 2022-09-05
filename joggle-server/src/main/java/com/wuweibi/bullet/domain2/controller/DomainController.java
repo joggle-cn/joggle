@@ -107,7 +107,7 @@ public class DomainController {
             return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
         ServerTunnel serverTunnel = serverTunnelService.getById(domain.getServerTunnelId());
-        if(serverTunnel == null){
+        if (serverTunnel == null) {
             return R.fail("域名/端口信息有误");
         }
         DomainDetailVO domainDetailVO = new DomainDetailVO();
@@ -115,6 +115,8 @@ public class DomainController {
         domainDetailVO.setDomainFull(domain.getDomain());
         if (domain.getType().equals(DomainTypeEnum.DOMAIN.getType())) {
             domainDetailVO.setDomainFull(String.format("%s.%s", domain.getDomain(), serverTunnel.getServerAddr()));
+        } else {
+            domainDetailVO.setDomainFull(String.format("%s:%s", serverTunnel.getServerAddr(), domain.getDomain()));
         }
         return R.success(domainDetailVO);
     }

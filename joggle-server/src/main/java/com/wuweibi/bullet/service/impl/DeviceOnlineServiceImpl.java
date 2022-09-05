@@ -6,13 +6,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,7 @@ import java.util.List;
  * @author marker
  * @since 2017-12-09
  */
+@Slf4j
 @Service
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
@@ -112,6 +117,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     }
 
     @Override
+    @Transactional
     public boolean saveOrUpdate(DeviceOnlineInfoDTO deviceInfo) {
         String deviceNo = deviceInfo.getDeviceNo();
         DeviceOnline deviceOnline = this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
@@ -125,6 +131,8 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnline.setIntranetIp(deviceInfo.getPublicIp());
         deviceOnline.setMacAddr(deviceInfo.getMacAddr());
         deviceOnline.setClientVersion(deviceInfo.getClientVersion());
+        deviceOnline.setOs(deviceInfo.getOs());
+        deviceOnline.setArch(deviceInfo.getArch());
         deviceOnline.setUpdateTime(new Date());
 
         if (deviceOnline.getId() != null) {
@@ -135,6 +143,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         }
         return true;
     }
+
+    @Resource
+    private DeviceService deviceService;
 
     @Override
     public DeviceOnline getByDeviceNo(String deviceId) {
@@ -147,16 +158,27 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     @Resource
     private WebsocketPool websocketPool;
 
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
     @Override
     public boolean checkDeviceStatus() {
-        Bullet3Annotation annotation = websocketPool.getByDeviceNo("1");
-        if(annotation == null){
-            return false;
-        }
 
-        MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
-        annotation.sendMessageToServer(msg);
-        return false;
+        List<ServerTunnel> list = serverTunnelService.getListEnable();
+
+        list.forEach(item -> {
+            log.debug("[init] check server[{}] {}[{}]", item.getId(), item.getName(), item.getServerAddr());
+            Bullet3Annotation annotation = websocketPool.getByTunnelId(item.getId());
+            if (annotation == null) {
+                log.debug("[init] check server[{}] not online", item.getId());
+            }
+            if (annotation != null) {
+                MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
+                annotation.sendMessageToServer(msg);
+                log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
+            }
+        });
+        return true;
     }
 
     @Override
@@ -166,7 +188,12 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     @Override
     public int batchUpdateStatus(List<String> deviceNoList, int status) {
-        if(deviceNoList.size() == 0) return 0;
+        if (deviceNoList.size() == 0) return 0;
         return this.baseMapper.batchUpdateStatus(deviceNoList, status);
+    }
+
+    @Override
+    public int updateOutLineByTunnelId(Integer tunnelId) {
+        return this.baseMapper.updateOutLineByTunnelId(tunnelId);
     }
 }

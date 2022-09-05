@@ -96,7 +96,7 @@ public class DeviceController {
      */
     @ApiOperation("设备下拉列表")
     @GetMapping("/options")
-    public R<List<DeviceOption>> deviceOptions( ) {
+    public R<List<DeviceOption>> deviceOptions() {
         Long userId = SecurityUtils.getUserId();
         List<DeviceOption> list = deviceService.getOptionListByUserId(userId);
         return R.ok(list);
@@ -156,8 +156,10 @@ public class DeviceController {
         if (status) {
             Device device = deviceService.getById(deviceId);
             Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(device.getServerTunnelId());
-            MsgUnBind msg = new MsgUnBind();
-            bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
+            if(bulletAnnotation != null){
+                MsgUnBind msg = new MsgUnBind();
+                bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
+            }
 
             // 删除映射
             deviceMappingService.deleteByDeviceId(deviceId);
@@ -193,6 +195,12 @@ public class DeviceController {
         if (device!= null && device.getUserId() != null) {
             return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
+
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+        if (annotation == null) {
+            return R.fail("ngrokd实例不在线, 请联系管理员");
+        }
+
         if (device == null) {
             // 给当前用户存储最新的设备数据
             device = new Device();
@@ -214,16 +222,13 @@ public class DeviceController {
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
         device.setUserId(userId);
-
         deviceService.saveOrUpdate(device);
-        // 发送消息通知设备秘钥
 
-        Bullet3Annotation annotation = websocketPool.getByDeviceNo("1");
-        if (annotation != null) {
-            MsgDeviceSecret msg = new MsgDeviceSecret();
-            msg.setSecret(deviceSecret);
-            annotation.sendMessage(deviceNo, msg);
-        }
+        // 发送消息通知设备秘钥
+        MsgDeviceSecret msg = new MsgDeviceSecret();
+        msg.setSecret(deviceSecret);
+        annotation.sendMessage(deviceNo, msg);
+
         return R.success();
     }
 
