@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.device.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -24,5 +25,8 @@ public class DeviceAuthDTO {
     private String remoteIpAddr;
 
     private String version;
+
+    @ApiModelProperty("通道id")
+    private Integer serverTunnelId;
 
 }

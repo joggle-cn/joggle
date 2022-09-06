@@ -8,6 +8,7 @@ import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.service.DevicePeersService;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -32,7 +33,6 @@ import java.util.List;
 
 import static com.wuweibi.bullet.protocol.Message.CONTROL_CLIENT_WRAPPER;
 import static com.wuweibi.bullet.protocol.Message.CONTROL_SERVER_WRAPPER;
-import static com.wuweibi.bullet.websocket.WebSocketConfigurator.IP_ADDR;
 
 
 /**
@@ -88,12 +88,19 @@ public class Bullet3Annotation {
 
 //        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
 //        deviceOnlineService.checkDeviceStatus();
+
+        // 更新服务通道得在线状态
+
+        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+        serverTunnelService.updateStatus(tunnelId, 1);
     }
 
 
     @OnClose
     public void end(CloseReason closeReason) {
-
+        log.debug("websocket close [{}]", closeReason.toString());
+        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+        serverTunnelService.updateStatus(tunnelId, 0);
     }
 
 
@@ -213,14 +220,6 @@ public class Bullet3Annotation {
 
     }
 
-
-
-    @SneakyThrows
-    public static String getRemoteAddress(final Session session) {
-        return (String) session.getUserProperties().get(IP_ADDR);
-    }
-
-
     @OnError
     public void onError(Throwable t) throws Throwable {
 //        log.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
@@ -234,6 +233,10 @@ public class Bullet3Annotation {
 //
 //        }
 //        this.deviceStatus = false;
+
+
+        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+        serverTunnelService.updateStatus(tunnelId, 0);
     }
 
 

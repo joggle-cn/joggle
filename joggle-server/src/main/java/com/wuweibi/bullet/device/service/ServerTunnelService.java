@@ -24,5 +24,12 @@ public interface ServerTunnelService extends IService<ServerTunnel> {
     List<ServerTunnel> getListEnable();
 
 
+    /**
+     * 更新通道的在线状态
+     * @param tunnelId 通道id
+     * @param status 状态 1在线 0 不在线
+     * @return
+     */
+    boolean updateStatus(Integer tunnelId, int status);
 }
 

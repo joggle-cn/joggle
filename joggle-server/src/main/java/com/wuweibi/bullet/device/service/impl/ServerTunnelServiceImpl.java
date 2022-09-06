@@ -28,5 +28,13 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
     public List<ServerTunnel> getListEnable() {
         return this.baseMapper.selectList(Wrappers.emptyWrapper());
     }
+
+    @Override
+    public boolean updateStatus(Integer tunnelId, int status) {
+        return this.update(Wrappers.<ServerTunnel>lambdaUpdate()
+                .eq(ServerTunnel::getId, tunnelId)
+                .set(ServerTunnel::getStatus, status)
+                );
+    }
 }
 

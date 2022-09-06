@@ -91,6 +91,7 @@ public class DeviceOpenInnerController {
         deviceOnlineInfoDTO.setClientVersion(deviceAuthDTO.getVersion());
         deviceOnlineInfoDTO.setOs(deviceAuthDTO.getOs());
         deviceOnlineInfoDTO.setArch(deviceAuthDTO.getArch());
+        deviceOnlineInfoDTO.setServerTunnelId(deviceAuthDTO.getServerTunnelId());
         deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
 
         return R.ok(authVO);

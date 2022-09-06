@@ -127,6 +127,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             deviceOnline.setDeviceNo(deviceNo);
             deviceOnline.setStatus(1);// 等待被绑定（在线)
         }
+        deviceOnline.setServerTunnelId(deviceInfo.getServerTunnelId());
         deviceOnline.setPublicIp(deviceInfo.getPublicIp());
         deviceOnline.setIntranetIp(deviceInfo.getPublicIp());
         deviceOnline.setMacAddr(deviceInfo.getMacAddr());
