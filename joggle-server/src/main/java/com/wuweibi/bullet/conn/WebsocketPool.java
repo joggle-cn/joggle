@@ -3,8 +3,6 @@ package com.wuweibi.bullet.conn;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
 import java.util.Map;
@@ -19,8 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 @Slf4j
 public final class WebsocketPool {
-    /** 日志 */
-    private Logger logger = LoggerFactory.getLogger(WebsocketPool.class);
 
     /** 根据客户端缓存链接 */
     public final Map<String, Bullet3Annotation> clientConnections = new ConcurrentHashMap<>();
@@ -31,13 +27,13 @@ public final class WebsocketPool {
      * @param conn 链接对象
      */
     public void addConnection(Bullet3Annotation conn){
-        String deviceNo = "1";
-        Bullet3Annotation bulletAnnotation = clientConnections.get(deviceNo);
-//        if(bulletAnnotation != null){
-//            conn.stop(String.format("设备%s已经注册", deviceNo));
-//            return;
-//        }
-        clientConnections.put(deviceNo, conn);
+        String tunnelId = conn.getTunnelId().toString();
+        Bullet3Annotation bulletAnnotation = clientConnections.get(tunnelId);
+        if (bulletAnnotation != null) {
+            conn.stop(String.format("通道服务%s已注册，请修改配置", tunnelId));
+            return;
+        }
+        clientConnections.put(tunnelId, conn);
     }
 
 
@@ -50,8 +46,8 @@ public final class WebsocketPool {
         if(conn == null){
             return;
         }
-        String deviceNo = "1";
-        clientConnections.remove(deviceNo); // 直接全部移除
+        String tunnelId = conn.getTunnelId().toString();
+        clientConnections.remove(tunnelId); // 直接全部移除
         conn.stop(message);
     }
 

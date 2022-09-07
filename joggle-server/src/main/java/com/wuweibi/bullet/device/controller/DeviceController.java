@@ -196,7 +196,7 @@ public class DeviceController {
             return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
         if (annotation == null) {
             return R.fail("ngrokd实例不在线, 请联系管理员");
         }
@@ -222,6 +222,7 @@ public class DeviceController {
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
         device.setUserId(userId);
+        device.setServerTunnelId(annotation.getTunnelId());
         deviceService.saveOrUpdate(device);
 
         // 发送消息通知设备秘钥

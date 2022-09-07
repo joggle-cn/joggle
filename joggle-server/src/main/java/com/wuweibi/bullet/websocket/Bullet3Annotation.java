@@ -82,7 +82,6 @@ public class Bullet3Annotation {
             return;
         }
 
-
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         pool.addConnection(this);
 
@@ -335,5 +334,9 @@ public class Bullet3Annotation {
 
     public void stop(String message) {
         this.stop(CloseReason.CloseCodes.NORMAL_CLOSURE, message);
+    }
+
+    public Integer getTunnelId() {
+        return this.tunnelId;
     }
 }
