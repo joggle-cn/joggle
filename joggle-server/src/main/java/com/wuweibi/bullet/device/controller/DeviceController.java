@@ -18,7 +18,7 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -33,21 +33,16 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -154,8 +149,13 @@ public class DeviceController {
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
         if (status) {
+            // 验证是否存在
             Device device = deviceService.getById(deviceId);
-            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+            DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(device.getDeviceNo());
+            if (deviceOnline == null) {
+                return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+            }
+            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
             if(bulletAnnotation != null){
                 MsgUnBind msg = new MsgUnBind();
                 bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
@@ -208,8 +208,6 @@ public class DeviceController {
             device.setUserId(userId);
             device.setCreateTime(new Date());
             device.setName(deviceId);
-            device.setMacAddr(deviceOnline.getMacAddr());
-            device.setIntranetIp(deviceOnline.getIntranetIp());
         }
 
         // 限制普通用户绑定设备的数量10 排除自己的账号判断
@@ -222,7 +220,6 @@ public class DeviceController {
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
         device.setUserId(userId);
-        device.setServerTunnelId(annotation.getTunnelId());
         deviceService.saveOrUpdate(device);
 
         // 发送消息通知设备秘钥
@@ -390,28 +387,20 @@ public class DeviceController {
 
         Device device = deviceService.getById(deviceId);
         String deviceNo = device.getDeviceNo();
-        device.setServerTunnelId(dto.getServerTunnelId());
         deviceService.updateById(device);
 
+        DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceNo);
+        if (deviceOnline == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        }
+
         // 发送切换消息给设备
-        BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
         if (annotation != null) {
             MsgSwitchLine msg = new MsgSwitchLine();
             msg.setDeviceNo(deviceNo);
             msg.setServerAddr(serverTunnel.getServerAddr());
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try {
-                msg.write(outputStream);
-                // 包装了Bullet协议的
-                byte[] resultBytes = outputStream.toByteArray();
-                ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                annotation.getSession().getBasicRemote().sendBinary(buf);
-            } catch (IOException e) {
-                log.error("", e);
-            } finally {
-                IOUtils.closeQuietly(outputStream);
-            }
+            annotation.sendMessage(deviceNo,  msg);
         }
 
         return R.success();

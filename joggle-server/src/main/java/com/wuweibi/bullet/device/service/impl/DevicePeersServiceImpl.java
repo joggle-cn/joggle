@@ -89,6 +89,9 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             log.debug("P2P Conf Error AppName={}, ClientDeviceNo={}, ServerDeviceNo={}", dto.getAppName(), dto.getClientDeviceNo(), dto.getServerDeviceNo() );
            return;
         }
+        if (dto.getClientDeviceTunnelId() == null || dto.getServerDeviceTunnelId() == null) {
+            return;
+        }
 
         String clientDeviceNo = dto.getClientDeviceNo();
         String serverDeviceNo = dto.getServerDeviceNo();

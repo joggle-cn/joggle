@@ -43,7 +43,7 @@ public final class WebsocketPool {
      * @param message
      */
     public void removeConnection(Bullet3Annotation conn, String message) {
-        if(conn == null){
+        if (conn == null) {
             return;
         }
         String tunnelId = conn.getTunnelId().toString();
@@ -122,12 +122,12 @@ public final class WebsocketPool {
 
 
     /**
-     * 广播所有客户端
+     * 广播所有客户端 TODO
      * @param deviceNo
      * @param msg
      */
     public void boradcast(String deviceNo, Message msg) {
-        Bullet3Annotation bulletAnnotation = this.getByDeviceNo("1");
+        Bullet3Annotation bulletAnnotation = this.getByTunnelId( 1);
         if (bulletAnnotation == null) {
             return;
         }

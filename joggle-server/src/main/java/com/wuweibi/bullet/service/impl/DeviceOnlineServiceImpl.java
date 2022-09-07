@@ -8,7 +8,6 @@ import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
@@ -65,18 +64,6 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             deviceOnline.setMacAddr(mac); // mac
             deviceOnline.setClientVersion(clientVersion);
             this.baseMapper.updateById(deviceOnline);
-        }
-
-        // 更新已绑定的设备
-        QueryWrapper ew2 = new QueryWrapper();
-        ew2.eq("deviceId", deviceNo);
-        List<Device> deviceList = deviceMapper.selectList(ew2);
-        if (deviceList.size() == 0) return;
-
-        for (Device device : deviceList) {
-            device.setIntranetIp(ip);
-            device.setMacAddr(mac);
-            deviceMapper.updateById(device);
         }
 
     }

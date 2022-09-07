@@ -108,10 +108,12 @@ public class DevicePeersController {
 
         DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
 
-        DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(peers.getId());
-
+        DevicePeersConfigDTO dtoPeer = this.devicePeersService.getPeersConfig(peers.getId());
+        if (dtoPeer.getClientDeviceTunnelId() == null || dtoPeer.getServerDeviceTunnelId() == null) {
+            return R.fail("设备通道id错误，请确定设备状态");
+        }
         // 发送peer消息
-        devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
+        devicePeersService.sendMsgPeerConfig(dtoPeer);
 
         return R.ok();
     }

@@ -51,6 +51,17 @@
 		where d.userId = #{userId}
 		order by do.status desc , do.`updateTime` desc
 	</select>
+<!--	获取设备详情-->
+    <select id="selectDetail" resultType="com.wuweibi.bullet.device.domain.DeviceDetail">
+		select
+			d.`id`, d.`name`, d.`deviceId` as deviceNo, d.userId,
+			do.`status`, do.`public_ip`,
+		       do.`intranet_ip`,do.mac_addr,
+			do.updateTime onlineTime, do.arch, do.os, do.server_tunnel_id
+		from t_device d
+	    left join t_device_online do on d.deviceId = do.deviceNo
+		where d.id = #{deviceId}
+	</select>
 
 
 </mapper>

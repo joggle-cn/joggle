@@ -2,7 +2,7 @@ package com.wuweibi.bullet.domain.dto;/**
  * Created by marker on 2017/12/10.
  */
 
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import lombok.Data;
 
 import java.util.Date;

@@ -6,10 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -20,6 +20,7 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
@@ -70,12 +71,12 @@ public class DeviceMappingController {
             DeviceMapping entity = deviceMappingService.getById(dmId);
             deviceMappingService.removeById(dmId);
 
-            Device device = deviceService.getById(entity.getDeviceId());
-            if (device == null) {
+            DeviceDetail deviceDetail = deviceService.getDetail(entity.getDeviceId());
+            if (deviceDetail == null) {
                 return R.fail("设备不存在");
             }
-            String deviceNo = device.getDeviceNo();
-            Bullet3Annotation annotation = coonPool.getByTunnelId(device.getServerTunnelId());
+            String deviceNo = deviceDetail.getDeviceNo();
+            Bullet3Annotation annotation = coonPool.getByTunnelId(deviceDetail.getServerTunnelId());
             if (annotation != null) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
@@ -84,6 +85,9 @@ public class DeviceMappingController {
         }
         return MessageFactory.getOperationSuccess();
     }
+
+    @Resource
+    private DeviceOnlineService deviceOnlineService;
 
 
     /**
@@ -149,20 +153,19 @@ public class DeviceMappingController {
             deviceMappingService.save(entity);
         }
 
-
-        Device device = deviceService.getById(entity.getDeviceId());
-        if (device == null) {
+        DeviceDetail deviceDetail = deviceService.getDetail(entity.getDeviceId());
+        if (deviceDetail == null) {
             return R.fail("设备不存在");
         }
-        String deviceNo = device.getDeviceNo();
-        Bullet3Annotation annotation = coonPool.getByTunnelId(device.getServerTunnelId());
+        String deviceNo = deviceDetail.getDeviceNo();
+
+        Bullet3Annotation annotation = coonPool.getByTunnelId(deviceDetail.getServerTunnelId());
         if (annotation == null) {// 设备不在线
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
 
         JSONObject data = (JSONObject)JSON.toJSON(entity);
         Message msg;
-
         if (entity.getStatus() == 1) { // 启用映射
             msg = new MsgMapping(data.toJSONString());
         } else {

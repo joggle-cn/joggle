@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
@@ -17,7 +18,6 @@ import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.vo.DomainDetailVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
-import com.wuweibi.bullet.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -159,7 +159,8 @@ public class DomainController {
         }
 
         // 检查设备是否该用户的
-        if (!deviceService.exists(userId, deviceId)) {
+        DeviceDetail deviceDetail = deviceService.getDetail(deviceId);
+        if (deviceDetail == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         // 检查域名是否已经绑定
@@ -170,13 +171,12 @@ public class DomainController {
 
         // 执行绑定
         Domain domainInfo = domainService.getById(domainId);
-        Device deviceInfo = deviceService.getById(deviceId);
 
         DeviceMapping mapping = new DeviceMapping();
         mapping.setDomain(domainInfo.getDomain());
         mapping.setUserId(userId);
         mapping.setDeviceId(deviceId);
-        mapping.setServerTunnelId(deviceInfo.getServerTunnelId());
+        mapping.setServerTunnelId(deviceDetail.getServerTunnelId());
         mapping.setDomainId(domainId);
         mapping.setCreateTime(new Date());
         if (domainInfo.getType() == 1) {
