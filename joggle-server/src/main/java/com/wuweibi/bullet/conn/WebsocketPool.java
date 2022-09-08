@@ -29,10 +29,10 @@ public final class WebsocketPool {
     public void addConnection(Bullet3Annotation conn){
         String tunnelId = conn.getTunnelId().toString();
         Bullet3Annotation bulletAnnotation = clientConnections.get(tunnelId);
-        if (bulletAnnotation != null) {
-            conn.stop(String.format("通道服务%s已注册，请修改配置", tunnelId));
-            return;
-        }
+//        if (bulletAnnotation != null) {
+//            conn.stop(String.format("通道服务%s已注册，请修改配置", tunnelId));
+//            return;
+//        }
         clientConnections.put(tunnelId, conn);
     }
 
