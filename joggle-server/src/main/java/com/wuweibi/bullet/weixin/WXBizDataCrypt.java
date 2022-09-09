@@ -4,12 +4,12 @@ package com.wuweibi.bullet.weixin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Security;
+import java.util.Base64;
 
 /**
  * 微信小程序
@@ -43,7 +43,7 @@ public class WXBizDataCrypt {
 
         String jsonStr = new String("");
         try {
-            BASE64Decoder base64Decoder = new BASE64Decoder();
+            Base64.Decoder base64Decoder = Base64.getDecoder();
             /**
              * 小程序加密数据解密算法
              * https://developers.weixin.qq.com/miniprogram/dev/api/signature.html#wxchecksessionobject
@@ -51,9 +51,9 @@ public class WXBizDataCrypt {
              * 2.对称解密秘钥 aeskey = Base64_Decode(session_key), aeskey 是16字节。
              * 3.对称解密算法初始向量 为Base64_Decode(iv)，其中iv由数据接口返回。
              */
-            byte[] encryptedByte = base64Decoder.decodeBuffer(encryptedData);
-            byte[] sessionKeyByte = base64Decoder.decodeBuffer(this.sessionKey);
-            byte[] ivByte = base64Decoder.decodeBuffer(iv);
+            byte[] encryptedByte = base64Decoder.decode(encryptedData);
+            byte[] sessionKeyByte = base64Decoder.decode(this.sessionKey);
+            byte[] ivByte = base64Decoder.decode(iv);
             /**
              * 以下为AES-128-CBC解密算法
              */

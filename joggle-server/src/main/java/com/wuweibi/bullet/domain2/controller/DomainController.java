@@ -7,15 +7,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
-import com.wuweibi.bullet.entity.Device;
-import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.domain2.domain.vo.DomainDetailVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -27,6 +30,7 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -47,8 +51,6 @@ import java.util.List;
 public class DomainController {
 
 
-    @Resource
-    private CoonPool coonPool;
 
 
     /**
@@ -85,20 +87,17 @@ public class DomainController {
         return MessageFactory.get(list);
     }
 
+    @Resource
+    private ServerTunnelService serverTunnelService;
 
     /**
      * 获取我的域名信息
      */
     @ApiModelProperty("获取域名信息")
     @GetMapping(value = "/info")
-    public Object getInfo(@JwtUser Session session, @RequestParam Long domainId) {
-
+    public R<DomainDetailVO> getInfo(@JwtUser Session session, @RequestParam Long domainId) {
         Long userId = session.getUserId();
 
-        // 检查是否该用户的域名
-//        if(!domainService.checkDomain(userId, domainId)){
-//            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
-//        }
         Domain domain = domainService.getById(domainId);
         if (domain == null) {
             return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
@@ -107,7 +106,19 @@ public class DomainController {
         if (domain.getUserId() != null && !domain.getUserId().equals(userId)) {
             return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
         }
-        return R.success(domain);
+        ServerTunnel serverTunnel = serverTunnelService.getById(domain.getServerTunnelId());
+        if (serverTunnel == null) {
+            return R.fail("域名/端口信息有误");
+        }
+        DomainDetailVO domainDetailVO = new DomainDetailVO();
+        BeanUtils.copyProperties(domain, domainDetailVO);
+        domainDetailVO.setDomainFull(domain.getDomain());
+        if (domain.getType().equals(DomainTypeEnum.DOMAIN.getType())) {
+            domainDetailVO.setDomainFull(String.format("%s.%s", domain.getDomain(), serverTunnel.getServerAddr()));
+        } else {
+            domainDetailVO.setDomainFull(String.format("%s:%s", serverTunnel.getServerAddr(), domain.getDomain()));
+        }
+        return R.success(domainDetailVO);
     }
 
     /**
@@ -148,7 +159,8 @@ public class DomainController {
         }
 
         // 检查设备是否该用户的
-        if (!deviceService.exists(userId, deviceId)) {
+        DeviceDetail deviceDetail = deviceService.getDetail(deviceId);
+        if (deviceDetail == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
         // 检查域名是否已经绑定
@@ -159,13 +171,12 @@ public class DomainController {
 
         // 执行绑定
         Domain domainInfo = domainService.getById(domainId);
-        Device deviceInfo = deviceService.getById(deviceId);
 
         DeviceMapping mapping = new DeviceMapping();
         mapping.setDomain(domainInfo.getDomain());
         mapping.setUserId(userId);
         mapping.setDeviceId(deviceId);
-        mapping.setServerTunnelId(deviceInfo.getServerTunnelId());
+        mapping.setServerTunnelId(deviceDetail.getServerTunnelId());
         mapping.setDomainId(domainId);
         mapping.setCreateTime(new Date());
         if (domainInfo.getType() == 1) {

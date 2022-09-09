@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.controller;
 
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.service.CountService;
-import com.wuweibi.bullet.utils.ConfigUtils;
 import com.wuweibi.bullet.utils.HttpUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +44,8 @@ public class HomeController {
 		return "index";
 	}
 
+	@Resource
+	private BulletConfig bulletConfig;
 
 
     /**
@@ -53,13 +55,16 @@ public class HomeController {
 	@GetMapping("/api/open/init")
 	@ResponseBody
 	public R init(){
-		String domain = ConfigUtils.getBulletDomain();
+		String websiteUrl = bulletConfig.getServerUrl();
+		String website = websiteUrl.substring(websiteUrl.indexOf("://")+3);
+
         Map map = new HashMap(6);
-        map.put("domain", domain);
-        map.put("clientVersion", "v1.2.14");
+        map.put("website", website);
+        map.put("websiteUrl", websiteUrl);
+        map.put("clientVersion", "v1.3.0");
         map.put("serverVersion", "v1.2.0");
         map.put("dockerClientVersion", "0.0.7");
-        map.put("apkClientVersion", "0.0.1");
+        map.put("apkClientVersion", "0.0.2");
 		resourceManager.loadResource();
 		return R.success(map);
 	}

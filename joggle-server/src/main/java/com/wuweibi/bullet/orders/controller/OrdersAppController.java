@@ -28,6 +28,7 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -80,6 +81,7 @@ public class OrdersAppController {
      * @param session
      * @return
      */
+    @ApiOperation("订单计算价格")
     @RequestMapping(value = "/calculate", method = RequestMethod.POST)
     public Object calculate(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) {
         Long userId = session.getUserId();
@@ -98,6 +100,7 @@ public class OrdersAppController {
      * @param session
      * @return
      */
+    @ApiOperation("下单接口")
     @PostMapping(value = "/create")
     @Transactional
     public R create(@JwtUser Session session, @RequestBody @Valid OrdersDTO ordersDTO) throws Exception {

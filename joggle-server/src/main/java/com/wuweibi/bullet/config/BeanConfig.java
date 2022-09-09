@@ -3,6 +3,7 @@ package com.wuweibi.bullet.config;
 import com.alipay.easysdk.kernel.Config;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,11 @@ public class BeanConfig {
     @Bean
     public CoonPool beanCoonPool() {
         return new CoonPool();
+    }
+
+    @Bean
+    public WebsocketPool beanC2oonPool() {
+        return new WebsocketPool();
     }
 
 

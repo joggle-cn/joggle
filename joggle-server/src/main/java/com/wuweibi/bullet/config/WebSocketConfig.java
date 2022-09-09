@@ -1,5 +1,7 @@
 package com.wuweibi.bullet.config;
 
+import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import com.wuweibi.bullet.websocket.LogAnnotation;
 import com.wuweibi.bullet.websocket.VideoAnnotation;
@@ -7,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+
+import javax.annotation.Resource;
 
 /**
  * WebSocket 配置
@@ -18,6 +22,8 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @EnableWebSocket
 public class WebSocketConfig {
 
+    @Resource
+    private BulletConfig config;
 
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
@@ -32,6 +38,12 @@ public class WebSocketConfig {
     @Bean
     public BulletAnnotation serverEndpointBulletAnnotation() {
         return new BulletAnnotation();
+    }
+
+
+    @Bean
+    public Bullet3Annotation serverEndpointBullet3Annotation() {
+        return new Bullet3Annotation();
     }
 
 

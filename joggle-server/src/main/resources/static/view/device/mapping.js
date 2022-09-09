@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], function (app, $, layer) {//加载依赖js,
+define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], function (app, $, layer) {//加载依赖js,
 
 	let callback = ["$scope","$routeParams","$location","$rootScope", function ($scope, $routeParams,$location,$rootScope) {
         $scope.active = 'device';
@@ -56,19 +56,19 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
         flushData();
 
 
-        /**
-         * 展示域名
-         * @param item
-         * @returns {*|string}
-         */
-        $scope.showDomain = function (item) {
-            if (item.domain) {// 子域名
-                return item.domain + '.' + $rootScope.config.domain;
-            }
-            if (item.hostname) {// 自定义域名 CNAME指向
-                return item.hostname;
-            }
-        }
+        // /**
+        //  * 展示域名
+        //  * @param item
+        //  * @returns {*|string}
+        //  */
+        // $scope.showDomain = function (item) {
+        //     if (item.domain) {// 子域名
+        //         return item.domain + '.' + $rootScope.config.domain;
+        //     }
+        //     if (item.hostname) {// 自定义域名 CNAME指向
+        //         return item.hostname;
+        //     }
+        // }
 
         /**
          * 展示映射状态
@@ -449,7 +449,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./device.css'], functio
          */
         $scope.confirmDeleteDevice = function(){
             faceinner.delete(api['user.device'], $scope.deviceInfo , function(res) {
-                if (res.status == 0) {
+                if (res.code == 'S00') {
                     $("#delDevice").modal('hide');
                    window.history.back();
                 }

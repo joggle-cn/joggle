@@ -8,6 +8,7 @@ import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author marker
  * @since 2017-12-09
  */
+@Mapper
 public interface DomainMapper extends BaseMapper<Domain> {
 
 

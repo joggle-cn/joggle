@@ -1,10 +1,14 @@
 package com.wuweibi.bullet.device.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 通道(ServerTunnel)表服务实现类
@@ -15,5 +19,22 @@ import org.springframework.stereotype.Service;
 @Service("serverTunnelService")
 public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, ServerTunnel> implements ServerTunnelService {
 
+    @Override
+    public List<TunnelOption> getOptionList() {
+        return this.baseMapper.selectOptionList();
+    }
+
+    @Override
+    public List<ServerTunnel> getListEnable() {
+        return this.baseMapper.selectList(Wrappers.emptyWrapper());
+    }
+
+    @Override
+    public boolean updateStatus(Integer tunnelId, int status) {
+        return this.update(Wrappers.<ServerTunnel>lambdaUpdate()
+                .eq(ServerTunnel::getId, tunnelId)
+                .set(ServerTunnel::getStatus, status)
+                );
+    }
 }
 

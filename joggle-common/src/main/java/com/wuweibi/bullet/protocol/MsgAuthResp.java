@@ -12,7 +12,7 @@ import java.io.OutputStream;
 
 /**
  *
- * 客户端认证结果消息
+ * 客户端认证消息
  *
  * @author marker
  * @create 2021-03-28 下午1:13
@@ -22,18 +22,18 @@ public class MsgAuthResp extends Message {
 
 
     /**
-     * error
+     * authToken
      */
-    private String error;
+    private String clientNo;
 
 
     /**
      * 构造
      */
-    public MsgAuthResp(String error) {
+    public MsgAuthResp(String clientNo) {
         super(Message.AUTH_RESP);
-        getHead().setLength(super.getLength() + error.length());
-        this.error = error;
+        getHead().setLength(super.getLength() + clientNo.length());
+        this.clientNo = clientNo;
     }
 
     public MsgAuthResp() {
@@ -51,10 +51,10 @@ public class MsgAuthResp extends Message {
         log.debug("send {}",this.toString());
 
         // 写入authToken
-        int len = error.getBytes().length;
+        int len = clientNo.getBytes().length;
         byte bs[] = new byte[len];
 
-        System.arraycopy(error.getBytes(), 0, bs, 0, len);
+        System.arraycopy(clientNo.getBytes(), 0, bs, 0, len);
         out.write(bs);
         out.flush();
     }
@@ -65,12 +65,11 @@ public class MsgAuthResp extends Message {
         // 读取ip
         byte bs[] = new byte[len];
         in.read(bs);
-        this.error = Utils.getString(bs, 0, len);
+        this.clientNo = Utils.getString(bs, 0, len);
 
     }
 
-    public String getError() {
-        return error;
+    public String getClientNo() {
+        return clientNo;
     }
-
 }

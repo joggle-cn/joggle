@@ -21,6 +21,9 @@ public abstract class Message {
     public static final int DELIVER_RESP = 0x80000004;
     public static final int REPORT = 0x5;
     public static final int REPORT_RESP = 0x80000005;
+    public static final int GET_DEVICE_STATUS = 0x11;
+    public static final int GET_DEVICE_STATUS_RESP = 0x12;
+    public static final int DEVICE_DOWN = 0x13;
 
     public static final int DEVICE_SECRET = 0x10000001;// 设备秘钥
     public static final int LOG_MAPPING_STATUS = 0x10000010; // 日志开关消息
@@ -38,6 +41,11 @@ public abstract class Message {
     public static final int AUTH = 0xa; // 认证
     public static final int AUTH_RESP = 0xa000001; //
 
+
+
+    //** 服务器管理端与服务端的消息
+    public static final int CONTROL_SERVER_WRAPPER = 1; // 管理端与服务器之间的消息
+    public static final int CONTROL_CLIENT_WRAPPER = 2; // 管理端与客户端之间的消息
 
     //消息头
     private MsgHead head;

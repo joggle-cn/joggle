@@ -7,12 +7,8 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -31,18 +27,18 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
 
-        Authentication authentication = (Authentication) event.getSource();
-        if (isUserAuthentication(authentication)) {
-            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-                    .getRequestAttributes();
-            HttpServletRequest request = requestAttributes.getRequest();
-            HttpServletResponse response = requestAttributes.getResponse();
+//        Authentication authentication = (Authentication) event.getSource();
+//        if (isUserAuthentication(authentication)) {
+//            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+//                    .getRequestAttributes();
+//            HttpServletRequest request = requestAttributes.getRequest();
+//            HttpServletResponse response = requestAttributes.getResponse();
             // 登录成功
-            UserDetail loginUserInfo = (UserDetail)authentication.getPrincipal();
+//            UserDetail loginUserInfo = (UserDetail)authentication.getPrincipal();
             // 更新登录时间
-            oauthUserService.updateLoginTime(loginUserInfo.getId());
-
-        }
+//            oauthUserService.updateLoginTime(loginUserInfo.getId());
+//
+//        }
 
     }
 

@@ -24,7 +24,7 @@ import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.device.service.DevicePeersService;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.protocol.*;
@@ -428,6 +428,7 @@ public class BulletAnnotation {
      * @param msg
      */
     @SneakyThrows
+    @Deprecated
     public void sendMessage(Message msg) {
         log.info("websocket send: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

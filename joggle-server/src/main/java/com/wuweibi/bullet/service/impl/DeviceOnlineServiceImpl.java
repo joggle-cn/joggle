@@ -3,13 +3,19 @@ package com.wuweibi.bullet.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
+import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +31,7 @@ import java.util.List;
  * @author marker
  * @since 2017-12-09
  */
+@Slf4j
 @Service
 public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, DeviceOnline> implements DeviceOnlineService {
 
@@ -57,18 +64,6 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             deviceOnline.setMacAddr(mac); // mac
             deviceOnline.setClientVersion(clientVersion);
             this.baseMapper.updateById(deviceOnline);
-        }
-
-        // 更新已绑定的设备
-        QueryWrapper ew2 = new QueryWrapper();
-        ew2.eq("deviceId", deviceNo);
-        List<Device> deviceList = deviceMapper.selectList(ew2);
-        if (deviceList.size() == 0) return;
-
-        for (Device device : deviceList) {
-            device.setIntranetIp(ip);
-            device.setMacAddr(mac);
-            deviceMapper.updateById(device);
         }
 
     }
@@ -109,6 +104,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     }
 
     @Override
+    @Transactional
     public boolean saveOrUpdate(DeviceOnlineInfoDTO deviceInfo) {
         String deviceNo = deviceInfo.getDeviceNo();
         DeviceOnline deviceOnline = this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
@@ -118,7 +114,13 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             deviceOnline.setDeviceNo(deviceNo);
             deviceOnline.setStatus(1);// 等待被绑定（在线)
         }
+        deviceOnline.setServerTunnelId(deviceInfo.getServerTunnelId());
         deviceOnline.setPublicIp(deviceInfo.getPublicIp());
+        deviceOnline.setIntranetIp(deviceInfo.getPublicIp());
+        deviceOnline.setMacAddr(deviceInfo.getMacAddr());
+        deviceOnline.setClientVersion(deviceInfo.getClientVersion());
+        deviceOnline.setOs(deviceInfo.getOs());
+        deviceOnline.setArch(deviceInfo.getArch());
         deviceOnline.setUpdateTime(new Date());
 
         if (deviceOnline.getId() != null) {
@@ -130,11 +132,56 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         return true;
     }
 
+    @Resource
+    private DeviceService deviceService;
+
     @Override
     public DeviceOnline getByDeviceNo(String deviceId) {
         return this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
                 .eq(DeviceOnline::getDeviceNo, deviceId)
                 .eq(DeviceOnline::getStatus, DeviceOnlineStatus.ONLINE.status)
                 .orderByDesc(DeviceOnline::getUpdateTime));
+    }
+
+    @Resource
+    private WebsocketPool websocketPool;
+
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
+    @Override
+    public boolean checkDeviceStatus() {
+
+        List<ServerTunnel> list = serverTunnelService.getListEnable();
+
+        list.forEach(item -> {
+            log.debug("[init] check server[{}] {}[{}]", item.getId(), item.getName(), item.getServerAddr());
+            Bullet3Annotation annotation = websocketPool.getByTunnelId(item.getId());
+            if (annotation == null) {
+                log.debug("[init] check server[{}] not online", item.getId());
+            }
+            if (annotation != null) {
+                MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
+                annotation.sendMessageToServer(msg);
+                log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean updateDeviceStatus(String deviceNo, int status) {
+        return this.baseMapper.updateDeviceStatus(deviceNo, status);
+    }
+
+    @Override
+    public int batchUpdateStatus(List<String> deviceNoList, int status) {
+        if (deviceNoList.size() == 0) return 0;
+        return this.baseMapper.batchUpdateStatus(deviceNoList, status);
+    }
+
+    @Override
+    public int updateOutLineByTunnelId(Integer tunnelId) {
+        return this.baseMapper.updateOutLineByTunnelId(tunnelId);
     }
 }

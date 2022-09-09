@@ -3,6 +3,7 @@ package com.wuweibi.bullet.device.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -41,5 +42,8 @@ public class ServerTunnel extends Model<ServerTunnel> {
 
     // 是否可购买 1可 0不可
     private Integer buyStatus;
+
+    @ApiModelProperty("在线状态 1在线 0不在线")
+    private Integer status;
 }
 

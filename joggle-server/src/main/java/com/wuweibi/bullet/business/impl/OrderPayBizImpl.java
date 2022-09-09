@@ -3,6 +3,7 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
+import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
@@ -73,7 +74,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
-                Domain domain = domainService.getById(resId);
+                DomainDetail domain = domainService.getDetail(resId);
                 // 校验域名是否存在
                 if(domain == null){
                     return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
@@ -95,7 +96,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 String name = ResourceTypeEnum.toName(resourceType);
 
 
-                orderPayInfo.setName(String.format("%s%s:%s", text, name ,domain.getDomain()));
+                orderPayInfo.setName(String.format("%s%s:%s", text, name , domain.getDomainFull()));
 
                 // 计算到期
                 Calendar calendar = Calendar.getInstance();
@@ -117,7 +118,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 BigDecimal priceAmount = BigDecimal.valueOf(1.6);
                 payAmount = priceAmount.multiply(BigDecimal.valueOf(amount));
 
-                orderPayInfo.setName(String.format("流量套餐:%dMB", amount));
+                orderPayInfo.setName(String.format("购买流量:%dMB", amount));
                 orderPayInfo.setPriceAmount(payAmount);
                 orderPayInfo.setPayAmount(payAmount);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
