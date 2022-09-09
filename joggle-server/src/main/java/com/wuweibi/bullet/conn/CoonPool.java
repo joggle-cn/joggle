@@ -1,4 +1,5 @@
 package com.wuweibi.bullet.conn;
+
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
 import lombok.extern.slf4j.Slf4j;
@@ -143,16 +144,15 @@ public final class CoonPool {
      * @param msg
      */
     public void boradcast(String deviceNo, Message msg) {
-
-        BulletAnnotation bulletAnnotation = this.getByDeviceNo(deviceNo);
-        if(bulletAnnotation == null){
-            return;
-        }
-        if(!bulletAnnotation.getSession().isOpen()){
-            return;
-        }
-
-        bulletAnnotation.sendMessage(msg);
+//        Bullet3Annotation bulletAnnotation = this.getByDeviceNo("1");
+//        if(bulletAnnotation == null){
+//            return;
+//        }
+//        if(!bulletAnnotation.getSession().isOpen()){
+//            return;
+//        }
+//
+//        bulletAnnotation.sendMessage(msg);
 
     }
 

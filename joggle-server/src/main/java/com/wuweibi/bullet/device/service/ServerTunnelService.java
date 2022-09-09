@@ -1,7 +1,10 @@
 package com.wuweibi.bullet.device.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
+
+import java.util.List;
 
 /**
  * 通道(ServerTunnel)表服务接口
@@ -11,5 +14,22 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
  */
 public interface ServerTunnelService extends IService<ServerTunnel> {
 
+    List<TunnelOption> getOptionList();
+
+
+    /**
+     * 获取所有可用区域清单
+     * @return
+     */
+    List<ServerTunnel> getListEnable();
+
+
+    /**
+     * 更新通道的在线状态
+     * @param tunnelId 通道id
+     * @param status 状态 1在线 0 不在线
+     * @return
+     */
+    boolean updateStatus(Integer tunnelId, int status);
 }
 

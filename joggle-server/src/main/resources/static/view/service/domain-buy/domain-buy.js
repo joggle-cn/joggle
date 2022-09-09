@@ -10,20 +10,33 @@ define(['app','jquery','layer','pagintation', 'css!./domain-buy.css'], function 
         $scope.orderNo = $routeParams.out_trade_no;
         $scope.payMoney = 2;
         $scope.payType = 2;
-        $scope.type = "";
-        $scope.keyword = "";
+        $scope.params = {
+            serverTunnelId: 1,
+            type : "",
+            keyword: "",
+        }
+
+
+
+        faceinner.get('/api/server/tunnel/options', {}, function(res) {
+            if (res.code == 'S00') {
+                $scope.$apply(function() {
+                    $scope.tunnels = res.data;
+                });
+            }
+        });
+
+
+
+
 
         /**
          *  搜索可购买域名
          * @param
          */
         $scope.searchDomain = function(page){
-            let params = {
-                keyword: $scope.keyword,
-                type: $scope.type,
-                current: page,
-            }
-            faceinner.get(api["user.domain.search"], params, function(res){
+            $scope.params.current = page;
+            faceinner.get(api["user.domain.search"], $scope.params, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.page = res.data;

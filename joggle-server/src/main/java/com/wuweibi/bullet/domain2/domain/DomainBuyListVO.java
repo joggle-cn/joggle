@@ -22,4 +22,13 @@ public class DomainBuyListVO {
     private BigDecimal originalPrice;
     @ApiModelProperty("销售价格")
     private BigDecimal salesPrice;
+
+    @ApiModelProperty("通道区域")
+    private String tunnelName;
+    @ApiModelProperty("通道地区")
+    private String tunnelArea;
+    @ApiModelProperty("通道国家")
+    private String tunnelCountry;
+    @ApiModelProperty("通道宽带")
+    private Integer tunnelBroadband;
 }

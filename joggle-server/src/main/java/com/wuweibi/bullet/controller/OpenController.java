@@ -12,7 +12,7 @@ import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.R;
@@ -208,6 +208,7 @@ public class OpenController {
      *
      * @return
      */
+    @Deprecated
     @ApiOperation("设备秘钥校验【服务端调用校验】")
     @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
     public R devicesecret(@RequestParam String clientNo,

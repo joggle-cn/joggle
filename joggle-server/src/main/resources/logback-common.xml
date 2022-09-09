@@ -80,6 +80,7 @@
 	<logger name="io.netty" level="INFO"/>
 	<logger name="org.mybatis" level="INFO"/>
 	<logger name="weixin.popular.client" level="INFO"/>
+	<logger name="org.redisson" level="INFO"/>
 
 
 

@@ -11,6 +11,9 @@ define(['app','layer','css!./login.css'], function (app, layer) {// 加载依赖
 	        function ($rootScope, $scope, $location, userService, $AjaxService, $session) {
 		// 登录操作
 		$scope.login = function(){
+
+			$scope.loginBtnDisable = true;
+
 			let params = {
 				username: $scope.user.name,
 				password: $scope.user.pass,
@@ -32,12 +35,19 @@ define(['app','layer','css!./login.css'], function (app, layer) {// 加载依赖
 								$rootScope.user = res.data;
 								$rootScope.islogin = true;
 								$location.path('/index').replace();
+
+								$scope.loginBtnDisable = false;
 							});
 						}
 					});
 				}else{
 					layer.msg(res.msg);
+					$scope.$apply(function() {
+						$scope.loginBtnDisable = false;
+					});
 				}
+
+
 				// faceinner.handleFieldError($scope, res);
 			});
 		 }; 

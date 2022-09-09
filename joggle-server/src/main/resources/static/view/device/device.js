@@ -17,13 +17,10 @@ define(['app','jquery', 'css!./device.css'], function (app, $) {//加载依赖js
 
 	    function render(){
             faceinner.get(api['user.device'], function(res){
-                if (res.status == 0) {
+                if (res.code == "S00") {
                     $scope.$apply(function() {
-                        // res.data = res.data.concat(res.data);
-
                         $scope.list = res.data;
                         $.each($scope.list, function(i,item){
-
                             item.onlineTimeStr = (new Date(item.onlineTime))
                                 .format("yyyy-MM-dd hh:mm:ss");
                         });
@@ -62,10 +59,12 @@ define(['app','jquery', 'css!./device.css'], function (app, $) {//加载依赖js
          */
 		$scope.confirmDeleteDevice = function(){
             faceinner.delete(api['user.device'], $scope.item , function(res) {
-                if (res.status == 0) {
+                if (res.code == "S00") {
                     $("#delDevice").modal('hide');
                     render();
+                    return
                 }
+                layer.msg(res.msg)
             });
         };
 

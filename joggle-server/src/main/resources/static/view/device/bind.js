@@ -28,12 +28,12 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                         $("#progress-bar .progress-bar").removeClass("progress-bar-danger");
                         $("#progress-bar .progress-bar").addClass("progress-bar-success");
                         $("#progress-bar .progress-bar").css({width:"100%"});
-                        $scope.info = "绑定完成！ 等待3秒跳转到 > 我的设备。";
+                        $scope.info = "绑定完成！ 等待1秒跳转到 > 我的设备。";
                     })
 
 
                     // 准备跳转
-                    $scope.time = 2;
+                    $scope.time = 1;
                     let timer = $interval(function(){
                         let num = $scope.time - 1;
                         if (num >= 0) {
@@ -45,7 +45,7 @@ define(['app','jquery'], function (app, $) {//加载依赖js,
                             $location.path("/user/device");
                             $interval.cancel(timer);
                         }
-                    }, 1000);
+                    }, 500);
 
                 } else {
                     $scope.$apply(function(){

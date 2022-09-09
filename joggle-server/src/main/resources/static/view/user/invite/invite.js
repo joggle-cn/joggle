@@ -9,7 +9,7 @@ define(['app', 'layer','css!./invite.css'], function (app, layer) {
 	let callback = ["$scope","$routeParams","$rootScope", function ($scope, $routeParams, $rootScope) {
 
 	    // URL地址
-        let url = "https://www."+$rootScope.config.domain + "/#/register?c="+$rootScope.user.activateCode;
+        let url = $rootScope.config.websiteUrl + "/#/register?c="+$rootScope.user.activateCode;
 
         $scope.inviteUrl = url;
 

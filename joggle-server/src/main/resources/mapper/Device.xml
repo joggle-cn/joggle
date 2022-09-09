@@ -32,10 +32,36 @@
 <!--	获取设备下拉列表-->
     <select id="selectOptionListByUserId" resultType="com.wuweibi.bullet.device.domain.vo.DeviceOption">
 	    select
-			d.`id`, d.`name`, d.`deviceId` as deviceNo, d.`intranet_ip`, do.`status`, do.`public_ip`
+			d.`id`, d.`name`, d.`deviceId` as deviceNo, do.`intranet_ip`, do.`status`, do.`public_ip`
 		from t_device d
 		left join t_device_online do on d.deviceId = do.deviceNo
 		where d.userId = #{userId}
         order by do.status asc , do.`updateTime` desc
 	</select>
+
+
+    <select id="selectWebListByUserId" resultType="com.wuweibi.bullet.domain.dto.DeviceDto">
+		select
+			d.`id`, d.`name`, d.`deviceId` as deviceNo,
+		   do.`status`, do.`public_ip`, do.`intranet_ip`,do.mac_addr,
+		   do.updateTime onlineTime
+
+		from t_device d
+		 left join t_device_online do on d.deviceId = do.deviceNo
+		where d.userId = #{userId}
+		order by do.status desc , do.`updateTime` desc
+	</select>
+<!--	获取设备详情-->
+    <select id="selectDetail" resultType="com.wuweibi.bullet.device.domain.DeviceDetail">
+		select
+			d.`id`, d.`name`, d.`deviceId` as deviceNo, d.userId,
+			do.`status`, do.`public_ip`,
+		       do.`intranet_ip`,do.mac_addr,
+			do.updateTime onlineTime, do.arch, do.os, do.server_tunnel_id
+		from t_device d
+	    left join t_device_online do on d.deviceId = do.deviceNo
+		where d.id = #{deviceId}
+	</select>
+
+
 </mapper>

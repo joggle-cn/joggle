@@ -34,7 +34,9 @@
                dp.`update_time`,
                dc.deviceId clientDeviceNo,
                dc.intranet_ip clientDeviceIp,
-               ds.deviceId serverDeviceNo
+               ds.deviceId serverDeviceNo,
+            (select server_tunnel_id from t_device_online where deviceNo = dc.deviceId)  as clientDeviceTunnelId,
+            (select server_tunnel_id from t_device_online where deviceNo = ds.deviceId)  as serverDeviceTunnelId
     </sql>
 
     <select id="selectPeersConfig" resultType="com.wuweibi.bullet.device.domain.DevicePeersConfigDTO">

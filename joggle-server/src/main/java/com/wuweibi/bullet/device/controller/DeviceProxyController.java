@@ -9,7 +9,7 @@ import com.wuweibi.bullet.device.domain.DeviceProxyParam;
 import com.wuweibi.bullet.device.domain.DeviceProxyVO;
 import com.wuweibi.bullet.device.entity.DeviceProxy;
 import com.wuweibi.bullet.device.service.DeviceProxyService;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgProxy;
 import com.wuweibi.bullet.protocol.domain.ProxyConfig;

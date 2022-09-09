@@ -4,7 +4,6 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.time.Duration;
@@ -16,10 +15,10 @@ import java.time.Duration;
  * @author marker
  */
 @Slf4j
-public class BulletSpringApplicationRunListener implements SpringApplicationRunListener {
+public class SpringApplicationRunListener implements org.springframework.boot.SpringApplicationRunListener {
 
     //必须有的构造器
-    public BulletSpringApplicationRunListener(SpringApplication application, String[] args) {
+    public SpringApplicationRunListener(SpringApplication application, String[] args) {
     }
 
 
@@ -31,12 +30,12 @@ public class BulletSpringApplicationRunListener implements SpringApplicationRunL
 
     @Override
     public void started(ConfigurableApplicationContext context, Duration timeTaken) {
-        SpringApplicationRunListener.super.started(context, timeTaken);
+        org.springframework.boot.SpringApplicationRunListener.super.started(context, timeTaken);
         log.info("SpringBoot 启动完成...");
+
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
         log.info("SpringBoot 初始化设备状态...");
-        deviceOnlineService.allDownNow();
-        log.info("SpringBoot 数据库记录设备已经下线...");
+        deviceOnlineService.checkDeviceStatus();
 
 //        CoonPool coonPool = SpringUtils.getBean(CoonPool.class);
 //        coonPool.stop();

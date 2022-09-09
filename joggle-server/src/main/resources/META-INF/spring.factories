@@ -1,2 +1,2 @@
 org.springframework.boot.SpringApplicationRunListener=\
-com.wuweibi.bullet.listener.BulletSpringApplicationRunListener
+com.wuweibi.bullet.listener.SpringApplicationRunListener

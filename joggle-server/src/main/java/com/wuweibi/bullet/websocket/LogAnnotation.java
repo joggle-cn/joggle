@@ -17,7 +17,7 @@
 package com.wuweibi.bullet.websocket;
 
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.entity.Device;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.protocol.MsgLogOpen;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;

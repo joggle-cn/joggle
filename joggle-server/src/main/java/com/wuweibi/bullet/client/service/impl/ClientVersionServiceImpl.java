@@ -46,10 +46,11 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
         if (clientVersion == null) return 0;
 
         // 生产环境才做URL更新
-        if (SpringUtils.isProduction()) {
-            String downloadURL = String.format("%s/client/%s/%s", aliOssProperties.getPublicServerUrl(), version, binFilePath);
-            clientVersion.setDownloadUrl(downloadURL);
+        String downloadURL = String.format("%s/client/%s/%s", aliOssProperties.getPublicServerUrl(), version, binFilePath);
+        if (!SpringUtils.isProduction()) {
+            downloadURL = String.format("%s/client/%s/%s", "http://192.168.1.6:30974", version, binFilePath);
         }
+        clientVersion.setDownloadUrl(downloadURL);
         clientVersion.setChecksum(checksum);
         clientVersion.setTitle(String.format("JoggleClient-v%s", version));
         clientVersion.setVersion(version);

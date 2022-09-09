@@ -1,9 +1,6 @@
-package com.wuweibi.bullet.entity;
+package com.wuweibi.bullet.device.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,15 +16,12 @@ import java.util.Date;
  * @since 2017-12-09
  */
 @Data
-@TableName("t_device")
-public class Device extends Model<Device> {
+public class DeviceDetail extends Model<DeviceDetail> {
 
     private static final long serialVersionUID = 1L;
 
-	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	private String name;
-	@TableField(value = "deviceId")
 	private String deviceNo;
 
 
@@ -36,22 +30,36 @@ public class Device extends Model<Device> {
     @TableField(value = "userId")
 	private Long userId;
 
-	@TableField(value = "intranet_ip")
-	private String intranetIp;
-	@TableField(value = "mac_addr")
-	private String macAddr;
-
-
-	/**
-	 * 服务通道ID
-	 */
-	@TableField("server_tunnel_id")
-	private Integer serverTunnelId;
-
 	@ApiModelProperty("设备秘钥")
 	@TableField("device_secret")
 	private String deviceSecret;
 
+
+	@ApiModelProperty("在线状态 -1离线  1在线")
+	private Integer status;
+
+	/**
+	 * 内网IP
+	 */
+	@TableField(value="intranet_ip" )
+	private String intranetIp;
+	/**
+	 * 公网IP
+	 */
+	@TableField()
+	private String publicIp;
+
+	@ApiModelProperty("客户端版本")
+	private String clientVersion;
+
+	@ApiModelProperty("通道id")
+	private Integer serverTunnelId;
+
+	@ApiModelProperty("操作系统")
+	private String os;
+
+	@ApiModelProperty("CPU架构")
+	private String arch;
 
 
 	@Override
