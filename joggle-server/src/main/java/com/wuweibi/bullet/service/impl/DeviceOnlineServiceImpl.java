@@ -116,7 +116,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         }
         deviceOnline.setServerTunnelId(deviceInfo.getServerTunnelId());
         deviceOnline.setPublicIp(deviceInfo.getPublicIp());
-        deviceOnline.setIntranetIp(deviceInfo.getPublicIp());
+        deviceOnline.setIntranetIp(deviceInfo.getIntranetIp());
         deviceOnline.setMacAddr(deviceInfo.getMacAddr());
         deviceOnline.setClientVersion(deviceInfo.getClientVersion());
         deviceOnline.setOs(deviceInfo.getOs());
