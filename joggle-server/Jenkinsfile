@@ -44,22 +44,22 @@ pipeline {
 
 
                         if [ "$BRANCH_NAME"  = "prod" ];then
-                            scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+                            scp -o StrictHostKeyChecking=no -l 5024 ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
                             echo "bullet-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
                         fi
 
 
-                            if [ "$OSS_DEPLOY"  = "是" ];then
-                                echo "预处理前端页面"
-                                cd joggle-server/src/main/resources/static/
-                                ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
-                                scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
+                        if [ "$OSS_DEPLOY"  = "是" ];then
+                            echo "预处理前端页面"
+                            cd joggle-server/src/main/resources/static/
+                            ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
+                            scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
 
-                                echo "发布前端页面 to OSS"
-                                ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
-                            fi
+                            echo "发布前端页面 to OSS"
+                            ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
+                        fi
 
                         if [ "$BRANCH_NAME"  = "test" ];then
                             scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@192.168.1.6:/opt/data/joggle/app.tmp.jar
