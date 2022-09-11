@@ -3,6 +3,7 @@ package com.wuweibi.bullet.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.device.entity.Device;
@@ -66,7 +67,7 @@ public interface DeviceService extends IService<Device> {
      * @param deviceId 设备id
      * @return
      */
-    JSONObject getDeviceInfoById(Long deviceId);
+    DeviceDetailVO getDeviceInfoById(Long deviceId);
 
     /**
      * 获取用户绑定的设备数量

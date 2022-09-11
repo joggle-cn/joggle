@@ -7,8 +7,8 @@
  */
 
 // 读取服务器地址
-// let server = 'http://192.168.1.20:8081';
-let server = 'http://localhost:8081';
+let server = 'http://192.168.1.20:8081';
+// let server = 'http://localhost:8081';
 if(window.SERVER_URL && window.SERVER_URL != '${url}'){ // 如果配置了
     server = window.SERVER_URL;
 }
