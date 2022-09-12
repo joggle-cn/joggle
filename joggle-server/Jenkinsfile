@@ -67,10 +67,9 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no root@192.168.1.6 "cd /opt/data/joggle/ && mv -f app.tmp.jar app.jar && kubectl rollout restart deployment joggle-server --namespace home"
 
                             echo "发布前端页面 to 宝塔面板"
-
-
-
-
+                            cd joggle-server/src/main/resources/static/
+                            scp -o StrictHostKeyChecking=no -r * root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/admin-test.joggle.cn/;
+                            echo "发布前端页面 完成"
                         fi
 
 
