@@ -118,7 +118,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 BigDecimal priceAmount = BigDecimal.valueOf(1.6);
                 payAmount = priceAmount.multiply(BigDecimal.valueOf(amount));
 
-                orderPayInfo.setName(String.format("购买流量:%dMB", amount));
+                orderPayInfo.setName(String.format("购买流量:%dGB", amount));
                 orderPayInfo.setPriceAmount(payAmount);
                 orderPayInfo.setPayAmount(payAmount);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
