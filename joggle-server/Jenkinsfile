@@ -65,6 +65,12 @@ pipeline {
                             scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@192.168.1.6:/opt/data/joggle/app.tmp.jar
                             echo "joggle-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@192.168.1.6 "cd /opt/data/joggle/ && mv -f app.tmp.jar app.jar && kubectl rollout restart deployment joggle-server --namespace home"
+
+                            echo "发布前端页面 to 宝塔面板"
+
+
+
+
                         fi
 
 
