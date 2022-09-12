@@ -46,7 +46,6 @@ public class DefaultGlobalExceptionHandlerAdvice {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public R serviceException(MethodArgumentNotValidException ex) {
-        log.error("service exception:{}", ex.getMessage());
         return R.fail(SystemErrorType.ARGUMENT_NOT_VALID, ex.getBindingResult().getFieldError().getDefaultMessage(), null);
     }
 

@@ -184,4 +184,10 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     public int updateOutLineByTunnelId(Integer tunnelId) {
         return this.baseMapper.updateOutLineByTunnelId(tunnelId);
     }
+
+    @Override
+    public DeviceOnline getOneByDeviceNo(String deviceNo) {
+        return this.baseMapper.selectOne(Wrappers.<DeviceOnline>lambdaQuery()
+                .eq(DeviceOnline::getDeviceNo, deviceNo));
+    }
 }

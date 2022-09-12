@@ -42,11 +42,5 @@ public class ScheduleConfig implements SchedulingConfigurer {
     public void work() {
         // task execution logic
         domainService.checkStatus();
-
-
-
-
-
-
     }
 }

@@ -45,5 +45,8 @@ public class ServerTunnel extends Model<ServerTunnel> {
 
     @ApiModelProperty("在线状态 1在线 0不在线")
     private Integer status;
+
+    @ApiModelProperty("服务器到期时间")
+    private Date serverEndTime;
 }
 

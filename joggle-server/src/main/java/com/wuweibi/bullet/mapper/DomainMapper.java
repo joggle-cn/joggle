@@ -70,10 +70,6 @@ public interface DomainMapper extends BaseMapper<Domain> {
      *
      * @return
      */
-    @Select("select b.id mappingId, a.domain, a.due_time dueTime,c.deviceId deviceNo  from t_domain a \n" +
-            "left join t_device_mapping b on a.id = b.domain_id\n" +
-            "left join t_device c on b.device_id = c.id\n" +
-            "where a.due_time < SYSDATE() and c.deviceId is not null and b.`status` = 1")
     List<JSONObject> selectDueDomain();
 
 

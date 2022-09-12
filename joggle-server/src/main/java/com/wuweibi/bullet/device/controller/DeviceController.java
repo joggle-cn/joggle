@@ -152,7 +152,7 @@ public class DeviceController {
         if (status) {
             // 验证是否存在
             Device device = deviceService.getById(deviceId);
-            DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(device.getDeviceNo());
+            DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
             if (deviceOnline == null) {
                 return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
             }

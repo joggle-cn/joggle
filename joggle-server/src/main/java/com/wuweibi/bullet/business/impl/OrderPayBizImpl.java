@@ -3,6 +3,8 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
@@ -17,6 +19,7 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SpringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,10 @@ import java.util.Map;
 @Service
 public class OrderPayBizImpl implements OrderPayBiz {
 
+    // 服务器到期时间的偏移量  1天
+    static final long SERVER_DIFF_TIME_MS = 24*60*60*1000;
+    // 最大购买天数
+    static final long MAX_BUY_DAYS = 360l;
 
     /** 域名管理 */
     @Resource
@@ -57,6 +64,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
     @Resource
     private UserFlowService userFlowService;
 
+    @Resource
+    private ServerTunnelService serverTunnelService;
 
 
     @Override
@@ -65,6 +74,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
         Long amount  = ordersDTO.getAmount();
         Integer resourceType  = ordersDTO.getResourceType();
 
+        if (amount.compareTo(0l) <= 0) {
+            return R.fail("购买数量参数错误");
+        }
         BigDecimal payPrice = null;
         Date dueTime = null;
 
@@ -74,6 +86,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
+                if (amount.compareTo(MAX_BUY_DAYS) >= 0) {
+                    return R.fail("最大支持购买300天");
+                }
                 DomainDetail domain = domainService.getDetail(resId);
                 // 校验域名是否存在
                 if(domain == null){
@@ -82,10 +97,35 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if(domain.getUserId() != null && !ordersDTO.getUserId().equals(domain.getUserId())){
                     return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
                 }
+
+                // 校验服务器到期时间
+                ServerTunnel serverTunnel = serverTunnelService.getById(domain.getServerTunnelId());
+                if(serverTunnel == null){
+                    return R.fail("通道信息错误，请联系管理员");
+                }
+
                 String text = "续费";
+                Date nowTime = new Date();
                 if (domain.getDueTime() == null) {
-                    domain.setDueTime(new Date());
+                    domain.setDueTime(nowTime);
                     text = "购买";
+                }
+                // 断档过的处理为购买，且时间标记为当前时间
+                if (domain.getDueTime().compareTo(nowTime) < 0){
+                    domain.setDueTime(nowTime);
+                    text = "购买";
+                }
+                // 资源的购买 结束时间
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(domain.getDueTime());
+                calendar.add(Calendar.DATE, amount.intValue());
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                dueTime = calendar.getTime();
+
+                if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
+                    return R.fail("该通道服务器到期时间：\n" + DateFormatUtils.format(serverTunnel.getServerEndTime(), "yyyy-MM-dd HH:mm:ss"));
                 }
 
                 // 计算价格 单价 * 天数
@@ -94,18 +134,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 BigDecimal originalAmount = domain.getOriginalPrice().multiply(BigDecimal.valueOf(amount));
 
                 String name = ResourceTypeEnum.toName(resourceType);
-
-
                 orderPayInfo.setName(String.format("%s%s:%s", text, name , domain.getDomainFull()));
 
                 // 计算到期
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(domain.getDueTime());
-                calendar.add(Calendar.DATE, amount.intValue());
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 59);
-                calendar.set(Calendar.SECOND, 59);
-                dueTime = calendar.getTime();
                 orderPayInfo.setDueTime(dueTime.getTime());
                 orderPayInfo.setAmount(amount*24*60*60l);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);

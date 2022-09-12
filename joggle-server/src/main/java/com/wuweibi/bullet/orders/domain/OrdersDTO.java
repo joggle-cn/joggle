@@ -16,6 +16,7 @@ public class OrdersDTO {
     private Integer payType;
 
     @ApiModelProperty("数量")
+    @NotNull(message = "购买数量错误")
     private Long amount;
 
     // 资源id

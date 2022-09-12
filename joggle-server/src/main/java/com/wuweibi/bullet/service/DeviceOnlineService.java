@@ -84,4 +84,6 @@ public interface DeviceOnlineService extends IService<DeviceOnline> {
      * @return
      */
     int updateOutLineByTunnelId(Integer tunnelId);
+
+    DeviceOnline getOneByDeviceNo(String deviceNo);
 }

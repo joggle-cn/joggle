@@ -30,6 +30,7 @@ public class DomainDetail   {
 	 * 二级域名前缀或端口
 	 */
 	private String domain;
+
 	private String domainFull;
 
 	/**
