@@ -85,7 +85,6 @@ pipeline {
 
                         if [ "$BRANCH_NAME"  = "build" ];then
                             echo "正在转移jar文件"
-//                             mv ./bullet-server/target/bullet-server.jar ./build/server/lib/joggle-server.jar
 
                             cd ./build/server/
 
