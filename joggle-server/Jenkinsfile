@@ -28,7 +28,14 @@ pipeline {
                steps {
                    echo "env: ${env.BRANCH_NAME}"
                    echo "Building.."
-                   sh "/opt/maven/bin/mvn clean package -Dmaven.test.skip=true"
+                   sh '''
+                        if [ "$BRANCH_NAME"  = "prod" ];then
+                            /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                        fi
+                        if [ "$BRANCH_NAME"  = "test" ];then
+                            /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                        fi
+                   '''
                }
            }
            stage('Test') {
