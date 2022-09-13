@@ -2,7 +2,7 @@ FROM debian:buster-slim
 
 # add our user and group first to make sure their IDs get assigned consistently,
 # regardless of whatever dependencies get added
-RUN groupadd -r -g 777 bullet && useradd -r -g bullet -u 777 bullet
+RUN groupadd -r -g 777 joggle && useradd -r -g joggle -u 777 joggle
 
 RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -14,31 +14,27 @@ RUN set -eux; \
 	echo $dpkgArch \
 
 # 工作空间
-VOLUME /opt/bullet
-WORKDIR /opt/bullet
+VOLUME /opt/joggle
+WORKDIR /opt/joggle
 
 # 开发者
 MAINTAINER docker_user admin@wuweibi.com
 
-ARG VERSION=0.0.1
 # 时区处理
 ENV TZ Asia/Shanghai
-# Bullet设备编码
-ENV BULLET_DEVICE_NO ''
 
 # 中文乱码处理
 ENV LANG C.UTF-8
 
 
 # 容器内部文件处理
-ADD ./bin /opt/bullet/bin/
-ADD ./conf /opt/bullet/conf/
-ADD ./logs /opt/bullet/logs/
+ADD ./bin /opt/joggle/bin/
+ADD ./conf /opt/joggle/conf/
+ADD ./logs /opt/joggle/logs/
 
 
-#RUN wget -O bin/ngrok  https://open.joggle.cn/ngrok/darwin_amd64/ngrok && \
 RUN ls /opt/bullet/bin && \
-  chown -R bullet:bullet /opt/bullet && \
+  chown -R joggle:joggle /opt/bullet && \
   echo "hello..."
 
 
@@ -47,4 +43,4 @@ RUN ls /opt/bullet/bin && \
 
 EXPOSE 443
 
-ENTRYPOINT ["/opt/bullet/bin/bullet"]
+ENTRYPOINT ["/opt/bullet/bin/service"]
