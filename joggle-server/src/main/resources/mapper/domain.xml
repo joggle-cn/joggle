@@ -56,9 +56,19 @@
 
 
     <select id="selectDetail" resultType="com.wuweibi.bullet.domain2.domain.DomainDetail">
-		select d.*,concat(d.domain,'.',st.server_addr) as domainFull from t_domain d
+		select d.*,
+			IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull
+		from t_domain d
 		left join t_server_tunnel st on st.id = d.server_tunnel_id
 		where d.id = #{domainId}
+	</select>
+
+
+	<select id="selectDueDomain" resultType="com.alibaba.fastjson.JSONObject">
+		 select b.id mappingId, a.domain, a.due_time dueTime,c.deviceId deviceNo  from t_domain a
+		 left join t_device_mapping b on a.id = b.domain_id
+		 left join t_device c on b.device_id = c.id
+		 where a.due_time &lt; SYSDATE() and c.deviceId is not null and b.`status` = 1
 	</select>
 
 </mapper>

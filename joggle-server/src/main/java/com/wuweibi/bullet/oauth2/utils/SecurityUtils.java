@@ -54,4 +54,8 @@ public final class SecurityUtils {
 
 
     }
+
+    public static boolean isNotLogin() {
+        return getUserId() == null;
+    }
 }

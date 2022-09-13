@@ -77,14 +77,12 @@ public class OrdersAppController {
 
     /**
      * 计算价格
-     *
-     * @param session
      * @return
      */
     @ApiOperation("订单计算价格")
     @RequestMapping(value = "/calculate", method = RequestMethod.POST)
-    public Object calculate(@JwtUser Session session, @RequestBody OrdersDTO ordersDTO) {
-        Long userId = session.getUserId();
+    public Object calculate( @RequestBody @Valid OrdersDTO ordersDTO) {
+        Long userId = SecurityUtils.getUserId();
         ordersDTO.setUserId(userId);
 
         return orderPayBiz.calculate(ordersDTO);

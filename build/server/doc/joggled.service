@@ -1,0 +1,9 @@
+[Unit]
+Description=bullet service
+Wants=systemd-networkd-wait-online.service
+After=systemd-networkd-wait-online.service
+[Service]
+ExecStart=/opt/ngrok/bin/bullet-server
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target

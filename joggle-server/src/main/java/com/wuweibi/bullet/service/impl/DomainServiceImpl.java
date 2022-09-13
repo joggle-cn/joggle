@@ -79,7 +79,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     public void checkStatus() {
-        // 查询过期的域名
+        // 查询过期的域名 TODO 优化为游标形式
         List<JSONObject> list = this.baseMapper.selectDueDomain();
         if (list.size() == 0) {
             return;

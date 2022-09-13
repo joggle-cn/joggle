@@ -35,9 +35,16 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
         render();
 
 
+        $scope.fixDays = function (){
+            if($scope.amount){
+                $scope.amount = parseInt(($scope.amount+"").replace(/^(0+)|[^\d]+/g,''))
+
+            }
+        }
+
 
         $scope.$watch('amount', function(newVal, b){
-            $scope.amount  = newVal;
+            $scope.amount  = parseInt(newVal);
             calculate();
         });
         $scope.$watch('payType', function(newVal, b){
@@ -64,6 +71,8 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                         $scope.payMoney = res.data.payAmount;
                         $scope.dueTime = res.data.dueTime;
                     });
+                }else{
+                    layer.msg(res.msg.replaceAll('\n', "<br/>"), {icon: 9});
                 }
             });
         }
@@ -89,7 +98,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                     window.location.href = "#/user/domain";
                     layer.msg("购买成功");
                 }else{ //错误提示
-                    layer.msg(res.msg);
+                    layer.msg(res.msg.replaceAll('\n', "<br/>"), {icon: 9});
                 }
             });
 

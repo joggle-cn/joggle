@@ -1,13 +1,13 @@
 package com.wuweibi.bullet.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
@@ -85,7 +85,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public JSONObject getDeviceInfoById(Long deviceId) {
+    public DeviceDetailVO getDeviceInfoById(Long deviceId) {
         return this.baseMapper.selectDeviceInfoById(deviceId);
     }
 

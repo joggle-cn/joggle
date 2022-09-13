@@ -140,11 +140,11 @@ mybatis-plus:
       #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
     field-strategy: 0
     #驼峰下划线转换
-    db-column-underline: false
+    db-column-underline: true
     #刷新mapper 调试神器
     #refresh-mapper: true
     #数据库大写下划线转换
-    #capital-mode: true
+    capital-mode: false
     # Sequence序列接口实现类配置
     #key-generator: com.baomidou.mybatisplus.incrementer.OracleKeyGenerator
     #逻辑删除配置（下面3个配置）
@@ -153,12 +153,12 @@ mybatis-plus:
     #自定义填充策略接口实现
     #meta-object-handler: com.baomidou.springboot.MyMetaObjectHandler
   configuration:
-    map-underscore-to-camel-case: on
+    map-underscore-to-camel-case: true
     cache-enabled: false
     #配置JdbcTypeForNull
     jdbc-type-for-null: 'null'
 
-
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 
 

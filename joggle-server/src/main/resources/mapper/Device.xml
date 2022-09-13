@@ -17,15 +17,18 @@
 	</select>
 
 <!--	获取设备详情-->
-    <select id="selectDeviceInfoById" resultType="com.alibaba.fastjson.JSONObject">
+    <select id="selectDeviceInfoById" resultType="com.wuweibi.bullet.device.domain.vo.DeviceDetailVO">
 		select
-		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId, a.`intranet_ip` as intranetIp,
-		       a.`mac_addr` macAddr,
+		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId,
+				do.`intranet_ip` as intranetIp,
+		         do.`status`, do.`public_ip`, do.arch,  do.os, do.client_version,
+		       do.`mac_addr` macAddr,
 		       b.name as lineName,
 		       b.broadband as broadband,
 			   b.server_addr as serverAddr
 		from t_device a
-		left join t_server_tunnel b on a.server_tunnel_id = b.id
+	    left join t_device_online do on do.deviceNo = a.deviceId
+		left join t_server_tunnel b on do.server_tunnel_id = b.id
 		where a.id = #{deviceId}
 	</select>
 
@@ -45,12 +48,12 @@
 			d.`id`, d.`name`, d.`deviceId` as deviceNo,
 		   do.`status`, do.`public_ip`, do.`intranet_ip`,do.mac_addr,
 		   do.updateTime onlineTime
-
 		from t_device d
 		 left join t_device_online do on d.deviceId = do.deviceNo
 		where d.userId = #{userId}
-		order by do.status desc , do.`updateTime` desc
+		order by d.id desc
 	</select>
+
 <!--	获取设备详情-->
     <select id="selectDetail" resultType="com.wuweibi.bullet.device.domain.DeviceDetail">
 		select

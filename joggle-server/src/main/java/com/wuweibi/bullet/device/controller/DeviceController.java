@@ -12,13 +12,14 @@ import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -151,7 +152,7 @@ public class DeviceController {
         if (status) {
             // 验证是否存在
             Device device = deviceService.getById(deviceId);
-            DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(device.getDeviceNo());
+            DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
             if (deviceOnline == null) {
                 return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
             }
@@ -245,46 +246,25 @@ public class DeviceController {
     /**
      * 获取设备信息
      *
-     * @param request
      * @param deviceId
      * @return
      */
     @GetMapping(value = "/info")
     @ResponseBody
-    public R device(HttpServletRequest request, @RequestParam Long deviceId,
-                         @JwtUser Session session) {
-        if (session.isNotLogin()) {
+    public R device(@RequestParam Long deviceId) {
+        Long userId = SecurityUtils.getUserId();
+        if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
-        Long userId = session.getUserId();
-
 
         MapBuilder mapBuilder = newMap(3);
-
         // 设备信息
-        JSONObject deviceInfo = deviceService.getDeviceInfoById(deviceId);
-//        JSONObject deviceInfo = (JSONObject) JSON.toJSON(device);
-
-        Long deviceUserId = deviceInfo.getLong("userId");
-        String deviceNo = deviceInfo.getString("deviceNo");
-        String serverAddr = deviceInfo.getString("serverAddr"); // 通道顶级地址
-        if(deviceNo == null){
+        DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
+        if(deviceInfo == null){
             return R.fail("设备不存在");
         }
-        if (!userId.equals(deviceUserId)) {
-            return R.fail("设备不存在");
-        }
-
-        DeviceOnline deviceOnline = deviceOnlineService.selectByDeviceNo(deviceNo);
-
-        if (deviceOnline != null) {
-            deviceInfo.put("intranetIp", deviceOnline.getIntranetIp());
-            deviceInfo.put("clientVersion", deviceOnline.getClientVersion());
-            deviceInfo.put("macAddr", deviceOnline.getMacAddr());
-            deviceInfo.put("status", deviceOnline.getStatus());
-        } else {
-            deviceInfo.put("clientVersion", "");
-            deviceInfo.put("status", -1);
+        if (!userId.equals(deviceInfo.getUserId())) {
+            return R.fail("用户设备不存在");
         }
 
         List<MappingDeviceVO> mappingList = deviceMappingService.getByDeviceId(deviceId);
@@ -298,7 +278,7 @@ public class DeviceController {
 
         // 端口
         portList.forEach(item->{
-            item.setDomain(serverAddr + ":" + item.getRemotePort());
+            item.setDomain(deviceInfo.getServerAddr() + ":" + item.getRemotePort());
         });
 
         // 域名
@@ -306,7 +286,7 @@ public class DeviceController {
             if (StringUtil.isNotBlank(item.getHostname())) {
                 item.setDomain(item.getHostname());
             } else {
-                item.setDomain(item.getDomain() + "." + serverAddr);
+                item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
             }
         });
 

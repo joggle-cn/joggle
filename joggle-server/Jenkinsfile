@@ -9,10 +9,13 @@ pipeline {
                       sh '''
 
                          if [ "$BRANCH_NAME"  = "build" ];then
-                            sed -ie 's/http:\\/\\/localhost:8081//g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/http:\\/\\/192.168.1.20:8081//g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
                          fi
+                         if [ "$BRANCH_NAME"  = "test" ];then
+                             sed -ie 's/http:\\/\\/192.168.1.20:8081/http:\\/\\/192.168.1.6:31117/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                          fi
                          if [ "$BRANCH_NAME"  = "prod" ];then
-                            sed -ie 's/http:\\/\\/localhost:8081/https:\\/\\/api.joggle.cn/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/http:\\/\\/192.168.1.20:8081/https:\\/\\/api.joggle.cn/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
                          fi
 
                          # echo "修改版本号 $VERSION ";
@@ -25,7 +28,14 @@ pipeline {
                steps {
                    echo "env: ${env.BRANCH_NAME}"
                    echo "Building.."
-                   sh "/opt/maven/bin/mvn clean package -Dmaven.test.skip=true"
+                   sh '''
+                        if [ "$BRANCH_NAME"  = "prod" ];then
+                            /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                        fi
+                        if [ "$BRANCH_NAME"  = "test" ];then
+                            /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                        fi
+                   '''
                }
            }
            stage('Test') {
@@ -44,66 +54,64 @@ pipeline {
 
 
                         if [ "$BRANCH_NAME"  = "prod" ];then
-                            scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+                            scp -o StrictHostKeyChecking=no -l 5024 ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
                             echo "bullet-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
                         fi
 
 
-                            if [ "$OSS_DEPLOY"  = "是" ];then
-                                echo "预处理前端页面"
-                                cd joggle-server/src/main/resources/static/
-                                ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
-                                scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
+                        if [ "$OSS_DEPLOY"  = "是" ];then
+                            echo "预处理前端页面"
+                            cd joggle-server/src/main/resources/static/
+                            ssh -o StrictHostKeyChecking=no root@192.168.1.5 "mkdir -p /tmp/bulletweb/";
+                            scp -o StrictHostKeyChecking=no -r * root@192.168.1.5:/tmp/bulletweb/;
 
-                                echo "发布前端页面 to OSS"
-                                ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
-                            fi
+                            echo "发布前端页面 to OSS"
+                            ssh root@192.168.1.5 "/opt/tools/ossutil64 -c /root/.ossutilconfigbullet cp -u -r /tmp/bulletweb/ oss://bullet1/ --exclude=.git"
+                        fi
 
                         if [ "$BRANCH_NAME"  = "test" ];then
                             scp -o StrictHostKeyChecking=no ./joggle-server/target/joggle-server.jar root@192.168.1.6:/opt/data/joggle/app.tmp.jar
                             echo "joggle-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@192.168.1.6 "cd /opt/data/joggle/ && mv -f app.tmp.jar app.jar && kubectl rollout restart deployment joggle-server --namespace home"
+
+                            echo "发布前端页面 to 宝塔面板"
+                            cd joggle-server/src/main/resources/static/
+                            scp -o StrictHostKeyChecking=no -r * root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/admin-test.joggle.cn/;
+                            echo "发布前端页面 完成"
                         fi
 
 
                         if [ "$BRANCH_NAME"  = "build" ];then
                             echo "正在转移jar文件"
-                            mv ./bullet-server/target/bullet-server.jar ./build/server/lib/joggle-server.jar
 
                             cd ./build/server/
 
                             echo "从服务器下载linux版本的ngrokd文件"
-                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/ngrokd ./bin/ngrokd
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_amd64/ngrokd ./bin/ngrokd
                             tar -zcvf bullet-server-linux.tar.gz ./*
-                            scp -o StrictHostKeyChecking=no bullet-server-linux.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                            scp -o StrictHostKeyChecking=no bullet-server-linux.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-linux.tar.gz
                             rm -rf bin/ngrokd
 
                             echo "从服务器下载Mac版本的ngrokd文件"
-                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrokd ./bin/ngrokd
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrokd ./bin/ngrokd
                             tar -zcvf bullet-server-darwin.tar.gz ./*
-                            scp -o StrictHostKeyChecking=no bullet-server-darwin.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
-
+                            scp -o StrictHostKeyChecking=no bullet-server-darwin.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-darwin.tar.gz
                             rm -rf bin/ngrokd
 
-
                             echo "从服务器下载Win版本的ngrokd文件"
 
-
-                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrokd.exe ./bin/ngrokd.exe
+                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrokd.exe ./bin/ngrokd.exe
                             tar -zcvf bullet-server-windows.tar.gz ./*
-                            scp -o StrictHostKeyChecking=no bullet-server-windows.tar.gz  root@192.168.1.6:/opt/baota/wwwroot/open.joggle.cn/bullet/
+                            scp -o StrictHostKeyChecking=no bullet-server-windows.tar.gz   root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-windows.tar.gz
                             rm -rf bin/ngrokd.exe
-
-
-
 
                         fi
                     '''

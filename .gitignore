@@ -5,6 +5,7 @@
 */*.iml
 */*/*.iml
 data
-logs
+/logs
 target
 .run/*
+LOGGING_PATH_IS_UNDEFINED
