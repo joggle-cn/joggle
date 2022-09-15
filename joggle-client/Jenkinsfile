@@ -34,6 +34,8 @@ pipeline {
                             cd ./build/client/
                             workdir="/opt/data/jenkins/workspace/Bullet-Client/build/client"
 
+                            rm -rf *.tar.gz
+
                             echo "从服务器下载linux Arm32版本的ngrok文件"
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_arm/ngrok ./bin/ngrok
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_arm/service ./bin/service
@@ -72,6 +74,7 @@ pipeline {
                             rm -rf bin/service
 
                            echo "从服务器下载Mac 64版本的ngrok文件"
+                           rm -rf bullet-client-darwin_amd64.tar.gz
                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrok ./bin/ngrok
                            scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/service ./bin/service
                             ssh -o StrictHostKeyChecking=no root@192.168.1.5 "cd $workdir && tar -zcvf bullet-client-darwin_amd64.tar.gz --xform 's#^#bullet/#' *"
