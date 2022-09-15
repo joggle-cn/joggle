@@ -27,5 +27,16 @@
         and result != 2
     </select>
 
+
+    <select id="selectProgressList" resultSetType="FORWARD_ONLY"
+            resultType="com.wuweibi.bullet.system.entity.UserCertification">
+       select * from user_certification where result = 0 limit #{limit}
+    </select>
+
+
+    <select id="selectLastResult" resultType="com.wuweibi.bullet.system.entity.UserCertification">
+        select * from user_certification where user_id = #{userId} order by id desc limit 1
+    </select>
+
 </mapper>
 

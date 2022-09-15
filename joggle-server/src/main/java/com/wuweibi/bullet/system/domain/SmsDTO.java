@@ -17,7 +17,6 @@ public class SmsDTO {
     @NotBlank(message = "手机号不能为空")
     private String phone;
 
-
     @ApiModelProperty(value = "短信类型 登录 LOGIN")
     private String type;
 

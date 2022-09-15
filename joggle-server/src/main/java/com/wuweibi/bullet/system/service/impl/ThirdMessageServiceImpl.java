@@ -70,7 +70,7 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
         if (!SpringUtils.isProduction()) {
             return R.ok();
         }
-        // 不是开发，并且开启了发送验证码 发送验证码
+        // 发送验证码
         com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
                 .setSignName("joggle")
                 .setTemplateCode(templateCode)

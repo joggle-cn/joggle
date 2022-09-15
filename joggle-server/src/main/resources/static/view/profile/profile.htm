@@ -49,6 +49,7 @@
 						<span class="label label-success" ng-if="user.userCertification==1">通过</span>
 						<span class="label label-default" ng-if="user.userCertification==0">未认证</span>
 						<span class="label label-danger" ng-if="user.userCertification==2">认证拒绝</span>
+						<span ng-if="user.userCertification==2" ng-bind="user.ucResultMsg"></span>
 						<br/><br/>
 						<a href="#/user/certification" ng-if="user.userCertification != 1" class="btn btn-default">实名认证</a>
 					</div>

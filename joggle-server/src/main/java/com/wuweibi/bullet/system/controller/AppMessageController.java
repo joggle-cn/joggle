@@ -7,7 +7,6 @@ import com.wuweibi.bullet.system.domain.SmsDTO;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,18 +31,12 @@ public class AppMessageController {
     @Resource
     private ThirdMessageService thirdMessageService;
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
-
-
-
     /**
      * 获取短信验证码
      *
      * @return 所有数据
      */
-    @ApiOperation(value = "获取短信验证码", notes = "短信类型  登录 LOGIN 手机更变 PHONE_UPDATE 手机号绑定 PHONE_BIND " +
-            " 修改手机号 MODIFY_PHONE_CODE 注销手机号 WITHDRAW_PHONE_CODE")
+    @ApiOperation(value = "获取短信验证码", notes = "短信类型  登录 LOGIN  实名认证AUTH")
     @PostMapping("/sms")
     public R sms(@RequestBody @Valid SmsDTO smsDTO) {
 //        // 注册验证码
@@ -64,7 +57,7 @@ public class AppMessageController {
 //            }
 //        }
 
-        if (PhoneUtil.isMobile(smsDTO.getPhone())) {
+        if (!PhoneUtil.isMobile(smsDTO.getCountryCode() + smsDTO.getPhone())) {
             return R.fail("手机号码不正确");
         }
 

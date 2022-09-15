@@ -33,7 +33,7 @@ import java.util.Date;
 @RestController
 @Api(value = "用户实名认证", tags = "用户实名认证")
 @RequestMapping("/api/user/certification")
-public class UserCertificationController  {
+public class UserCertificationController {
     /**
      * 服务对象
      */
@@ -60,22 +60,27 @@ public class UserCertificationController  {
 
         // 验证码校验
         String codeKey = String.format(ThirdMessageService.SMS_CODE_FORMAT, SmsTypeEnum.AUTH.getType(),
-                "86", dto.getPhone());
+                dto.getCountryCode(), dto.getPhone());
         Object cdv = redisTemplate.opsForValue().get(codeKey);
         if (cdv == null) {
             return R.fail("请获取短信验证码");
+        }
+        if (!dto.getCode().equals(cdv)) {
+            return R.fail("验证码错误");
         }
 
         // 如果用户有认证成功和认证中的不允许提交
         // 返回：1通过 0等待审核  2 可申请
         int result = this.userCertificationService.checkCertRepeatOk(userId);
-        switch (result){
-            case 1: return R.fail("您的认证已经通过，无需重复提交！");
-            case 0: return R.fail("请耐心等待认证审核！");
+        switch (result) {
+            case 1:
+                return R.fail("您的认证已经通过，无需重复提交！");
+            case 0:
+                return R.fail("请耐心等待认证审核！");
         }
 
-        if(userCertificationService.checkIdcardAndPhone(dto.getPhone(), dto.getIdcard())){
-            return R.fail("对不起，您提交的信息已存在");
+        if (userCertificationService.checkIdcardAndPhone(dto.getPhone(), dto.getIdcard())) {
+            return R.fail("对不起，您提交的认证信息已存在");
         }
 
         UserCertification userCertification = new UserCertification();

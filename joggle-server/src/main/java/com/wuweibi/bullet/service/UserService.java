@@ -95,4 +95,12 @@ public interface UserService extends IService<User> {
      */
     User getByInviteCode(String inviteCode);
 
+    /**
+     * 更新认证 状态
+     * @param userId 用户id
+     * @param state 状态
+     * @return
+     */
+    boolean updateUserCertification(Long userId, Integer state);
+
 }

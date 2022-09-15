@@ -75,7 +75,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"></label>
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-success" ng-click="submitData()">提交认证</button>
+                        <button id="submitUcData" type="submit" class="btn btn-success" ng-click="submitData()">提交认证</button>
                     </div>
                 </div>
             </form>
@@ -103,55 +103,3 @@
 
 
 
-
-<!-- 编辑弹出框 -->
-<div id="editDevice" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">编辑设备</h4>
-            </div>
-            <div class="modal-body">
-
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="a" class="col-sm-2 control-label">设备名称</label>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="item.name" class="form-control" id="a" placeholder="名称">
-                        </div>
-                        <div class="col-sm-4">
-                            1
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="b" class="col-sm-2 control-label">设备标识</label>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="item.deviceId"  class="form-control" id="b" placeholder="设备" readonly>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="c" class="col-sm-2 control-label">创建时间</label>
-                        <div class="col-sm-6">
-                            <input type="text" ng-model="item.createTimeStr"  class="form-control" id="c" readonly>
-                        </div>
-
-                        <div class="col-sm-4">
-
-                        </div>
-                    </div>
-
-                </form>
-
-            </div>
-            <div class="modal-footer">
-                <a ng-click="save()" class="btn btn-default">保 存</a>
-                <a ng-click="exit()"  class="btn btn-default">取消</a>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

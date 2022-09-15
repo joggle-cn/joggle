@@ -56,4 +56,9 @@ public class UserCertificationServiceImpl extends ServiceImpl<UserCertificationM
     public boolean checkIdcardAndPhone(String phone, String idcard) {
         return this.baseMapper.checkIdcardAndPhone(phone, idcard);
     }
+
+    @Override
+    public UserCertification getLastResult(Long userId) {
+        return this.baseMapper.selectLastResult(userId);
+    }
 }

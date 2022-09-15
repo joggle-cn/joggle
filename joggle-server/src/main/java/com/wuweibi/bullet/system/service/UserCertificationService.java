@@ -32,4 +32,6 @@ public interface UserCertificationService extends IService<UserCertification> {
     int checkCertRepeatOk(Long userId);
 
     boolean checkIdcardAndPhone(String phone, String idcard);
+
+    UserCertification getLastResult(Long userId);
 }

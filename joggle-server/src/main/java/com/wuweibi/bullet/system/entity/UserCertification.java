@@ -94,7 +94,10 @@ public class UserCertification {
      */
     @ApiModelProperty("创建时间")
  	private Date createTime;
-    
+
+    @ApiModelProperty("审核时间")
+ 	private Date examineTime;
+
     /**
      * 认证 结果 1通过 0等待审核  2未通过
      */

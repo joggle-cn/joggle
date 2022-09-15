@@ -33,3 +33,5 @@ ALTER TABLE `t_sys_users`
 
 update t_sys_users set user_certification = 0;
 
+ALTER TABLE `user_certification`
+    ADD COLUMN `examine_time` datetime NULL COMMENT '审核时间' AFTER `result_msg`;

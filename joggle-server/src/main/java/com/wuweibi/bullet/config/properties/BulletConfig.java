@@ -35,4 +35,9 @@ public class BulletConfig {
      */
     private String adminApiToken;
 
+    /**
+     * 阿里云市场实名认证appcode
+     */
+    private String aliAppcode;
+
 }

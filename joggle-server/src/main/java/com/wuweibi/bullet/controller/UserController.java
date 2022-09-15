@@ -20,6 +20,8 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.entity.UserCertification;
+import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -63,6 +65,9 @@ public class UserController {
     @Resource
     private UserFlowService userFlowService;
 
+    @Resource
+    private UserCertificationService userCertificationService;
+
     /**
      * 获取登录的用户信息
      */
@@ -90,6 +95,14 @@ public class UserController {
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
         result.put("userFlow", userFlow.getFlow()/1024); //MB
         result.put("userCertification", user.getUserCertification());
+
+        if (user.getUserCertification() != 1) {
+            UserCertification userCertification = userCertificationService.getLastResult(userId);
+            if (userCertification != null) {
+                result.put("ucResultMsg", userCertification.getResultMsg());
+                result.put("ucExamineTime", userCertification.getExamineTime());
+            }
+        }
 
         return R.success(result);
     }

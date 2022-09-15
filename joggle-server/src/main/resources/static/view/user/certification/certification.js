@@ -31,6 +31,7 @@ define(['app','jquery','layer'], function (app, $, layer) {//加载依赖js,
                     // 准备跳转
                     $scope.time = 90;
                     $scope.info = "等待" + $scope.time + "秒可重发";
+                    $scope.$apply(function(){});
                     let timer = $interval(function(){
                         let num = $scope.time - 1;
                         if (num >= 0) {
@@ -69,31 +70,28 @@ define(['app','jquery','layer'], function (app, $, layer) {//加载依赖js,
         $scope.submitData = function(){
             // 校验
             if($scope.data.realName == ""){
-                layer.msg("姓名不能为空");
-                return
+                layer.msg("姓名不能为空"); return
             }
             if($scope.data.idcard == ""){
-                 layer.msg("身份证号码不能为空");
-                return;
+                 layer.msg("身份证号码不能为空"); return;
             }
-
             if($scope.data.phone == ""){
-                 layer.msg("手机号不能为空");
-                return;
+                 layer.msg("手机号不能为空");  return;
             }
-
             if($scope.data.code == ""){
-                 layer.msg("验证码不能为空")
-                return;
+                layer.msg("验证码不能为空"); return;
             }
 
+            $("#submitUcData").attr("disabled", true);
             faceinner.postJson(api['user.auth.submit'], $scope.data, function(res) {
-                $("#btnGetSms").attr("disabled", false);
                 if (res.code == 'S00') {
-                    layer.msg("提交成功，请等待系统审核。")
+                    layer.msg("提交成功，请等待系统审核。", {icon:1});
                 }else{
-                    layer.msg(res.msg, {icon:1});
+                    layer.msg(res.msg, {icon:9});
                 }
+                setTimeout(function (){
+                    $("#submitUcData").attr("disabled", false);
+                },1000)
             })
         }
 
