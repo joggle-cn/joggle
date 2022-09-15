@@ -59,9 +59,11 @@ public class DataMetricsOpenInnerController {
     public R insert(@RequestHeader String authorization,
                     @RequestBody @Valid DataMetricsDTO dataMetrics) {
         if (!bulletConfig.getAdminApiToken().equals(authorization)) {
+            log.warn("[上报流量]无接口调用权限token:{}", authorization);
             return R.fail("无接口调用权限");
         }
         if (dataMetrics.getCloseTime() <= dataMetrics.getOpenTime()){
+            log.warn("[上报流量]链接时长错误");
             return R.fail("链接时长错误");
         }
 

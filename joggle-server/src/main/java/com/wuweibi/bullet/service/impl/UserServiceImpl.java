@@ -202,5 +202,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .eq(User::getActivateCode, inviteCode));
     }
 
+    @Override
+    public boolean updateUserCertification(Long userId, Integer state) {
+        return this.baseMapper.updateUserCertification(userId, state);
+    }
+
 
 }

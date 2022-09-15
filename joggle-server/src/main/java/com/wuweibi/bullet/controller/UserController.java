@@ -18,7 +18,10 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.entity.UserCertification;
+import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -62,17 +65,20 @@ public class UserController {
     @Resource
     private UserFlowService userFlowService;
 
+    @Resource
+    private UserCertificationService userCertificationService;
+
     /**
      * 获取登录的用户信息
      */
-    @RequestMapping(value = "/login/info", method = RequestMethod.GET)
-    public R loginInfo(@JwtUser Session session) {
-
-        if (session.isNotLogin()) {
+    @ApiOperation("获取登录的用户信息")
+    @GetMapping("/login/info")
+    public R loginInfo() {
+        if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
 
-        Long userId = session.getUserId();
+        Long userId = SecurityUtils.getUserId();
 
         // 验证邮箱正确性
         User user = userService.getById(userId);
@@ -88,7 +94,15 @@ public class UserController {
         result.put("loginTime", sdf.format(user.getLoginTime()));
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
         result.put("userFlow", userFlow.getFlow()/1024); //MB
+        result.put("userCertification", user.getUserCertification());
 
+        if (user.getUserCertification() != 1) {
+            UserCertification userCertification = userCertificationService.getLastResult(userId);
+            if (userCertification != null) {
+                result.put("ucResultMsg", userCertification.getResultMsg());
+                result.put("ucExamineTime", userCertification.getExamineTime());
+            }
+        }
 
         return R.success(result);
     }

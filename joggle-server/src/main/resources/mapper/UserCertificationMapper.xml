@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.system.mapper.UserCertificationMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.system.entity.UserCertification">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+        <result property="idcard" column="idcard" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="district" column="district" jdbcType="VARCHAR"/>
+        <result property="area" column="area" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="result" column="result" jdbcType="INTEGER"/>
+        <result property="resultMsg" column="result_msg" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="checkIdcardAndPhone" resultType="java.lang.Boolean">
+        select count(1) from user_certification where (idcard = #{idcard} or phone = #{phone})
+        and result != 2
+    </select>
+
+
+    <select id="selectProgressList" resultSetType="FORWARD_ONLY"
+            resultType="com.wuweibi.bullet.system.entity.UserCertification">
+       select * from user_certification where result = 0 limit #{limit}
+    </select>
+
+
+    <select id="selectLastResult" resultType="com.wuweibi.bullet.system.entity.UserCertification">
+        select * from user_certification where user_id = #{userId} order by id desc limit 1
+    </select>
+
+</mapper>
+

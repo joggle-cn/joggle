@@ -1,13 +1,14 @@
 <div style="margin-top:30px; "></div>
 <div class="container">
 
-    <div class="row">
-        <div class="col-xs-12">
-            <blockquote>
-                <p>我的资料</p>
-            </blockquote>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-xs-12">
+			<ol class="breadcrumb">
+				<li><a href="#">首页</a></li>
+				<li><a href="#/user/profile">我的资料</a></li>
+			</ol>
+		</div>
+	</div>
 
     <div class="row">
         <div class="col-md-6">
@@ -22,7 +23,7 @@
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right"><span ng-bind="res.t('register.nickname')"></span>:</label>
 					<div class="col-sm-9">
-						<div type="text" ng-bind="user.nickname" ></div>
+						<span type="text" ng-bind="user.nickname" ></span>
 					</div>
 				</div>
 				<div class="form-group">
@@ -34,12 +35,23 @@
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">流量:</label>
 					<div class="col-sm-9">
-						<div type="text" ng-if="user.userFlow >= 100">{{user.userFlow}} MB</div>
-						<div type="text" ng-if="user.userFlow < 100 && user.userFlow >= 50" style="color: #ff7700">{{user.userFlow}} MB</div>
-						<div type="text" ng-if="user.userFlow < 50" style="color: red">{{user.userFlow}} MB</div>
+						<span type="text" ng-if="user.userFlow >= 100">{{user.userFlow}} MB</span>
+						<span type="text" ng-if="user.userFlow < 100 && user.userFlow >= 50" style="color: #ff7700">{{user.userFlow}} MB</span>
+						<span type="text" ng-if="user.userFlow < 50" style="color: red">{{user.userFlow}} MB</span>
 
-			            <a href="#/user/flow/cash" class="btn">购买流量</a>
+			            <a href="#/user/flow/cash" class="btn btn-default">购买流量</a>
 
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right"><span>实名认证</span>:</label>
+					<div class="col-sm-9">
+						<span class="label label-success" ng-if="user.userCertification==1">通过</span>
+						<span class="label label-default" ng-if="user.userCertification==0">未认证</span>
+						<span class="label label-danger" ng-if="user.userCertification==2">认证拒绝</span>
+						<span ng-if="user.userCertification==2" ng-bind="user.ucResultMsg"></span>
+						<br/><br/>
+						<a href="#/user/certification" ng-if="user.userCertification != 1" class="btn btn-default">实名认证</a>
 					</div>
 				</div>
 				<div class="form-group">

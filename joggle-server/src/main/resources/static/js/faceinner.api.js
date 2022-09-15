@@ -41,6 +41,8 @@ let api = {
 
     /* 注销 */
     "user.loginout": '/api/user/loginout',
+    "user.auth.sms": '/api/open/message/sms',
+    "user.auth.submit": '/api/user/certification/submit',
 
 
     /* 发布秘密 */

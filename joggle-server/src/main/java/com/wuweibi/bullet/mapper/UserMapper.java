@@ -65,4 +65,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Update("update t_sys_users set enabled=1 where id = #{userId}")
     boolean updateEnabled(@Param("userId") Long userId);
+
+    boolean updateUserCertification(@Param("userId") Long userId,@Param("state") Integer state);
 }

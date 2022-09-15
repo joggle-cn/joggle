@@ -236,6 +236,8 @@ footer>.big>a{margin: 0 5px;
 	background-color: #fff;
 	background-image: none;
 	border: 1px solid #ccc;
+	position: relative;
+	top: 2px;
 }
 
 

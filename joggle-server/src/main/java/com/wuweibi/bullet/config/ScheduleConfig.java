@@ -2,6 +2,7 @@ package com.wuweibi.bullet.config;
 
 
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.task.UserCertificationTaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -43,4 +44,18 @@ public class ScheduleConfig implements SchedulingConfigurer {
         // task execution logic
         domainService.checkStatus();
     }
+
+    @Resource
+    private UserCertificationTaskService userCertificationTaskService;
+
+    /**
+     * 每60秒执行检查
+     */
+    @Scheduled(fixedRate = 1000*60)
+    public void work4UserCertificationProgress() {
+        userCertificationTaskService.progress();
+    }
+
+
+
 }

@@ -12,9 +12,14 @@
 
 	<!-- 更新登录时间-->
     <update id="updateLoginTime" parameterType="java.lang.Long">
-		update t_user set
+		update t_sys_users set
 			loginTime = now()
 		where id = #{userId}
+	</update>
+
+<!--	更新 认证状态-->
+    <update id="updateUserCertification">
+		update t_sys_users set user_certification = #{state}, updated_time=sysdate() where id =#{userId}
 	</update>
 
 
