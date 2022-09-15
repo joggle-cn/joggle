@@ -195,7 +195,9 @@ joggle:
     accessKeyId: ${ALI_OSS_ACCESSKEY:xxx}
     accessKeySecret: ${ALI_OSS_KEYSECRET:xxx}
     publicBucketName: ${ALI_OSS_BUCKET:xxx}
-
+  # ali sms 配置
+  accessKeyId: ${ALI_SMS_ACCESSKEYID:LTAI5tAF7fUuz9xxxtd}
+  accessKeySecret: ${ALI_SMS_KEYSECRET:xxxx}
 
 # 微信配置（测试appid）
 weixin:

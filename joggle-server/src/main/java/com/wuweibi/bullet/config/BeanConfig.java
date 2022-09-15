@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.config;
 
 import com.alipay.easysdk.kernel.Config;
+import com.wuweibi.bullet.config.properties.AliSmsProperties;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.conn.WebsocketPool;
@@ -32,6 +33,8 @@ import javax.annotation.Resource;
 )
 public class BeanConfig {
 
+    @Resource
+    private AliSmsProperties aliSmsProperties;
 
     /**
      * WebSocket链接池
@@ -93,5 +96,22 @@ public class BeanConfig {
         return config;
     }
 
+
+
+
+    /**
+     * 使用AK&SK初始化账号Client
+     * @return Client
+     * @throws Exception
+     */
+    @Bean
+    public com.aliyun.dysmsapi20170525.Client createClient( ) throws Exception {
+        com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
+                .setAccessKeyId(aliSmsProperties.getAccessKeyId())
+                .setAccessKeySecret(aliSmsProperties.getAccessKeySecret());
+        // 访问的域名
+        config.endpoint = "dysmsapi.aliyuncs.com";
+        return new com.aliyun.dysmsapi20170525.Client(config);
+    }
 
 }

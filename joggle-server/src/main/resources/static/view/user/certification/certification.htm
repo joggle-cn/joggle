@@ -1,0 +1,157 @@
+
+<style>
+    .progress{
+        margin-bottom: 10px;
+    }
+
+    .certification .face-input{
+        width: 340px;
+    }
+</style>
+
+
+<div style="margin-top:30px; "></div>
+<div class="container certification">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+                <li><a href="#/user/profile">我的资料</a></li>
+                <li class="active">实名认证</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-success" role="alert">
+                根据《<a target="_blank" href="http://www.gov.cn/xinwen/2022-06/14/content_5695690.htm">移动互联网应用程序信息服务管理规定</a>》
+               ，应用程序提供者应当对申请注册的用户进行基于移动电话号码、身份证件号码或者统一社会信用代码等方式的真实身份信息认证。
+            </div>
+        </div>
+
+
+
+        <div class="col-xs-6 ">
+            <h3 style="text-align: center; margin-bottom: 30px">用户实名认证</h3>
+            <form class="form-horizontal " role="form" onsubmit="return false">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" >姓名</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.realName" class="face-input" placeholder="请输入真实姓名" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" >认证类型</label>
+                    <div class="col-sm-9">
+                        <select type="text" ng-model="data.type" class="face-input" placeholder="请输入姓名对应的身份证号">
+                            <option value="1">中国居民身份证</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" >身份证号码</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.idcard" class="face-input" placeholder="请输入姓名对应的身份证号"  />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" >手机号</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.phone" class="face-input" placeholder="请输入实名对应的手机号" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" >验证码</label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="data.code" class="face-input" style="width: 150px;" placeholder=""  />
+                        <button id="btnGetSms" type="submit" class="btn btn-default" ng-click="getSmsCode()" ng-bind="info"></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-success" ng-click="submitData()">提交认证</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-xs-6">
+            <p style="line-height: 26px"><br/>
+                <b>认证不通过情况说明：</b><br/>
+                (1)现役军人、武警官兵、特殊部门人员及特殊级别官员；<br/>
+                (2)退役不到2年的军人和士兵（根据军衔、兵种不同，时间会有所不同，一般为2年）；<br/>
+                (3)户口迁出，且没有在新的迁入地迁入 eg：刚上大学或刚毕业的大学生；<br/>
+                (4)户口迁入新迁入地，当地公安系统未将迁移信息上报到公安部（上报时间地域不同而有所差异）；<br/>
+                (5)更改姓名，当地公安系统未将更改信息上报到公安部（上报时间因地域不同而有所差异）；<br/>
+                (6)移民；<br/>
+                (7)未更换二代身份证；<br/>
+                (8)死亡。<br/>
+                (9)身份证号确实不存在<br/>
+            </p>
+        </div>
+	</div>
+
+
+
+</div>
+
+
+
+
+<!-- 编辑弹出框 -->
+<div id="editDevice" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">编辑设备</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="a" class="col-sm-2 control-label">设备名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.name" class="form-control" id="a" placeholder="名称">
+                        </div>
+                        <div class="col-sm-4">
+                            1
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="b" class="col-sm-2 control-label">设备标识</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.deviceId"  class="form-control" id="b" placeholder="设备" readonly>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="c" class="col-sm-2 control-label">创建时间</label>
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="item.createTimeStr"  class="form-control" id="c" readonly>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <a ng-click="save()" class="btn btn-default">保 存</a>
+                <a ng-click="exit()"  class="btn btn-default">取消</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

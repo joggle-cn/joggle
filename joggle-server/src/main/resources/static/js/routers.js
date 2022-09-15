@@ -85,6 +85,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			templateUrl: 'view/user/activate/activate.htm'
 			, controllerUrl: 'view/user/activate/activate.js'
 		}))
+		// 实名认证界面
+		.when('/user/certification', router({
+			templateUrl: 'view/user/certification/certification.htm'
+			, controllerUrl: 'view/user/certification/certification.js'
+		}))
 
 		// 我的设备
 		.when('/user/device', router({

@@ -64,6 +64,9 @@ public class User extends Model<User> {
 	private String activateCode;
 
 
+	private Integer userCertification;
+
+
 
 
 
