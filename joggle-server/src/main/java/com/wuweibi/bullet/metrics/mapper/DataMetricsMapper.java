@@ -2,7 +2,7 @@ package com.wuweibi.bullet.metrics.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
-import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 
