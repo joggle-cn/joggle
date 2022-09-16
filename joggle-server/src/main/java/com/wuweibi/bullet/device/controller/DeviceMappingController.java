@@ -22,6 +22,7 @@ import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.utils.IpAddrUtils;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -118,7 +119,11 @@ public class DeviceMappingController {
     public R save(DeviceMapping entity ){
         Long userId = SecurityUtils.getUserId();
         entity.setUserId(userId);
-
+        // 判断ip是内网ip
+        if (!IpAddrUtils.internalIp(entity.getHost())) {
+            return R.fail("请填写内网ip地址");
+        }
+        
         DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
         entity.setDomainId(deviceMapping.getDomainId());
         entity.setDomain(deviceMapping.getDomain());
