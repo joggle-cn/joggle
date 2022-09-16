@@ -54,7 +54,7 @@ pipeline {
 
 
                         if [ "$BRANCH_NAME"  = "prod" ];then
-                            scp -o StrictHostKeyChecking=no -l 5024 ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
+                            scp -o StrictHostKeyChecking=no -l 4500 ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
                             echo "bullet-server restart ....."
                             ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
 
