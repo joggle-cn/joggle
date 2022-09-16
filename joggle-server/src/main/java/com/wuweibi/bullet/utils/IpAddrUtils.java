@@ -11,7 +11,7 @@ public final class IpAddrUtils {
      *
      * 10.0.0.0/8：10.0.0.0～10.255.255.255
      * 172.16.0.0/12：172.16.0.0～172.31.255.255
-     * 192.168.0.0/16：192.168.0.0～192.168.255.255 
+     * 192.168.0.0/16：192.168.0.0～192.168.255.255
      * @param ip
      * @return
      */
@@ -125,5 +125,30 @@ public final class IpAddrUtils {
         }
         return bytes;
     }
+
+
+
+    public static boolean isIpv4(String text) {
+        if (text != null && !text.isEmpty()) {
+            //定义正则表达式。
+            String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])"
+                    + "(\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)){3}$";
+            // 判断IP地址是否与正则表达式匹配。
+            if (text.matches(regex)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
 
 }

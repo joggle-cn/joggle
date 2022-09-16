@@ -20,7 +20,6 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
-import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
@@ -68,7 +67,7 @@ public class DeviceMappingController {
         Long dmId = dto.getId();
         // 验证设备映射是自己的
         boolean status = deviceMappingService.exists(userId, dmId);
-        if(status){
+        if (status) {
             DeviceMapping entity = deviceMappingService.getById(dmId);
             deviceMappingService.removeById(dmId);
 
@@ -86,10 +85,6 @@ public class DeviceMappingController {
         }
         return MessageFactory.getOperationSuccess();
     }
-
-    @Resource
-    private DeviceOnlineService deviceOnlineService;
-
 
     /**
      * 获取映射详情
@@ -119,11 +114,14 @@ public class DeviceMappingController {
     public R save(DeviceMapping entity ){
         Long userId = SecurityUtils.getUserId();
         entity.setUserId(userId);
+        if (!IpAddrUtils.isIpv4(entity.getHost())) {
+            return R.fail("请填写ipV4地址");
+        }
         // 判断ip是内网ip
         if (!IpAddrUtils.internalIp(entity.getHost())) {
             return R.fail("请填写内网ip地址");
         }
-        
+
         DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
         entity.setDomainId(deviceMapping.getDomainId());
         entity.setDomain(deviceMapping.getDomain());
