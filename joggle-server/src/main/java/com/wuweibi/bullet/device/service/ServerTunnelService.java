@@ -1,6 +1,9 @@
 package com.wuweibi.bullet.device.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.device.domain.dto.ServerTunnelAdminParam;
+import com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO;
 import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 
@@ -31,5 +34,14 @@ public interface ServerTunnelService extends IService<ServerTunnel> {
      * @return
      */
     boolean updateStatus(Integer tunnelId, int status);
+
+
+    /**
+     * 分页查询通道
+     * @param pageInfo 分页对象
+     * @param params
+     * @return
+     */
+    Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params);
 }
 

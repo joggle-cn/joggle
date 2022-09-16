@@ -1,10 +1,13 @@
 package com.wuweibi.bullet.device.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.device.domain.dto.ServerTunnelAdminParam;
+import com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO;
 import com.wuweibi.bullet.device.domain.vo.TunnelOption;
-import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,7 @@ import java.util.List;
  * @author makejava
  * @since 2022-04-28 21:27:37
  */
-@Service("serverTunnelService")
+@Service
 public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, ServerTunnel> implements ServerTunnelService {
 
     @Override
@@ -35,6 +38,11 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
                 .eq(ServerTunnel::getId, tunnelId)
                 .set(ServerTunnel::getStatus, status)
                 );
+    }
+
+    @Override
+    public Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params) {
+        return this.baseMapper.selectAdminPage(pageInfo, params);
     }
 }
 

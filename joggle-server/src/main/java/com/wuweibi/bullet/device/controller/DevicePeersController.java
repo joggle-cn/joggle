@@ -14,6 +14,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.utils.IpAddrUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -93,6 +94,16 @@ public class DevicePeersController {
             return R.fail("请选择不同设备");
         }
 
+        if (!IpAddrUtils.isIpv4(dto.getServerLocalHost())) {
+            return R.fail("服务侧Host：请填写ipV4地址");
+        }
+        // 判断ip是内网ip
+        if (!IpAddrUtils.internalIp(dto.getServerLocalHost())) {
+            return R.fail("服务侧Host：请填写内网ip地址");
+        }
+
+
+
         // 校验设备
         if (!deviceService.existsUserDeviceId(userId, dto.getServerDeviceId())) {
             return R.fail("服务侧设备不存在");
@@ -136,6 +147,15 @@ public class DevicePeersController {
         if (dto.getServerDeviceId().equals(dto.getClientDeviceId())) {
             return R.fail("请选择不同设备");
         }
+
+        if (!IpAddrUtils.isIpv4(dto.getServerLocalHost())) {
+            return R.fail("服务侧Host：请填写ipV4地址");
+        }
+        // 判断ip是内网ip
+        if (!IpAddrUtils.internalIp(dto.getServerLocalHost())) {
+            return R.fail("服务侧Host：请填写内网ip地址");
+        }
+
         // 校验设备
         if (!deviceService.existsUserDeviceId(userId, dto.getServerDeviceId())) {
             return R.fail("服务侧设备不存在");
