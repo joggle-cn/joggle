@@ -8,4 +8,16 @@
 		       concat('[',area,'] ', name,' ',broadband,'mb/s') as name
 		from t_server_tunnel where buy_status = 1
 	</select>
+
+
+	<select id="selectAdminPage" resultType="com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO">
+		select `id`, `name`, `country`, `area`, `broadband`, `server_addr`, `create_time`,
+			   `price_type`, `sales_price`, `original_price`, `buy_status`, `status`,
+			   `server_end_time`
+		from t_server_tunnel
+  		where name like concat('%',#{params.name},'%')
+		order by id asc
+	</select>
+
+
 </mapper>
