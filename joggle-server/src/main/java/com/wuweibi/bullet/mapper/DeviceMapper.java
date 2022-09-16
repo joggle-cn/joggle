@@ -6,7 +6,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
-import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
