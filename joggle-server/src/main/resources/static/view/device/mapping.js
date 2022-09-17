@@ -333,7 +333,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
                 }
             });
 
-            $("#deviceDoorDialog").modal({
+            $("#switchLineDialog").modal({
                 backdrop: false
             });
         }
@@ -361,18 +361,17 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
          */
         $scope.switchLine = function(){
             if(!$scope.selectTunnelId){
+                layer.msg("请选择通道")
                 return;
             }
             let params = {
                 deviceId: $scope.deviceInfo.id,
                 serverTunnelId: $scope.selectTunnelId,
             }
-
             faceinner.postJson(api["user.device.switch-line"], params , function(res) {
                 if (res.code == 'S00') {
                     $scope.closeSwitchLine();
                     flushData(); // 刷新数据
-
                     delete $scope.selectTunnelId;
                 } else {
                     layer.msg(res.msg);

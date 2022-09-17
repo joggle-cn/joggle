@@ -379,7 +379,12 @@ public class DeviceController {
         if (annotation != null) {
             MsgSwitchLine msg = new MsgSwitchLine();
             msg.setDeviceNo(deviceNo);
-            msg.setServerAddr(serverTunnel.getServerAddr());
+
+            String serverAddr = serverTunnel.getServerAddr();
+            if (!(serverAddr.indexOf(":") > 0)) {
+                serverAddr = serverAddr + ":8083";
+            }
+            msg.setServerAddr(serverAddr);
             annotation.sendMessage(deviceNo,  msg);
         }
 
