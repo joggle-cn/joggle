@@ -193,9 +193,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (domain == null) {
                     throw new RuntimeException("校验域名是否存在");
                 }
-                if(domain.getDueTime() == null){
+                if (domain.getDueTime() == null) {
                     domain.setDueTime(new Date());
                 }
+                domain.setBuyTime(new Date());
 
                 // 计算到期
                 Calendar calendar = Calendar.getInstance();

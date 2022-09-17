@@ -106,7 +106,7 @@
 			  <tbody>
 			  <tr ng-repeat="item in portList">
 				  <td>{{$index+1}}</td>
-				  <td>{{item.domain}}</td>
+				  <td><span ng-bind="item.domain"></span></td>
 				  <td>
 					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
 					  <span ng-if="item.protocol == 5">udp://{{item.host}}:{{item.port}}</span>
@@ -118,7 +118,6 @@
 				  </td>
 				  <td>{{item.description}}</td>
 				  <td>
-
 					  <a ng-click="addMapping(item, 1)" class="btn btn-info">编辑</a>
 					  <a ng-click="delMapping(item.id, $index)" class="btn btn-default">解绑</a>
 				  </td>
