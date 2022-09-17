@@ -372,6 +372,9 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
                 if (res.code == 'S00') {
                     $scope.closeSwitchLine();
                     flushData(); // 刷新数据
+                    setTimeout(function () {
+                        flushData(); // 刷新数据
+                    },2000);
                     delete $scope.selectTunnelId;
                 } else {
                     layer.msg(res.msg);
