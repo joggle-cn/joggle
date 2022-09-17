@@ -25,7 +25,8 @@
 		       do.`mac_addr` macAddr,
 		       b.name as lineName,
 		       b.broadband as broadband,
-			   b.server_addr as serverAddr
+			   b.server_addr as serverAddr,
+		       do.server_tunnel_id as serverTunnelId
 		from t_device a
 	    left join t_device_online do on do.deviceNo = a.deviceId
 		left join t_server_tunnel b on do.server_tunnel_id = b.id

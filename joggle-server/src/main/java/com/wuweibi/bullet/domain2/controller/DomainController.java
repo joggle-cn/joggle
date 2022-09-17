@@ -3,7 +3,6 @@ package com.wuweibi.bullet.domain2.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
@@ -16,6 +15,7 @@ import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.vo.DomainDetailVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -127,16 +127,14 @@ public class DomainController {
      */
     @ApiOperation("获取未绑定的域名/端口列表")
     @GetMapping(value = "/nobind")
-    public R getInfo(
+    public R<List<DomainOptionVO>> getInfo(
             @ApiParam("类型： 1端口 2域名")
-            @RequestParam Integer type) {
+            @RequestParam Integer type,
+            @ApiParam("服务器通道id")
+            @RequestParam Integer serverTunnelId
+    ) {
         Long userId = SecurityUtils.getUserId();
-        List<JSONObject> list = domainService.getListNotBindByUserId(userId, type);
-        list.forEach(item -> {
-            if (item.getInteger("type") == 2) {
-                item.put("domain", item.getString("domain") + "." + item.getString("serverAddr"));
-            }
-        });
+        List<DomainOptionVO> list = domainService.getListNotBindByUserId(userId, serverTunnelId, type);
         return R.success(list);
     }
 

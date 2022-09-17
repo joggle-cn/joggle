@@ -1,14 +1,16 @@
 package com.wuweibi.bullet.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
+import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -41,10 +43,11 @@ public interface DomainService extends IService<Domain> {
     /**
      * 获取未绑定的域名列表
      * @param userId 用户ID
+     * @param serverTunnelId
      * @param type
      * @return
      */
-    List<JSONObject> getListNotBindByUserId(Long userId, Integer type);
+    List<DomainOptionVO> getListNotBindByUserId(Long userId, Integer serverTunnelId, Integer type);
 
 
     /**
@@ -79,14 +82,9 @@ public interface DomainService extends IService<Domain> {
     /**
      * 释放域名
      * @return
+     * @param dto
      */
-    boolean release();
-
-    /**
-     * 释放端口
-     * @return
-     */
-    boolean releasePort();
+    boolean release(@Valid ReleaseResourceDTO dto);
 
     /**
      * 校验用户是否拥有域名
@@ -97,4 +95,11 @@ public interface DomainService extends IService<Domain> {
     boolean exists(Long userId, Long domainId);
 
     DomainDetail getDetail(Long domainId);
+
+    /**
+     * 校验通道是否存在资源
+     * @param serverTunnelId 服务器通道id
+     * @return
+     */
+    boolean checkServerTunnelUse(Integer serverTunnelId);
 }

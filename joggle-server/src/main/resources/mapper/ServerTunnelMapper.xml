@@ -15,7 +15,11 @@
 			   `price_type`, `sales_price`, `original_price`, `buy_status`, `status`,
 			   `server_end_time`
 		from t_server_tunnel
-  		where name like concat('%',#{params.name},'%')
+  		<where>
+		  <if test="params.name != null and params.name != ''">
+			 and name like concat('%',#{params.name},'%')
+		  </if>
+		</where>
 		order by id asc
 	</select>
 

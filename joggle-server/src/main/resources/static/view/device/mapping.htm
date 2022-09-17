@@ -305,7 +305,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">域名/端口</label>
 						<div class="col-sm-6">
-							<select class="form-control" ng-model="selectDomainId" ng-options="item.id as item.domain for item in domainNoBindList">
+							<select class="form-control" ng-model="selectDomainId" ng-options="item.id as item.domainFull for item in domainNoBindList">
 
 							</select>
 						</div>
@@ -462,7 +462,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">域名</label>
 						<div class="col-sm-6">
-							<select class="form-control" ng-model="deviceDoor.domainId" ng-options="item.id as item.domain for item in domainNoBindList">
+							<select class="form-control" ng-model="deviceDoor.domainId" ng-options="item.id as item.domainFull for item in domainNoBindList">
 							</select>
 						</div>
 						<div class="col-sm-4">
@@ -509,7 +509,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">外部端口</label>
 						<div class="col-sm-6">
-							<select class="form-control" ng-model="deviceProxy.domainId" ng-options="item.id as item.domain for item in domainNoBindList">
+							<select class="form-control" ng-model="deviceProxy.domainId" ng-options="item.id as item.domainFull for item in domainNoBindList">
 
 							</select>
 						</div>

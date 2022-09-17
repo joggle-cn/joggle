@@ -5,16 +5,19 @@ package com.wuweibi.bullet.domain2.controller;
 
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * 我的域名接口
@@ -38,6 +41,8 @@ public class DomainAdminController {
      */
     @Resource
     private DomainService domainService;
+    @Resource
+    private ServerTunnelService serverTunnelService;
 
     @Resource
     private DeviceMappingService deviceMappingService;
@@ -47,19 +52,22 @@ public class DomainAdminController {
      */
     @ApiOperation(value = "发放域名", tags="后台")
     @PostMapping("/release")
-    public R<Boolean> releaseDomain() {
-        boolean status = domainService.release();
-        return R.success(status);
+    public R<Boolean> releaseDomain(@RequestBody @Valid ReleaseResourceDTO dto) {
+        // 校验参数
+        if (!ArrayUtils.contains(new int[]{1, 2}, dto.getType())) {
+            return R.fail("资源类型错误");
+        }
+
+        // 校验通道师傅存在
+        ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
+        if (serverTunnel == null) {
+            return R.fail("服务器通道不存在");
+        }
+
+        boolean status = domainService.release(dto);
+        return R.ok(status);
     }
 
-    /**
-     * 搜索可购买的域名
-     */
-    @ApiOperation(value = "发放端口", tags="发放端口")
-    @PostMapping("/port/release")
-    public R<Boolean> releasePort() {
-        boolean status = domainService.releasePort();
-        return R.success(status);
-    }
+
 
 }
