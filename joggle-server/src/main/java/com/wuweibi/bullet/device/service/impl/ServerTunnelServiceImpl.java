@@ -42,7 +42,11 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
 
     @Override
     public Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params) {
-        return this.baseMapper.selectAdminPage(pageInfo, params);
+        Page<ServerTunnelAdminVO> page = this.baseMapper.selectAdminPage(pageInfo, params);
+        page.getRecords().forEach(item->{
+            item.setName("["+item.getCountry()+"|"+item.getArea()+"] "+item.getName());
+        });
+        return page;
     }
 }
 

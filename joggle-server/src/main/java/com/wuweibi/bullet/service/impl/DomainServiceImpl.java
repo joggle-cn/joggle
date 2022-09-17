@@ -10,10 +10,12 @@ import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
+import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
-import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -62,8 +65,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public List<JSONObject> getListNotBindByUserId(Long userId, Integer type) {
-        return this.baseMapper.selectListNotBindByUserId(userId,type);
+    public List<DomainOptionVO> getListNotBindByUserId(Long userId, Integer serverTunnelId, Integer type) {
+        return this.baseMapper.selectListNotBindByUserId(userId, serverTunnelId, type);
     }
 
     @Override
@@ -138,41 +141,48 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     @Transactional
-    public synchronized boolean release() {
-        for (int i=0 ;i< 10;i++){
-            Domain domain = new Domain();
-            domain.setType(DomainTypeEnum.DOMAIN.getType());
-            domain.setCreateTime(new Date());
-            domain.setDomain(CodeHelper.makeNewCode());
-            domain.setOriginalPrice(BigDecimal.ONE);
-            domain.setSalesPrice(BigDecimal.valueOf(0.15));
-            domain.setStatus(DomainStatusEnum.BUY.getStatus());
-            domain.setServerTunnelId(1);// 默认通道
-            this.baseMapper.insert(domain);
+    public synchronized boolean release(@Valid ReleaseResourceDTO dto) {
+        if (dto.getServerTunnelId() == null) {
+            log.warn("release resource error tunId == null");
+            return false;
+        }
+
+        if (dto.getType() == DomainTypeEnum.PORT.getType()) {
+            Integer port = this.baseMapper.selectMaxPort(dto.getServerTunnelId());
+            if (port == null) {
+                port = 1999;
+            }
+            AtomicInteger atomicInteger = new AtomicInteger(port);
+            for (int i = 0; i < 10; i++) {
+                Domain domain = new Domain();
+                domain.setType(DomainTypeEnum.PORT.getType());
+                domain.setCreateTime(new Date());
+                domain.setDomain(String.valueOf(atomicInteger.incrementAndGet()));
+                domain.setOriginalPrice(BigDecimal.valueOf(2));
+                domain.setSalesPrice(BigDecimal.valueOf(0.25)); //
+                domain.setStatus(DomainStatusEnum.BUY.getStatus());
+                domain.setServerTunnelId(dto.getServerTunnelId());// 默认通道
+                this.baseMapper.insert(domain);
+            }
+        }
+
+
+        if(dto.getType() == DomainTypeEnum.DOMAIN.getType()){
+            for (int i=0 ;i< 10;i++){
+                Domain domain = new Domain();
+                domain.setType(DomainTypeEnum.DOMAIN.getType());
+                domain.setCreateTime(new Date());
+                domain.setDomain(CodeHelper.makeNewCode());
+                domain.setOriginalPrice(BigDecimal.ONE);
+                domain.setSalesPrice(BigDecimal.valueOf(0.15));
+                domain.setStatus(DomainStatusEnum.BUY.getStatus());
+                domain.setServerTunnelId(dto.getServerTunnelId());// 默认通道
+                this.baseMapper.insert(domain);
+            }
         }
         return true;
     }
 
-    @Override
-    @Transactional
-    public synchronized boolean releasePort() {
-        // 获取最大的端口号
-        Integer port = this.baseMapper.selectMaxPort();
-
-        AtomicInteger atomicInteger = new AtomicInteger(port);
-        for (int i=0 ;i< 10;i++){
-            Domain domain = new Domain();
-            domain.setType(DomainTypeEnum.PORT.getType());
-            domain.setCreateTime(new Date());
-            domain.setDomain(String.valueOf(atomicInteger.incrementAndGet()));
-            domain.setOriginalPrice(BigDecimal.valueOf(0.5));
-            domain.setSalesPrice(BigDecimal.valueOf(0.25)); //半价
-            domain.setStatus(DomainStatusEnum.BUY.getStatus());
-            domain.setServerTunnelId(1);// 默认通道
-            this.baseMapper.insert(domain);
-        }
-        return true;
-    }
 
     @Override
     public boolean exists(Long userId, Long domainId) {
@@ -184,5 +194,11 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public DomainDetail getDetail(Long domainId) {
         return this.baseMapper.selectDetail(domainId);
+    }
+
+    @Override
+    public boolean checkServerTunnelUse(Integer serverTunnelId) {
+        return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
+                .eq(Domain::getServerTunnelId, serverTunnelId)) > 0;
     }
 }

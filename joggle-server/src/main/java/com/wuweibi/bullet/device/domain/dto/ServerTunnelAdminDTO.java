@@ -1,24 +1,14 @@
-package com.wuweibi.bullet.device.entity;
+package com.wuweibi.bullet.device.domain.dto;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * 通道(ServerTunnel)表实体类
- *
- * @author makejava
- * @since 2022-04-28 21:27:32
- */
-@SuppressWarnings("serial")
 @Data
-@TableName("t_server_tunnel")
-public class ServerTunnel extends Model<ServerTunnel> {
+public class ServerTunnelAdminDTO {
 
     @TableId
     private Integer id;
@@ -30,8 +20,6 @@ public class ServerTunnel extends Model<ServerTunnel> {
     private Integer broadband;
     //线路通道地址
     private String serverAddr;
-    //上线时间
-    private Date createTime;
 
     // 价格类型 1免费 2包月 3包年
     private Integer priceType;
@@ -45,10 +33,11 @@ public class ServerTunnel extends Model<ServerTunnel> {
     // 是否可购买 1可 0不可
     private Integer buyStatus;
 
-    @ApiModelProperty("在线状态 1在线 0不在线")
-    private Integer status;
 
     @ApiModelProperty("服务器到期时间")
     private Date serverEndTime;
-}
 
+
+
+
+}

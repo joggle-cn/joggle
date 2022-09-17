@@ -12,6 +12,8 @@ public class ServerTunnelAdminVO {
     private Integer id;
     //通道名称
     private String name;
+    private String country;
+    private String area;
     //宽带 MB
     private Integer broadband;
     //线路通道地址

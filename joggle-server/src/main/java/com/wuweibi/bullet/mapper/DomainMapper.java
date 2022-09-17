@@ -7,6 +7,7 @@ import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
+import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -51,10 +52,12 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * 获取未绑定的域名列表
      *
      * @param userId 用户ID
-     * @param type
+     * @param serverTunnelId 服务器通道id
+     * @param type 类型
      * @return
      */
-    List<JSONObject> selectListNotBindByUserId(@Param("userId") Long userId, @Param("type") Integer type);
+    List<DomainOptionVO> selectListNotBindByUserId(@Param("userId") Long userId,
+                               @Param("serverTunnelId") Integer serverTunnelId, @Param("type") Integer type);
 
     /**
      * 更新域名有效期
@@ -97,8 +100,9 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * 获取最大的端口号
      *
      * @return
+     * @param serverTunnelId 通道id
      */
-    Integer selectMaxPort();
+    Integer selectMaxPort(@Param("serverTunnelId") Integer serverTunnelId);
 
 
     DomainDetail selectDetail(@Param("domainId") Long domainId);

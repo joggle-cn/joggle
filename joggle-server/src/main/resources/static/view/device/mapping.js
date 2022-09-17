@@ -178,7 +178,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
          * 绑定域名弹框
          */
         $scope.bindDomainDialog = function(item, type){
-            faceinner.get(api['user.domain.nobind'], {type:type}, function(res){
+            let serverTunnelId = item.serverTunnelId;
+            let params = {
+                type: type,
+                serverTunnelId:serverTunnelId
+            }
+            faceinner.get(api['user.domain.nobind'], params, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;
@@ -199,7 +204,13 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
         $scope.openDeviceProxyDialog = function(item){
             $scope.deviceProxy.deviceId = item.id;
             $scope.deviceProxy.deviceProxyPort = 3000;
-            faceinner.get(api['user.domain.nobind'], {type: 1}, function(res){
+
+            let serverTunnelId = item.serverTunnelId;
+            let params = {
+                type:1,
+                serverTunnelId:serverTunnelId
+            }
+            faceinner.get(api['user.domain.nobind'], params, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;
@@ -246,7 +257,13 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
                 deviceId: item.id,
                 enable: false
             }
-            faceinner.get(api['user.domain.nobind'], {type: 2,}, function(res){
+
+            let serverTunnelId = item.serverTunnelId;
+            let params = {
+                type: 2,
+                serverTunnelId:serverTunnelId
+            }
+            faceinner.get(api['user.domain.nobind'], params, function(res){
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.domainNoBindList = res.data;
