@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 public class OrderPayInfo {
@@ -15,9 +16,15 @@ public class OrderPayInfo {
     private BigDecimal priceAmount;
 
     /**
-     * 购买的时长，购买的流量
+     * 购买的时长(天)，购买的流量
      */
     private Long amount;
+
+
+    /**
+     * 购买的时长(秒)，购买的流量
+     */
+    private Long realAmount;
 
     @ApiModelProperty("购买后的实效时间")
     private Long dueTime;
@@ -26,4 +33,8 @@ public class OrderPayInfo {
 
     private Integer payType;
     private Integer resourceType;
+
+
+    @ApiModelProperty("通道服务器到期时间")
+    private Date serverEndTime;
 }

@@ -65,7 +65,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * @param domainId
      * @param dueTime
      */
-    @Update("update t_domain set due_time = #{dueTime} where id = #{domainId}")
+    @Update("update t_domain set due_time = #{dueTime},buy_time=sysdate() where id = #{domainId}")
     void updateDueTime(@Param("domainId") Long domainId, @Param("dueTime") Date dueTime);
 
     /**
