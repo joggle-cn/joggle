@@ -119,7 +119,7 @@ public class OrdersAppController {
         long id = CodeHelper.getIdWorker().nextId();
         orders.setOrderNo(String.valueOf(id));
         orders.setName(orderPayInfo.getName());
-        orders.setAmount(orderPayInfo.getAmount());
+        orders.setAmount(orderPayInfo.getRealAmount()); // 单位 秒 GB
         orders.setPayType(ordersDTO.getPayType());
         orders.setUserId(userId);
         orders.setResourceType(ordersDTO.getResourceType());

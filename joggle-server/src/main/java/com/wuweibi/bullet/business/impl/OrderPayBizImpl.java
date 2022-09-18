@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.business.impl;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.wuweibi.bullet.business.OrderPayBiz;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
@@ -19,7 +20,7 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SpringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,8 +87,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
-                if (amount.compareTo(MAX_BUY_DAYS) >= 0) {
-                    return R.fail("最大支持购买300天");
+                if (amount.compareTo(MAX_BUY_DAYS) > 0) {
+                    return R.fail("最大支持购买360天");
                 }
                 DomainDetail domain = domainService.getDetail(resId);
                 // 校验域名是否存在
@@ -123,9 +124,12 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 calendar.set(Calendar.MINUTE, 59);
                 calendar.set(Calendar.SECOND, 59);
                 dueTime = calendar.getTime();
-
+                orderPayInfo.setServerEndTime(serverTunnel.getServerEndTime());
                 if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
-                    return R.fail("该通道服务器到期时间：\n" + DateFormatUtils.format(serverTunnel.getServerEndTime(), "yyyy-MM-dd HH:mm:ss"));
+                    long size = DateUtil.betweenDay(domain.getDueTime(), serverTunnel.getServerEndTime(), true);
+                    dueTime = DateUtils.addDays(domain.getDueTime(), (int)size);
+                    amount = new Long(size);
+//                    return R.fail("该通道服务器到期时间：\n" + DateFormatUtils.format(serverTunnel.getServerEndTime(), "yyyy-MM-dd HH:mm:ss"));
                 }
 
                 // 计算价格 单价 * 天数
@@ -138,7 +142,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
                 // 计算到期
                 orderPayInfo.setDueTime(dueTime.getTime());
-                orderPayInfo.setAmount(amount*24*60*60l);
+                orderPayInfo.setAmount(amount);
+                orderPayInfo.setRealAmount(amount*24*60*60l);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
                 orderPayInfo.setPriceAmount(originalAmount);
                 orderPayInfo.setPayAmount(payAmount);

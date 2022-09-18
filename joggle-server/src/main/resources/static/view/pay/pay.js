@@ -7,7 +7,6 @@
  */
 define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//加载依赖js,
 
-
 	var callback = ["$scope","$routeParams",'$location',  function ($scope, $routeParams, $location) {
 
         $scope.active = 'domain';
@@ -38,14 +37,14 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
         $scope.fixDays = function (){
             if($scope.amount){
                 $scope.amount = parseInt(($scope.amount+"").replace(/^(0+)|[^\d]+/g,''))
-
             }
         }
 
 
-        $scope.$watch('amount', function(newVal, b){
-            $scope.amount  = parseInt(newVal);
-            calculate();
+        $scope.$watch('amount', function(newVal, oldVal){
+            if(newVal != oldVal){
+                calculate();
+            }
         });
         $scope.$watch('payType', function(newVal, b){
             $scope.payType  = newVal;
@@ -70,6 +69,10 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                     $scope.$apply(function() {
                         $scope.payMoney = res.data.payAmount;
                         $scope.dueTime = res.data.dueTime;
+                        if ($scope.amount != res.data.amount) {
+                            layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});
+                        }
+                        $scope.amount = res.data.amount;
                     });
                 }else{
                     layer.msg(res.msg.replaceAll('\n', "<br/>"), {icon: 9});
