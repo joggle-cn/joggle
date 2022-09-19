@@ -5,7 +5,7 @@
 
 	<select id="selectOptionList" resultType="com.wuweibi.bullet.device.domain.vo.TunnelOption">
 		select id,
-		       concat('[',area,'] ', name,' ',broadband,'mb/s') as name
+		       concat('[',area,'] ', name,' ',broadband,'Mbps') as name
 		from t_server_tunnel where buy_status = 1
 	</select>
 
