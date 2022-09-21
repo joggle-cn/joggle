@@ -159,6 +159,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 orderPayInfo.setPayAmount(payAmount);
                 orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
                 orderPayInfo.setAmount(amount);
+                orderPayInfo.setRealAmount(amount);
                 break;
         }
 

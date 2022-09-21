@@ -201,4 +201,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
                 .eq(Domain::getServerTunnelId, serverTunnelId)) > 0;
     }
+
+    @Override
+    public boolean updateDueTimeById(Long domainId, Date dueTime) {
+        return this.baseMapper.updateDueTimeById(domainId, dueTime);
+    }
 }

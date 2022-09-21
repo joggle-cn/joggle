@@ -11,6 +11,7 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,4 +103,6 @@ public interface DomainService extends IService<Domain> {
      * @return
      */
     boolean checkServerTunnelUse(Integer serverTunnelId);
+
+    boolean updateDueTimeById(Long id, Date time);
 }

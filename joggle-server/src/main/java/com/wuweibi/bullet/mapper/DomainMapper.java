@@ -65,8 +65,11 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * @param domainId
      * @param dueTime
      */
-    @Update("update t_domain set due_time = #{dueTime},buy_time=sysdate() where id = #{domainId}")
+    @Update("update t_domain set due_time = #{dueTime}, buy_time=sysdate() where id = #{domainId}")
     void updateDueTime(@Param("domainId") Long domainId, @Param("dueTime") Date dueTime);
+
+    @Update("update t_domain set due_time = #{dueTime} where id = #{domainId}")
+    boolean updateDueTimeById(@Param("domainId") Long domainId, @Param("dueTime") Date dueTime);
 
     /**
      * 查询过期的域名
@@ -106,4 +109,5 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
 
     DomainDetail selectDetail(@Param("domainId") Long domainId);
+
 }
