@@ -89,9 +89,10 @@ public class Bullet3Annotation {
 //        deviceOnlineService.checkDeviceStatus();
 
         // 更新服务通道得在线状态
-
         ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
         serverTunnelService.updateStatus(tunnelId, 1);
+
+        log.info("websocket[{}] online", tunnelId);
     }
 
 
