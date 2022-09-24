@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.domain.vo;
+package com.wuweibi.bullet.domain2.domain.vo;
 
 import lombok.Data;
 

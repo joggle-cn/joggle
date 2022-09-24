@@ -82,6 +82,8 @@ public class DeviceOpenInnerController {
             deviceNo = CodeHelper.makeNewCode();
         }
         authVO.setDeviceNo(deviceNo);
+        authVO.setConcurrentNum(device.getConcurrentNum());
+
         // 设备在线
         DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
         deviceOnlineInfoDTO.setDeviceNo(deviceNo);
@@ -93,7 +95,6 @@ public class DeviceOpenInnerController {
         deviceOnlineInfoDTO.setArch(deviceAuthDTO.getArch());
         deviceOnlineInfoDTO.setServerTunnelId(deviceAuthDTO.getServerTunnelId());
         deviceOnlineService.saveOrUpdate(deviceOnlineInfoDTO);
-
         return R.ok(authVO);
     }
 

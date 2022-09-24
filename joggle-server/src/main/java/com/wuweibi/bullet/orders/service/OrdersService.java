@@ -33,5 +33,14 @@ public interface OrdersService extends IService<Orders> {
      * @return
      */
     Page<OrdersListAdminVO> getAdminPage(Page pageInfo, OrdersAdminParam params);
+
+
+    /**
+     * 更新订单状态
+     * @param orderId 订单id
+     * @param status 订单状态
+     * @return
+     */
+    boolean updateStatus(Long orderId, int status);
 }
 

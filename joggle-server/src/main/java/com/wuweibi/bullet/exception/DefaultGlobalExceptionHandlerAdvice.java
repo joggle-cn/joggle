@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.exception;
 
+import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.domain.FieldMsg;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -102,6 +103,19 @@ public class DefaultGlobalExceptionHandlerAdvice {
         return R.fail();
     }
 
+
+
+    /**
+     * 业务异常（不输出异常栈）
+     * @param exception
+     * @return R
+     */
+    @ExceptionHandler({ RException.class })
+    @ResponseStatus(HttpStatus.OK)
+    public R bindExceptionHandler(RException exception) {
+        log.info("业务异常,ex = {}", exception.getMessage());
+        return exception.getResult();
+    }
 
 
 }

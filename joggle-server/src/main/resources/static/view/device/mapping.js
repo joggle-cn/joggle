@@ -87,14 +87,12 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
          * 编辑设备
          */
         $scope.addMapping = function(item, type){
-            if(type == 2){
-                if ($rootScope.user.userCertification != 1) {
-                    layer.msg("您还没有实名认证，实名认证后可正常使用。", {icon: 9})
-                    setTimeout(function () {
-                        window.location.href = "#/user/certification"
-                    }, 2000);
-                    return;
-                }
+            if ($rootScope.user.userCertification != 1) {
+                layer.msg("您还没有实名认证，实名认证后可正常使用。", {icon: 9})
+                setTimeout(function () {
+                    window.location.href = "#/user/certification"
+                }, 2000);
+                return;
             }
             item.type = type;
             $scope.entity = item;
@@ -103,8 +101,6 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
                 backdrop: false
             });
             $('#addMapping').on('shown.bs.modal', function () {
-
-
                 $("#stautsCheckbox").bootstrapSwitch({
                     state: $scope.entity.status,
                     onSwitchChange:function (event, state) {
@@ -187,7 +183,7 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
          * 绑定域名弹框
          */
         $scope.bindDomainDialog = function(item, type){
-            if ($rootScope.user.userCertification != 1 && type == 2) {
+            if ($rootScope.user.userCertification != 1) {
                 layer.msg("您还没有实名认证，实名认证后可正常使用。", {icon: 9})
                 setTimeout(function () {
                     window.location.href = "#/user/certification"

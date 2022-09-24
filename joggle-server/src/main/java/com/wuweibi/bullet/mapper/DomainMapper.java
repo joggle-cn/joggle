@@ -3,11 +3,12 @@ package com.wuweibi.bullet.mapper;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuweibi.bullet.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -110,4 +111,10 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     DomainDetail selectDetail(@Param("domainId") Long domainId);
 
+    /**
+     * 查询指定过期天数时间的资源
+     * @param days 天数
+     * @return
+     */
+    List<DomainReleaseVO> selectByDueDay(@Param("days") int days);
 }

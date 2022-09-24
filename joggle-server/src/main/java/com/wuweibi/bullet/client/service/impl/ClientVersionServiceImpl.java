@@ -58,4 +58,13 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
         clientVersion.setUpdateTime(new Date());
         return this.baseMapper.updateById(clientVersion);
     }
+
+    @Override
+    public String getMaxVersion() {
+        ClientVersion clientVersion = this.getById(1);
+        if(clientVersion == null){
+            return "v1.3.0";
+        }
+        return String.format("v%s", clientVersion.getVersion());
+    }
 }

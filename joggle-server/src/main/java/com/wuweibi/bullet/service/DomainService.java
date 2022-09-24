@@ -2,7 +2,7 @@ package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
@@ -105,4 +105,14 @@ public interface DomainService extends IService<Domain> {
     boolean checkServerTunnelUse(Integer serverTunnelId);
 
     boolean updateDueTimeById(Long id, Date time);
+
+    /**
+     * 释放资源id
+     * @param id domainId
+     * @return
+     */
+    boolean releaseById(Long id);
+
+    boolean resourceDueTimeRelease();
+
 }

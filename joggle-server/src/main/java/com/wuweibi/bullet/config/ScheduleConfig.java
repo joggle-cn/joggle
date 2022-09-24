@@ -22,8 +22,12 @@ public class ScheduleConfig implements SchedulingConfigurer {
     @Resource
     private DomainService domainService;
 
+    @Resource
+    private UserCertificationTaskService userCertificationTaskService;
 
-    @Bean()
+
+
+    @Bean
     public Executor taskExecutor() {
         return Executors.newScheduledThreadPool(20);
     }
@@ -40,20 +44,26 @@ public class ScheduleConfig implements SchedulingConfigurer {
      * 每10秒点执行检查是否过期
      */
     @Scheduled(fixedRate = 1000*10)
-    public void work() {
-        // task execution logic
+    public void checkStatus() {
         domainService.checkStatus();
     }
 
-    @Resource
-    private UserCertificationTaskService userCertificationTaskService;
 
     /**
-     * 每60秒执行检查
+     * 每60秒执行检查 用户认证自动化检查
      */
     @Scheduled(fixedRate = 1000*60)
     public void work4UserCertificationProgress() {
         userCertificationTaskService.progress();
+    }
+
+
+    /**
+     * 到期超过2天未续费的资源释放。
+     */
+    @Scheduled(fixedRate = 1000*60 * 10)
+    public void resourceDueTimeRelease() {
+        domainService.resourceDueTimeRelease();
     }
 
 

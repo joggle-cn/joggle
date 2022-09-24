@@ -32,4 +32,11 @@ public interface ClientVersionService extends IService<ClientVersion> {
      * @return
      */
     int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum);
+
+    /**
+     * 获取最大版本
+     * @return
+     */
+    String getMaxVersion();
+
 }

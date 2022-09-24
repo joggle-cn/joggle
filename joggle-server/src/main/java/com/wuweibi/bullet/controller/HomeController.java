@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.controller;
 
+import com.wuweibi.bullet.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.R;
@@ -48,6 +49,9 @@ public class HomeController {
 	private BulletConfig bulletConfig;
 
 
+	@Resource
+	private ClientVersionService clientVersionService;
+
     /**
      * 初始化接口
      * @return
@@ -57,12 +61,12 @@ public class HomeController {
 	public R init(){
 		String websiteUrl = bulletConfig.getServerUrl();
 		String website = websiteUrl.substring(websiteUrl.indexOf("://")+3);
-
+		String version = clientVersionService.getMaxVersion();
         Map map = new HashMap(6);
         map.put("website", website);
         map.put("websiteUrl", websiteUrl);
-        map.put("clientVersion", "v1.3.0");
-        map.put("serverVersion", "v1.2.0");
+        map.put("clientVersion", version);
+        map.put("serverVersion", "v1.3.0");
         map.put("dockerClientVersion", "0.0.7");
         map.put("apkClientVersion", "0.0.2");
 		resourceManager.loadResource();

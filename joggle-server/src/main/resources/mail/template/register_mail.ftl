@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bullet激活页面</title>
+    <title>Joggle账号激活页面</title>
 </head>
 <body style="font-family: 'Microsoft YaHei'">
 
@@ -14,9 +14,9 @@
         </div>
         <div style="width: 285px; margin: 0 auto;">
             <!-- <img src="" alt=""/> -->
-            <div style="color: #029a5b;">距离使用Bullet就差一步啦，加油！</div>
-            <span style="color: #464646; font-size: 14px;">Bullet是一个帮您快速内网穿透的产品！</span>
-            <a href="https://help.joggle.cn/docs/app/gitlab.html"></a>《Bullet使用教程》</div>
+            <div style="color: #029a5b;">距离使用Joggle就差一步啦，加油！</div>
+            <span style="color: #464646; font-size: 14px;">Joggle是一个帮您快速实现内网穿透的产品！</span>
+            <a href="https://help.joggle.cn/docs/app/gitlab.html"></a>《Joggle使用教程》</div>
         </div>
         <div style=" margin:0 auto; width: 260px; margin-top: 50px;">
             <a href="${activateUrl!}" style="display:inline-block; height:35px; line-height: 35px; text-decoration: none; font-size: 16px;color: #ffffff; text-align: center; width: 260px; background: #3ab94f;">激活账号</a>

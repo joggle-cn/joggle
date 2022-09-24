@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.device.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -12,4 +13,6 @@ public class DeviceAuthVO {
     private String deviceNo;
 
 
+    @ApiModelProperty("设备并发连接数")
+    private Integer concurrentNum;
 }
