@@ -6,3 +6,6 @@ ALTER TABLE `orders`
 ALTER TABLE `t_device`
     ADD COLUMN `update_time` datetime NULL COMMENT '更新时间' AFTER `device_secret`,
     ADD COLUMN `concurrent_num` int NULL DEFAULT 5 COMMENT '设备的并发连接数' AFTER `update_time`;
+
+
+-- 线上已执行
