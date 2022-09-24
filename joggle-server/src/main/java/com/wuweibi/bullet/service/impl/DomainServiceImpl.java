@@ -220,6 +220,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
                 .set(Domain::getUserId, null)
                 .set(Domain::getDueTime, null)
                 .set(Domain::getBuyTime, null)
+                .set(Domain::getStatus, DomainStatusEnum.BUY.getStatus())
         );
     }
 
