@@ -63,5 +63,14 @@ public class OrdersDetailAdminVO {
     //更新时间
     private Date updateTime;
 
+    /**
+     * 购买用户昵称
+     */
+    @ApiModelProperty("购买用户昵称")
+    private String buyerNickname;
+
+    @ApiModelProperty("购买用户Email")
+    private String buyerEmail;
+
 }
 

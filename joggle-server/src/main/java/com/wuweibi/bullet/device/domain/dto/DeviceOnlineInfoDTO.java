@@ -32,4 +32,5 @@ public class DeviceOnlineInfoDTO {
 
     @ApiModelProperty("通道id")
     private Integer serverTunnelId;
+
 }

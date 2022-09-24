@@ -26,19 +26,24 @@ public class Device extends Model<Device> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
+
 	private String name;
+
 	@TableField(value = "deviceId")
 	private String deviceNo;
 
-
     @TableField(value = "createTime")
 	private Date createTime;
+
     @TableField(value = "userId")
 	private Long userId;
 
 	@ApiModelProperty("设备秘钥")
 	@TableField("device_secret")
 	private String deviceSecret;
+
+	@ApiModelProperty("设备并发连接数")
+	private Integer concurrentNum;
 
 
 

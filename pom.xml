@@ -87,6 +87,7 @@
     <modules>
         <module>joggle-common</module>
         <module>joggle-server</module>
+        <module>joggle-common-alipay</module>
     </modules>
 
     <dependencyManagement>
@@ -139,6 +140,9 @@
                 <artifactId>fastjson</artifactId>
                 <version>1.2.83</version>
             </dependency>
+
+
+
 
         </dependencies>
 

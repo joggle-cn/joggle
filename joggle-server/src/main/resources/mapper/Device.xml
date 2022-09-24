@@ -19,7 +19,7 @@
 <!--	获取设备详情-->
     <select id="selectDeviceInfoById" resultType="com.wuweibi.bullet.device.domain.vo.DeviceDetailVO">
 		select
-		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId,
+		   a.`id`, a.`name`, a.`deviceId` as deviceNo, a.`createTime`, a.userId as userId, a.concurrent_num,
 				do.`intranet_ip` as intranetIp,
 		         do.`status`, do.`public_ip`, do.arch,  do.os, do.client_version,
 		       do.`mac_addr` macAddr,

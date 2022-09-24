@@ -11,7 +11,7 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.vo.DomainDetailVO;

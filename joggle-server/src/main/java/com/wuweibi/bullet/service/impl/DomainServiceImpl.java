@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
@@ -21,9 +23,15 @@ import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.websocket.BulletAnnotation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +41,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -46,6 +52,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author marker
  * @since 2017-12-09
  */
+
+@Slf4j
 @Service
 public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> implements DomainService {
 
@@ -115,8 +123,6 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             }
             // 更新Mapping状态
             deviceMappingMapper.updateStatusById(mappingId, 0);
-
-
         }
 
     }
@@ -206,4 +212,56 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     public boolean updateDueTimeById(Long domainId, Date dueTime) {
         return this.baseMapper.updateDueTimeById(domainId, dueTime);
     }
+
+    @Override
+    public boolean releaseById(Long id) {
+        return this.update(Wrappers.<Domain>lambdaUpdate()
+                .eq(Domain::getId, id)
+                .set(Domain::getUserId, null)
+                .set(Domain::getDueTime, null)
+                .set(Domain::getBuyTime, null)
+        );
+    }
+
+
+    @Resource
+    private MailService mailService;
+
+    @Resource
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Resource
+    private BulletConfig bulletConfig;
+
+    @Override
+    public boolean resourceDueTimeRelease() {
+        log.debug("[资源到期释放] 开始");
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("days", 2);
+        Cursor<DomainReleaseVO> cursor = sqlSession.selectCursor(DomainMapper.class.getName() + ".selectByDueDay", params);
+        Iterator<DomainReleaseVO> iter = cursor.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            DomainReleaseVO domain = iter.next();
+            log.debug("user domain[{}] release", domain.getDomainFull());
+            Map<String, Object> param = new HashMap<>(3);
+            param.put("domain", domain.getDomainFull());
+            param.put("url", bulletConfig.getServerUrl() );
+            param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(),"yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("%s到期释放提醒", domain.getDomainFull());
+
+            this.releaseById(domain.getId());
+            mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
+        }
+        try {
+            cursor.close();
+        } catch (IOException e) {
+            log.error("", e);
+        }
+
+        log.debug("[资源到期释放] 结束 处理数据量：{}", count);
+        return true;
+    }
+
 }

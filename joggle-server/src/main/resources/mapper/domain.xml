@@ -3,7 +3,7 @@
 <mapper namespace="com.wuweibi.bullet.mapper.DomainMapper">
 
 	<!--	根据用户ID查询归属域名-->
-	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain.vo.DomainVO" parameterType="java.lang.Long">
+	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainVO" parameterType="java.lang.Long">
 		select d.id, d.domain,
 			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
 			   d.type, d.status, d.due_time as dueDateTime
@@ -71,6 +71,16 @@
 		 left join t_device_mapping b on a.id = b.domain_id
 		 left join t_device c on b.device_id = c.id
 		 where a.due_time &lt; SYSDATE() and c.deviceId is not null and b.`status` = 1
+	</select>
+
+
+	<select id="selectByDueDay" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO">
+		select d.*,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull,
+			   (select email from t_sys_users where t_sys_users.id = d.user_id) as userEmail
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		where d.user_id >0 and d.due_time &lt; date_add(sysdate(), interval -#{days} day)
 	</select>
 
 </mapper>

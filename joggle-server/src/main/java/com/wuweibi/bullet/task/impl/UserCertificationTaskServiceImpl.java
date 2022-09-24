@@ -94,6 +94,10 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
         log.debug("[实名认证处理] 结束 处理数据量：{}", count);
 
     }
+    @Resource
+    private BulletConfig bulletConfig;
+
+
 
 
     @Data
@@ -106,8 +110,6 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
         private String birthday; // ": "1965-3-10"
     }
 
-    @Resource
-    private BulletConfig bulletConfig;
 
     /**
      * 调用 三方接口
