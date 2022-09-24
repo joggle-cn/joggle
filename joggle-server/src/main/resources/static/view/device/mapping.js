@@ -70,6 +70,11 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
         //     }
         // }
 
+
+        $scope.upgradeConnect = function(){
+            alert('升级并发连接数，请联系QQ：903595558');
+        }
+
         /**
          * 展示映射状态
          * @param item

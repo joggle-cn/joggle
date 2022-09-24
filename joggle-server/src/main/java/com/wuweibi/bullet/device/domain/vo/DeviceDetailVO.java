@@ -66,8 +66,10 @@ public class DeviceDetailVO {
 
 
 	private String lineName;
-	private Integer broadband;
+	private Integer broadband; 
 
+	@ApiModelProperty("设备并发连接数")
+	private Integer concurrentNum;
 
 	@Override
 	public String toString() {

@@ -32,6 +32,7 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-6">版本：{{deviceInfo.clientVersion}}</div>
+						<div class="col-sm-6">系统：{{deviceInfo.os +'_'+deviceInfo.arch}}</div>
 					</div>
 				</div>
 			</div>
@@ -49,28 +50,41 @@
 	<hr>
 
 	<div class="row ">
-		<div class="col-xs-3">
+		<div class="col-xs-2">
 			<div class="mapping-feature-item">
 				<h5 ng-click="switchLineDialog()">线路</h5>
 				<p>(<span ng-bind="deviceInfo.lineName"></span>)</p>
 			</div>
 		</div>
-		<div class="col-xs-3">
+		<div class="col-xs-2">
 			<div class="mapping-feature-item">
 				<h5>宽带</h5>
 				<p>{{deviceInfo.broadband}}MB</p>
 			</div>
 		</div>
-		<div class="col-xs-3">
+		<div class="col-xs-2">
 			<div class="mapping-feature-item">
 				<h5>域名</h5>
 				<p>{{features.domainCount}}个</p>
 			</div>
 		</div>
-		<div class="col-xs-3">
+		<div class="col-xs-2">
 			<div class="mapping-feature-item">
 				<h5>端口</h5>
 				<p>{{features.portCount}}个</p>
+			</div>
+		</div>
+		<div class="col-xs-2">
+			<div class="mapping-feature-item">
+				<h5>并发连接 <a href ng-click="upgradeConnect()">升级</a></h5>
+				<p><span class="label label-info">{{deviceInfo.concurrentNum}}个</span> </p>
+			</div>
+		</div>
+
+		<div class="col-xs-2">
+			<div class="mapping-feature-item">
+				<h5>公网IP</h5>
+				<p>{{deviceInfo.publicIp}}</p>
 			</div>
 		</div>
 	</div>

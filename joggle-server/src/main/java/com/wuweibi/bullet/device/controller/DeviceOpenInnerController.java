@@ -2,8 +2,6 @@ package com.wuweibi.bullet.device.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.wuweibi.bullet.business.DeviceBiz;
-import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.device.domain.dto.DeviceAuthDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceAuthVO;
@@ -11,8 +9,6 @@ import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
-import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.CodeHelper;
@@ -40,27 +36,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/inner/open/device")
 public class DeviceOpenInnerController {
-    /**
-     * 服务对象
-     */
-    @Resource
-    private DataMetricsService dataMetricsService;
 
     @Resource
     private DeviceService deviceService;
-
-    @Resource
-    private UserFlowService userFlowService;
-
-    @Resource
-    private BulletConfig bulletConfig;
-
-
-
-
-    @Resource
-    private DeviceBiz deviceBiz;
-
 
 
     @ApiOperation("设备秘钥校验【服务端调用校验】")
