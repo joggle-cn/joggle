@@ -52,14 +52,20 @@
 	<div class="row ">
 		<div class="col-xs-2">
 			<div class="mapping-feature-item">
-				<h5 ng-click="switchLineDialog()">线路</h5>
-				<p>(<span ng-bind="deviceInfo.lineName"></span>)</p>
+				<h5>线路 <a href ng-click="switchLineDialog()">切换</a></h5>
+				<p><span ng-bind="deviceInfo.lineName"></span> <{{deviceInfo.broadband}}mbps></p>
 			</div>
 		</div>
 		<div class="col-xs-2">
 			<div class="mapping-feature-item">
-				<h5>宽带</h5>
-				<p>{{deviceInfo.broadband}}MB</p>
+				<h5>并发连接 <a href ng-click="upgradeConnect()">升级</a></h5>
+				<p><span class="label label-info">{{deviceInfo.concurrentNum}}个</span> </p>
+			</div>
+		</div>
+		<div class="col-xs-2">
+			<div class="mapping-feature-item">
+				<h5>公网IP</h5>
+				<p>{{deviceInfo.publicIp}}</p>
 			</div>
 		</div>
 		<div class="col-xs-2">
@@ -74,19 +80,7 @@
 				<p>{{features.portCount}}个</p>
 			</div>
 		</div>
-		<div class="col-xs-2">
-			<div class="mapping-feature-item">
-				<h5>并发连接 <a href ng-click="upgradeConnect()">升级</a></h5>
-				<p><span class="label label-info">{{deviceInfo.concurrentNum}}个</span> </p>
-			</div>
-		</div>
 
-		<div class="col-xs-2">
-			<div class="mapping-feature-item">
-				<h5>公网IP</h5>
-				<p>{{deviceInfo.publicIp}}</p>
-			</div>
-		</div>
 	</div>
 
 
@@ -383,7 +377,9 @@
 				<h4 class="modal-title">消息提示</h4>
 			</div>
 			<div class="modal-body">
-				确定要解绑该设备？
+				确定要解绑该设备？<br/><br/>
+
+				<p><span class="label label-warning">注意：解绑后，自动删除所有映射！</span></p>
 			</div>
 			<div class="modal-footer">
 				<a ng-click="confirmDeleteDevice()" class="btn btn-default">确 定</a>
