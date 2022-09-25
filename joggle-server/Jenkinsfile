@@ -89,7 +89,7 @@ pipeline {
 
                             echo "从服务器下载linux版本的ngrokd文件"
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/linux_amd64/ngrokd ./bin/ngrokd
-                            tar -zcvf bullet-server-linux.tar.gz --xform 's#^#joggle-server/#' *
+                            tar -zcvf bullet-server-linux.tar.gz *
                             scp -o StrictHostKeyChecking=no bullet-server-linux.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-linux.tar.gz
@@ -97,7 +97,7 @@ pipeline {
 
                             echo "从服务器下载Mac版本的ngrokd文件"
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/darwin_amd64/ngrokd ./bin/ngrokd
-                            tar -zcvf bullet-server-darwin.tar.gz --xform 's#^#joggle-server/#' *
+                            tar -zcvf bullet-server-darwin.tar.gz *
                             scp -o StrictHostKeyChecking=no bullet-server-darwin.tar.gz  root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-darwin.tar.gz
@@ -106,7 +106,7 @@ pipeline {
                             echo "从服务器下载Win版本的ngrokd文件"
 
                             scp -o StrictHostKeyChecking=no root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/ngrok/windows_amd64/ngrokd.exe ./bin/ngrokd.exe
-                            tar -zcvf bullet-server-windows.tar.gz --xform 's#^#joggle-server/#' *
+                            tar -zcvf bullet-server-windows.tar.gz *
                             scp -o StrictHostKeyChecking=no bullet-server-windows.tar.gz   root@192.168.1.6:/opt/baota/docker-baota/www/wwwroot/open.joggle.cn/bullet/
 
                             rm -rf bullet-server-windows.tar.gz
