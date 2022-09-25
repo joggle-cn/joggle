@@ -61,7 +61,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
     /**
      * 到期超过2天未续费的资源释放。
      */
-    @Scheduled(fixedRate = 100*1 * 1)
+    @Scheduled(fixedRate = 1000 * 60 * 10)
     public void resourceDueTimeRelease() {
         domainService.resourceDueTimeRelease();
     }
