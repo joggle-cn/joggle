@@ -259,6 +259,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             cursor.close();
         } catch (IOException e) {
             log.error("", e);
+        } finally {
+            sqlSession.close();
         }
 
         log.debug("[资源到期释放] 结束 处理数据量：{}", count);

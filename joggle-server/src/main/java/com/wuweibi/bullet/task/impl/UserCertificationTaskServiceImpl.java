@@ -89,6 +89,8 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
             cursor.close();
         } catch (IOException e) {
             log.error("", e);
+        } finally {
+            sqlSession.close();
         }
 
         log.debug("[实名认证处理] 结束 处理数据量：{}", count);
