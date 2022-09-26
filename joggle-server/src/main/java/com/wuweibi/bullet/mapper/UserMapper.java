@@ -1,7 +1,10 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wuweibi.bullet.entity.User;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -67,4 +70,12 @@ public interface UserMapper extends BaseMapper<User> {
     boolean updateEnabled(@Param("userId") Long userId);
 
     boolean updateUserCertification(@Param("userId") Long userId,@Param("state") Integer state);
+
+    /**
+     * 查询用户列表
+     * @param pageInfo 分页对象
+     * @param params 参数
+     * @return
+     */
+    Page<UserListVO> selectUserList(Page pageInfo, @Param("params")  UserAdminParam params);
 }

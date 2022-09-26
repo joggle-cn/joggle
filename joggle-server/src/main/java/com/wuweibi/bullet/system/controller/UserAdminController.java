@@ -1,13 +1,14 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.system.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
+import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -15,7 +16,11 @@ import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
@@ -56,6 +61,29 @@ public class UserAdminController {
 
     @Resource
     private UserFlowService userFlowService;
+
+
+
+    /**
+     * 分页查询所有数据2
+     *
+     * @param page   分页对象
+     * @param params 查询实体
+     * @return 所有数据
+     */
+    @ApiOperation("用户分页查询")
+    @GetMapping("/list")
+    public R<Page<UserListVO>> getPageList(PageParam page, UserAdminParam params) {
+        return R.ok(this.userService.getList(page.toMybatisPlusPage(), params));
+    }
+
+
+
+
+
+
+
+
 
     /**
      * 获取登录的用户信息

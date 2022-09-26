@@ -11,7 +11,7 @@ import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;

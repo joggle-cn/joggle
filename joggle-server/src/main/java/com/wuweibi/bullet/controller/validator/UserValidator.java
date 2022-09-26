@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.controller.validator;
 
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
