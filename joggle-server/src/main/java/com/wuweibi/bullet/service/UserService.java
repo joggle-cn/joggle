@@ -1,10 +1,13 @@
 package com.wuweibi.bullet.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
 
 import java.math.BigDecimal;
 
@@ -103,4 +106,12 @@ public interface UserService extends IService<User> {
      */
     boolean updateUserCertification(Long userId, Integer state);
 
+
+    /**
+     * 用户分页查询
+     * @param pageInfo 分页对象
+     * @param params 参数
+     * @return
+     */
+    Page<UserListVO> getList(Page pageInfo, UserAdminParam params);
 }

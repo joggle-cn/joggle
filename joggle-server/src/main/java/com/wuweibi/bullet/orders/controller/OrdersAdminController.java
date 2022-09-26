@@ -10,7 +10,7 @@ import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersAdminParam;
 import com.wuweibi.bullet.orders.domain.OrdersDetailAdminVO;

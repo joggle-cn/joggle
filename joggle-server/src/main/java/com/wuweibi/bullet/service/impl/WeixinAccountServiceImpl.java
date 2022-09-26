@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.WeixinAccount;
 import com.wuweibi.bullet.jwt.domain.JwtSession;
 import com.wuweibi.bullet.jwt.utils.JWTUtil;

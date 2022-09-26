@@ -2,13 +2,16 @@ package com.wuweibi.bullet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.MessageCode;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.entity.User;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
@@ -205,6 +208,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public boolean updateUserCertification(Long userId, Integer state) {
         return this.baseMapper.updateUserCertification(userId, state);
+    }
+
+    @Override
+    public Page<UserListVO> getList(Page pageInfo, UserAdminParam params) {
+        return this.baseMapper.selectUserList(pageInfo, params);
     }
 
 
