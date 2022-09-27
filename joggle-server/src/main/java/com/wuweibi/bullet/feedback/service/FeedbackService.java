@@ -1,5 +1,8 @@
 package com.wuweibi.bullet.feedback.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
+import com.wuweibi.bullet.feedback.domain.FeedbackParam;
 import com.wuweibi.bullet.feedback.entity.Feedback;
 import java.util.List;
 
@@ -9,7 +12,7 @@ import java.util.List;
  * @author marker
  * @since 2022-04-01 17:32:37
  */
-public interface FeedbackService {
+public interface FeedbackService   {
 
     /**
      * 通过ID查询单条数据
@@ -51,5 +54,9 @@ public interface FeedbackService {
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+
+
+
+    Page<FeedbackListVO> getAdminList(Page toMybatisPlusPage, FeedbackParam params);
 
 }

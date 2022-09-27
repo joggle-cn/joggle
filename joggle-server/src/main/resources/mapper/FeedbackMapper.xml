@@ -16,7 +16,7 @@
     <select id="queryById" resultMap="BaseResultMap">
         select
           id, user_id, title, contact, content, create_time
-        from db_bullet.feedback
+        from  feedback
         where id = #{id}
     </select>
 
@@ -24,7 +24,7 @@
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select
           id, user_id, title, contact, content, create_time
-        from db_bullet.feedback
+        from feedback
         limit #{offset}, #{limit}
     </select>
 
@@ -32,7 +32,7 @@
     <select id="queryAll" resultMap="BaseResultMap">
         select
           id, user_id, title, contact, content, create_time
-        from db_bullet.feedback
+        from feedback
         <where>
             <if test="id != null">
                 and id = #{id}
@@ -55,15 +55,31 @@
         </where>
     </select>
 
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.feedback.domain.FeedbackListVO">
+        select
+            f.id, f.user_id, f.title, f.contact, f.content, f.create_time,
+            su.username
+        from feedback f
+        left join t_sys_users su on f.user_id = su.id
+        <where>
+            <if test="params.title != null and params.title != ''">
+                and f.title like concat('%',#{params.title},'%')
+            </if>
+        </where>
+        order by f.id desc
+    </select>
+
+
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into db_bullet.feedback(user_id, title, contact, content, create_time)
+        insert into feedback(user_id, title, contact, content, create_time)
         values (#{userId}, #{title}, #{contact}, #{content}, #{createTime})
     </insert>
 
     <!--通过主键修改数据-->
     <update id="update">
-        update db_bullet.feedback
+        update feedback
         <set>
             <if test="userId != null">
                 user_id = #{userId},
@@ -86,7 +102,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from db_bullet.feedback where id = #{id}
+        delete from feedback where id = #{id}
     </delete>
 
 </mapper>

@@ -1,5 +1,8 @@
 package com.wuweibi.bullet.feedback.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
+import com.wuweibi.bullet.feedback.domain.FeedbackParam;
 import com.wuweibi.bullet.feedback.entity.Feedback;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -62,4 +65,12 @@ public interface FeedbackMapper {
      */
     int deleteById(Integer id);
 
+
+    /**
+     * 分页查询意见反馈
+     * @param pageInfo
+     * @param params
+     * @return
+     */
+    Page<FeedbackListVO> selectAdminList(Page pageInfo,@Param("params") FeedbackParam params);
 }
