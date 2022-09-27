@@ -94,7 +94,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         ew.eq("deviceNo", deviceNo);
         ew.eq("status", 1);
 
-        int count = this.baseMapper.selectCount(ew);
+        Long count = this.baseMapper.selectCount(ew);
         return count > 0;
     }
 

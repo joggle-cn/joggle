@@ -40,7 +40,7 @@ public class OrdersRefundServiceImpl extends ServiceImpl<OrdersRefundMapper, Ord
     }
 
     @Override
-    public int countStatusByOrderId(Long orderId, int status) {
+    public Long countStatusByOrderId(Long orderId, int status) {
         return this.baseMapper.selectCount(Wrappers.<OrdersRefund>lambdaQuery()
                 .eq(OrdersRefund::getOrderId, orderId)
                 .eq(OrdersRefund::getStatus, status));

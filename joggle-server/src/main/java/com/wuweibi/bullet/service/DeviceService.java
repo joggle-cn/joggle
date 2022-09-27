@@ -1,12 +1,11 @@
 package com.wuweibi.bullet.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
 import java.util.List;
@@ -74,7 +73,7 @@ public interface DeviceService extends IService<Device> {
      * @param userId 用户id
      * @return 绑定设备的数量
      */
-    int getCountByUserId(Long userId);
+    Long getCountByUserId(Long userId);
 
     /**
      * 获取设备下拉列表

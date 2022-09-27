@@ -15,6 +15,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -30,7 +31,7 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 @Service
 public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, DeviceMapping> implements DeviceMappingService {
 
-    @Autowired
+    @Resource
     private DeviceService deviceService;
 
     @Override
@@ -134,7 +135,7 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     }
 
     @Override
-    public int countByDeviceId(Long deviceId) {
+    public Long countByDeviceId(Long deviceId) {
         return count(Wrappers.<DeviceMapping>lambdaQuery()
                 .eq(DeviceMapping::getDeviceId, deviceId)
         );

@@ -90,7 +90,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public int getCountByUserId(Long userId) {
+    public Long getCountByUserId(Long userId) {
         return this.baseMapper.selectCount(Wrappers.<Device>lambdaQuery()
                 .eq(Device::getUserId, userId));
     }

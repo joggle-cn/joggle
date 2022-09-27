@@ -23,5 +23,5 @@ public interface OrdersRefundService extends IService<OrdersRefund> {
      */
     Page<OrdersRefundVO> getPage(Page pageInfo, OrdersRefundParam params);
 
-    int countStatusByOrderId(Long orderId, int status);
+    Long countStatusByOrderId(Long orderId, int status);
 }

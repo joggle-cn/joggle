@@ -116,7 +116,7 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
      * @param deviceId 设备id
      * @return
      */
-    int countByDeviceId(Long deviceId);
+    Long countByDeviceId(Long deviceId);
 
     /**
      * 根据设备id查询映射集合
