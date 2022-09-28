@@ -8,6 +8,7 @@
         insert into data_metrics_day (select
           null,
           a.user_id,
+          a.server_tunnel_id,
           a.device_id,
           a.mapping_id,
           DATE_FORMAT(#{date},'%Y-%m-%d'),
@@ -19,7 +20,7 @@
         from
           data_metrics a
         WHERE a.create_date = DATE_FORMAT(#{date},'%Y-%m-%d')
-        GROUP BY a.user_id, a.device_id, a.mapping_id
+        GROUP BY a.user_id, a.server_tunnel_id, a.device_id, a.mapping_id
         HAVING a.user_id is not null
             )
     </update>

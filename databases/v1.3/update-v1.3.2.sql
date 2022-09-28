@@ -19,5 +19,8 @@ ALTER TABLE `data_metrics`
     ADD COLUMN `server_tunnel_id` int NULL COMMENT '通道id' AFTER `user_id`;
 update data_metrics set server_tunnel_id = 1;
 
+ALTER TABLE `data_metrics_day`
+    ADD COLUMN `server_tunnel_id` int NULL COMMENT '通道id' AFTER `user_id`;
+update data_metrics_day set server_tunnel_id = 1;
 
 -- 线上已执行
