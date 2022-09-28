@@ -83,7 +83,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.3.4</version>
         </dependency>
 
 
@@ -146,11 +146,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/co.cask.http/netty-http -->
-        <dependency>
-            <groupId>co.cask.http</groupId>
-            <artifactId>netty-http</artifactId>
-            <version>0.17.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>co.cask.http</groupId>-->
+<!--            <artifactId>netty-http</artifactId>-->
+<!--            <version>0.17.0</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -293,4 +293,24 @@
 
     </dependencies>
 
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.30</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.33</version>
+            </dependency>
+
+
+
+        </dependencies>
+    </dependencyManagement>
 </project>

@@ -212,7 +212,7 @@ public class DeviceController {
         }
 
         // 限制普通用户绑定设备的数量10 排除自己的账号判断
-        int deviceNum = deviceService.getCountByUserId(userId);
+        Long deviceNum = deviceService.getCountByUserId(userId);
         if (deviceNum >= 10 && userId != 1) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }

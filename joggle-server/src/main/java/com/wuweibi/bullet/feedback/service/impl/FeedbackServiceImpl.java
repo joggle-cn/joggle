@@ -1,5 +1,8 @@
 package com.wuweibi.bullet.feedback.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
+import com.wuweibi.bullet.feedback.domain.FeedbackParam;
 import com.wuweibi.bullet.feedback.entity.Feedback;
 import com.wuweibi.bullet.feedback.mapper.FeedbackMapper;
 import com.wuweibi.bullet.feedback.service.FeedbackService;
@@ -75,5 +78,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public boolean deleteById(Integer id) {
         return this.feedbackMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public Page<FeedbackListVO> getAdminList(Page pageInfo, FeedbackParam params) {
+        return this.feedbackMapper.selectAdminList(pageInfo, params);
     }
 }

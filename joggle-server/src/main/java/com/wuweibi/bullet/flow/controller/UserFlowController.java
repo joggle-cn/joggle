@@ -1,22 +1,13 @@
 package com.wuweibi.bullet.flow.controller;
 
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuweibi.bullet.flow.domain.UserFlowDTO;
-import com.wuweibi.bullet.flow.domain.UserFlowParam;
-import com.wuweibi.bullet.flow.domain.UserFlowVO;
-import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * 用户流量(UserFlow)表控制层
