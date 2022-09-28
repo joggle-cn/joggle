@@ -8,7 +8,16 @@ ALTER TABLE `t_device`
     ADD COLUMN `concurrent_num` int NULL DEFAULT 5 COMMENT '设备的并发连接数' AFTER `update_time`;
 
 
--- 线上已执行
-
 ALTER TABLE `t_server_tunnel`
     ADD COLUMN `token` varchar(100) NULL COMMENT '服务器Token' AFTER `server_end_time`;
+
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `enable_flow` tinyint(1) NULL COMMENT '启用扣量 1 是 0否' AFTER `token`;
+update t_server_tunnel set enable_flow = 1;
+
+ALTER TABLE `data_metrics`
+    ADD COLUMN `server_tunnel_id` int NULL COMMENT '通道id' AFTER `user_id`;
+update data_metrics set server_tunnel_id = 1;
+
+
+-- 线上已执行

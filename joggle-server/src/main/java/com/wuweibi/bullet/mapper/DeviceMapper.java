@@ -67,4 +67,7 @@ public interface DeviceMapper extends BaseMapper<Device> {
      * @return
      */
     DeviceDetail selectDetail(@Param("deviceId") Long deviceId);
+
+    DeviceDetail selectDetailByDeviceNo(@Param("deviceNo") String deviceNo);
+
 }

@@ -107,4 +107,7 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     DeviceDetail getDetail(Long deviceId);
+
+
+    DeviceDetail getDetailByDeviceNo(String deviceNo);
 }

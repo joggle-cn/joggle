@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -45,6 +46,10 @@ public class ServerTunnelAdminDTO {
     @ApiModelProperty("通道Token")
     @NotBlank(message = "通道Token不能为空")
     private String token;
+
+    @ApiModelProperty("启用扣量 1是 0 否")
+    @NotNull(message = "请选择启用扣量状态")
+    private Integer enableFlow;
 
 
 

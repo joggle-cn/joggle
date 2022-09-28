@@ -35,6 +35,8 @@ public class DataMetrics extends Model<DataMetrics> {
      * 设备映射ID
      */
     private Long mappingId;
+
+    private Integer serverTunnelId;
     /**
      * 进入流量
      */

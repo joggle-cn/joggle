@@ -52,5 +52,8 @@ public class ServerTunnel  {
 
     @ApiModelProperty("服务器Token")
     private String token;
+
+    @ApiModelProperty("启用扣量 1是 0 否")
+    private Integer enableFlow;
 }
 

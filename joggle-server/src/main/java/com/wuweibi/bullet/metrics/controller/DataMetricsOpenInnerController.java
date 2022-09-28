@@ -4,7 +4,9 @@ package com.wuweibi.bullet.metrics.controller;
 import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
@@ -49,6 +51,9 @@ public class DataMetricsOpenInnerController {
     @Resource
     private BulletConfig bulletConfig;
 
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
     /**
      * 上报流量数据
      *
@@ -68,37 +73,43 @@ public class DataMetricsOpenInnerController {
         }
 
         String deviceNo = dataMetrics.getDeviceNo();
-        Device device = deviceService.getByDeviceNo(deviceNo);
-        if (device == null) {
+        DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
+        if (deviceDetail == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
+        }
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(deviceDetail.getServerTunnelId());
+        if (serverTunnel == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
 
         DataMetrics entity = new DataMetrics();
         BeanUtils.copyProperties(dataMetrics, entity);
         entity.setCreateTime(new Date());
-        entity.setDeviceId(device.getId());
-        entity.setUserId(device.getUserId());
+        entity.setServerTunnelId(deviceDetail.getServerTunnelId());
+        entity.setDeviceId(deviceDetail.getId());
+        entity.setUserId(deviceDetail.getUserId());
         entity.setOpenTime(new Date(dataMetrics.getOpenTime()));
         entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
         entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
         entity.setRemoteAddr(dataMetrics.getRemoteAddr());
-
         this.dataMetricsService.save(entity);
 
-        Long userId = device.getUserId();
+        Long userId = deviceDetail.getUserId();
 
         // 扣取流量
-        Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
-        UserFlow userFlow = userFlowService.getUserFlow(userId);
-        if (userFlow.getFlow() - bytes / 1024 <= 0) {
-            // 由于用户没有流量了，默认关闭所有映射
-            deviceBiz.closeAllMappingByUserId(userId);
-        }
-
-        boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
-        if (!status) {
-            log.warn("流量扣取失败 userId={}", userId);
-            return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
+        if(serverTunnel.getEnableFlow() == 1){
+            Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+            UserFlow userFlow = userFlowService.getUserFlow(userId);
+            if (userFlow.getFlow() - bytes / 1024 <= 0) {
+                // 由于用户没有流量了，默认关闭所有映射
+                deviceBiz.closeAllMappingByUserId(userId);
+            }
+            boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
+            if (!status) {
+                log.warn("流量扣取失败 userId={}", userId);
+                return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
+            }
         }
         return R.success();
     }
