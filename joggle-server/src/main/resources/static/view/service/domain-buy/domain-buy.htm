@@ -2,11 +2,15 @@
 <div class="container domain-buy">
 
     <div class="row">
-        <div class="col-xs-12"><ol class="breadcrumb">
-			<li><a href="#">首页</a></li>
-            <li><a href="#/user/domain">我的域名</a></li>
-			<li class="active">购买域名</li>
-		</ol>
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+                <li><a href="#/user/domain">我的域名</a></li>
+                <li class="active">购买资源</li>
+                <li class="node-status">
+                    <a href="#/server-tunnel/nodes">节点状态</a>
+                </li>
+            </ol>
         </div>
     </div>
 
@@ -16,7 +20,7 @@
                 <div class="col-sm-12">
                    <div class="form-inline">
                        <div class="input-group">
-                            <span class="input-group-addon">区域</span>
+                            <span class="input-group-addon">节点</span>
                            <select class="form-control" ng-model="params.serverTunnelId" ng-options="item.id as item.name for item in tunnels">
 
                            </select>

@@ -1,0 +1,64 @@
+<div style="margin-top:30px; "></div>
+<div class="container node-status">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+                <li><a href="#/user/domain">我的资源</a></li>
+                <li><a href="#/user/domain/buy">购买资源</a></li>
+                <li class="active">节点状态</li>
+
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+             <div class="bs-example" data-example-id="hoverable-table">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th width="60">#</th>
+                      <th width="200">服务器地区</th>
+                      <th width="60">宽带</th>
+                      <th width="100">出网流量</th>
+                      <th width="100">入网流量</th>
+<!--                      <th width="100">隧道数量</th>-->
+                      <th width="100">设备数量</th>
+                      <th width="100">在线时长</th>
+                      <th width="80">状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in page.records">
+                      <th scope="row">{{$index + 1+(page.current -1) * page.size}}</th>
+                      <td>
+                        <span class="label label-info">{{item.area}}</span> {{item.name}}</td>
+                      <td>{{item.broadband}}Mbps</td>
+                      <td>
+                        <span class="label label-info item-domain">{{item.flowIn}} GB</span>
+                      </td>  <td>
+                        <span class="label label-info item-domain">{{item.flowOut}} GB</span>
+                      </td>
+<!--                      <td>{{item.tunnelNum}}</td>-->
+                      <td>{{item.deviceNum}}</td>
+                      <td>-</td>
+                      <td>
+                        <span ng-if="item.status == 1" class="label label-success">正常</span>
+                        <span ng-if="item.status == 2" class="label label-warning">拥挤</span>
+                        <span ng-if="item.status == 3" class="label label-danger">已满</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            <div class="text-center">
+                <ul id="pagination" class="pagination"></ul>
+            </div>
+        </div>
+    </div>
+</div>

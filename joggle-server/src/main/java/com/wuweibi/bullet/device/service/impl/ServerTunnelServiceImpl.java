@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.device.domain.dto.ServerTunnelAdminParam;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO;
+import com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO;
 import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
@@ -47,6 +48,11 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
             item.setName("["+item.getCountry()+"|"+item.getArea()+"] "+item.getName());
         });
         return page;
+    }
+
+    @Override
+    public Page<ServerTunnelNodeVO> getNodeStatusList(Page pageInfo) {
+        return this.baseMapper.selectNodeStatusList(pageInfo);
     }
 }
 

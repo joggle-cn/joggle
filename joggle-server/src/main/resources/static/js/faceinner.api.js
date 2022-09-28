@@ -78,6 +78,7 @@ let api = {
     "user.domain.nobind": '/api/user/domain/nobind',
     "user.domain.bind.device": '/api/user/domain/bind',
     "user.domain.search": '/api/user/domain/search',
+    "device.tunnel.nodes": '/api/open/server/tunnel/node/list',
 
     "user.dashboard.statistics": '/api/dashboard/statistics',
     "user.dashboard.device.rank": '/api/dashboard/device/rank',

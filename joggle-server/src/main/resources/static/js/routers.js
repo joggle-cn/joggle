@@ -70,6 +70,14 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
             , controllerUrl: 'view/forget/forget.js'
         }))
 
+
+
+		.when('/server-tunnel/nodes', router({
+			minTitle: "通道节点"
+			, templateUrl: 'view/service/node-status/list.htm'
+			, controllerUrl: 'view/service/node-status/list.js'
+		}))
+
 		/* 用户路由  */
 		.when('/user/profile', router({
 			templateUrl: 'view/profile/profile.htm'

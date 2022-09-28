@@ -1,49 +1,49 @@
-.domain-buy input{
+.node-status input{
     outline: none !important;
 }
-.domain-buy .icheck-success{
+.node-status .icheck-success{
     display: inline-block;
 }
-.domain-buy .pay-box{
+.node-status .pay-box{
     border: 1px solid rgba(208, 208, 208, 0.8);
     border-radius: 6px;
     padding-top: 0px;
 }
 
-.domain-buy .pay-box label:before{
+.node-status .pay-box label:before{
     margin-top: 5px;
 }
-.domain-buy .pay-box label:after{
+.node-status .pay-box label:after{
     margin-top: 15px;
     margin-left: 11px !important;
 }
-.domain-buy .pay-box label{
+.node-status .pay-box label{
     display: inline-block;
     width: 160px;
     height: 54px;
     padding-top: 10px;
     padding-left: 40px !important;
 }
-.domain-buy .original-price{
+.node-status .original-price{
     text-decoration: line-through;
 }
-.domain-buy .pay-box{
+.node-status .pay-box{
    user-select:none;
-}.domain-buy .pay-box img{
+}.node-status .pay-box img{
     width: 100px;
 }
-.domain-buy .pay-box span{
+.node-status .pay-box span{
     margin-top: 4px;
     margin-left: 10px;
     display: inline-block;
 }
-.domain-buy .item-domain{
-    background: #e7e7e7;
+.node-status .item-domain{
+    background: #dcf2a4;
     color: black;
 }
-.domain-buy .node-status{
+.node-status .node-status{
     float: right; content:''
 }
-.domain-buy .node-status:before{
+.node-status .node-status:before{
     content:''
 }

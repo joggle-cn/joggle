@@ -24,4 +24,18 @@
 	</select>
 
 
+    <select id="selectNodeStatusList" resultType="com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO">
+		select st.`id`, st.`name`, st.`country`, st.`area`, st.`broadband`, st.`server_addr`, st.`create_time`,
+			   st.`price_type`,  st.`buy_status`, st.`status`,
+			   st.`server_end_time`,
+			   (select ifnull(sum(dmd.flow)/1024/1024/1024,0) from data_metrics_day dmd WHERE dmd.server_tunnel_id = st.id) flowIn,
+			   (select ifnull(sum(dmd.flow)/1024/1024/1024,0) from data_metrics_day dmd WHERE dmd.server_tunnel_id = st.id) flowOut,
+			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id) as deviceNum ,
+			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id) as tunnelNum
+
+		from t_server_tunnel st
+		order by st.id desc
+	</select>
+
+
 </mapper>

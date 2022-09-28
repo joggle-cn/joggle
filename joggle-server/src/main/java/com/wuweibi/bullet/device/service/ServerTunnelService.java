@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.dto.ServerTunnelAdminParam;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO;
+import com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO;
 import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 
@@ -43,5 +44,14 @@ public interface ServerTunnelService extends IService<ServerTunnel> {
      * @return
      */
     Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params);
+
+
+    /**
+     * 分页查询节点状态
+     * @param pageInfo 分页对象
+     * @return
+     */
+    Page<ServerTunnelNodeVO> getNodeStatusList(Page pageInfo);
+
 }
 
