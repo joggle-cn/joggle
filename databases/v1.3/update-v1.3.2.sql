@@ -9,3 +9,6 @@ ALTER TABLE `t_device`
 
 
 -- 线上已执行
+
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `token` varchar(100) NULL COMMENT '服务器Token' AFTER `server_end_time`;

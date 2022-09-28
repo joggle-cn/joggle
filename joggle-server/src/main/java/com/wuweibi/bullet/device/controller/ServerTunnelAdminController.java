@@ -57,7 +57,7 @@ public class ServerTunnelAdminController {
      */
     @ApiOperation("通道详情")
     @GetMapping(value = "/detail")
-    public R detail(IdDTO dto) {
+    public R<ServerTunnel> detail(IdDTO dto) {
         ServerTunnel serverTunnel = serverTunnelService.getById(dto.getId());
         return R.ok(serverTunnel);
     }

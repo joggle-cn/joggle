@@ -2,11 +2,11 @@ package com.wuweibi.bullet.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -74,9 +74,15 @@ public class Bullet3Annotation {
         this.tunnelId = tunnelId;
 
         String authorization = (String) session.getUserProperties().get("authorization");
-        BulletConfig config = SpringUtils.getBean(BulletConfig.class);
+        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(tunnelId);
+        if (serverTunnel == null) {
+            this.stop(CloseReason.CloseCodes.CANNOT_ACCEPT, "服务节点不存在");
+        }
+
         // 校验Token
-        if(!config.getAdminApiToken().equals(authorization)){
+        if(!serverTunnel.getToken().equals(authorization)){
             log.error("websocket api token error session[{}]", session.getId());
             this.stop(CloseReason.CloseCodes.CANNOT_ACCEPT ,"Auth Token Error...");
             return;
@@ -89,7 +95,6 @@ public class Bullet3Annotation {
 //        deviceOnlineService.checkDeviceStatus();
 
         // 更新服务通道得在线状态
-        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
         serverTunnelService.updateStatus(tunnelId, 1);
 
         log.info("websocket[{}] online", tunnelId);

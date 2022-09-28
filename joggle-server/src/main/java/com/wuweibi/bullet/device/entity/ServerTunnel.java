@@ -50,5 +50,8 @@ public class ServerTunnel extends Model<ServerTunnel> {
 
     @ApiModelProperty("服务器到期时间")
     private Date serverEndTime;
+
+    @ApiModelProperty("服务器Token")
+    private String token;
 }
 
