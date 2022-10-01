@@ -60,7 +60,11 @@ public class DeviceOpenInnerController {
             deviceNo = CodeHelper.makeNewCode();
         }
         authVO.setDeviceNo(deviceNo);
-        authVO.setConcurrentNum(device.getConcurrentNum());
+        authVO.setConcurrentNum(5);
+        if(device != null){
+            authVO.setConcurrentNum(device.getConcurrentNum());
+        }
+
 
         // 设备在线
         DeviceOnlineInfoDTO deviceOnlineInfoDTO = new DeviceOnlineInfoDTO();
