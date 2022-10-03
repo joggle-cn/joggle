@@ -188,7 +188,7 @@ joggle:
     appId: ${ALIPAY_MERCHANT_APPID:2021000121630337}
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
-    notifyUrl: ${ALIPAY_NOTIFY_URL:"https://pay.joggle.cn/api/open/orders/alipay/callback"}
+    notifyUrl: ${ALIPAY_NOTIFY_URL:https://pay.joggle.cn/api/open/orders/alipay/callback}
     returnUrl: ${joggle.serverUrl}${ALIPAY_RETURN_URL}
   # oss 配置
   ali-oss:

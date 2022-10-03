@@ -109,9 +109,9 @@ let faceinner = {
 
             let tmp = (curTime - tokenTime)/1000; // 转换为秒
             if(tmp < tokenExpires){ // 没过期
-                if(options.headers){
+                if (options.headers) {
                     options.headers['Authorization'] = 'Bearer ' + localStorage.token;
-                }else{
+                } else {
                     options.headers = {
                         'Authorization': 'Bearer ' + localStorage.token,
                     }
@@ -145,6 +145,10 @@ let faceinner = {
                         delete localStorage.tokenExpires; // 有效期 单位：秒
                         delete localStorage.tokenTime; // 当前时间
 
+                        $rootScope.$apply(function (){
+                            $rootScope.user = null;
+                            $rootScope.islogin = false;
+                        })
                         return;
                     }
                     localStorage.tokenInfo = JSON.stringify(res);

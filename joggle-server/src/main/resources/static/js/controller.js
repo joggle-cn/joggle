@@ -93,6 +93,7 @@ define([
             domain: 'joggle.cn' // 默认，如果服务还没有返回读取的这个值
         }
 
+        window.$rootScope = $rootScope;
         // 初始化数据
         $rootScope.init = function () {
 

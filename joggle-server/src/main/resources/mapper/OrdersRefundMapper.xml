@@ -18,6 +18,18 @@
         <result property="status" column="status" jdbcType="INTEGER"/>
         <result property="reason" column="reason" jdbcType="VARCHAR"/>
     </resultMap>
-        
+
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.orders.domain.OrdersRefundVO">
+      select
+          orf.`id`, orf.`order_id`, orf.`user_id`, orf.`refund_no`, orf.`refund_amount`, orf.`price_amount`, orf.`amount`, orf.`create_time`, orf.`update_time`, orf.`refund_time`, orf.`trade_no`, orf.`status`, orf.`reason`
+      from orders_refund orf
+        <where>
+            <if test="params.orderId != null">
+                and orf.`order_id` = #{params.orderId}
+            </if>
+        </where>
+    </select>
+
 </mapper>
 

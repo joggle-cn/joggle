@@ -10,7 +10,6 @@ import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersAdminParam;
 import com.wuweibi.bullet.orders.domain.OrdersDetailAdminVO;
@@ -19,8 +18,10 @@ import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
+import com.wuweibi.bullet.orders.service.OrdersRefundService;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,6 +68,9 @@ public class OrdersAdminController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private OrdersRefundService ordersRefundService;
+
     /**
      * 通过主键查询单条数据
      *
@@ -91,6 +95,10 @@ public class OrdersAdminController {
         vo.setBuyerNickname(user.getNickname());
 
 
+        // 查询退款信息
+
+
+
         return R.ok(vo);
     }
 
@@ -107,7 +115,7 @@ public class OrdersAdminController {
     @ApiOperation("取消订单")
     @PutMapping("/cancel")
     @Transactional
-    public R<Boolean> update(@RequestBody @Valid IdLongDTO dto) throws Exception {
+    public R<Boolean> cancel(@RequestBody @Valid IdLongDTO dto) throws Exception {
         Long orderId = dto.getId();
 
         Orders orders = this.ordersService.getById(orderId);
@@ -130,10 +138,10 @@ public class OrdersAdminController {
         log.debug("orders[{}] close[{}] request", orders.getId(), orders.getOrderNo());
         if (orders.getPayType() == PayTypeEnum.ALIPAY.getType()) {
             AliFactory.setOptions(alipayConfig);
-            AlipayTradeCloseResponse result = AliFactory.Common().closeTradeNo( orders.getOrderNo());
-            log.debug("orders[{}] close[{}] status={}", orders.getId(), orders.getTradeNo(), result.getHttpBody());
+            AlipayTradeCloseResponse result = AliFactory.Common().closeTradeNo(orders.getOrderNo().trim());
+            log.debug("orders[{}] close[{}] status={}", orders.getId(), orders.getOrderNo(), result.getHttpBody());
             if (result.code != "10000") {
-                throw new RException("支付宝：" + result.getMsg());
+                throw new RException("支付宝：" + result.getMsg() + result.getSubMsg());
             }
         }
 

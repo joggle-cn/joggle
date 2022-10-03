@@ -33,7 +33,9 @@ public class CommonExtClient extends com.alipay.easysdk.payment.common.Client {
             try {
                 TeaRequest request_ = new TeaRequest();
                 Map<String, String> systemParams = TeaConverter.buildMap(new TeaPair[]{new TeaPair("method", "alipay.trade.close"), new TeaPair("app_id", this._kernel.getConfig("appId")), new TeaPair("timestamp", this._kernel.getTimestamp()), new TeaPair("format", "json"), new TeaPair("version", "1.0"), new TeaPair("alipay_sdk", this._kernel.getSdkVersion()), new TeaPair("charset", "UTF-8"), new TeaPair("sign_type", this._kernel.getConfig("signType")), new TeaPair("app_cert_sn", this._kernel.getMerchantCertSN()), new TeaPair("alipay_root_cert_sn", this._kernel.getAlipayRootCertSN())});
-                Map<String, Object> bizParams = TeaConverter.buildMap(new TeaPair[]{new TeaPair("trade_no", tradeNo)});
+                Map<String, Object> bizParams = TeaConverter.buildMap(new TeaPair[]{
+                        new TeaPair("out_trade_no", tradeNo),
+                });
                 Map<String, String> textParams = new HashMap();
                 request_.protocol = this._kernel.getConfig("protocol");
                 request_.method = "POST";

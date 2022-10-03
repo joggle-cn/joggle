@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -51,11 +52,11 @@ public class DefaultGlobalExceptionHandlerAdvice {
     }
 
 
-//    @ExceptionHandler(value = {MissingServletRequestParameterException.class})
-//    public Result service1Exception(MissingServletRequestParameterException ex) {
-//        log.error("service exception:{}", ex.getMessage());
-//        return Result.fail(SystemErrorType.ARGUMENT_NOT_VALID, ex.getMessage());
-//    }
+    @ExceptionHandler(value = {MissingServletRequestParameterException.class})
+    public R service1Exception(MissingServletRequestParameterException ex) {
+        log.warn("service exception:{}", ex.getMessage());
+        return R.fail(SystemErrorType.ARGUMENT_NOT_VALID, ex.getMessage());
+    }
 
 
     /**
