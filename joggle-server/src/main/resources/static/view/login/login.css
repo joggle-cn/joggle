@@ -2,3 +2,14 @@
     font-size: 30px;
 
 }
+
+
+@media (max-width: 767px)
+{
+
+    .single-panel{
+        margin: 0 30px;
+    }
+
+}
+
