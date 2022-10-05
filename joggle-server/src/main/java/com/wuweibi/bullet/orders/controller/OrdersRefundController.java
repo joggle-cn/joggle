@@ -9,6 +9,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersRefundDTO;
 import com.wuweibi.bullet.orders.domain.OrdersRefundParam;
 import com.wuweibi.bullet.orders.domain.OrdersRefundVO;
+import com.wuweibi.bullet.orders.domain.RefundAuditDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.entity.OrdersRefund;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
@@ -139,6 +140,20 @@ public class OrdersRefundController  {
         }
 
         return R.ok( );
+    }
+
+
+    /**
+     * 退款审核
+     *
+     * @return 新增结果
+     */
+    @ApiOperation("退款审核")
+    @PostMapping("/audit")
+    @Transactional
+    public R<Boolean> auditRefund(@RequestBody @Valid RefundAuditDTO dto) {
+
+        return R.fail("");
     }
 
     /**

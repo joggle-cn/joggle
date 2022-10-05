@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +131,8 @@ public class OrdersAppController {
         orders.setStatus(OrdersStatusEnum.WAIT_PAY.getStatus());
         orders.setCreateTime(new Date());
         orders.setUpdateTime(orders.getCreateTime());
+        orders.setRefundAmount(0l);
+        orders.setRefundMoney(BigDecimal.ZERO);
 
         ordersService.save(orders);
 

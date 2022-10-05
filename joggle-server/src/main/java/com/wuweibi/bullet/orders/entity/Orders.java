@@ -4,6 +4,7 @@ package com.wuweibi.bullet.orders.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -39,6 +40,10 @@ public class Orders extends Model<Orders> {
     private BigDecimal discountAmount;
     //支付价格
     private BigDecimal payAmount;
+    @ApiModelProperty("退款金额")
+    private BigDecimal refundMoney;
+    @ApiModelProperty("退款数量")
+    private Long refundAmount;
     //支付方式 1余额 2支付宝
     private Integer payType;
     //订单状态 0待支付 1已支付 2 取消 3退款中 4已退款

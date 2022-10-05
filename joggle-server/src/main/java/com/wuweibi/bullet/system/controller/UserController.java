@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.controller;
+package com.wuweibi.bullet.system.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

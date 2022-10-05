@@ -23,8 +23,12 @@ ALTER TABLE `data_metrics_day`
     ADD COLUMN `server_tunnel_id` int NULL COMMENT '通道id' AFTER `user_id`;
 update data_metrics_day set server_tunnel_id = 1;
 
--- 线上已执追
 
 ALTER TABLE `orders`
     ADD COLUMN `refund_amount` bigint(22) NULL COMMENT '退款数量' AFTER `pay_type`,
     ADD COLUMN `refund_money` decimal(12,2) NULL COMMENT '退款金额' AFTER `refund_amount`;
+
+update orders set refund_amount =0, refund_money=0 ;
+
+
+-- 线上已执
