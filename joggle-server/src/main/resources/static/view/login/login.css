@@ -1,6 +1,13 @@
 #loginTitle{
     font-size: 30px;
+}
 
+.login-page .inner2{
+    margin: 0 auto;
+    margin-top:80px;
+}
+.login-page .single-panel-body{
+    margin: 0 30px;
 }
 
 
@@ -8,7 +15,7 @@
 {
 
     .single-panel{
-        margin: 0 30px;
+        /*margin: 0 30px;*/
     }
 
 }
