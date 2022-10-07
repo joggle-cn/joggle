@@ -30,7 +30,9 @@ pipeline {
                    echo "Building.."
                    sh '''
                         if [ "$BRANCH_NAME"  = "prod" ];then
-                            /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                             if [ "$JAR_DEPLOY"  = "是" ];then
+                               /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
+                             fi
                         fi
                         if [ "$BRANCH_NAME"  = "test" ];then
                             /opt/maven/bin/mvn clean package -Dmaven.test.skip=true
