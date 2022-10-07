@@ -33,7 +33,7 @@
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
                dc.deviceId clientDeviceNo,
-               dc.intranet_ip clientDeviceIp,
+               (select intranet_ip from t_device_online do where do.deviceNo = dc.deviceId) clientDeviceIp,
                ds.deviceId serverDeviceNo,
             (select server_tunnel_id from t_device_online where deviceNo = dc.deviceId)  as clientDeviceTunnelId,
             (select server_tunnel_id from t_device_online where deviceNo = ds.deviceId)  as serverDeviceTunnelId
