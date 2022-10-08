@@ -5,6 +5,8 @@ ALIPAY_RETURN_URL: "/#/user/orders/pay/result"
 ## Swagger文档启用
 SWAGGER_DOC_ENABLE: false
 
+# 日志输出目录
+LOGGING_PATH: logs/
 #
 # 服务器配置
 #
@@ -30,6 +32,10 @@ knife4j:
 
 
 spring:
+  profiles:
+    active: dev
+  application:
+    name: joggle-server
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #swagger3 需配置，不然展示不了列表
@@ -50,10 +56,6 @@ spring:
   http:
     encoding:
       force: on
-  profiles:
-    active: dev
-  application:
-    name: Bullet
   devtools:
     restart:
       enabled: false

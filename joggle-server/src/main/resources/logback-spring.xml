@@ -11,7 +11,8 @@
 
     <!-- 读取spring配置 -->
     <springProperty name="LOGGING_PATH" source="LOGGING_PATH"/>
-    <property name="log.path" value="${LOGGING_PATH}/${project.artifactId}"/>
+    <springProperty name="appName" source="spring.application.name"/>
+    <property name="log.path" value="${LOGGING_PATH}/${appName}"/>
     <include resource="logback-common.xml"/>
 
 
