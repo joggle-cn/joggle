@@ -1,8 +1,11 @@
 package com.wuweibi.bullet.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
@@ -110,4 +113,13 @@ public interface DeviceService extends IService<Device> {
 
 
     DeviceDetail getDetailByDeviceNo(String deviceNo);
+
+
+    /**
+     * 设备分页查询
+     * @param pageInfo
+     * @param params
+     * @return
+     */
+    Page<DeviceListVO> getAdminList(Page pageInfo, DeviceAdminParam params);
 }

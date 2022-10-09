@@ -78,4 +78,30 @@
 	</select>
 
 
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.device.domain.vo.DeviceListVO">
+		select d.*, d.deviceId deviceNo,
+			   do.os,do.arch,do.public_ip, do.intranet_ip,do.mac_addr,
+			   do.status,
+			   do.server_tunnel_id,
+			   su.username,
+			   (select st.name from t_server_tunnel st where st.id = do.server_tunnel_id) as serverTunnelName
+		from t_device  d
+		left join t_device_online do on d.deviceId = do.deviceNo
+		left join t_sys_users su on su.id = d.userId
+		<where>
+			<if test="params.deviceNo != null and params.deviceNo != ''">
+				and d.deviceId = #{params.deviceNo}
+			</if>
+			<if test="params.serverTunnelId != null ">
+				and do.server_tunnel_id = #{params.serverTunnelId}
+			</if>
+			<if test="params.userId != null ">
+				and d.userId = #{params.userId}
+			</if>
+		</where>
+
+		order by d.id desc
+	</select>
+
+
 </mapper>

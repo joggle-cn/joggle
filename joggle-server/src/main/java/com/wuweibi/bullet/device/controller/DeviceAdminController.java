@@ -3,50 +3,46 @@ package com.wuweibi.bullet.device.controller;
  * Created by marker on 2017/12/6.
  */
 
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
-import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -61,8 +57,8 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 @WebApi
 @Api(tags = "设备管理")
 @RestController
-@RequestMapping("/api/user/device")
-public class DeviceController {
+@RequestMapping("/admin/device")
+public class DeviceAdminController {
 
     @Resource
     private WebsocketPool websocketPool;
@@ -93,17 +89,17 @@ public class DeviceController {
     }
 
     /**
-     * 设备列表
-     *
-     * @return
+     * 设备分页查询
+     * @param page   分页对象
+     * @param params 查询实体
+     * @return 所有数据
      */
-    @ApiOperation("用户的设备列表")
-    @GetMapping
-    public R<List<DeviceDto>> device() {
-        Long userId = SecurityUtils.getUserId();
-        List<DeviceDto> list = deviceService.getWebListByUserId(userId);
-        return R.ok(list);
+    @ApiOperation("设备分页查询")
+    @GetMapping("/list")
+    public R<Page<DeviceListVO>> getAdminList(PageParam page, DeviceAdminParam params) {
+        return R.ok(this.deviceService.getAdminList(page.toMybatisPlusPage(), params));
     }
+
 
 
     /**
@@ -112,7 +108,7 @@ public class DeviceController {
      * @return
      */
     @ApiOperation("更新设备信息")
-    @PostMapping()
+    @PutMapping("/update")
     public R save(@RequestBody @Valid DeviceUpdateDTO dto) {
         Long userId = SecurityUtils.getUserId();
         Long deviceId = dto.getId();
@@ -163,76 +159,8 @@ public class DeviceController {
     }
 
 
-    /**
-     * 设备校验(绑定)
-     *
-     * @return
-     */
-    @RequestMapping(value = "/validate", method = RequestMethod.GET)
-    @ResponseBody
-    public R validate(String deviceId, HttpServletRequest request) {
-        Long userId = SecurityUtils.getUserId();
-        String deviceNo = deviceId;
-        // 没有输入设备ID
-        if (StringUtil.isBlank(deviceNo)) {
-            return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
-        }
-
-        // 验证是否存在
-        DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceNo);
-        if (deviceOnline == null) {
-            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-        }
-        // 获取设备信息
-        Device device = deviceService.getByDeviceNo(deviceNo);
-        if (device!= null && device.getUserId() != null) {
-            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
-        }
-
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-        if (annotation == null) {
-            return R.fail("ngrokd实例不在线, 请联系管理员");
-        }
-
-        if (device == null) {
-            // 给当前用户存储最新的设备数据
-            device = new Device();
-            device.setDeviceNo(deviceId);
-            device.setUserId(userId);
-            device.setCreateTime(new Date());
-            device.setName(deviceId);
-        }
-
-        // 限制普通用户绑定设备的数量10 排除自己的账号判断
-        Long deviceNum = deviceService.getCountByUserId(userId);
-        if (deviceNum >= 10 && userId != 1) {
-            return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
-        }
-
-        // 生成设备秘钥
-        String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
-        device.setDeviceSecret(deviceSecret);
-        device.setUserId(userId);
-        deviceService.saveOrUpdate(device);
-
-        // 发送消息通知设备秘钥
-        MsgDeviceSecret msg = new MsgDeviceSecret();
-        msg.setSecret(deviceSecret);
-        annotation.sendMessage(deviceNo, msg);
-
-        return R.success();
-    }
 
 
-    @Deprecated
-    @RequestMapping(value = "/uuid", method = RequestMethod.GET)
-    @ResponseBody
-    public Map uuid(HttpServletRequest request) {
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        JSONObject result = new JSONObject();
-        result.put("uuid", uuid);
-        return result;
-    }
 
 
     /**
@@ -241,7 +169,7 @@ public class DeviceController {
      * @param deviceId
      * @return
      */
-    @GetMapping(value = "/info")
+    @GetMapping(value = "/detail")
     @ResponseBody
     public R device(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
@@ -311,17 +239,6 @@ public class DeviceController {
     }
 
 
-    /**
-     * 设备发现接口
-     *
-     * @return
-     */
-    @GetMapping(value = "/discovery" )
-    public R discovery(HttpServletRequest request) {
-        String ip = HttpUtils.getRemoteIP(request);
-        List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
-        return R.success(list);
-    }
 
 
 
