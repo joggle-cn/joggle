@@ -2,7 +2,6 @@ package com.wuweibi.bullet.config;
 
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
 import com.wuweibi.bullet.websocket.LogAnnotation;
 import com.wuweibi.bullet.websocket.VideoAnnotation;
 import org.springframework.context.annotation.Bean;
@@ -31,14 +30,14 @@ public class WebSocketConfig {
     }
 
 
-    /**
-     * Bullet WebSocket接口
-     * @return
-     */
-    @Bean
-    public BulletAnnotation serverEndpointBulletAnnotation() {
-        return new BulletAnnotation();
-    }
+//    /**
+//     * Bullet WebSocket接口
+//     * @return
+//     */
+//    @Bean
+//    public BulletAnnotation serverEndpointBulletAnnotation() {
+//        return new BulletAnnotation();
+//    }
 
 
     @Bean

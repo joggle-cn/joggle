@@ -4,7 +4,7 @@ package com.wuweibi.bullet.domain2.controller;
  */
 
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
@@ -33,7 +33,7 @@ public class DomainAdminController {
 
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool websocketPool;
 
 
     /**

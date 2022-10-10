@@ -27,8 +27,6 @@ public class MsgLogOpen extends Message {
      */
     private int open;
 
-
-
     /**
      * 构造
      */

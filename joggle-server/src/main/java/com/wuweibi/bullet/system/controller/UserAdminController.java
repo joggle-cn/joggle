@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.common.domain.PageParam;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.api.R;
@@ -48,7 +48,7 @@ public class UserAdminController {
     private UserService userService;
 
     @Resource
-    private CoonPool pool;
+    private WebsocketPool websocketPool;
 
 
     @InitBinder
@@ -104,7 +104,7 @@ public class UserAdminController {
 
         JSONObject result = (JSONObject) JSON.toJSON(user);
 
-        result.put("connNums", pool.count());
+        result.put("connNums", websocketPool.count());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

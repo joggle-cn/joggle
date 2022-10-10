@@ -91,12 +91,8 @@ public class Bullet3Annotation {
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         pool.addConnection(this);
 
-//        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-//        deviceOnlineService.checkDeviceStatus();
-
-        // 更新服务通道得在线状态
+        // 更新服务通道 在线状态
         serverTunnelService.updateStatus(tunnelId, 1);
-
         log.info("websocket[{}] online", tunnelId);
     }
 
@@ -125,6 +121,8 @@ public class Bullet3Annotation {
                     msgAuthResp.read(bis);
 
                     String clientNo = msgAuthResp.getClientNo();
+
+
 
                     this.sendMappingInfo(clientNo);
 
@@ -202,9 +200,12 @@ public class Bullet3Annotation {
      */
     public void sendMappingInfo(String deviceNo) {
         // 获取设备的配置数据,并将映射配置发送到客户端
+        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-        List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
+        log.info("update device[{}] status=1", deviceNo);
+        deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.ONLINE.status);
 
+        List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
         for (DeviceMapping entity : list) {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);

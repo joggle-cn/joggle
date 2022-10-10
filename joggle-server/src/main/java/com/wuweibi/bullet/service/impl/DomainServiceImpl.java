@@ -6,14 +6,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.config.properties.BulletConfig;
-import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
-import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
@@ -25,9 +25,8 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.session.SqlSession;
@@ -37,10 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,7 +56,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool websocketPool;
 
 
     @Override
@@ -104,22 +101,11 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             String deviceNo = item.getString("deviceNo");
 
             DeviceMapping entity = deviceMappingService.getById(mappingId);
-            BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+            Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
             if (annotation != null) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                try {
-                    msg.write(outputStream);
-                    // 包装了Bullet协议的
-                    byte[] resultBytes = outputStream.toByteArray();
-                    ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                    annotation.getSession().getBasicRemote().sendBinary(buf);
-                } catch (IOException e) {
-                    log.error("", e);
-                } finally {
-                    IOUtils.closeQuietly(outputStream);
-                }
+                annotation.sendMessage(deviceNo, msg);
             }
             // 更新Mapping状态
             deviceMappingMapper.updateStatusById(mappingId, 0);

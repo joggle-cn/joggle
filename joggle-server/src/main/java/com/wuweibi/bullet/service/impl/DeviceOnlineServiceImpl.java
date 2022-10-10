@@ -13,7 +13,6 @@ import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
-import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -132,8 +131,6 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         return true;
     }
 
-    @Resource
-    private DeviceService deviceService;
 
     @Override
     public DeviceOnline getByDeviceNo(String deviceId) {
@@ -149,11 +146,13 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     @Resource
     private ServerTunnelService serverTunnelService;
 
+    /**
+     * 一般初始化启动的时候调用该方法得到每个设备的状态
+     * @return
+     */
     @Override
     public boolean checkDeviceStatus() {
-
         List<ServerTunnel> list = serverTunnelService.getListEnable();
-
         list.forEach(item -> {
             log.debug("[init] check server[{}] {}[{}]", item.getId(), item.getName(), item.getServerAddr());
             Bullet3Annotation annotation = websocketPool.getByTunnelId(item.getId());

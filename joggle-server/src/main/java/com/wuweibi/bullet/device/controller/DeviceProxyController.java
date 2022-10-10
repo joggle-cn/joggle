@@ -3,18 +3,18 @@ package com.wuweibi.bullet.device.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.PageParam;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.DeviceProxyDTO;
 import com.wuweibi.bullet.device.domain.DeviceProxyParam;
 import com.wuweibi.bullet.device.domain.DeviceProxyVO;
 import com.wuweibi.bullet.device.entity.DeviceProxy;
 import com.wuweibi.bullet.device.service.DeviceProxyService;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgProxy;
 import com.wuweibi.bullet.protocol.domain.ProxyConfig;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +71,7 @@ public class DeviceProxyController  {
 
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool websocketPool;
     @Resource
     private DeviceService deviceService;
 
@@ -93,9 +93,9 @@ public class DeviceProxyController  {
         entity.setUpdateTime(new Date());
         this.deviceProxyService.saveOrUpdate(entity);
 
-        Device device = this.deviceService.getById(dto.getDeviceId());
+        DeviceDetail device = this.deviceService.getDetail(dto.getDeviceId());
 
-        BulletAnnotation annotation = coonPool.getByDeviceNo(device.getDeviceNo());
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
         if (annotation != null) {
             ProxyConfig config = new ProxyConfig();
             config.setDeviceId(dto.getDeviceId());
@@ -104,18 +104,10 @@ public class DeviceProxyController  {
             config.setType(dto.getType());
             config.setStatus(dto.getStatus());
             MsgProxy msg = new MsgProxy(config);
-            annotation.sendMessage(msg);
+            annotation.sendMessage(device.getDeviceNo(), msg);
 
             // TODO 自动映射处理
-
-
-
         }
-
-
-
-
-
         return R.ok();
     }
 
