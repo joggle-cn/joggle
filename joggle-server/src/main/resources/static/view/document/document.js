@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','css!./agreement.css'], function (app) {//加载依赖js,
+define(['app','css!./document.css'], function (app) {//加载依赖js,
 	var callback = ["$scope", function ($scope) {
 
 		// 校验是否登录
