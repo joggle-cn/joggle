@@ -66,6 +66,8 @@ let api = {
     "device.peer.list": '/api/device/peers/list',
     "device.peer.save": '/api/device/peers',
     "device.peer.detail": '/api/device/peers/detail',
+    "device.white.ips": '/api/device/white-ips',
+    "device.white.ips.detail": '/api/device/white-ips/detail',
 
 
     "system.ngrokd.check": '/api/system/ngrokd/check',

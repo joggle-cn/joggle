@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.device.mapper.DeviceWhiteIpsMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.device.entity.DeviceWhiteIps">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="ips" column="ips" jdbcType="VARCHAR"/>
+    </resultMap>
+        
+</mapper>
+

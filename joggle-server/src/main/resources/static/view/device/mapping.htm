@@ -44,6 +44,7 @@
 			<a class="btn btn-default" ng-click="sendMigicWolDevice(deviceInfo)">网络唤醒</a>
 			<a class="btn btn-default" ng-click="openDeviceDoorDialog(deviceInfo)">任意门</a>
 <!-- 			<a class="btn btn-default" ng-click="openDeviceProxyDialog(deviceInfo)">内网代理</a> -->
+ 			<a class="btn btn-default" ng-click="openWhiteIpsDialog(deviceInfo)">IP白名单</a>
 		</div>
 	</div>
 
@@ -543,15 +544,42 @@
                             </div>
                         </div>
                     </div>
-
-
-
 				</form>
-
 			</div>
 			<div class="modal-footer">
 				<a ng-click="submitDeviceProxy()" class="btn btn-default">提交代理</a>
 				<a ng-click="closeDeviceProxyDialog()"  class="btn btn-default">取消</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- ip白名单 弹框 -->
+<div id="whiteIpsDialog" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">配置IP白名单</h4>
+			</div>
+			<div class="modal-body">
+				<p>注意：配置ip白名单后，仅允许范围内ip访问设备的相关映射资源。</p>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="deviceName" class="col-sm-2 control-label">ips</label>
+						<div class="col-sm-9">
+							<textarea ng-model="whiteIps.ips" rows="8" class="form-control" placeholder="请输入ip地址、cidr地址，使用分号间隔"></textarea>
+						</div>
+						<div class="col-sm-3">
+
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<a ng-click="submitWhiteIps()" class="btn btn-default">保存</a>
+				<a ng-click="closeWhiteIpsDialog()"  class="btn btn-default">取消</a>
 			</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->

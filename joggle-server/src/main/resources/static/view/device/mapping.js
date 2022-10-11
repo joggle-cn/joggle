@@ -412,11 +412,13 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
         $scope.closeSwitchLine = function(){
             $("#switchLineDialog").modal('hide');
         }
-        /**
-         * 关闭绑定域名弹框
-         */
+        /** 关闭绑定域名弹框 */
         $scope.closeDeviceProxyDialog = function(){
             $("#deviceProxyDialog").modal('hide');
+        }
+        /** 关闭ip白名单弹框 */
+        $scope.closeWhiteIpsDialog = function(){
+            $("#whiteIpsDialog").modal('hide');
         }
 
 
@@ -500,7 +502,47 @@ define(['app','jquery', 'layer','bootstrap-switch', 'css!./mapping.css'], functi
 
 
 
- 	}];
+        $scope.openWhiteIpsDialog = function(item){
+            $scope.whiteIps = {
+                deviceId: item.id,
+                ips: ""
+            }
+            let params = {
+                deviceId: item.id,
+            }
+            faceinner.get(api['device.white.ips.detail'], params, function(res){
+                if (res.code == 'S00') {
+                    $scope.$apply(function() {
+                        $scope.whiteIps = res.data;
+                    });
+                }
+            });
+            $("#whiteIpsDialog").modal({
+                backdrop: false
+            });
+
+        }
+        /** 保存  */
+        $scope.submitWhiteIps = function(){
+            faceinner.putJson(api['device.white.ips'], $scope.whiteIps , function(res) {
+                if (res.code == 'S00') {
+                    $("#whiteIpsDialog").modal('hide');
+                    flushData();
+                }else{
+                    layer.msg(res.msg);
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+    }];
 
 
 	// app.controller('IndexController', callback );

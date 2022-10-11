@@ -5,14 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
+import com.wuweibi.bullet.device.entity.DeviceWhiteIps;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.DevicePeersService;
+import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.Utils;
 import lombok.SneakyThrows;
@@ -31,8 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wuweibi.bullet.protocol.Message.CONTROL_CLIENT_WRAPPER;
-import static com.wuweibi.bullet.protocol.Message.CONTROL_SERVER_WRAPPER;
+import static com.wuweibi.bullet.protocol.Message.*;
 
 
 /**
@@ -121,9 +124,6 @@ public class Bullet3Annotation {
                     msgAuthResp.read(bis);
 
                     String clientNo = msgAuthResp.getClientNo();
-
-
-
                     this.sendMappingInfo(clientNo);
 
                     break;
@@ -224,7 +224,20 @@ public class Bullet3Annotation {
             devicePeersService.sendMsgPeerConfig(configDTO);
         }
 
+        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
+        DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
+        if (deviceDetail != null) {
+            DeviceWhiteIpsService deviceWhiteIpsService = SpringUtils.getBean(DeviceWhiteIpsService.class);
+            DeviceWhiteIps deviceWhiteIps = deviceWhiteIpsService.getByDeviceId(deviceDetail.getId());
+            if (deviceWhiteIps != null) {
+                byte[] data = JSON.toJSONString(deviceWhiteIps.getIps().split(";")).getBytes();
+                this.sendMessageBytes(CONTROL_WHITE_IPS, deviceDetail.getDeviceNo(), data);
+            }
+
+        }
     }
+
+
 
     @OnError
     public void onError(Throwable t) throws Throwable {
@@ -301,13 +314,37 @@ public class Bullet3Annotation {
      */
     @SneakyThrows
     public void sendMessage(String clientNo, Message msg) {
+        sendMessage(CONTROL_CLIENT_WRAPPER, clientNo, msg);
+    }
+
+
+    public void sendMessage(int type, String clientNo, Message msg) {
         log.info("Control -> Server -> Client: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            outputStream.write(Utils.IntToBytes4(CONTROL_CLIENT_WRAPPER));
+            outputStream.write(Utils.IntToBytes4(type));
             outputStream.write(Utils.IntToBytes4(clientNo.length()));
             outputStream.write(clientNo.getBytes(StandardCharsets.UTF_8));
             msg.write(outputStream);
+            // 包装了Bullet协议的
+            byte[] resultBytes = outputStream.toByteArray();
+            ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+            this.session.getBasicRemote().sendBinary(buf, true);
+        } catch (Exception e) {
+            log.error("", e);
+        } finally {
+            IOUtils.closeQuietly(outputStream);
+        }
+    }
+
+
+    public void sendMessageBytes(int type, String clientNo, byte[] data) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            outputStream.write(Utils.IntToBytes4(type));
+            outputStream.write(Utils.IntToBytes4(clientNo.length()));
+            outputStream.write(clientNo.getBytes(StandardCharsets.UTF_8));
+            outputStream.write(data);
             // 包装了Bullet协议的
             byte[] resultBytes = outputStream.toByteArray();
             ByteBuffer buf = ByteBuffer.wrap(resultBytes);

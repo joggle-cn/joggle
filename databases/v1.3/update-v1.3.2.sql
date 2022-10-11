@@ -31,4 +31,12 @@ ALTER TABLE `orders`
 update orders set refund_amount =0, refund_money=0 ;
 
 
+-- 2022-10-11 marker 设备ip白名单
+CREATE TABLE `device_white_ips`  (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `device_id` bigint(22) NULL DEFAULT NULL COMMENT '设备id',
+    `ips` text  NULL COMMENT '分号间隔的ip地址',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1   COMMENT = '设备ip白名单' ;
+
 -- 线上已执

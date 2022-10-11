@@ -47,6 +47,8 @@ public abstract class Message {
     public static final int CONTROL_SERVER_WRAPPER = 1; // 管理端与服务器之间的消息
     public static final int CONTROL_CLIENT_WRAPPER = 2; // 管理端与客户端之间的消息
 
+    public static final int CONTROL_WHITE_IPS = 3; // ip白名单
+
     //消息头
     private MsgHead head;
 
