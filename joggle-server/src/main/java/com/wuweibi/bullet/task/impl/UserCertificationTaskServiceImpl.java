@@ -4,7 +4,9 @@ import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.mapper.UserCertificationMapper;
 import com.wuweibi.bullet.system.service.util.HttpUtils;
@@ -46,6 +48,8 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
     @Resource
     private UserService userService;
 
+    @Resource
+    private MailService mailService;
 
     @Override
     @Transactional
@@ -64,6 +68,7 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
             uc.setResult(2); // 默认拒绝
             uc.setResultMsg("身份证校验不通过，请重新提交真实信息。");
             Long userId = uc.getUserId();
+            User user = userService.getById(userId);
 
             UserInfo userInfo = getIdCardInfo(uc);
             if (userInfo != null) {
@@ -83,6 +88,15 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
             uc.setExamineTime(new Date());
             userCertificationMapper.updateById(uc);
             userService.updateUserCertification(userId, uc.getResult());
+
+            // 发送通过邮件
+            log.debug("send email[{}] notification 实名认证结果: {}", user.getEmail(), uc.getResultMsg());
+            Map<String, Object> param = new HashMap<>(3);
+            param.put("result", uc.getResult());
+            param.put("resultMsg", uc.getResultMsg());
+            param.put("url", bulletConfig.getServerUrl() );
+            mailService.send(user.getEmail(), "Joggle实名认证结果", param, "certification_result.ftl");
+
             count++;
         }
         try {
