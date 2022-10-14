@@ -17,11 +17,13 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserAdminDetailVO;
 import com.wuweibi.bullet.system.domain.vo.UserListVO;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
@@ -77,7 +79,21 @@ public class UserAdminController {
         return R.ok(this.userService.getList(page.toMybatisPlusPage(), params));
     }
 
+    /**
+     * 用户详情
+     */
+    @GetMapping("/detail")
+    public R<UserAdminDetailVO> userDetail(@RequestParam Long userId) {
+        User user = this.userService.getById(userId);
+        if(user == null){
+            return R.fail("数据不存在");
+        }
 
+        UserAdminDetailVO userAdminDetailVO = new UserAdminDetailVO();
+        BeanUtils.copyProperties(user, userAdminDetailVO);
+
+        return R.ok(userAdminDetailVO);
+    }
 
 
 

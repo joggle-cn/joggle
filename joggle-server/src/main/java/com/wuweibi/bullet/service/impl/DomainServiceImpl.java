@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
@@ -251,6 +253,15 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
         log.debug("[资源到期释放] 结束 处理数据量：{}", count);
         return true;
+    }
+
+    @Override
+    public Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params) {
+        Page<DomainListVO> page = this.baseMapper.selectAdminList(pageInfo, params);
+        page.getRecords().forEach(item->{
+            item.setStatusName(DomainStatusEnum.toName(item.getStatus()));
+        });
+        return page;
     }
 
 }

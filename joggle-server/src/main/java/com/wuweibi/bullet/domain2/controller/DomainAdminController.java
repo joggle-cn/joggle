@@ -3,11 +3,15 @@ package com.wuweibi.bullet.domain2.controller;
  * Created by marker on 2017/12/6.
  */
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
@@ -46,6 +50,23 @@ public class DomainAdminController {
 
     @Resource
     private DeviceMappingService deviceMappingService;
+
+
+
+    /**
+     * 域名分页查询
+     * @param page   分页对象
+     * @param params 查询实体
+     * @return 所有数据
+     */
+    @ApiOperation("域名分页查询")
+    @GetMapping("/list")
+    public R<Page<DomainListVO>> getAdminList(PageParam page, DomainAdminParam params) {
+        return R.ok(this.domainService.getAdminList(page.toMybatisPlusPage(), params));
+    }
+
+
+
 
     /**
      * 搜索可购买的域名

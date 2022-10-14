@@ -83,4 +83,38 @@
 		where d.user_id >0 and d.due_time &lt; date_add(sysdate(), interval -#{days} day)
 	</select>
 
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainListVO">
+		select d.id, d.domain,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
+			   d.type,
+			   d.status,
+			   st.name serverTunnelName,
+			   d.server_tunnel_id,
+			   d.create_time,
+			   d.buy_time,
+			   d.due_time,
+			   d.user_id
+		from t_domain  d
+	    left join t_server_tunnel st on st.id = d.server_tunnel_id
+
+		<where>
+			<if test="params.domain != null and params.domain != ''">
+				and d.domain like concat('%', #{params.domain},'%')
+			</if>
+			<if test="params.serverTunnelId != null ">
+				and d.server_tunnel_id = #{params.serverTunnelId}
+			</if>
+			<if test="params.userId != null ">
+				and d.user_id = #{params.userId}
+			</if>
+			<if test="params.status != null ">
+				and d.status = #{params.status}
+			</if>
+			<if test="params.type != null ">
+				and d.type = #{params.type}
+			</if>
+		</where>
+	</select>
+
 </mapper>

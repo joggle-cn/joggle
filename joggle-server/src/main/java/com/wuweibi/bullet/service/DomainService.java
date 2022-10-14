@@ -2,12 +2,14 @@ package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
+import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 
 import javax.validation.Valid;
@@ -115,4 +117,11 @@ public interface DomainService extends IService<Domain> {
 
     boolean resourceDueTimeRelease();
 
+    /**
+     * 资源分页查询
+     * @param pageInfo 分页对象
+     * @param params 参数
+     * @return
+     */
+    Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params);
 }

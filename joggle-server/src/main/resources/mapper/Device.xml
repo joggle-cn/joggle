@@ -79,7 +79,10 @@
 
 
     <select id="selectAdminList" resultType="com.wuweibi.bullet.device.domain.vo.DeviceListVO">
-		select d.*, d.deviceId deviceNo,
+		select  
+			 d.`id`, d.`name`, d.`deviceId`, d.`createTime`, d.`userId`,
+			 d.`server_tunnel_id`, d.`device_secret`, d.`update_time`, d.`concurrent_num`,
+				d.deviceId deviceNo,
 			   do.os,do.arch,do.public_ip, do.intranet_ip,do.mac_addr,
 			   do.status,
 			   do.server_tunnel_id,
@@ -97,6 +100,9 @@
 			</if>
 			<if test="params.userId != null ">
 				and d.userId = #{params.userId}
+			</if>
+			<if test="params.status != null ">
+				and do.status = #{params.status}
 			</if>
 		</where>
 

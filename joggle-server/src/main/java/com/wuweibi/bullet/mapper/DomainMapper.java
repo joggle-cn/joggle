@@ -3,9 +3,11 @@ package com.wuweibi.bullet.mapper;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
+import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
@@ -117,4 +119,13 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * @return
      */
     List<DomainReleaseVO> selectByDueDay(@Param("days") int days);
+
+
+    /**
+     * 资源分页查询
+     * @param pageInfo 分页对象
+     * @param params 参数
+     * @return
+     */
+    Page<DomainListVO> selectAdminList(Page pageInfo, @Param("params") DomainAdminParam params);
 }

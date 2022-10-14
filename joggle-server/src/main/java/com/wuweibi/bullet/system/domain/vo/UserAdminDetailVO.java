@@ -1,10 +1,7 @@
-package com.wuweibi.bullet.system.entity;
+package com.wuweibi.bullet.system.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,12 +16,10 @@ import java.util.Date;
  * @since 2017-12-08
  */
 @Data
-@TableName("t_sys_users")
-public class User extends Model<User> {
+public class UserAdminDetailVO {
 
     private static final long serialVersionUID = 1L;
 
-	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	private String email;
 	private String nickname;
@@ -41,10 +36,10 @@ public class User extends Model<User> {
 	/**
 	 * 登录时间
 	 */
-	@TableField("loginTime")
+	@ApiModelProperty("注册时间")
 	private Date loginTime;
 
-	@TableField("created_time")
+	@ApiModelProperty("注册时间")
 	private Date createdTime;
 
 	/**
@@ -57,7 +52,7 @@ public class User extends Model<User> {
 	 * 是否启用
 	 */
 	@TableField("enabled")
-	private boolean enabled;
+	private Integer enabled;
 
 
 	/**

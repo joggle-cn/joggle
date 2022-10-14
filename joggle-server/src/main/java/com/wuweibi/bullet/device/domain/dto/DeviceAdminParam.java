@@ -20,6 +20,10 @@ public class DeviceAdminParam {
 	@ApiModelProperty("通道id")
 	private Integer serverTunnelId;
 
+
+	@ApiModelProperty("设备状态 1在线 ")
+	private Integer status;
+
 	@ApiModelProperty("用户id")
 	private Long userId;
 
