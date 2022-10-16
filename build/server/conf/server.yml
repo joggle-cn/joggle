@@ -1,0 +1,17 @@
+# 通用配置
+loglevel: DEBG
+
+# http/https 通道
+domain: "xxx.com"
+http_addr: ":80"
+httpsAddr: ":443"
+
+# 通道配置
+tunnelAddr: ":8083"
+#tunnelTlsKey: "D:/Users/marker/cert/ca/server.key"
+#tunnelTlsCrt: "D:/Users/marker/cert/ca/new_certs/10.pem"
+
+# 控制端配置
+serverUrl: "localhost:8081"
+serverApiToken: "123456"
+serverTunnelId: "3"

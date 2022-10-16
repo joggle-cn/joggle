@@ -209,6 +209,7 @@ public class Bullet3Annotation {
         for (DeviceMapping entity : list) {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
+                log.info("device[{}] {}", deviceNo, data);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
                 this.sendMessage(deviceNo, msg);
             }
