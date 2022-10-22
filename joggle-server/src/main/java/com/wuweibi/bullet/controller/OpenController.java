@@ -168,7 +168,7 @@ public class OpenController {
 
             Calendar calendar = Calendar.getInstance();
             Date time = calendar.getTime();
-            calendar.add(Calendar.DATE, 365); // 1年使用权
+            calendar.add(Calendar.DATE, 7); // 7天使用权
             Date dueTime = calendar.getTime();
 
             // 生成域名
@@ -178,8 +178,8 @@ public class OpenController {
             domain.setCreateTime(time);
             domain.setBuyTime(time);
             domain.setDueTime(dueTime);
-            domain.setOriginalPrice(BigDecimal.valueOf(2));
-            domain.setSalesPrice(BigDecimal.valueOf(1));
+            domain.setOriginalPrice(BigDecimal.valueOf(1));
+            domain.setSalesPrice(BigDecimal.valueOf(0.25));
             domain.setStatus(1);
             domain.setType(2);
             domainService.save(domain);
