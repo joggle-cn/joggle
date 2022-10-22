@@ -38,5 +38,8 @@ public class DomainListVO {
     @ApiModelProperty("通道名称")
     private String serverTunnelName;
 
+    @ApiModelProperty("设备信息")
+    private String deviceInfo;
+
 
 }

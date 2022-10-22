@@ -38,5 +38,22 @@
         select * from user_certification where user_id = #{userId} order by id desc limit 1
     </select>
 
+
+<!--    分页查询用户的实名认证记录-->
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.system.domain.vo.UserCertificationAdminListVO">
+        select
+            *
+        from user_certification
+         <where>
+             <if test="params.userId != null">
+                 and user_id = #{params.userId}
+             </if>
+             <if test="params.realName != null and params.realName != ''">
+                 and real_name = #{params.realName}
+             </if>
+         </where>
+         order by id desc
+    </select>
+
 </mapper>
 

@@ -1,10 +1,12 @@
 package com.wuweibi.bullet.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuweibi.bullet.system.entity.UserCertification;
-import com.wuweibi.bullet.system.domain.UserCertificationVO;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.system.domain.UserCertificationParam;
+import com.wuweibi.bullet.system.domain.UserCertificationVO;
+import com.wuweibi.bullet.system.domain.dto.UserCertAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserCertificationAdminListVO;
+import com.wuweibi.bullet.system.entity.UserCertification;
 
 /**
  * 用户实名认证(UserCertification)表服务接口
@@ -34,4 +36,13 @@ public interface UserCertificationService extends IService<UserCertification> {
     boolean checkIdcardAndPhone(String phone, String idcard);
 
     UserCertification getLastResult(Long userId);
+
+    /**
+     * 分页查询用户的实名认证记录
+     * @param pageInfo 分页参数
+     * @param params 条件参数
+     * @return
+     */
+    Page<UserCertificationAdminListVO> getAdminList(Page pageInfo, UserCertAdminParam params);
+
 }
