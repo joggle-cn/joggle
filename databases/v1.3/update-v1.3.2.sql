@@ -40,3 +40,8 @@ CREATE TABLE `device_white_ips`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1   COMMENT = '设备ip白名单' ;
 
 -- 线上已执
+
+ALTER TABLE `feedback`
+    ADD COLUMN `reply` varchar(500) NULL COMMENT '回复内容' AFTER `create_time`;
+ALTER TABLE `feedback`
+    ADD COLUMN `reply_time` datetime NULL COMMENT '回复时间' AFTER `reply`;

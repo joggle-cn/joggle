@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.feedback.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
 import com.wuweibi.bullet.feedback.domain.FeedbackParam;
 import com.wuweibi.bullet.feedback.entity.Feedback;
@@ -18,7 +19,8 @@ import java.util.List;
  * @since 2022-04-01 17:32:37
  */
 @Service("feedbackService")
-public class FeedbackServiceImpl implements FeedbackService {
+public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> implements FeedbackService {
+
     @Resource
     private FeedbackMapper feedbackMapper;
 
@@ -30,7 +32,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     public Feedback queryById(Integer id) {
-        return this.feedbackMapper.queryById(id);
+        return this.feedbackMapper.selectById(id);
     }
 
     /**
@@ -45,29 +47,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         return this.feedbackMapper.queryAllByLimit(offset, limit);
     }
 
-    /**
-     * 新增数据
-     *
-     * @param feedback 实例对象
-     * @return 实例对象
-     */
-    @Override
-    public Feedback insert(Feedback feedback) {
-        this.feedbackMapper.insert(feedback);
-        return feedback;
-    }
-
-    /**
-     * 修改数据
-     *
-     * @param feedback 实例对象
-     * @return 实例对象
-     */
-    @Override
-    public Feedback update(Feedback feedback) {
-        this.feedbackMapper.update(feedback);
-        return this.queryById(feedback.getId());
-    }
 
     /**
      * 通过主键删除数据

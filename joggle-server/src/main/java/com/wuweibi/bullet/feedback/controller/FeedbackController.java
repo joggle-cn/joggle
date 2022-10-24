@@ -7,6 +7,8 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.feedback.domain.FeedbackDTO;
 import com.wuweibi.bullet.feedback.entity.Feedback;
 import com.wuweibi.bullet.feedback.service.FeedbackService;
+import com.wuweibi.bullet.service.MailService;
+import com.wuweibi.bullet.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +36,12 @@ public class FeedbackController {
      */
     @Resource
     private FeedbackService feedbackService;
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private MailService mailService;
+
 
     /**
      * 提交意见反馈
@@ -51,8 +59,9 @@ public class FeedbackController {
         feedback.setUserId(userId);
         feedback.setCreateTime(new Date());
 
-        this.feedbackService.insert(feedback);
-        return R.success("");
+        this.feedbackService.save(feedback);
+        return R.ok("");
     }
+
 
 }

@@ -1,5 +1,8 @@
 package com.wuweibi.bullet.feedback.entity;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -9,6 +12,8 @@ import java.io.Serializable;
  * @author marker
  * @since 2022-04-01 17:32:35
  */
+
+@Data
 public class Feedback implements Serializable {
     private static final long serialVersionUID = -43555469426416459L;
     /**
@@ -31,58 +36,20 @@ public class Feedback implements Serializable {
     * 内容
     */
     private String content;
+
+    @ApiModelProperty("回复内容")
+    private String reply;
+
+
     /**
     * 创建时间
     */
     private Date createTime;
 
 
-    public Integer getId() {
-        return id;
-    }
+    @ApiModelProperty("回复时间")
+    private Date replyTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 
 }

@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.feedback.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
 import com.wuweibi.bullet.feedback.domain.FeedbackParam;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author marker
  * @since 2022-04-01 17:32:35
  */
-public interface FeedbackMapper {
+public interface FeedbackMapper extends BaseMapper<Feedback> {
 
     /**
      * 通过ID查询单条数据
