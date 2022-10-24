@@ -32,6 +32,8 @@ public abstract class Message {
     public static final int DEVICE_DOOR = 0x10000013; // 设备任意门
     public static final int P2P_STUN = 0x10000014; // p2p
 
+    public static final int DEVICE_METRICS = 0x10000015; // 统计数据
+
 
     public static final int NEW_MAPPING = 0x6;
     public static final int NEW_UNMAPPING = 0x60000001;

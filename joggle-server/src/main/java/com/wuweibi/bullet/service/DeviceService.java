@@ -122,4 +122,6 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     Page<DeviceListVO> getAdminList(Page pageInfo, DeviceAdminParam params);
+
+
 }

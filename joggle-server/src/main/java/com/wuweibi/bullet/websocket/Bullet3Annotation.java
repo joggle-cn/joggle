@@ -13,6 +13,8 @@ import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
@@ -119,13 +121,18 @@ public class Bullet3Annotation {
                     MsgProxy msgProxy = new MsgProxy(head);
                     msgProxy.read(bis);
                     break;
+                case Message.DEVICE_METRICS:// Bind响应命令
+                    MsgDataMetrics msgDataMetrics = new MsgDataMetrics(head);
+                    msgDataMetrics.read(bis);
+                    DataMetricsService dataMetricsService = SpringUtils.getBean(DataMetricsService.class);
+                    dataMetricsService.uploadData(JSON.parseObject(msgDataMetrics.getData(), DataMetricsDTO.class));
+
+                    break;
                 case Message.AUTH_RESP:// 设备认证成功
                     MsgAuthResp msgAuthResp = new MsgAuthResp(head);
                     msgAuthResp.read(bis);
-
                     String clientNo = msgAuthResp.getClientNo();
                     this.sendMappingInfo(clientNo);
-
                     break;
                 case Message.AUTH:// 认证
                     MsgAuth msgAuth = new MsgAuth(head);

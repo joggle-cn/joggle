@@ -1,14 +1,28 @@
 package com.wuweibi.bullet.metrics.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.business.DeviceBiz;
+import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.entity.UserFlow;
+import com.wuweibi.bullet.flow.service.UserFlowService;
+import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.mapper.DataMetricsMapper;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
+import com.wuweibi.bullet.service.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,6 +44,67 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         }
         return this.baseMapper.generateDayByTime(date);
     }
+
+    @Resource
+    private DeviceService deviceService;
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
+    @Resource
+    private UserFlowService userFlowService;
+
+    @Resource
+    private BulletConfig bulletConfig;
+
+    @Resource
+    private DeviceBiz deviceBiz;
+
+
+    @Override
+    @Transactional
+    public R uploadData(DataMetricsDTO dataMetrics) {
+        String deviceNo = dataMetrics.getDeviceNo();
+        DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
+        if (deviceDetail == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
+        }
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(deviceDetail.getServerTunnelId());
+        if (serverTunnel == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
+        }
+
+        DataMetrics entity = new DataMetrics();
+        BeanUtils.copyProperties(dataMetrics, entity);
+        entity.setCreateTime(new Date());
+        entity.setServerTunnelId(deviceDetail.getServerTunnelId());
+        entity.setDeviceId(deviceDetail.getId());
+        entity.setUserId(deviceDetail.getUserId());
+        entity.setOpenTime(new Date(dataMetrics.getOpenTime()));
+        entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
+        entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
+        entity.setRemoteAddr(dataMetrics.getRemoteAddr());
+        this.save(entity);
+
+        Long userId = deviceDetail.getUserId();
+
+        // 扣取流量
+        if(serverTunnel.getEnableFlow() == 1){
+            Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+            UserFlow userFlow = userFlowService.getUserFlow(userId);
+            if (userFlow.getFlow() - bytes / 1024 <= 0) {
+                // 由于用户没有流量了，默认关闭所有映射
+                deviceBiz.closeAllMappingByUserId(userId);
+            }
+            boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
+            if (!status) {
+                log.warn("流量扣取失败 userId={}", userId);
+                return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
+            }
+        }
+        return null;
+    }
+
 
 
     /**
