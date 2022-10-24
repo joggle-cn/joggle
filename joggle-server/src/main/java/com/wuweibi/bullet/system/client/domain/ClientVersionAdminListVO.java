@@ -1,9 +1,5 @@
-package com.wuweibi.bullet.client.entity;
+package com.wuweibi.bullet.system.client.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,27 +18,22 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("client_version")
-public class ClientVersion implements Serializable {
+public class ClientVersionAdminListVO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
      * 版本号
      */
-    @TableField("version")
     private String version;
 
     /**
      * 标题
      */
-    @TableField("title")
     private String title;
 
 
@@ -53,35 +44,29 @@ public class ClientVersion implements Serializable {
     /**
      * 描述
      */
-    @TableField("description")
     private String description;
 
     /**
      * 创建时间
      */
-    @TableField("create_time")
     private Date createTime;
 
-    @TableField("update_time")
     private Date updateTime;
 
     /**
      * 下载URL地址
      */
-    @TableField("download_url")
     private String downloadUrl;
 
     /**
      * 检查信息
      */
-    @TableField("checksum")
     private String checksum;
 
     /**
      * 状态 1上架 0下架
      */
-    @TableField("status")
-    private Boolean status;
+    private Integer status;
 
 
 }

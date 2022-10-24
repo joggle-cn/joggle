@@ -91,7 +91,7 @@ public class UserAdminController {
 
         UserAdminDetailVO userAdminDetailVO = new UserAdminDetailVO();
         BeanUtils.copyProperties(user, userAdminDetailVO);
-
+        userAdminDetailVO.setEnabled(user.isEnabled()?1:0);
         return R.ok(userAdminDetailVO);
     }
 

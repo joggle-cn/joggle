@@ -1,12 +1,15 @@
-package com.wuweibi.bullet.client.service.impl;
+package com.wuweibi.bullet.system.client.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.wuweibi.bullet.client.entity.ClientVersion;
-import com.wuweibi.bullet.client.mapper.ClientVersionMapper;
-import com.wuweibi.bullet.client.service.ClientVersionService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.config.properties.AliOssProperties;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
+import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
+import com.wuweibi.bullet.system.client.entity.ClientVersion;
+import com.wuweibi.bullet.system.client.mapper.ClientVersionMapper;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
+import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
 import com.wuweibi.bullet.utils.SpringUtils;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +69,10 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
             return "v1.3.0";
         }
         return String.format("v%s", clientVersion.getVersion());
+    }
+
+    @Override
+    public Page<ClientVersionAdminListVO> getAdminList(Page pageInfo, ClientVersionParam params) {
+        return this.baseMapper.selectAdminList(pageInfo, params);
     }
 }

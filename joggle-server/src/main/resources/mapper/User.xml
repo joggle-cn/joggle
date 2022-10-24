@@ -36,7 +36,10 @@
 				and su.enabled = #{params.enabled}
 			</if>
 			<if test="params.username != null and params.username != ''">
-				and su.username like concat('%',#{params.username},'%')
+				and (
+					su.username like concat('%',#{params.username},'%') or
+					su.id = #{params.username}
+				)
 			</if>
 		</where>
  		order by id desc

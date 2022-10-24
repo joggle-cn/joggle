@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.controller;
 
-import com.wuweibi.bullet.client.service.ClientVersionService;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.R;

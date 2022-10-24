@@ -3,8 +3,8 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.client.entity.ClientVersion;
-import com.wuweibi.bullet.client.service.ClientVersionService;
+import com.wuweibi.bullet.system.client.entity.ClientVersion;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;

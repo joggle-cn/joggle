@@ -126,7 +126,6 @@ public class Bullet3Annotation {
                     msgDataMetrics.read(bis);
                     DataMetricsService dataMetricsService = SpringUtils.getBean(DataMetricsService.class);
                     dataMetricsService.uploadData(JSON.parseObject(msgDataMetrics.getData(), DataMetricsDTO.class));
-
                     break;
                 case Message.AUTH_RESP:// 设备认证成功
                     MsgAuthResp msgAuthResp = new MsgAuthResp(head);

@@ -1,8 +1,11 @@
-package com.wuweibi.bullet.client.service;
+package com.wuweibi.bullet.system.client.service;
 
-import com.wuweibi.bullet.client.entity.ClientVersion;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
+import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
+import com.wuweibi.bullet.system.client.entity.ClientVersion;
+import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
 
 /**
  * <p>
@@ -39,4 +42,11 @@ public interface ClientVersionService extends IService<ClientVersion> {
      */
     String getMaxVersion();
 
+    /**
+     * 分页查询客户端
+     * @param pageInfo 分页参数
+     * @param params 条件参数
+     * @return
+     */
+    Page<ClientVersionAdminListVO> getAdminList(Page pageInfo, ClientVersionParam params);
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.system.client.mapper.ClientVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.system.client.entity.ClientVersion">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="version" column="version" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="os" column="os" jdbcType="VARCHAR"/>
+        <result property="arch" column="arch" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="downloadUrl" column="download_url" jdbcType="VARCHAR"/>
+        <result property="checksum" column="checksum" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO">
+        select * from client_version
+        <where>
+            <if test="params.title != null and params.title != ''">
+                and title like concat('%',#{params.title},'%')
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+</mapper>
+
