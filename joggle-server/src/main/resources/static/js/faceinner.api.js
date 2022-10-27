@@ -90,6 +90,7 @@ let api = {
     "user.orders.create": '/api/orders/create',
     "user.orders.confirm": '/api/orders/confirm',
     "user.orders.list": '/api/orders/list',
+    "user.metrics.list": '/api/data/metrics/list',
 
     "device.tunnel": '/api/server/tunnel/list',
 

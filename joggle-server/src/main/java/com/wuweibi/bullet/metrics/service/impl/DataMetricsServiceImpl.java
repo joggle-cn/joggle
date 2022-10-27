@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.metrics.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.config.properties.BulletConfig;
@@ -11,6 +12,8 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsListVO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsParam;
 import com.wuweibi.bullet.metrics.mapper.DataMetricsMapper;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
@@ -105,6 +108,10 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         return null;
     }
 
+    @Override
+    public Page<DataMetricsListVO> getList(Page<DataMetrics> page, DataMetricsParam params) {
+        return this.baseMapper.selectUserList(page, params);
+    }
 
 
     /**

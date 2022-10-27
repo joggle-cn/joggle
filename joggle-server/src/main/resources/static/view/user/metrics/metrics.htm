@@ -1,0 +1,75 @@
+<div style="margin-top:30px; "></div>
+<div class="container metrics-list">
+
+    <div class="row">
+        <div class="col-xs-12"><ol class="breadcrumb">
+			<li><a href="#">首页</a></li>
+            <li><a href="#/user/profile">我的资料</a></li>
+			<li><a href="#/user/metrics/list">流量明细</a></li>
+		</ol>
+        </div>
+    </div>
+
+    <div class="row">
+<!--         <div class="col-md-2"> -->
+<!--         </div> -->
+        <div class="col-md-12">
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="form-inline">
+                        <div class="input-group">
+                            <span class="input-group-addon">通道</span>
+                            <select class="form-control" ng-model="params.serverTunnelId" ng-options="item.id as item.name for item in tunnels">
+
+                            </select>
+                        </div>
+
+<!--                        <div class="input-group">-->
+<!--                            <span class="input-group-addon">关键字</span>-->
+<!--                            <input type="text" ng-model="params.keyword" class="form-control" aria-label="Text input with multiple buttons">-->
+<!--                        </div>-->
+                        <button id="bindButton" ng-click="queryMetricsList(1)" type="button"   class="btn btn-success">搜索</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="bs-example" data-example-id="hoverable-table">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th width="60">#</th>
+                      <th width="100">时间</th>
+                      <th width="140">通道</th>
+                      <th width="200">设备</th>
+                      <th width="80">隧道ID</th>
+                      <th width="120">流量</th>
+                      <th width="80">进/出情况</th>
+                      <th width="120">链接数</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in page.records">
+                      <th scope="row">{{$index + 1}}</th>
+                      <td>{{item.createDate}}</td>
+                      <td ng-bind="item.serverTunnelName"></td>
+                      <td>
+                          <span class="label label-info">{{item.deviceNo}}</span></td>
+                      <td>{{item.mappingId}}</td>
+                      <td style="text-align: right">{{item.flowStr}}</td>
+                      <td>{{item.bytesIn}}/{{item.bytesOut}}</td>
+                      <td>{{item.link}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+                <div class="text-center">
+                    <ul id="pagination" class="pagination"></ul>
+                </div>
+        </div>
+
+
+
+    </div>
+</div>

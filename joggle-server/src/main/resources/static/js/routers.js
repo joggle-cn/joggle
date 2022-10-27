@@ -159,6 +159,13 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			, templateUrl: 'view/service/orders/orders.htm'
 			, controllerUrl: 'view/service/orders/orders.js'
 		}))
+		.when('/user/metrics/list', router({
+			minTitle: "流量明细"
+			, templateUrl: 'view/user/metrics/metrics.htm'
+			, controllerUrl: 'view/user/metrics/metrics.js'
+		}))
+
+
 
         // 系统配置
         .when('/system', router({

@@ -3,7 +3,7 @@
 <mapper namespace="com.wuweibi.bullet.metrics.mapper.DataMetricsMapper">
 
 
-
+<!--    按天生成统计数据-->
     <update id="generateDayByTime">
         insert into data_metrics_day (select
           null,
@@ -14,17 +14,46 @@
           DATE_FORMAT(#{date},'%Y-%m-%d'),
           DATE_FORMAT(#{date},'%Y-%m-01'),
           DATE_FORMAT(#{date},'%Y'),
-          sum(ifnull(a.bytes_in,0) + ifnull(a.bytes_out,0)),
+          sum(ifnull(a.bytes_in,0) + ifnull(a.bytes_out,0)) as flow,
+          sum(ifnull(a.bytes_in,0)) as bytes_in,
+          sum(ifnull(a.bytes_out,0)) as bytes_out,
           count(*),
-          now()
+          sysdate()
         from
           data_metrics a
         WHERE a.create_date = DATE_FORMAT(#{date},'%Y-%m-%d')
         GROUP BY a.user_id, a.server_tunnel_id, a.device_id, a.mapping_id
         HAVING a.user_id is not null
-            )
+        )
     </update>
 
+
+    <select id="selectUserList" resultType="com.wuweibi.bullet.metrics.domain.DataMetricsListVO">
+        select
+            dmd.`id`, dmd.`user_id`, dmd.`server_tunnel_id`, dmd.`device_id`, dmd.`mapping_id`, dmd.`create_date`, dmd.`create_month`,
+            dmd.`create_year`, dmd.`flow`/1000 as flow,
+            dmd.`link`, dmd.`create_time`, tst.name serverTunnelName,
+            td.name as deviceName,
+            td.deviceId as deviceNo
+        from data_metrics_day dmd
+        left join t_server_tunnel tst on dmd.server_tunnel_id = tst.id
+        left join t_device td on dmd.device_id = td.id
+        <where>
+            <if test="params.serverTunnelId != null">
+                and dmd.server_tunnel_id = #{params.serverTunnelId}
+            </if>
+            <if test="params.deviceId != null">
+                and dmd.device_id = #{params.deviceId}
+            </if>
+            <if test="params.mappingId != null">
+                and dmd.mapping_id = #{params.mappingId}
+            </if>
+            <if test="params.userId != null">
+                and dmd.user_id = #{params.userId}
+            </if>
+        </where>
+        order by dmd.id desc
+    </select>
 
 
 </mapper>

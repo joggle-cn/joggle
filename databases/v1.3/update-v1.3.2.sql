@@ -45,3 +45,9 @@ ALTER TABLE `feedback`
     ADD COLUMN `reply` varchar(500) NULL COMMENT '回复内容' AFTER `create_time`;
 ALTER TABLE `feedback`
     ADD COLUMN `reply_time` datetime NULL COMMENT '回复时间' AFTER `reply`;
+
+-- 记录明细进入流量
+ALTER TABLE `data_metrics_day`
+    ADD COLUMN `bytes_in` bigint(22) NULL COMMENT '流入' AFTER `flow`,
+    ADD COLUMN `bytes_out` bigint(22) NULL COMMENT '流出' AFTER `bytes_in`;
+
