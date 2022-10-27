@@ -3,11 +3,14 @@ package com.wuweibi.bullet.system.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.common.domain.PageParam;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
+import com.wuweibi.bullet.domain.message.FormFieldMessage;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -15,11 +18,15 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
+import com.wuweibi.bullet.service.UserForgetService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.UserPassForgetApplyDTO;
 import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
 import com.wuweibi.bullet.system.domain.vo.UserAdminDetailVO;
 import com.wuweibi.bullet.system.domain.vo.UserListVO;
 import com.wuweibi.bullet.system.entity.User;
+import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -170,5 +177,40 @@ public class UserAdminController {
         return R.fail();
     }
 
+
+    @Resource
+    private BulletConfig bulletConfig;
+
+    @Resource
+    private UserForgetService userForgetService;
+
+    /**
+     * 忘记密码
+     *
+     * @return
+     */
+    @ApiOperation(value = "重置密码",notes = "重置密码将收到修改密码的邮件")
+    @PostMapping(value = "/password/reset")
+    public R forget(@RequestBody UserPassForgetApplyDTO dto,
+                                HttpServletRequest request) {
+        String email = dto.getEmail();
+        // 验证邮箱正确性
+        if (email.indexOf("@") == -1 && !SpringUtils.emailFormat(email)) {// 邮箱格式不正确
+            FormFieldMessage ffm = new FormFieldMessage();
+            ffm.setField("email");
+            ffm.setStatus(State.RegEmailError);
+            return R.fail(ffm);
+        }
+        String ip  = HttpUtils.getRemoteHost(request);
+        String url = bulletConfig.getServerUrl();
+
+        // 验证最近5分钟是否申请过
+        boolean applyStatus = userForgetService.checkApply(email, 5 * 60);
+        if(applyStatus){
+            return R.fail("最近申请过忘记密码，请查收等待一段时间再次操作");
+        }
+         userService.applyChangePass(email, url, ip);
+        return R.ok();
+    }
 
 }
