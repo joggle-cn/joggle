@@ -55,5 +55,8 @@ public class ServerTunnel  {
 
     @ApiModelProperty("启用扣量 1是 0 否")
     private Integer enableFlow;
+
+    @ApiModelProperty("服务器上线时间")
+    private Date serverUpTime;
 }
 

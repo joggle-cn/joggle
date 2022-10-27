@@ -12,6 +12,7 @@ import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +39,7 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
         return this.update(Wrappers.<ServerTunnel>lambdaUpdate()
                 .eq(ServerTunnel::getId, tunnelId)
                 .set(ServerTunnel::getStatus, status)
+                .set(ServerTunnel::getServerUpTime, new Date())
                 );
     }
 

@@ -3,6 +3,8 @@ package com.wuweibi.bullet.device.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class ServerTunnelNodeVO {
 
@@ -22,7 +24,7 @@ public class ServerTunnelNodeVO {
     private String serverAddr;
 
     @ApiModelProperty("在线时长")
-    private Long onlineTime;
+    private String onlineTime;
 
     @ApiModelProperty("入网流量GB")
     private Long flowIn;
@@ -38,6 +40,9 @@ public class ServerTunnelNodeVO {
 
     @ApiModelProperty("通道状态")
     private Integer status;
+
+    @ApiModelProperty("通道上线时间")
+    private Date serverUpTime;
 
 
 }

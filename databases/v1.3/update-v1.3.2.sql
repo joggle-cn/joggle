@@ -51,3 +51,8 @@ ALTER TABLE `data_metrics_day`
     ADD COLUMN `bytes_in` bigint(22) NULL COMMENT '流入' AFTER `flow`,
     ADD COLUMN `bytes_out` bigint(22) NULL COMMENT '流出' AFTER `bytes_in`;
 
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `server_up_time` datetime NULL COMMENT '服务器上线时间' AFTER `server_end_time`;
+
+
+-- 线上已执
