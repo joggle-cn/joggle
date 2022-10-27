@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.ratelimiter.handler;
 
 import com.wuweibi.bullet.ratelimiter.annotation.RateLimiter;
+import com.wuweibi.bullet.ratelimiter.util.RateSpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -40,8 +41,6 @@ public class RateLimterHandler {
 
     private DefaultRedisScript<Long> getRedisScript;
 
-    @Resource
-    private RedissonClient redissonClient;
 
     @PostConstruct
     public void init() {
@@ -64,7 +63,7 @@ public class RateLimterHandler {
             throw new IllegalArgumentException("the Annotation @RateLimter must used on method!");
         }
 
-
+        RedissonClient redissonClient = RateSpringUtils.getBean(RedissonClient.class);
 
         RRateLimiter limiter = redissonClient.getRateLimiter("rateLimiter");
         if (limiter.tryAcquire()) {//尝试获取1个令牌

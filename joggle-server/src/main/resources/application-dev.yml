@@ -1,7 +1,7 @@
 
 ## Swagger文档启用
 SWAGGER_DOC_ENABLE: true
-
+RATE_LIMITER_ENABLED: true
 
 #
 # Spring 配置

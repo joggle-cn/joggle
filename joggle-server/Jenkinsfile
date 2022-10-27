@@ -7,19 +7,27 @@ pipeline {
                       echo "env: ${env.BRANCH_NAME}"
                       echo 'Deploying....'
                       sh '''
+                         echo "copy admin web..."
+                         scp -rp -o StrictHostKeyChecking=no root@192.168.1.5:/tmp/joggleAdmin/ ./joggle-server/src/main/resources/static/manager/;
+
+                         echo "fix ip"
 
                          if [ "$BRANCH_NAME"  = "build" ];then
                             sed -ie 's/http:\\/\\/joggle-server:8081//g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/http:\\/\\/joggle-server:8081//g' joggle-server/src/main/resources/static/manager/static/js/app.js
                          fi
                          if [ "$BRANCH_NAME"  = "test" ];then
                              sed -ie 's/http:\\/\\/joggle-server:8081/http:\\/\\/192.168.1.6:31117/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                             sed -ie 's/http:\\/\\/192.168.1.6:31117/http:\\/\\/192.168.1.6:31117/g' joggle-server/src/main/resources/static/manager/static/js/app.js
                           fi
                          if [ "$BRANCH_NAME"  = "prod" ];then
                             sed -ie 's/http:\\/\\/joggle-server:8081/https:\\/\\/api.joggle.cn/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
+                            sed -ie 's/https:\\/\\/api.joggle.cn//g' joggle-server/src/main/resources/static/manager/static/js/app.js
                          fi
 
                          # echo "修改版本号 $VERSION ";
                          # sed -ie "s/dev-version/$VERSION/g" static/lib/common.lib.js
+
 
                       '''
                   }

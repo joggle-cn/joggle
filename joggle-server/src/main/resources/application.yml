@@ -99,8 +99,8 @@ spring:
         max-idle: 10
   # 限流器配置
   rate-limiter:
-    enabled: true
-    rate: 10
+    enabled: ${RATE_LIMITER_ENABLED:true}
+    rate: 1000
     interval: 1000
     type: PER_CLIENT
     ignoreUrls:
@@ -175,7 +175,7 @@ logging:
 gate:
   ignore:
     authentication:
-      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template
+      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template,/manager
 
 # joggle 配置
 joggle:

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
+@ConditionalOnProperty(prefix = RateLimiterProperties.PREFIX, value = "enabled", havingValue = "true")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RateLimiterFilter extends OncePerRequestFilter {
 
