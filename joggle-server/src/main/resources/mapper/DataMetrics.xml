@@ -31,7 +31,7 @@
     <select id="selectUserList" resultType="com.wuweibi.bullet.metrics.domain.DataMetricsListVO">
         select
             dmd.`id`, dmd.`user_id`, dmd.`server_tunnel_id`, dmd.`device_id`, dmd.`mapping_id`, dmd.`create_date`, dmd.`create_month`,
-            dmd.`create_year`, dmd.`flow`/1000 as flow,
+            dmd.`create_year`, dmd.`flow` as flow,dmd.`bytes_in`, dmd.`bytes_out`,
             dmd.`link`, dmd.`create_time`, tst.name serverTunnelName,
             td.name as deviceName,
             td.deviceId as deviceNo
