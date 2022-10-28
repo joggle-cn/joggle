@@ -39,6 +39,9 @@ public class ServerTunnelAdminVO {
     @ApiModelProperty("服务器到期时间")
     private Date serverEndTime;
 
+    @ApiModelProperty("服务器上线时间")
+    private Date serverUpTime;
+
 
 
 
