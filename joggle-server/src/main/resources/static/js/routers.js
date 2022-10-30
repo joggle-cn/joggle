@@ -218,6 +218,13 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 		}))
 
 
+		.when('/user/package', router({
+			minTitle: "用户套餐"
+			, templateUrl: 'view/service/package/package.htm'
+			, controllerUrl: 'view/service/package/package.js'
+		}))
+
+
 
 		/* 闪聊模式 */
 		.when('/flashchat/index', router({

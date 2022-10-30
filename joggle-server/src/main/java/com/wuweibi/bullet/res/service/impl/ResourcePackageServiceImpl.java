@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.res.domain.ResourcePackageAdminParam;
+import com.wuweibi.bullet.res.domain.ResourcePackageListVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageParam;
 import com.wuweibi.bullet.res.domain.ResourcePackageVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
@@ -25,7 +27,7 @@ public class ResourcePackageServiceImpl extends ServiceImpl<ResourcePackageMappe
 
 
     @Override
-    public Page<ResourcePackageVO> getPage(Page pageInfo, ResourcePackageParam params) {
+    public Page<ResourcePackageVO> getPage(Page pageInfo, ResourcePackageAdminParam params) {
 
         LambdaQueryWrapper<ResourcePackage> qw = Wrappers.lambdaQuery();
         Page<ResourcePackage> page = this.baseMapper.selectPage(pageInfo, qw);
@@ -40,7 +42,12 @@ public class ResourcePackageServiceImpl extends ServiceImpl<ResourcePackageMappe
     }
 
     @Override
-    public Page<ResourcePackageVO> getAdminList(Page pageInfo, ResourcePackageParam params) {
+    public Page<ResourcePackageVO> getAdminList(Page pageInfo, ResourcePackageAdminParam params) {
         return this.baseMapper.selectAdminList(pageInfo, params);
+    }
+
+    @Override
+    public Page<ResourcePackageListVO> getList(Page pageInfo, ResourcePackageParam params) {
+        return  this.baseMapper.selectWebList(pageInfo, params);
     }
 }

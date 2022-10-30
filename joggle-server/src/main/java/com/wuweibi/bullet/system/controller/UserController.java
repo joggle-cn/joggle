@@ -11,7 +11,6 @@ import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -19,7 +18,10 @@ import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -68,6 +70,9 @@ public class UserController {
     @Resource
     private UserCertificationService userCertificationService;
 
+    @Resource
+    private ResourcePackageService resourcePackageService;
+
     /**
      * 获取登录的用户信息
      */
@@ -81,7 +86,7 @@ public class UserController {
         Long userId = SecurityUtils.getUserId();
 
         // 验证邮箱正确性
-        User user = userService.getById(userId);
+        UserDetailVO user = userService.getDetailById(userId);
         UserFlow userFlow = userFlowService.getUserFlow(userId);
         user.setPassword(null);
 

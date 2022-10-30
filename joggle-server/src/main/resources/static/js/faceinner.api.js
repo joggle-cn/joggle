@@ -70,6 +70,7 @@ let api = {
     "device.white.ips.detail": '/api/device/white-ips/detail',
 
 
+    "user.package.list": '/api/resource/package/list',
     "system.ngrokd.check": '/api/system/ngrokd/check',
 
     /* 用户域名与端口 */

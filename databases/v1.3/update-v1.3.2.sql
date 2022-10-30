@@ -78,5 +78,12 @@ CREATE TABLE `resource_package`  (
      `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
      `days` int(11) NULL DEFAULT NULL COMMENT '购买后持有天数',
      `content` longtext NULL COMMENT '富文本说明',
+     `sence` varchar(255) NULL COMMENT '使用场景',
      PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1  ROW_FORMAT = Dynamic;
+
+ALTER TABLE `resource_package`
+    ADD COLUMN `concurrent_num` int NULL COMMENT '并发限制' AFTER `proxy_enable`;
+
+ALTER TABLE `orders`
+    MODIFY COLUMN `resource_type` int(2) NULL DEFAULT NULL COMMENT '资源类型 1域名 2端口 3流量 4 充值 5套餐' AFTER `user_id`;

@@ -10,6 +10,7 @@ import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
 import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
 import com.wuweibi.bullet.system.domain.vo.UserListVO;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
@@ -213,6 +214,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<UserListVO> getList(Page pageInfo, UserAdminParam params) {
         return this.baseMapper.selectUserList(pageInfo, params);
+    }
+
+    @Override
+    public UserDetailVO getDetailById(Long userId) {
+        return this.baseMapper.selectDetailById(userId);
     }
 
 

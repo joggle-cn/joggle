@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.system.entity;
+package com.wuweibi.bullet.system.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -21,7 +21,7 @@ import java.util.Date;
  */
 @Data
 @TableName("t_sys_users")
-public class User extends Model<User> {
+public class UserDetailVO extends Model<UserDetailVO> {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,6 +72,12 @@ public class User extends Model<User> {
 
 	@ApiModelProperty("套餐id")
 	private Integer resourcePackageId;
+
+	@ApiModelProperty("套餐名称")
+	private String resourcePackageName;
+
+	@ApiModelProperty("套餐等级")
+	private Integer resourcePackageLevel;
 
 
 

@@ -3,6 +3,7 @@ package com.wuweibi.bullet.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
 import com.wuweibi.bullet.system.domain.vo.UserListVO;
 import com.wuweibi.bullet.system.entity.User;
 import org.apache.ibatis.annotations.Param;
@@ -78,4 +79,6 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     Page<UserListVO> selectUserList(Page pageInfo, @Param("params")  UserAdminParam params);
+
+    UserDetailVO selectDetailById(@Param("userId") Long userId);
 }

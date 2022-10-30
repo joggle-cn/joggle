@@ -27,6 +27,14 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right"><span>套餐等级</span>:</label>
+					<div class="col-sm-9">
+						<span class="label label-success" ng-bind="user.resourcePackageName"></span>
+
+						<a href="#/user/package" class="btn btn-default">升级套餐</a>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">余额:</label>
 					<div class="col-sm-9">
 						<div type="text" ng-bind="user.balance" ></div>

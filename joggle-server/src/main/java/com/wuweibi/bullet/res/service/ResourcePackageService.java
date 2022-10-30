@@ -1,10 +1,12 @@
 package com.wuweibi.bullet.res.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuweibi.bullet.res.entity.ResourcePackage;
-import com.wuweibi.bullet.res.domain.ResourcePackageVO;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.res.domain.ResourcePackageAdminParam;
+import com.wuweibi.bullet.res.domain.ResourcePackageListVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageParam;
+import com.wuweibi.bullet.res.domain.ResourcePackageVO;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
 
 /**
  * (ResourcePackage)表服务接口
@@ -21,9 +23,11 @@ public interface ResourcePackageService extends IService<ResourcePackage> {
      * @param params 参数
      * @return
      */
-    Page<ResourcePackageVO> getPage(Page pageInfo, ResourcePackageParam params);
+    Page<ResourcePackageVO> getPage(Page pageInfo, ResourcePackageAdminParam params);
 
 
 
-    Page<ResourcePackageVO> getAdminList(Page pageInfo, ResourcePackageParam params);
+    Page<ResourcePackageVO> getAdminList(Page pageInfo, ResourcePackageAdminParam params);
+
+    Page<ResourcePackageListVO>  getList(Page toMybatisPlusPage, ResourcePackageParam params);
 }

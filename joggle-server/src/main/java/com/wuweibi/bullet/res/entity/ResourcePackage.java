@@ -115,4 +115,9 @@ public class ResourcePackage {
     @ApiModelProperty("富文本说明")
  	private String content;
 
+    @ApiModelProperty("并发数")
+    private Integer concurrentNum;
+
+    @ApiModelProperty("应用场景")
+    private String sence;
 }

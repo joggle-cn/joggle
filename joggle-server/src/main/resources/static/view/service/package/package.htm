@@ -1,0 +1,62 @@
+<div style="margin-top:30px; "></div>
+<div class="container package">
+
+	<div class="row">
+		<div class="col-xs-12">
+			<ol class="breadcrumb">
+				<li><a href="#">首页</a></li>
+				<li><a href="#/user/profile">我的资料</a></li>
+				<li>购买套餐</li>
+
+<!--				<li class="bind-device">-->
+<!--					<a href="#/user/device/bind">-->
+<!--					<i class="fa fa-magnet"></i> <span ng-bind="res.t('home.btn.devicebind')"></span>-->
+<!--					</a>-->
+<!--				</li>-->
+			</ol>
+		</div>
+	</div>
+
+
+	<div class="no-device-info" ng-if="list.length == 0">
+		您还没有绑定设备，赶紧去<a href="#/download"><b>下载客户端</b></a>程序运行并绑定吧!
+	</div>
+
+	<div class="row">
+		<div class="col-md-3" ng-repeat="item in list">
+
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{item.name}}</h3>
+					<b ng-if="item.level != 0">{{item.price}}元/{{item.days}}天</b>
+					<b ng-if="item.level == 0">免费</b>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class="list-group-item">可绑设备 <div class="pull-right">{{item.deviceNum}}台</div></li>
+						<li class="list-group-item">套餐流量 <div class="pull-right">{{item.flowNum/1024/1024}}GB</div></li>
+						<li class="list-group-item">可用端口 <div class="pull-right">{{item.portNum}}个</div></li>
+						<li class="list-group-item">可用域名 <div class="pull-right">{{item.domainNum}}个</div></li>
+						<li class="list-group-item">P2P隧道 <div class="pull-right">{{item.p2pNum}}条</div></li>
+						<li class="list-group-item">并发限制 <div class="pull-right">{{item.concurrentNum}}</div></li>
+						<li class="list-group-item">代理支持 <div class="pull-right">{{item.proxyEnable==1?'支持':'-'}}</div></li>
+						<li class="list-group-item">网络唤醒 <div class="pull-right">{{item.wolEnable==1?'支持':'-'}}</div></li>
+					</ul>
+
+					<div class="packages-btn">
+						<a ng-if="item.level != 0" href="#" class="btn btn-success active" role="button">升级套餐</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+
+</div>
+
+
+

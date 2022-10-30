@@ -26,7 +26,7 @@
     <select id="selectAdminList" resultType="com.wuweibi.bullet.res.domain.ResourcePackageVO">
         select
             rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
-            rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days
+            rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
         from resource_package rp
         <where>
             <if test="params.name != null and params.name != ''">
@@ -44,9 +44,22 @@
     </select>
 
 
-
-
-
+    <select id="selectWebList" resultType="com.wuweibi.bullet.res.domain.ResourcePackageListVO">
+        select
+        rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
+        rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
+        from resource_package rp
+        <where>
+            <if test="params.name != null and params.name != ''">
+                and rp.name like concat('%',#{params.name},'%')
+            </if>
+            <if test="params.level != null">
+                and rp.level = #{params.level}
+            </if>
+            and rp.status = 1
+        </where>
+        order by rp.level asc, rp.status desc
+    </select>
 
 
 </mapper>
