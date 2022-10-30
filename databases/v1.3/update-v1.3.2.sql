@@ -59,3 +59,24 @@ ALTER TABLE `t_server_tunnel`
 
 ALTER TABLE `t_sys_users`
     ADD COLUMN `resource_package_id` int NULL COMMENT '资源包id' AFTER `user_certification`;
+
+
+CREATE TABLE `resource_package`  (
+     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `name` varchar(50) NULL DEFAULT NULL COMMENT '资源包名称',
+     `level` int(1) NULL DEFAULT NULL COMMENT '等级',
+     `price` decimal(12, 2) NULL DEFAULT NULL COMMENT '价格',
+     `domain_num` int(11) NULL DEFAULT NULL COMMENT '域名数量',
+     `port_num` int(11) NULL DEFAULT NULL COMMENT '端口数量',
+     `flow_num` bigint(20) NULL DEFAULT NULL COMMENT 'kb 流量',
+     `device_num` int(11) NULL DEFAULT NULL COMMENT '设备数量',
+     `p2p_num` int(11) NULL DEFAULT NULL COMMENT 'p2p隧道数量',
+     `wol_enable` int(1) NULL DEFAULT NULL COMMENT '网络唤醒开关',
+     `proxy_enable` int(1) NULL DEFAULT NULL COMMENT '代理开关',
+     `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态 1正常 0禁用',
+     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+     `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+     `days` int(11) NULL DEFAULT NULL COMMENT '购买后持有天数',
+     `content` longtext NULL COMMENT '富文本说明',
+     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1  ROW_FORMAT = Dynamic;
