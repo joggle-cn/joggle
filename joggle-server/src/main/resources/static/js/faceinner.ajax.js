@@ -116,7 +116,6 @@ let faceinner = {
                         'Authorization': 'Bearer ' + localStorage.token,
                     }
                 }
-
             } else {
                 if(options.data && options.data['grant_type'] && options.data.grant_type == 'password'){
                     return;
@@ -145,10 +144,13 @@ let faceinner = {
                         delete localStorage.tokenExpires; // 有效期 单位：秒
                         delete localStorage.tokenTime; // 当前时间
 
-                        $rootScope.$apply(function (){
-                            $rootScope.user = null;
-                            $rootScope.islogin = false;
-                        })
+                        try{
+                            $rootScope.$apply(function (){
+                                $rootScope.user = null;
+                                $rootScope.islogin = false;
+                            })
+                        }catch (e){}
+
                         return;
                     }
                     localStorage.tokenInfo = JSON.stringify(res);

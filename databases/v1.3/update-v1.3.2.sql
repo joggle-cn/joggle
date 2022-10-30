@@ -56,3 +56,6 @@ ALTER TABLE `t_server_tunnel`
 
 
 -- 线上已执
+
+ALTER TABLE `t_sys_users`
+    ADD COLUMN `resource_package_id` int NULL COMMENT '资源包id' AFTER `user_certification`;
