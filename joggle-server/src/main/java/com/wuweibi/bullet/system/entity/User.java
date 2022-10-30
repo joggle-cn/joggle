@@ -73,6 +73,9 @@ public class User extends Model<User> {
 	@ApiModelProperty("套餐id")
 	private Integer resourcePackageId;
 
+	@ApiModelProperty("套餐结束时间")
+	private Date packageEndTime;
+
 
 
 

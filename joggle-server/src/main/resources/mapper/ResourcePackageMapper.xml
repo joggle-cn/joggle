@@ -27,6 +27,7 @@
         select
             rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
             rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
+            ,rp.broadband_rate
         from resource_package rp
         <where>
             <if test="params.name != null and params.name != ''">
@@ -48,6 +49,7 @@
         select
         rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
         rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
+        ,rp.broadband_rate
         from resource_package rp
         <where>
             <if test="params.name != null and params.name != ''">

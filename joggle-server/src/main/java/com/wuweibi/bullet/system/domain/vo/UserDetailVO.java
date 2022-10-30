@@ -80,6 +80,8 @@ public class UserDetailVO extends Model<UserDetailVO> {
 	private Integer resourcePackageLevel;
 
 
+	@ApiModelProperty("套餐结束时间")
+	private Date packageEndTime;
 
 
 

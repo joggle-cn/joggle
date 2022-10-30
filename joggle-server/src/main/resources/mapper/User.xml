@@ -51,7 +51,7 @@
 		su.`id`, su.`username`, su.`email`, su.`nickname`,  su.`agree`, su.`icon`, su.`loginTime`,
 		su.`balance`, su.`enabled`, su.`account_non_expired`, su.`credentials_non_expired`,
 		su.`account_non_locked`, su.`created_time`, su.`updated_time`, su.`created_by`,
-		su.`updated_by`, su.`activate_code`, su.`user_admin`, su.`user_certification`,
+		su.`updated_by`, su.`activate_code`, su.`user_admin`, su.`user_certification`,su.package_end_time,
 		su.resource_package_id,
 		rp.name as resourcePackageName,
 		rp.level as resourcePackageLevel

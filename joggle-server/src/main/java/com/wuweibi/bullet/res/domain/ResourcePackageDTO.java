@@ -123,4 +123,8 @@ public class ResourcePackageDTO {
     @ApiModelProperty("富文本说明")
  	private String content;
 
+
+    @ApiModelProperty("宽带速度 mbps")
+    private Integer broadbandRate;
+
 }

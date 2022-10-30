@@ -87,3 +87,18 @@ ALTER TABLE `resource_package`
 
 ALTER TABLE `orders`
     MODIFY COLUMN `resource_type` int(2) NULL DEFAULT NULL COMMENT '资源类型 1域名 2端口 3流量 4 充值 5套餐' AFTER `user_id`;
+
+
+ALTER TABLE  `t_sys_users`
+    ADD COLUMN `package_end_time` datetime NULL COMMENT '资源套餐结束时间' AFTER `resource_package_id`;
+ALTER TABLE  `resource_package`
+    ADD COLUMN `broadband_rate` int(11) NULL COMMENT '宽带速率' AFTER `concurrent_num`;
+
+
+
+
+
+
+
+
+

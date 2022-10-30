@@ -120,4 +120,7 @@ public class ResourcePackage {
 
     @ApiModelProperty("应用场景")
     private String sence;
+
+    @ApiModelProperty("宽带速度 mbps")
+    private Integer broadbandRate;
 }

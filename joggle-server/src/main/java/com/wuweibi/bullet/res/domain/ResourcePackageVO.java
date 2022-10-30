@@ -1,12 +1,10 @@
 package com.wuweibi.bullet.res.domain;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.io.Serializable;
-import lombok.Data; 
-import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.annotation.TableId;
 
 /**
  * (ResourcePackage)分页对象
@@ -20,7 +18,8 @@ public class ResourcePackageVO {
 
     /**
      * id
-     */        @ApiModelProperty("id")
+     */
+    @ApiModelProperty("id")
   	private Integer id;    
 
     /**
@@ -106,6 +105,9 @@ public class ResourcePackageVO {
      */        
     @ApiModelProperty("购买后持有天数")
  	private Integer days;
+
+    @ApiModelProperty("宽带速度 mbps")
+    private Integer broadbandRate;
 
     /**
      * 富文本说明

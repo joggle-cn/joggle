@@ -110,5 +110,8 @@ public class ResourcePackageListVO {
     @ApiModelProperty("购买后持有天数")
  	private Integer days;
 
+    @ApiModelProperty("宽带速度 mbps")
+    private Integer broadbandRate;
+
 
 }
