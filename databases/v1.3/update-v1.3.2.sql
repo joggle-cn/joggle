@@ -95,6 +95,19 @@ ALTER TABLE  `resource_package`
     ADD COLUMN `broadband_rate` int(11) NULL COMMENT '宽带速率' AFTER `concurrent_num`;
 
 
+insert into user_package (`user_id`, `resource_package_id`, `name`, `level`, create_time,device_use, peer_use) (
+    select
+        su.id ,
+        1,
+        rp.`name`,
+        rp.`level`,
+        sysdate(),
+        (select count(1) from t_device where user_id = su.id),
+        (select count(1) from device_peers where user_id = su.id)
+    from t_sys_users su
+             left join resource_package rp on rp.id = 1
+)
+
 
 
 

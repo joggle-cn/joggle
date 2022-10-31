@@ -64,8 +64,17 @@ define(['app','jquery','layer','pagintation','bootstrap-switch', 'css!./mapping.
         }
 
 
+        $scope.deleteP2pMapping = function (peerId) {
+            faceinner.delete(api['device.peer.save'], {id:peerId} , function(res) {
+                if (res.code == 'S00') {
+                    flushData();
+                }else{
+                    layer.msg(res.msg);
+                }
+            });
+        }
         $scope.createP2pMapping = function (peerId) {
-            if(peerId){
+            if (peerId) {
                 faceinner.get(api['device.peer.detail'], {id:peerId} , function(res) {
                     if (res.code == 'S00') {
                         $scope.$apply(function() {

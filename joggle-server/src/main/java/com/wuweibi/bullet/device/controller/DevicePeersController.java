@@ -2,6 +2,7 @@ package com.wuweibi.bullet.device.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
@@ -13,12 +14,15 @@ import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -79,6 +83,8 @@ public class DevicePeersController {
     @Resource
     private DeviceService deviceService;
 
+    @Resource
+    private UserPackageManager userPackageManager;
     /**
      * 新增数据
      *
@@ -87,6 +93,7 @@ public class DevicePeersController {
      */
     @ApiOperation("新增数据")
     @PostMapping
+    @Transactional
     public R<Boolean> save(@RequestBody @Valid DevicePeersDTO dto) {
         dto.setId(null);
         Long userId = SecurityUtils.getUserId();
@@ -102,7 +109,10 @@ public class DevicePeersController {
             return R.fail("服务侧Host：请填写内网ip地址");
         }
 
-
+        // 套餐设备数量限制校验
+        if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.PeerNum, 1)) {
+            return R.fail(SystemErrorType.PEER_BIND_ADD_ERROR);
+        }
 
         // 校验设备
         if (!deviceService.existsUserDeviceId(userId, dto.getServerDeviceId())) {
@@ -118,6 +128,10 @@ public class DevicePeersController {
         }
 
         DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
+        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
+        if (r1.isFail()) {
+            return r1;
+        }
 
         DevicePeersConfigDTO dtoPeer = this.devicePeersService.getPeersConfig(peers.getId());
         if (dtoPeer.getClientDeviceTunnelId() == null || dtoPeer.getServerDeviceTunnelId() == null) {
@@ -139,6 +153,7 @@ public class DevicePeersController {
      */
     @ApiOperation("修改数据")
     @PutMapping
+    @Transactional
     public R<Boolean> update(@RequestBody @Valid DevicePeersDTO dto) {
         Long userId = SecurityUtils.getUserId();
         if (dto.getId() == null) {
@@ -192,16 +207,31 @@ public class DevicePeersController {
 
 
 
-//    /**
-//     * 删除数据
-//     *
-//     * @param idDTO 主键
-//     * @return 删除结果
-//     */
-//    @ApiOperation("删除数据")
-//    @DeleteMapping()
-//    public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
-//        return R.ok(this.devicePeersService.removeById(idDTO.getId()));
-//    }
+    /**
+     * 删除数据
+     *
+     * @param idDTO 主键
+     * @return 删除结果
+     */
+    @ApiOperation("删除数据")
+    @DeleteMapping()
+    @Transactional
+    public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
+        Integer id = idDTO.getId();
+        Long userId = SecurityUtils.getUserId();
+        DevicePeers devicePeers = devicePeersService.getById(id);
+        if (devicePeers == null) {
+            return R.fail("数据不存在");
+        }
+        if (devicePeers.getUserId().compareTo(userId) != 0) {
+            return R.fail("用户数据不存在");
+        }
+        this.devicePeersService.removeById(idDTO.getId());
+        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, -1);
+        if (r1.isFail()) {
+            return r1;
+        }
+        return R.ok();
+    }
 
 }

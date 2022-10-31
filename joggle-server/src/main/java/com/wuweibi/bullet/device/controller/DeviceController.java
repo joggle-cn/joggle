@@ -27,6 +27,8 @@ import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
+import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -38,6 +40,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -133,6 +136,7 @@ public class DeviceController {
      */
     @ApiOperation("删除设备")
     @DeleteMapping(value = "")
+    @Transactional
     public R<Boolean> delete(@JwtUser Session session,
                          @RequestBody @Valid DeviceDelDTO dto,
                          HttpServletRequest request) {
@@ -141,27 +145,34 @@ public class DeviceController {
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
-        if (status) {
-            // 验证是否存在
-            Device device = deviceService.getById(deviceId);
-            DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
-            if (deviceOnline == null) {
-                return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-            }
-            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-            if(bulletAnnotation != null){
-                MsgUnBind msg = new MsgUnBind();
-                bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
-            }
+        if (!status) {
+            return R.fail("设备不存在");
+        }
+        // 验证是否存在
+        Device device = deviceService.getById(deviceId);
+        DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
+        if (deviceOnline == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        }
+        Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
+        if(bulletAnnotation != null){
+            MsgUnBind msg = new MsgUnBind();
+            bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
+        }
 
-            // 删除映射
-            deviceMappingService.deleteByDeviceId(deviceId);
+        // 删除映射
+        deviceMappingService.deleteByDeviceId(deviceId);
+        deviceService.removeUserId(deviceId);
 
-            deviceService.removeUserId(deviceId);
+        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, -1);
+        if (r1.isFail()) {
+            return r1;
         }
         return R.ok();
     }
 
+    @Resource
+    private UserPackageManager userPackageManager;
 
     /**
      * 设备校验(绑定)
@@ -170,6 +181,7 @@ public class DeviceController {
      */
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
+    @Transactional
     public R validate(String deviceId, HttpServletRequest request) {
         Long userId = SecurityUtils.getUserId();
         String deviceNo = deviceId;
@@ -203,17 +215,16 @@ public class DeviceController {
             device.setName(deviceId);
         }
 
-        // 限制普通用户绑定设备的数量10 排除自己的账号判断
-        Long deviceNum = deviceService.getCountByUserId(userId);
-        if (deviceNum >= 10 && userId != 1) {
+        // 套餐设备数量限制校验
+        if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
-
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
         device.setUserId(userId);
         deviceService.saveOrUpdate(device);
+        userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, 1);
 
         // 发送消息通知设备秘钥
         MsgDeviceSecret msg = new MsgDeviceSecret();

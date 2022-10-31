@@ -51,12 +51,12 @@
 		su.`id`, su.`username`, su.`email`, su.`nickname`,  su.`agree`, su.`icon`, su.`loginTime`,
 		su.`balance`, su.`enabled`, su.`account_non_expired`, su.`credentials_non_expired`,
 		su.`account_non_locked`, su.`created_time`, su.`updated_time`, su.`created_by`,
-		su.`updated_by`, su.`activate_code`, su.`user_admin`, su.`user_certification`,su.package_end_time,
-		su.resource_package_id,
-		rp.name as resourcePackageName,
-		rp.level as resourcePackageLevel
+		su.`updated_by`, su.`activate_code`, su.`user_admin`, su.`user_certification`,
+		up.end_time packageEndTime,
+		up.resource_package_id, up.name as resourcePackageName,
+		up.level as resourcePackageLevel
 		from `t_sys_users` su
-		left join resource_package rp on su.resource_package_id = rp.id
+		left join user_package up on su.id = up.user_id
 	    where  su.id = #{userId}
 	</select>
 
