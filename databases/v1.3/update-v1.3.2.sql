@@ -55,11 +55,6 @@ ALTER TABLE `t_server_tunnel`
     ADD COLUMN `server_up_time` datetime NULL COMMENT '服务器上线时间' AFTER `server_end_time`;
 
 
--- 线上已执
-
-ALTER TABLE `t_sys_users`
-    ADD COLUMN `resource_package_id` int NULL COMMENT '资源包id' AFTER `user_certification`;
-
 
 CREATE TABLE `resource_package`  (
      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
@@ -90,10 +85,36 @@ ALTER TABLE `orders`
     MODIFY COLUMN `resource_type` int(2) NULL DEFAULT NULL COMMENT '资源类型 1域名 2端口 3流量 4 充值 5套餐' AFTER `user_id`;
 
 
-ALTER TABLE  `t_sys_users`
-    ADD COLUMN `package_end_time` datetime NULL COMMENT '资源套餐结束时间' AFTER `resource_package_id`;
 ALTER TABLE  `resource_package`
     ADD COLUMN `broadband_rate` int(11) NULL COMMENT '宽带速率' AFTER `concurrent_num`;
+
+
+
+
+CREATE TABLE `user_package`  (
+     `user_id` bigint(20) NOT NULL COMMENT 'id',
+     `resource_package_id` int(11) NULL DEFAULT NULL COMMENT '资源包id',
+     `name` varchar(50)  NULL DEFAULT NULL COMMENT '资源包名称',
+     `level` int(1) NULL DEFAULT NULL COMMENT '等级',
+     `wol_enable` int(1) NULL DEFAULT 0 COMMENT '网络唤醒开关',
+     `proxy_enable` int(1) NULL DEFAULT 0 COMMENT '代理开关',
+     `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+     `domain_use` int(11) NULL DEFAULT 0 COMMENT '域名数量',
+     `port_use` int(11) NULL DEFAULT 0 COMMENT '端口数量',
+     `flow_use` bigint(20) NULL DEFAULT 0 COMMENT 'kb 流量',
+     `device_use` int(11) NULL DEFAULT 0 COMMENT '设备数量',
+     `peer_use` int(11) NULL DEFAULT 0 COMMENT 'p2p隧道数量',
+     `broadband_rate` int(11) NULL DEFAULT 0 COMMENT '宽带速率',
+     `concurrent_num` int(11) NULL DEFAULT 5 COMMENT '并发数',
+     `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
+     `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+     PRIMARY KEY (`user_id`) USING BTREE
+) ENGINE = InnoDB  COMMENT = '用户套餐' ROW_FORMAT = Dynamic;
+
+
+INSERT INTO `resource_package`(`id`, `name`, `level`, `price`, `domain_num`, `port_num`, `flow_num`, `device_num`, `p2p_num`, `wol_enable`, `proxy_enable`, `concurrent_num`, `broadband_rate`, `status`, `create_time`, `update_time`, `days`, `content`, `sence`)
+VALUES (1, '普通用户', 0, 0.00, 0, 0, 1048576, 2, 1, 1, 0, 5, 1, 1, '2022-10-30 13:29:11', '2022-10-30 22:37:13', -1, NULL, '打算');
+
 
 
 insert into user_package (`user_id`, `resource_package_id`, `name`, `level`, create_time,device_use, peer_use) (
@@ -103,15 +124,15 @@ insert into user_package (`user_id`, `resource_package_id`, `name`, `level`, cre
         rp.`name`,
         rp.`level`,
         sysdate(),
-        (select count(1) from t_device where user_id = su.id),
-        (select count(1) from device_peers where user_id = su.id)
+        (select count(1) from t_device d where d.userId = su.id),
+        (select count(1) from device_peers dp where dp.user_id = su.id)
     from t_sys_users su
              left join resource_package rp on rp.id = 1
-)
+);
 
 
 
-
+-- 线上已执
 
 
 
