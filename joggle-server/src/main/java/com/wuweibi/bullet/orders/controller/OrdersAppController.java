@@ -154,6 +154,9 @@ public class OrdersAppController {
                 }
                 domainService.updateUserId(orders.getDomainId(), orders.getUserId(), DomainStatusEnum.SALE.getStatus());
                 break;
+            case 5: // 套餐
+
+                break;
         }
 
 

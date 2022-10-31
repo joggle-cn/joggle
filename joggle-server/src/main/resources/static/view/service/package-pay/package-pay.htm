@@ -1,0 +1,141 @@
+<div style="margin-top:30px; "></div>
+<div class="container domain-pay">
+
+    <div class="row">
+        <div class="col-xs-12">
+			<ol class="breadcrumb">
+				<li><a href="#">首页</a></li>
+				<li><a href="#/user/profile">我的资料</a></li>
+				<li><a href="#/user/package">套餐列表</a></li>
+				<li class="active">购买</li>
+			</ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">
+						<span>套餐名称:</span>
+					</label>
+					<div class="col-sm-9">
+						<div> {{data.name}} </div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">价格:</label>
+					<div class="col-sm-9">
+						<div>
+							<b>{{data.price}}</b>元/30天
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">时间:</label>
+					<div class="col-sm-9">
+						<div style="position: relative;  top: -6px;">
+							<div class="radio radio-success icheck-success">
+                                <input id="inlineTimeRadio6" type="radio" value="1" name="payTime" ng-model="amount">
+                                <label for="inlineTimeRadio6">1月</label>
+                            </div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio1" type="radio" value="2" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio1">2月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio2" type="radio" value="3" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio2">3月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio12" type="radio" value="4" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio12">4月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio3" type="radio" value="6" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio3">6月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio13" type="radio" value="8" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio13">8月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio14" type="radio" value="10" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio14">10月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio4" type="radio" value="11" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio4">11月</label>
+							</div>
+							<div class="radio radio-success icheck-success">
+								<input id="inlineTimeRadio5" type="radio" value="12" name="payTime" ng-model="amount">
+								<label for="inlineTimeRadio5">12月</label>
+							</div>
+						</div>
+						<div class="input-group" style="width: 200px">
+							<span class="input-group-addon">自定义</span>
+							<input id="dayAmount" type="number" name="payTime" ng-model="amount"
+								   class="form-control" ng-keyup="fixDays()">
+							<span class="input-group-addon">个月</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">到期时间:</label>
+					<div class="col-sm-9">
+						<div>
+							{{dueTime | showDate}}
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">支付金额:</label>
+					<div class="col-sm-9">
+						<div>
+							{{payMoney}} 元
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">支付方式:</label>
+					<div class="col-sm-9">
+						<div style="position: relative;  top: -6px;">
+							<div class="radio radio-success icheck-success pay-box">
+								<input type="radio" id="inlineRadio1" value="2" name="radioInline" ng-model="payType">
+								<label for="inlineRadio1">
+								    <img src="resource/images/pay/alipay-icon.png" />
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right"> </label>
+					<div class="col-sm-9">
+						<div>
+							您的余额：{{user.balance}} 元
+						</div>
+					</div>
+				</div>
+
+<!-- 				<div class="form-group"> -->
+<!-- 					<label class="col-sm-3" style="text-align: right">服务协议:</label> -->
+<!-- 					<div class="col-sm-9"> -->
+<!-- 						<div>《Joggle内网穿透服务协议》</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right" ></label>
+					<div class="col-sm-9">
+						<a class="btn btn-success" ng-click="pay()" >下单支付</a>
+					</div>
+				</div>
+			</form>
+        </div>
+ 
+
+    </div>
+</div>

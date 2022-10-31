@@ -15,8 +15,14 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
+import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
+import com.wuweibi.bullet.res.entity.UserPackage;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SpringUtils;
@@ -60,7 +66,6 @@ public class OrderPayBizImpl implements OrderPayBiz {
      */
     @Resource
     private OrdersService ordersService;
-
 
     @Resource
     private UserFlowService userFlowService;
@@ -161,11 +166,52 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 orderPayInfo.setAmount(amount);
                 orderPayInfo.setRealAmount(amount);
                 break;
+            case 5: // 套餐
+
+                if (amount.compareTo(12l) > 0) {
+                    return R.fail("时间限制最多12个月");
+                }
+                if (amount.compareTo(0l) <= 0) {
+                    return R.fail("购买时间错误");
+                }
+                if (orderPayInfo.getPayType() != PayTypeEnum.ALIPAY.getType()) {
+                    return R.fail("仅支持支付宝购买");
+                }
+                ResourcePackage resourcePackage =  resourcePackageService.getById(resId);
+                UserPackage userPackage = userPackageService.getByUserId(ordersDTO.getUserId());
+                if (userPackage != null && userPackage.getLevel() >= resourcePackage.getLevel()) {
+                    return R.fail("请重新选择套餐，原因不支持降级。");
+                }
+
+                BigDecimal totalAmount = resourcePackage.getPrice().multiply(BigDecimal.valueOf(amount));
+                orderPayInfo.setName(String.format("购买套餐:%s", resourcePackage.getName()));
+                orderPayInfo.setPriceAmount(totalAmount);
+                orderPayInfo.setPayAmount(totalAmount);
+                orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
+                orderPayInfo.setAmount(amount);
+                orderPayInfo.setRealAmount(amount);
+
+                calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DATE, amount.intValue()*30);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                dueTime = calendar.getTime();
+
+                orderPayInfo.setDueTime(dueTime.getTime());
+                break;
         }
 
         return R.success(orderPayInfo);
     }
 
+
+    @Resource
+    private UserPackageService userPackageService;
+
+    @Resource
+    private ResourcePackageService resourcePackageService;
 
     /**
      * 支付宝 通知
@@ -217,9 +263,23 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 long flow = orders.getAmount() * 1024 * 1024;
                 userFlowService.updateFLow(orders.getUserId(), flow);
                 break;
+
+            case 5: // 套餐
+
+                Integer packageId = orders.getDomainId().intValue();
+                Integer amount =  orders.getAmount() .intValue();
+
+                userPackageManager.openService(orders.getUserId(), packageId, amount);
+
+
+                break;
         }
         return true;
     }
+
+    @Resource
+    private UserPackageManager userPackageManager;
+
 
 
     @Override

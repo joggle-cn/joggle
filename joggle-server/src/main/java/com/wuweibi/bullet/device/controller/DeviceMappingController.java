@@ -52,7 +52,6 @@ public class DeviceMappingController {
     @Resource
     private DeviceMappingService deviceMappingService;
 
-
     @Resource
     private WebsocketPool coonPool;
 

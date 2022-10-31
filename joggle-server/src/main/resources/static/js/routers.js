@@ -223,6 +223,11 @@ app.config(['$routeProvider','$locationProvider', function($routeProvider, $loca
 			, templateUrl: 'view/service/package/package.htm'
 			, controllerUrl: 'view/service/package/package.js'
 		}))
+		.when('/user/package/pay', router({
+			minTitle: "购买套餐"
+			, templateUrl: 'view/service/package-pay/package-pay.htm'
+			, controllerUrl: 'view/service/package-pay/package-pay.js'
+		}))
 
 
 

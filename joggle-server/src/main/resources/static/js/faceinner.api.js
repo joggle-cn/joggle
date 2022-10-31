@@ -71,6 +71,7 @@ let api = {
 
 
     "user.package.list": '/api/resource/package/list',
+    "user.package.detail": '/api/resource/package/detail',
     "system.ngrokd.check": '/api/system/ngrokd/check',
 
     /* 用户域名与端口 */

@@ -12,4 +12,6 @@ public interface UserPackageManager {
     boolean checkLimit(Long userId, UserPackageLimitEnum userPackageLimitEnum, int addNum);
 
     R usePackageAdd(Long userId, UserPackageLimitEnum deviceNum, int num);
+
+    R openService(Long userId, Integer packageId, Integer dueTime);
 }

@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class UserPackageManagerImpl implements UserPackageManager {
@@ -56,6 +58,57 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setPeerUse(userPackage.getPeerUse() + num);
         }
         userPackageService.updateById(userPackage);
+
+        return R.ok();
+    }
+
+    @Override
+    public R openService(Long userId, Integer packageId, Integer amount) {
+        ResourcePackage resourcePackage = resourcePackageService.getById(packageId);
+
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        boolean isInsert = false;
+        if (userPackage == null) {
+            userPackage = new UserPackage();
+            userPackage.setUserId(userId);
+            userPackage.setLevel(resourcePackage.getLevel());
+            userPackage.setName(resourcePackage.getName());
+            userPackage.setResourcePackageId(resourcePackage.getId());
+            userPackage.setConcurrentNum(resourcePackage.getConcurrentNum());
+            userPackage.setWolEnable(resourcePackage.getWolEnable());
+            userPackage.setProxyEnable(resourcePackage.getProxyEnable());
+            userPackage.setStartTime(new Date());
+            isInsert = true;
+        } else {
+            if (userPackage.getLevel() >= resourcePackage.getLevel()) {
+                return R.fail("套餐升级失败，原因不支持降级。");
+            }
+            userPackage.setLevel(resourcePackage.getLevel());
+            userPackage.setName(resourcePackage.getName());
+            userPackage.setResourcePackageId(resourcePackage.getId());
+            userPackage.setConcurrentNum(resourcePackage.getConcurrentNum());
+            userPackage.setWolEnable(resourcePackage.getWolEnable());
+            userPackage.setProxyEnable(resourcePackage.getProxyEnable());
+        }
+
+
+        if (userPackage.getEndTime() == null) {
+            userPackage.setEndTime(new Date());
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(userPackage.getEndTime());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.add(Calendar.DATE, amount * 30);
+        userPackage.setEndTime(calendar.getTime());
+
+        if (isInsert) {
+            userPackageService.save(userPackage);
+        } else {
+            userPackageService.updateById(userPackage);
+        }
 
         return R.ok();
     }
