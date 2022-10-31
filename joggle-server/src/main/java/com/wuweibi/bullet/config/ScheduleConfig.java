@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.config;
 
 
+import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.task.UserCertificationTaskService;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +42,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * 每10秒点执行检查是否过期
+     * 每10秒点执行检查是否过期，过期域名，自动关闭映射
      */
     @Scheduled(fixedRate = 1000*10)
     public void checkStatus() {
@@ -64,6 +65,17 @@ public class ScheduleConfig implements SchedulingConfigurer {
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void resourceDueTimeRelease() {
         domainService.resourceDueTimeRelease();
+    }
+
+    @Resource
+    private UserPackageManager userPackageManager;
+
+    /**
+     * 用户资源包释放
+     */
+    @Scheduled(fixedRate = 1000 * 60 * 10)
+    public void userPackageRelease() {
+        userPackageManager.expireFree();
     }
 
 

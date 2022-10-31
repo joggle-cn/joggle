@@ -203,6 +203,13 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     public boolean releaseById(Long id) {
+
+        // TODO 存在映射释放映射
+
+
+        // 如果该域名是VIP权益的，扣除使用权益数量
+
+
         return this.update(Wrappers.<Domain>lambdaUpdate()
                 .eq(Domain::getId, id)
                 .set(Domain::getUserId, null)

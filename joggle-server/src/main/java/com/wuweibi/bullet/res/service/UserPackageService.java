@@ -24,4 +24,6 @@ public interface UserPackageService extends IService<UserPackage> {
     Page<UserPackageVO> getPage(Page pageInfo, UserPackageParam params);
 
     UserPackage getByUserId(Long userId);
+
+    boolean updateToLevel0ByUserId(Long userId, UserPackage userPackage);
 }

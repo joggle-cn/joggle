@@ -30,4 +30,6 @@ public interface ResourcePackageService extends IService<ResourcePackage> {
     Page<ResourcePackageVO> getAdminList(Page pageInfo, ResourcePackageAdminParam params);
 
     Page<ResourcePackageListVO>  getList(Page toMybatisPlusPage, ResourcePackageParam params);
+
+    ResourcePackage getByLevel(int level);
 }

@@ -14,4 +14,12 @@ public interface UserPackageManager {
     R usePackageAdd(Long userId, UserPackageLimitEnum deviceNum, int num);
 
     R openService(Long userId, Integer packageId, Integer dueTime);
+
+
+    /**
+     * 到期释放
+     * @return
+     */
+    R expireFree();
+
 }

@@ -21,6 +21,34 @@
         <result property="endTime" column="end_time" />
         <result property="peerUse" column="peer_use" />
     </resultMap>
-        
+
+
+    <update id="updateToLevel0ByUserId">
+        update user_package up , resource_package rp set
+            up.level = rp.level,
+            up.name = rp.name,
+            up.concurrent_num = rp.concurrent_num,
+            up.broadband_rate = rp.broadband_rate,
+            up.proxy_enable = rp.proxy_enable,
+            up.wol_enable = rp.wol_enable,
+            up.resource_package_id = rp.id,
+            up.end_time = null
+        where rp.id = 1 and up.user_id = #{userId}
+    </update>
+
+
+    <select id="selectByExpireDay" resultType="com.wuweibi.bullet.res.domain.UserPackageExpireVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            up.`level`,
+            up.`name`,
+            up.end_time,
+            su.email as userEmail
+        from user_package up
+        left join t_sys_users su on su.id = up.user_id
+        where  up.user_id >0 and up.end_time &lt; sysdate()
+    </select>
+
 </mapper>
 

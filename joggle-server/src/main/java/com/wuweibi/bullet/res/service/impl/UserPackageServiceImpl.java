@@ -44,4 +44,9 @@ public class UserPackageServiceImpl extends ServiceImpl<UserPackageMapper, UserP
         return this.baseMapper.selectOne(Wrappers.<UserPackage>lambdaQuery()
                 .eq(UserPackage::getUserId, userId));
     }
+
+    @Override
+    public boolean updateToLevel0ByUserId(Long userId, UserPackage userPackage) {
+        return this.baseMapper.updateToLevel0ByUserId(userId);
+    }
 }

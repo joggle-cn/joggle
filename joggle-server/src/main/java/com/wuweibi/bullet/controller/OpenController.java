@@ -3,27 +3,28 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.system.client.entity.ClientVersion;
-import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain2.entity.Domain;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.client.entity.ClientVersion;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -257,12 +258,28 @@ public class OpenController {
         return releaseDetail;
     }
 
+    @Resource
+    private UserPackageManager userPackageManager;
 
     /**
      * 检查请求头
      *
      * @return
      */
+    @Profile("dev")
+    @RequestMapping(value = "/package/release")
+    public R packageRelease(HttpServletRequest request) {
+        userPackageManager.expireFree();
+        return R.success( );
+    }
+
+    @Profile("dev")
+    @RequestMapping(value = "/domain/release")
+    public R domainRelease(HttpServletRequest request) {
+        domainService.resourceDueTimeRelease();
+        return R.success( );
+    }
+
     @Profile("dev")
     @RequestMapping(value = "/test")
     public R checkUpdate(HttpServletRequest request) {

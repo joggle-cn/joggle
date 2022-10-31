@@ -84,6 +84,7 @@ CREATE TABLE `resource_package`  (
 
 ALTER TABLE `resource_package`
     ADD COLUMN `concurrent_num` int NULL COMMENT '并发限制' AFTER `proxy_enable`;
+ALTER TABLE  `resource_package` COMMENT = '套餐';
 
 ALTER TABLE `orders`
     MODIFY COLUMN `resource_type` int(2) NULL DEFAULT NULL COMMENT '资源类型 1域名 2端口 3流量 4 充值 5套餐' AFTER `user_id`;

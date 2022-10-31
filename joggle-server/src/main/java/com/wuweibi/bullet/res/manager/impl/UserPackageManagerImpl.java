@@ -1,21 +1,31 @@
 package com.wuweibi.bullet.res.manager.impl;
 
 import com.wuweibi.bullet.common.exception.RException;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.mapper.UserPackageMapper;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageService;
+import com.wuweibi.bullet.service.MailService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
+import java.io.IOException;
+import java.util.*;
 
+@Slf4j
 @Service
 public class UserPackageManagerImpl implements UserPackageManager {
 
@@ -111,6 +121,79 @@ public class UserPackageManagerImpl implements UserPackageManager {
         }
 
         return R.ok();
+    }
+
+
+    @Resource
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Resource
+    private BulletConfig bulletConfig;
+
+    @Resource
+    private MailService mailService;
+
+
+
+    @Override
+    public R expireFree() {
+        log.debug("[资源包到期释放] 开始");
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> params = new HashMap<>(1);
+        Cursor<UserPackageExpireVO> cursor = sqlSession.selectCursor(UserPackageMapper.class.getName() + ".selectByExpireDay", params);
+        Iterator<UserPackageExpireVO> iter = cursor.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            UserPackageExpireVO userPackage = iter.next();
+            log.info("user[{}] package[{}] expireFree", userPackage.getUserId(), userPackage.getResourcePackageId());
+            Map<String, Object> param = new HashMap<>(3);
+            param.put("packageName", userPackage.getName());
+            param.put("url", bulletConfig.getServerUrl() );
+            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(),"yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("%s到期提醒", userPackage.getName());
+            this.free(userPackage);
+
+            mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
+        }
+        try {
+            cursor.close();
+        } catch (IOException e) {
+            log.error("", e);
+        } finally {
+            sqlSession.close();
+        }
+
+        log.debug("[资源包到期释放] 结束 处理数据量：{}", count);
+
+        return R.ok();
+    }
+
+
+    /**
+     * 释放用户购买的资源
+     * @param dto
+     */
+    private void free(UserPackageExpireVO dto) {
+        Integer packageId = dto.getResourcePackageId();
+        Long userId = dto.getUserId();
+
+        ResourcePackage resourcePackage = resourcePackageService.getByLevel(0);
+
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        if (userPackage.getResourcePackageId() != packageId) {
+            log.error("释放资源失败，资源包不一致 userId={}",userId);
+            throw new RException("释放资源失败，资源包不一致 userId="+userId);
+        }
+
+        userPackage.setLevel(resourcePackage.getLevel());
+        userPackage.setName(resourcePackage.getName());
+        userPackage.setResourcePackageId(resourcePackage.getId());
+        userPackage.setConcurrentNum(resourcePackage.getConcurrentNum());
+        userPackage.setProxyEnable(resourcePackage.getProxyEnable());
+        userPackage.setWolEnable(resourcePackage.getWolEnable());
+        userPackage.setEndTime(null); // 这个设置无效
+        userPackageService.updateToLevel0ByUserId(userId, userPackage);
+
     }
 
 

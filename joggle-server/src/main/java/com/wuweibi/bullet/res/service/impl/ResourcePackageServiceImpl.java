@@ -50,4 +50,11 @@ public class ResourcePackageServiceImpl extends ServiceImpl<ResourcePackageMappe
     public Page<ResourcePackageListVO> getList(Page pageInfo, ResourcePackageParam params) {
         return  this.baseMapper.selectWebList(pageInfo, params);
     }
+
+    @Override
+    public ResourcePackage getByLevel(int level) {
+        return this.baseMapper.selectOne(Wrappers.<ResourcePackage>lambdaQuery()
+                .eq(ResourcePackage::getLevel, level)
+                .eq(ResourcePackage::getStatus, 1));
+    }
 }
