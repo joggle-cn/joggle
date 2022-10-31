@@ -133,7 +133,7 @@ public class DeviceMappingController {
             return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
         }
         // 判断映射的域名是否过期，过期后不允许开启
-        if(!domainMapper.checkDoaminIdDue(deviceMapping.getDomainId())){
+        if(!domainMapper.checkDoaminIdDue(userId, deviceMapping.getDomainId())){
             if(entity.getStatus() == 1){ // 不能启用
                 return R.fail(SystemErrorType.DOMAIN_IS_DUE);
             }

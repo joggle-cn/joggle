@@ -85,11 +85,12 @@ public interface DomainMapper extends BaseMapper<Domain> {
     /**
      * 检查域名是否过期
      *
+     * @param userId
      * @param domainId 域名ID
      * @return
      */
-    @Select("select count(1) from t_domain where (due_time is null or due_time >= SYSDATE()) and id = #{domainId}")
-    boolean checkDoaminIdDue(@Param("domainId") Long domainId);
+    @Select("select count(1) from t_domain where user_id = #{userId} and (due_time is null or due_time >= SYSDATE()) and id = #{domainId}")
+    boolean checkDoaminIdDue(@Param("userId") Long userId, @Param("domainId") Long domainId);
 
 
     /**
