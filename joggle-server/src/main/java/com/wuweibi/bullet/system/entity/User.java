@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -69,15 +68,6 @@ public class User extends Model<User> {
 
 
 	private Integer userCertification;
-
-	@ApiModelProperty("套餐id")
-	private Integer resourcePackageId;
-
-	@ApiModelProperty("套餐结束时间")
-	private Date packageEndTime;
-
-
-
 
 
 
