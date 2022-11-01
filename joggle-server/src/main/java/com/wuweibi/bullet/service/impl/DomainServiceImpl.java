@@ -86,6 +86,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Resource
     private DeviceMappingMapper deviceMappingMapper;
 
+    @Resource
+    private WebsocketPool coonPool;
 
     @Override
     public void checkStatus() {
@@ -111,6 +113,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             }
             // 更新Mapping状态
             deviceMappingMapper.updateStatusById(mappingId, 0);
+
         }
 
     }

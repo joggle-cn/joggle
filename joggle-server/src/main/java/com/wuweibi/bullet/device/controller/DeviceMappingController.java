@@ -24,10 +24,12 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -60,9 +62,10 @@ public class DeviceMappingController {
      * 删除映射关系
      * @return
      */
+    @ApiOperation("删除映射")
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public Object delete(@JwtUser Session session, @RequestBody DeviceMappingDelDTO dto){
-        Long userId = session.getUserId();
+    public Object delete(@RequestBody @Valid DeviceMappingDelDTO dto){
+        Long userId = SecurityUtils.getUserId();
         Long dmId = dto.getId();
         // 验证设备映射是自己的
         boolean status = deviceMappingService.exists(userId, dmId);

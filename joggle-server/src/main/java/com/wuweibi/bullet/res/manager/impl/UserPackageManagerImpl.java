@@ -43,22 +43,26 @@ public class UserPackageManagerImpl implements UserPackageManager {
         ResourcePackage resourcePackage = resourcePackageService.getById(resourcePackageId);
 
         if (limitEnum.equals(UserPackageLimitEnum.DeviceNum)) {
-            if (resourcePackage.getDeviceNum() < userPackage.getDeviceUse() + addNum) {
+            int cur = userPackage.getDeviceUse() + addNum;
+            if (cur > 0 && resourcePackage.getDeviceNum() < cur || cur < 0) {
                 return false;
             }
         }
         if (limitEnum.equals(UserPackageLimitEnum.PeerNum)) {
-            if (resourcePackage.getP2pNum() < userPackage.getPeerUse() + addNum) {
+            int cur = userPackage.getPeerUse() + addNum;
+            if (cur > 0 && resourcePackage.getP2pNum() < cur || cur < 0) {
                 return false;
             }
         }
         if (limitEnum.equals(UserPackageLimitEnum.PortNum)) {
-            if (resourcePackage.getPortNum() < userPackage.getPortUse() + addNum) {
+            int cur = userPackage.getPortUse() + addNum;
+            if (cur > 0 && resourcePackage.getPortNum() < cur || cur < 0) {
                 return false;
             }
         }
         if (limitEnum.equals(UserPackageLimitEnum.DomainNum)) {
-            if (resourcePackage.getDomainNum() < userPackage.getDomainUse() + addNum) {
+            int cur = userPackage.getDomainUse() + addNum;
+            if (cur > 0 && resourcePackage.getDomainNum() < cur || cur < 0) {
                 return false;
             }
         }
@@ -72,7 +76,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             return R.fail("参数错误");
         }
         UserPackage userPackage = userPackageService.getByUserId(userId);
-        if (!checkLimit(userId, limitEnum, num)) {
+        if (num >=0 && !checkLimit(userId, limitEnum, num)) {
             throw new RException("超出数量，请升级套餐");
         }
         if (limitEnum.equals(UserPackageLimitEnum.DeviceNum)) {
@@ -154,7 +158,6 @@ public class UserPackageManagerImpl implements UserPackageManager {
     private MailService mailService;
 
 
-
     @Override
     public R expireFree() {
         log.debug("[资源包到期释放] 开始");
@@ -168,8 +171,8 @@ public class UserPackageManagerImpl implements UserPackageManager {
             log.info("user[{}] package[{}] expireFree", userPackage.getUserId(), userPackage.getResourcePackageId());
             Map<String, Object> param = new HashMap<>(3);
             param.put("packageName", userPackage.getName());
-            param.put("url", bulletConfig.getServerUrl() );
-            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(),"yyyy-MM-dd HH:mm:ss"));
+            param.put("url", bulletConfig.getServerUrl());
+            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s到期提醒", userPackage.getName());
             this.free(userPackage);
 
@@ -191,6 +194,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
     /**
      * 释放用户购买的资源
+     *
      * @param dto
      */
     private void free(UserPackageExpireVO dto) {
@@ -201,8 +205,8 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
         UserPackage userPackage = userPackageService.getByUserId(userId);
         if (userPackage.getResourcePackageId() != packageId) {
-            log.error("释放资源失败，资源包不一致 userId={}",userId);
-            throw new RException("释放资源失败，资源包不一致 userId="+userId);
+            log.error("释放资源失败，资源包不一致 userId={}", userId);
+            throw new RException("释放资源失败，资源包不一致 userId=" + userId);
         }
 
         userPackage.setLevel(resourcePackage.getLevel());

@@ -20,7 +20,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
         // 如果是VIP就默认VIP权益支付
         if ($rootScope.user && $rootScope.user.resourcePackageLevel > 0){
             $scope.showPackagePay = true;
-            $scope.payType = 3;
+            $scope.payType = 4;
         }
 
 
@@ -74,7 +74,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                         $scope.payMoney = res.data.payAmount;
                         $scope.discountMoney = res.data.discountAmount;
                         $scope.dueTime = res.data.dueTime;
-                        if ($scope.amount != res.data.amount && $scope.payType != 3) {
+                        if ($scope.amount != res.data.amount && $scope.payType != 4) {
                             layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});
                         }
                         $scope.amount = res.data.amount;

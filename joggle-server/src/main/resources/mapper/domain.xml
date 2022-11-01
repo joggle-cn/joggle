@@ -16,10 +16,11 @@
 	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainVO" parameterType="java.lang.Long">
 		select d.id, d.domain,
 			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
-			   d.type, d.status, d.due_time as dueDateTime
-
+			   d.type, d.status, d.due_time as dueDateTime,
+			   ifnull(upr.user_id, 0) as packageRights
 		from t_domain  d
 	    left join t_server_tunnel st on st.id = d.server_tunnel_id
+		left join user_package_rights upr on d.id = upr.resource_id and upr.user_id = d.user_id
 		where d.user_id = #{userId}
 		order by d.buy_time desc, d.id desc
 	</select>

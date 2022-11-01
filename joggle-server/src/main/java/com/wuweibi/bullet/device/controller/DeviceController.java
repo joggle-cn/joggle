@@ -5,6 +5,7 @@ package com.wuweibi.bullet.device.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
@@ -29,6 +30,7 @@ import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
 import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -164,12 +166,15 @@ public class DeviceController {
         deviceMappingService.deleteByDeviceId(deviceId);
         deviceService.removeUserId(deviceId);
 
+        // 设备移除，权益移除
         R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, -1);
         if (r1.isFail()) {
-            return r1;
+            throw new RException(r1);
         }
         return R.ok();
     }
+    @Resource
+    private UserPackageRightsService userPackageRightsService;
 
     @Resource
     private UserPackageManager userPackageManager;

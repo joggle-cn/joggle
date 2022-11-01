@@ -25,7 +25,10 @@
 								{{item.domainFull}}
 							</p>
 							<p class="item-text" style="color: #8c8c8c">
-								<i class="fa fa-clock-o"></i> {{item.dueTime}}</p>
+								<i class="fa fa-clock-o"></i> {{item.dueTime}}
+								<span class="label label-danger" ng-show="item.packageRights">VIP权益</span>
+
+							</p>
 
 						</div>
 					</div>
