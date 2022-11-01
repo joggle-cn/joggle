@@ -5,7 +5,7 @@
  * @author marker
  * @date 2016-06-05
  */
-define(['app','layer','css!./login.css'], function (app,layer) {// 加载依赖js,
+define(['app','layer','css!./profile.css'], function (app,layer) {// 加载依赖js,
 
 	return ['$rootScope','$scope','$location','userService', '$AjaxService',
 	        function ($rootScope, $scope, $location, userService, $AjaxService, $session) {

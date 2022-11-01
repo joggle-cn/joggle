@@ -7,31 +7,35 @@
  */
 define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//加载依赖js,
 
-	var callback = ["$scope","$routeParams",'$location',  function ($scope, $routeParams, $location) {
+	var callback = ["$rootScope","$scope","$routeParams",'$location',  function ($rootScope, $scope, $routeParams, $location) {
 
         $scope.active = 'domain';
         $scope.payMoney = 0;
         $scope.amount  = 7; // 天
-        $scope.payType  = 2; // 天
+        $scope.payType = 2; // 支付宝支付
+        $scope.showPackagePay = false; // 是否支持套餐支付
         $scope.data = {
             type: 1,
         }
+        // 如果是VIP就默认VIP权益支付
+        if ($rootScope.user && $rootScope.user.resourcePackageLevel > 0){
+            $scope.showPackagePay = true;
+            $scope.payType = 3;
+        }
+
 
         $scope.domainId = $routeParams.domainId;
         let params = {
             domainId: $scope.domainId,
         }
-	    function render(){
-            faceinner.get(api["user.domain.info"], params, function(res){
-                if (res.code == 'S00') {
-                    $scope.$apply(function() {
-                        $scope.data = res.data;
-                        calculate();
-                    });
-                }
-            });
-        }
-        render();
+        faceinner.get(api["user.domain.info"], params, function(res){
+            if (res.code == 'S00') {
+                $scope.$apply(function() {
+                    $scope.data = res.data;
+                    calculate();
+                });
+            }
+        });
 
 
         $scope.fixDays = function (){
@@ -68,6 +72,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.payMoney = res.data.payAmount;
+                        $scope.discountMoney = res.data.discountAmount;
                         $scope.dueTime = res.data.dueTime;
                         if ($scope.amount != res.data.amount) {
                             layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});

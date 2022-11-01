@@ -51,12 +51,25 @@ public class UserPackageManagerImpl implements UserPackageManager {
                 return false;
             }
         }
+        if (limitEnum.equals(UserPackageLimitEnum.PortNum)) {
+            if (resourcePackage.getPortNum() < userPackage.getPortUse() + addNum) {
+                return false;
+            }
+        }
+        if (limitEnum.equals(UserPackageLimitEnum.DomainNum)) {
+            if (resourcePackage.getDomainNum() < userPackage.getDomainUse() + addNum) {
+                return false;
+            }
+        }
         return true;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public R usePackageAdd(Long userId, UserPackageLimitEnum limitEnum, int num) {
+        if (Objects.isNull(limitEnum)) {
+            return R.fail("参数错误");
+        }
         UserPackage userPackage = userPackageService.getByUserId(userId);
         if (!checkLimit(userId, limitEnum, num)) {
             throw new RException("超出数量，请升级套餐");
@@ -67,7 +80,16 @@ public class UserPackageManagerImpl implements UserPackageManager {
         if (limitEnum.equals(UserPackageLimitEnum.PeerNum)) {
             userPackage.setPeerUse(userPackage.getPeerUse() + num);
         }
+        if (limitEnum.equals(UserPackageLimitEnum.PortNum)) {
+            userPackage.setPortUse(userPackage.getPortUse() + num);
+        }
+        if (limitEnum.equals(UserPackageLimitEnum.DomainNum)) {
+            userPackage.setDomainUse(userPackage.getDomainUse() + num);
+        }
         userPackageService.updateById(userPackage);
+
+
+        // 权益使用记录 TODO
 
         return R.ok();
     }

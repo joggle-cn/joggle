@@ -42,4 +42,13 @@ public interface OrderPayBiz {
     R balancePay(Long userId, BigDecimal payMoney, String orderNo);
 
 
+    /**
+     * VIP权益支付
+     * @param userId 用户id
+     * @param payAmount 支付金额
+     * @param orderNo 订单号
+     * @return
+     */
+    R packagePay(Long userId, BigDecimal payAmount, String orderNo);
+
 }

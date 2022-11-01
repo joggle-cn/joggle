@@ -5,6 +5,8 @@ public enum UserPackageLimitEnum {
 
 
     DeviceNum,
+    PortNum,
+    DomainNum,
     PeerNum
 
 }

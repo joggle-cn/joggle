@@ -143,6 +143,13 @@ public class OrdersAppController {
                 throw new BaseException(r2);
             }
         }
+        // 套餐权益支付
+        if (orderPayInfo.getPayType() == PayTypeEnum.VIP.getType()) {
+            R r2 = orderPayBiz.packagePay(userId, orders.getPayAmount(), orders.getOrderNo());
+            if (r2.isFail()) {
+                throw new BaseException(r2);
+            }
+        }
 
         switch (orderPayInfo.getResourceType()) {
             case 1: // 域名

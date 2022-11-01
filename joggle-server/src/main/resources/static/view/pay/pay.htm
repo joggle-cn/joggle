@@ -6,6 +6,7 @@
 			<ol class="breadcrumb">
 				<li><a href="#">首页</a></li>
 				<li><a href="#/user/domain">我的域名</a></li>
+				<li><a href="#/user/domain/buy">购买资源</a></li>
 				<li class="active">购买</li>
 			</ol>
         </div>
@@ -42,7 +43,7 @@
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">时间:</label>
 					<div class="col-sm-9">
-						<div style="position: relative;  top: -6px;">
+						<div style="position: relative;  top: -6px;" ng-show="payType != 3">
 							<div class="radio radio-success icheck-success">
                                 <input id="inlineTimeRadio6" type="radio" value="1" name="payTime" ng-model="amount">
                                 <label for="inlineTimeRadio6">1天</label>
@@ -105,11 +106,23 @@
 						</div>
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-sm-3" style="text-align: right">优惠金额:</label>
+					<div class="col-sm-9">
+						<div>
+							{{discountMoney}} 元
+						</div>
+					</div>
+				</div>
 
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">支付方式:</label>
 					<div class="col-sm-9">
 						<div style="position: relative;  top: -6px;">
+							<div class="radio radio-success icheck-success pay-box" ng-show="showPackagePay">
+								<input type="radio" id="inlineRadio3" value="3" name="radioInline" ng-model="payType">
+								<label for="inlineRadio3"><span>VIP权益支付</span></label>
+							</div>
 							<div class="radio radio-success icheck-success pay-box">
 								<input type="radio" id="inlineRadio1" value="2" name="radioInline" ng-model="payType">
 								<label for="inlineRadio1">
