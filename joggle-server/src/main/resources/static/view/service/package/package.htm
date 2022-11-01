@@ -6,7 +6,7 @@
 			<ol class="breadcrumb">
 				<li><a href="#">首页</a></li>
 				<li><a href="#/user/profile">我的资料</a></li>
-				<li>购买套餐</li>
+				<li>套餐列表</li>
 
 <!--				<li class="bind-device">-->
 <!--					<a href="#/user/device/bind">-->
@@ -34,12 +34,21 @@
 				<div class="panel-body">
 					<ul class="list-group">
 						<li class="list-group-item">可绑设备 <div class="pull-right">{{item.deviceNum}}台</div></li>
-						<li class="list-group-item">套餐流量 <div class="pull-right">{{item.flowNum/1024/1024}}GB</div></li>
-						<li class="list-group-item">网络速率 <div class="pull-right">{{item.broadbandRate}}Mbps</div></li>
+						<li class="list-group-item">
+							套餐流量
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="每个月的流量限额"></span>
+							<div class="pull-right">{{item.flowNum/1024/1024}}GB</div></li>
+						<li class="list-group-item">网络速率
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="目前未实施该限制"></span>
+							<div class="pull-right">{{item.broadbandRate}}Mbps</div></li>
 						<li class="list-group-item">可用端口 <div class="pull-right">{{item.portNum}}个</div></li>
 						<li class="list-group-item">可用域名 <div class="pull-right">{{item.domainNum}}个</div></li>
-						<li class="list-group-item">P2P隧道 <div class="pull-right">{{item.p2pNum}}条</div></li>
-						<li class="list-group-item">并发限制 <div class="pull-right">{{item.concurrentNum}}</div></li>
+						<li class="list-group-item">P2P隧道
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="不是所有网路都支持P2P打洞"></span>
+							<div class="pull-right">{{item.p2pNum}}条</div></li>
+						<li class="list-group-item">并发限制
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="同时间链接的数量"></span>
+							<div class="pull-right">{{item.concurrentNum}}</div></li>
 						<li class="list-group-item">代理支持 <div class="pull-right">{{item.proxyEnable==1?'支持':'-'}}</div></li>
 						<li class="list-group-item">网络唤醒 <div class="pull-right">{{item.wolEnable==1?'支持':'-'}}</div></li>
 					</ul>
@@ -52,6 +61,14 @@
 
 		</div>
 
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="alert alert-info" role="alert">
+				注意：购买VIP套餐后，所有的资源可以通过VIP权益支付方式0元购买。
+			</div>
+		</div>
 	</div>
 
 

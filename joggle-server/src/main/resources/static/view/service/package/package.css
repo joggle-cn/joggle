@@ -88,3 +88,8 @@
 .package .packages-btn{
     height: 40px;
 }
+
+.package .list-group-item .glyphicon{
+    color: #b6b6b6;
+    cursor: pointer;
+}

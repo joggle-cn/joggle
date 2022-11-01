@@ -30,6 +30,8 @@ define(['app','jquery', 'css!./package.css'], function (app, $) {//加载依赖j
         }
         render();
 
+            $('[data-toggle="tooltip"]').tooltip()
+
         /**
          * 编辑设备
          */
