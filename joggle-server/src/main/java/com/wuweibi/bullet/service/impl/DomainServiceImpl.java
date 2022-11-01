@@ -104,7 +104,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
             DeviceMapping entity = deviceMappingService.getById(mappingId);
             Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
-            if (annotation != null) {
+            if (annotation != null) { // 发送控制消息关闭映射
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
                 annotation.sendMessage(deviceNo, msg);

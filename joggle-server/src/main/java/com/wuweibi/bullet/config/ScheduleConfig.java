@@ -39,8 +39,6 @@ public class ScheduleConfig implements SchedulingConfigurer {
     }
 
 
-
-
     /**
      * 每10秒点执行检查是否过期，过期域名，自动关闭映射
      */
@@ -71,7 +69,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
     private UserPackageManager userPackageManager;
 
     /**
-     * VIP用户资源包释放
+     * VIP用户资源包释放 10分钟一次
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void userPackageRelease() {
