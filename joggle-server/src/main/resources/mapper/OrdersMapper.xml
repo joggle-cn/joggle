@@ -64,6 +64,9 @@
             <if test="params.status != null">
                 and o.status = #{params.status}
             </if>
+            <if test="params.payType != null">
+                and o.pay_type = #{params.payType}
+            </if>
             <if test="params.userId != null">
                 and o.user_id = #{params.userId}
             </if>

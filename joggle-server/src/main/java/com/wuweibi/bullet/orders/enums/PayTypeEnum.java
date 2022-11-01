@@ -18,7 +18,8 @@ public enum PayTypeEnum {
     BALANCE(1, "余额"),
     ALIPAY(2, "支付宝"),
 
-    VIP(3, "VIP权益"),
+    WECHAT(3, "微信"),
+    VIP(4, "VIP权益"),
 
     ;
 
