@@ -41,6 +41,12 @@
         where rp.id = 1 and up.user_id = #{userId}
     </update>
 
+<!--    更新套餐流量-->
+    <update id="updateFlow">
+        update user_package set flow = flow + #{flow}
+        where user_id = #{userId} and (flow + #{flow})>= 0
+    </update>
+
 
     <select id="selectByExpireDay" resultType="com.wuweibi.bullet.res.domain.UserPackageExpireVO">
         select

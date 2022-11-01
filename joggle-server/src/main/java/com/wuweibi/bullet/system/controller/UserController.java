@@ -99,6 +99,7 @@ public class UserController {
         result.put("loginTime", sdf.format(user.getLoginTime()));
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
         result.put("userFlow", userFlow.getFlow()/1024); //MB
+        result.put("userPackageFlow", user.getUserPackageFlow()/1024); //MB
         result.put("userCertification", user.getUserCertification());
 
         if (user.getUserCertification() != 1) {

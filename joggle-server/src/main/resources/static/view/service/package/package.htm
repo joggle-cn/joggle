@@ -36,8 +36,10 @@
 						<li class="list-group-item">可绑设备 <div class="pull-right">{{item.deviceNum}}台</div></li>
 						<li class="list-group-item">
 							套餐流量
-							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="每个月的流量限额"></span>
-							<div class="pull-right">{{item.flowNum/1024/1024}}GB</div></li>
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" ng-if="item.level == 0" title="新用户注册赠送流量"></span>
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" ng-if="item.level != 0" title="每个月的流量限额"></span>
+							<div class="pull-right">{{item.flowNum/1024/1024}}GB</div>
+						</li>
 						<li class="list-group-item">网络速率
 							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="目前未实施该限制"></span>
 							<div class="pull-right">{{item.broadbandRate}}Mbps</div></li>

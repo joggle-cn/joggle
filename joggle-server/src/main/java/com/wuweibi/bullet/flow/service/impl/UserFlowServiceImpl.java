@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.flow.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.mapper.UserFlowMapper;
@@ -41,9 +40,12 @@ public class UserFlowServiceImpl extends ServiceImpl<UserFlowMapper, UserFlow> i
 
     @Override
     public boolean hasFlow(Long userId) {
-        return this.baseMapper.selectCount(Wrappers.<UserFlow>lambdaQuery()
-                .eq(UserFlow::getUserId, userId)
-                .gt(UserFlow::getFlow, 0)
-        ) > 0;
+        UserFlow userFlow = this.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
+        return userFlow.getFlow() <= 0;
+    }
+
+    @Override
+    public UserFlow getUserFlowAndPackageFlow(Long userId) {
+        return this.baseMapper.selectUserFlowAndPackageFlow(userId);
     }
 }

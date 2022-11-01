@@ -143,14 +143,12 @@ public class OpenController {
         // userflow
         UserFlow userFlow = new UserFlow();
         userFlow.setUserId(user.getId());
-        userFlow.setFlow(1048576L);// kb 默认赠送1G流量
+        userFlow.setFlow(0L);// kb 
         userFlow.setUpdatedTime(new Date());
         userFlowService.save(userFlow);
 
-        //
+        // 开通普通用户永久服务
         userPackageManager.openService(user.getId(), 1, null);
-
-
 
         if (status) {
             Long userId = user.getId();

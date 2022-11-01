@@ -131,9 +131,23 @@ insert into user_package (`user_id`, `resource_package_id`, `name`, `level`, cre
 );
 
 
+CREATE TABLE `user_package_rights`  (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
+    `resource_type` int(1) NULL DEFAULT NULL COMMENT '资源类型 1域名 2端口 ',
+    `resource_id` bigint(20) NULL DEFAULT NULL COMMENT '资源id',
+    `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+    `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+    `status` int(1) NULL DEFAULT NULL COMMENT '状态 1正常 0禁用',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1  COMMENT = '用户套餐权益' ROW_FORMAT = Dynamic;
+
+ALTER TABLE `user_package`
+    ADD COLUMN `flow` bigint(22) NULL COMMENT 'kb 可用流量' AFTER `flow_use`;
+
+
+
 
 -- 线上已执
-
-
 
 

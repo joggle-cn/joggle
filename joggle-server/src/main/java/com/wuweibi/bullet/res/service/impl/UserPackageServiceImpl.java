@@ -55,4 +55,9 @@ public class UserPackageServiceImpl extends ServiceImpl<UserPackageMapper, UserP
         return this.baseMapper.selectCount(Wrappers.<UserPackage>lambdaQuery()
                 .eq(UserPackage::getResourcePackageId, packageId)) > 0;
     }
+
+    @Override
+    public boolean updateFLow(Long userId, long bytes) {
+        return this.baseMapper.updateFlow(userId, bytes);
+    }
 }

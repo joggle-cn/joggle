@@ -29,4 +29,13 @@ public interface UserPackageService extends IService<UserPackage> {
 
     boolean checkPackageId(Integer packageId);
 
+
+    /**
+     * 更新套餐流量
+     * (带有保护，不支持负数)当更新失败时，走用户流量走
+     * @param userId
+     * @param flow
+     * @return
+     */
+    boolean updateFLow(Long userId, long flow);
 }

@@ -15,5 +15,14 @@
         where user_id = #{userId}
     </update>
 
+    <select id="selectUserFlowAndPackageFlow" resultType="com.wuweibi.bullet.flow.entity.UserFlow">
+        select
+            uf.user_id,
+            (ifnull(uf.flow, 0) + ifnull(up.flow, 0)) as flow
+        from user_flow uf
+        left join user_package up on uf.user_id = up.user_id
+        where uf.user_id = #{userId}
+    </select>
+
 </mapper>
 

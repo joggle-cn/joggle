@@ -116,6 +116,9 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
             userPackage.setStartTime(new Date());
             isInsert = true;
+
+            ResourcePackage resourcePackageLevel0 = resourcePackageService.getByLevel(0);
+            userPackage.setFlow(resourcePackageLevel0.getFlowNum());
         } else {
             if (userPackage.getLevel() > resourcePackage.getLevel()) {
                 return R.fail("套餐升级失败，原因不支持降级。");

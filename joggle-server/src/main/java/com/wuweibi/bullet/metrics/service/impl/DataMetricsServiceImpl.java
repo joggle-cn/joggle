@@ -14,9 +14,10 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.domain.DataMetricsListVO;
 import com.wuweibi.bullet.metrics.domain.DataMetricsParam;
-import com.wuweibi.bullet.metrics.mapper.DataMetricsMapper;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
+import com.wuweibi.bullet.metrics.mapper.DataMetricsMapper;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
@@ -92,21 +93,35 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         Long userId = deviceDetail.getUserId();
 
         // 扣取流量
-        if(serverTunnel.getEnableFlow() == 1){
+        if (serverTunnel.getEnableFlow() == 1) {
             Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
-            UserFlow userFlow = userFlowService.getUserFlow(userId);
-            if (userFlow.getFlow() - bytes / 1024 <= 0) {
-                // 由于用户没有流量了，默认关闭所有映射
-                deviceBiz.closeAllMappingByUserId(userId);
+
+            long byteKb = bytes / 1024;
+            if (byteKb == 0) {
+                byteKb = 1; // 至少消耗1KB
             }
-            boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
-            if (!status) {
+            // 优先扣套餐流量 (带有保护，不支持负数)
+            boolean status = userPackageService.updateFLow(userId, -byteKb);
+            if (status){
+                return R.ok();
+            }
+            // 套餐流量扣失败了，扣充值流量（没有保护只有成功）
+            status = userFlowService.updateFLow(userId, -bytes / 1024);
+            if (!status) { // 后面判断基本不走
                 log.warn("流量扣取失败 userId={}", userId);
                 return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
             }
+            UserFlow userFlow = userFlowService.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
+            if (userFlow.getFlow() < -(1024)){ // 如果流量超出1兆，关闭映射
+                // 由于用户没有流量了，默认关闭所有映射
+                deviceBiz.closeAllMappingByUserId(userId);
+            }
         }
-        return null;
+        return R.ok();
     }
+
+    @Resource
+    private UserPackageService userPackageService;
 
     @Override
     public Page<DataMetricsListVO> getList(Page<DataMetrics> page, DataMetricsParam params) {

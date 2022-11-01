@@ -79,7 +79,8 @@ public class UserPackage {
      */
     @ApiModelProperty("kb 流量")
  	private Long flowUse;
-    
+ 	private Long flow;
+
     /**
      * 设备数量
      */

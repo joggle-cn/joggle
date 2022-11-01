@@ -24,4 +24,5 @@ public interface UserPackageMapper extends BaseMapper<UserPackage> {
 
     boolean updateToLevel0ByUserId(@Param("userId") Long userId);
 
+    boolean updateFlow(@Param("userId") Long userId, @Param("flow") Long flow);
 }

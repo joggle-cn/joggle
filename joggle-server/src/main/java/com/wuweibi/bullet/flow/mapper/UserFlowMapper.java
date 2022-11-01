@@ -21,4 +21,6 @@ public interface UserFlowMapper extends BaseMapper<UserFlow> {
      * @return
      */
     boolean updateFlow(@Param("userId") Long userId, @Param("flow") Long flow);
+
+    UserFlow selectUserFlowAndPackageFlow(@Param("userId") Long userId);
 }
