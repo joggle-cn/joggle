@@ -26,4 +26,7 @@ public interface UserPackageService extends IService<UserPackage> {
     UserPackage getByUserId(Long userId);
 
     boolean updateToLevel0ByUserId(Long userId, UserPackage userPackage);
+
+    boolean checkPackageId(Integer packageId);
+
 }

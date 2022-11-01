@@ -10,6 +10,7 @@ import com.wuweibi.bullet.res.domain.ResourcePackageAdminParam;
 import com.wuweibi.bullet.res.domain.ResourcePackageVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@Api(value = "", tags = "")
+@Api(value = "", tags = "套餐管理")
 @RequestMapping("/admin/resource/package")
 public class ResourcePackageAdminController {
     /**
@@ -97,19 +98,27 @@ public class ResourcePackageAdminController {
     }
 
 
+    @Resource
+    private UserPackageService userPackageService;
+
     /**
-     * 删除数据
+     * 删除套餐
      *
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除数据")
+    @ApiOperation("删除套餐")
     @DeleteMapping()
     public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
-
-        // TODO 检查用户是开通过资源
-
-        return R.ok(this.resourcePackageService.removeById(idDTO.getId()));
+        Integer packageId = idDTO.getId();
+        // 检查用户是开通过资源
+        if (packageId == 1) {
+            return R.fail("系统内置，不能删除");
+        }
+        if (userPackageService.checkPackageId(packageId)){
+            return R.fail("已经有用户开通套餐，不能删除");
+        }
+        return R.ok(this.resourcePackageService.removeById(packageId));
     }
 
 }
