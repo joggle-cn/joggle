@@ -145,6 +145,9 @@ CREATE TABLE `user_package_rights`  (
 ALTER TABLE `user_package`
     ADD COLUMN `flow` bigint(22) NULL COMMENT 'kb 可用流量' AFTER `flow_use`;
 
+update user_package up ,user_flow uf
+set up.flow =0
+where up.user_id = uf.user_id;
 
 
 

@@ -143,7 +143,7 @@ public class OpenController {
         // userflow
         UserFlow userFlow = new UserFlow();
         userFlow.setUserId(user.getId());
-        userFlow.setFlow(0L);// kb 
+        userFlow.setFlow(0L);// kb
         userFlow.setUpdatedTime(new Date());
         userFlowService.save(userFlow);
 
@@ -279,6 +279,13 @@ public class OpenController {
     @RequestMapping(value = "/domain/release")
     public R domainRelease(HttpServletRequest request) {
         domainService.resourceDueTimeRelease();
+        return R.success( );
+    }
+
+    @Profile("dev")
+    @RequestMapping(value = "/package/flow-reset")
+    public R resetPackageFlow(HttpServletRequest request) {
+        userPackageManager.resetPackageFlow();
         return R.success( );
     }
 

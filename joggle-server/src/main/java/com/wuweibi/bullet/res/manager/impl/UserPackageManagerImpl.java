@@ -4,6 +4,7 @@ import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
+import com.wuweibi.bullet.res.domain.UserPackageFowVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
@@ -192,6 +193,43 @@ public class UserPackageManagerImpl implements UserPackageManager {
         log.debug("[资源包到期释放] 结束 处理数据量：{}", count);
 
         return R.ok();
+    }
+
+    @Override
+    public void resetPackageFlow() {
+        log.debug("[资源包每月发放流量] 开始");
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> params = new HashMap<>(1);
+        Cursor<UserPackageFowVO> cursor = sqlSession.selectCursor(UserPackageMapper.class.getName() + ".selectByRestPackageFlow", params);
+        Iterator<UserPackageFowVO> iter = cursor.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            UserPackageFowVO userPackage = iter.next();
+            log.info("user[{}] package[{}] resetflow", userPackage.getUserId(), userPackage.getResourcePackageId());
+
+            this.userPackageService.updateRestFLow(userPackage.getUserId(), userPackage.getResourcePackageFlow());
+
+
+
+//            Map<String, Object> param = new HashMap<>(3);
+//            param.put("packageName", userPackage.getName());
+//            param.put("url", bulletConfig.getServerUrl());
+//            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+//            String subject = String.format("%s到期提醒", userPackage.getName());
+//            this.free(userPackage);
+
+//            mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
+        }
+        try {
+            cursor.close();
+        } catch (IOException e) {
+            log.error("", e);
+        } finally {
+            sqlSession.close();
+        }
+
+        log.debug("[资源包每月发放流量] 结束 处理数据量：{}", count);
+
     }
 
 

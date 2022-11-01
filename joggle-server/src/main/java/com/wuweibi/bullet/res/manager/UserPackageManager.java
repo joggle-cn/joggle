@@ -22,4 +22,5 @@ public interface UserPackageManager {
      */
     R expireFree();
 
+    void resetPackageFlow();
 }

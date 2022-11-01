@@ -77,5 +77,14 @@ public class ScheduleConfig implements SchedulingConfigurer {
     }
 
 
+    /**
+     * 发放套餐流量（每月1日 00:00:00）
+     */
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void resetFlow() {
+        userPackageManager.resetPackageFlow();
+    }
+
+
 
 }

@@ -60,4 +60,9 @@ public class UserPackageServiceImpl extends ServiceImpl<UserPackageMapper, UserP
     public boolean updateFLow(Long userId, long bytes) {
         return this.baseMapper.updateFlow(userId, bytes);
     }
+
+    @Override
+    public boolean updateRestFLow(Long userId, long flow) {
+        return this.baseMapper.updateRestFLow(userId, flow);
+    }
 }

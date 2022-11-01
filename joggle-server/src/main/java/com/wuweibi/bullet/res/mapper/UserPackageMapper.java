@@ -2,6 +2,7 @@ package com.wuweibi.bullet.res.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
+import com.wuweibi.bullet.res.domain.UserPackageFowVO;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,7 +23,16 @@ public interface UserPackageMapper extends BaseMapper<UserPackage> {
     List<UserPackageExpireVO> selectByExpireDay( );
 
 
+    /**
+     * 查询需要充值流量的用户信息
+     * @return
+     */
+    List<UserPackageFowVO> selectByRestPackageFlow( );
+
+
     boolean updateToLevel0ByUserId(@Param("userId") Long userId);
 
     boolean updateFlow(@Param("userId") Long userId, @Param("flow") Long flow);
+
+    boolean updateRestFLow(@Param("userId") Long userId, @Param("flow") Long flow);
 }

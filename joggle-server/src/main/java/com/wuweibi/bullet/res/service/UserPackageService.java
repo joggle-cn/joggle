@@ -38,4 +38,13 @@ public interface UserPackageService extends IService<UserPackage> {
      * @return
      */
     boolean updateFLow(Long userId, long flow);
+
+
+    /**
+     * 充值套餐流量
+     * @param userId 用户id
+     * @param flow 流量 kb
+     * @return
+     */
+    boolean updateRestFLow(Long userId, long flow);
 }

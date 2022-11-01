@@ -47,6 +47,12 @@
         where user_id = #{userId} and (flow + #{flow})>= 0
     </update>
 
+<!--    充值套餐流量-->
+    <update id="updateRestFLow">
+        update user_package set flow = #{flow}
+        where user_id = #{userId}
+    </update>
+
 
     <select id="selectByExpireDay" resultType="com.wuweibi.bullet.res.domain.UserPackageExpireVO">
         select
@@ -59,6 +65,24 @@
         from user_package up
         left join t_sys_users su on su.id = up.user_id
         where  up.user_id >0 and up.end_time &lt; sysdate()
+    </select>
+
+
+<!--   查询 没有过期的 付费套餐用户权益 -->
+    <select id="selectByRestPackageFlow" resultType="com.wuweibi.bullet.res.domain.UserPackageFowVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            up.`level`,
+            up.`flow`,
+            up.`name`,
+            up.end_time,
+            rp.flow_num as resourcePackageFlow,
+            su.email as userEmail
+        from user_package up
+         left join resource_package rp on up.resource_package_id = rp.id
+        left join t_sys_users su on su.id = up.user_id
+        where up.user_id >0 and up.level > 0 and up.end_time > sysdate()
     </select>
 
 </mapper>
