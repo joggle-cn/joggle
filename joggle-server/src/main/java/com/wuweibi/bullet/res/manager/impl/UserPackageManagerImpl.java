@@ -10,6 +10,7 @@ import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.mapper.UserPackageMapper;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.MailService;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +96,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
     }
 
     @Override
-    public R openService(Long userId, Integer packageId, Integer amount) {
+    public R<UserPackage> openService(Long userId, Integer packageId, Integer amount) {
         ResourcePackage resourcePackage = resourcePackageService.getById(packageId);
 
         UserPackage userPackage = userPackageService.getByUserId(userId);
@@ -112,7 +113,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setStartTime(new Date());
             isInsert = true;
         } else {
-            if (userPackage.getLevel() >= resourcePackage.getLevel()) {
+            if (userPackage.getLevel() > resourcePackage.getLevel()) {
                 return R.fail("套餐升级失败，原因不支持降级。");
             }
             userPackage.setLevel(resourcePackage.getLevel());
@@ -123,18 +124,15 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
         }
 
-
         if (userPackage.getEndTime() == null) {
             userPackage.setEndTime(new Date());
         }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(userPackage.getEndTime());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.add(Calendar.DATE, amount * 30);
-        userPackage.setEndTime(calendar.getTime());
+        if (amount != null) { // 购买数量空代表永久
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(userPackage.getEndTime());
+            calendar.add(Calendar.DATE, amount * 30);
+            userPackage.setEndTime(calendar.getTime());
+        }
 
         if (isInsert) {
             userPackageService.save(userPackage);
@@ -142,7 +140,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackageService.updateById(userPackage);
         }
 
-        return R.ok();
+        return R.ok(userPackage);
     }
 
 
@@ -216,7 +214,13 @@ public class UserPackageManagerImpl implements UserPackageManager {
         userPackage.setEndTime(null); // 这个设置无效
         userPackageService.updateToLevel0ByUserId(userId, userPackage);
 
+        // 删除用户的所有权益
+        userPackageRightsService.removeResourceByUserId(userId);
+
+
     }
 
+    @Resource
+    private UserPackageRightsService userPackageRightsService;
 
 }

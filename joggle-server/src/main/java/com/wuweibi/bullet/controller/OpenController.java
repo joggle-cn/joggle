@@ -99,7 +99,8 @@ public class OpenController {
 
     @Resource
     private UserFlowService userFlowService;
-
+    @Resource
+    private UserPackageManager userPackageManager;
 
     /**
      * 注册账号
@@ -145,6 +146,11 @@ public class OpenController {
         userFlow.setFlow(1048576L);// kb 默认赠送1G流量
         userFlow.setUpdatedTime(new Date());
         userFlowService.save(userFlow);
+
+        //
+        userPackageManager.openService(user.getId(), 1, null);
+
+
 
         if (status) {
             Long userId = user.getId();
@@ -258,8 +264,6 @@ public class OpenController {
         return releaseDetail;
     }
 
-    @Resource
-    private UserPackageManager userPackageManager;
 
     /**
      * 检查请求头

@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wuweibi.bullet.mapper.DomainMapper">
 
+
+
+	<update id="updateUserDueTime">
+		update t_domain d , user_package_rights upr set
+			d.due_time = #{endTime}
+		where upr.resource_id = d.id and upr.resource_type in (1,2)
+		  and d.user_id = upr.user_id
+		  and d.user_id = #{userId}
+	</update>
+
 	<!--	根据用户ID查询归属域名-->
 	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainVO" parameterType="java.lang.Long">
 		select d.id, d.domain,
@@ -10,9 +20,8 @@
 
 		from t_domain  d
 	    left join t_server_tunnel st on st.id = d.server_tunnel_id
-
-
 		where d.user_id = #{userId}
+		order by d.buy_time desc, d.id desc
 	</select>
 
 <!--	获取可购买的域名列表-->

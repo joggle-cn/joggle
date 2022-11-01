@@ -114,6 +114,10 @@ public class OrdersAppController {
         }
         OrderPayInfo orderPayInfo = r.getData();
 
+        if (ordersDTO.getAmount().compareTo(orderPayInfo.getAmount()) != 0) {
+            return R.fail("数量错误，下单失败！");
+        }
+
         Orders orders = new Orders();
 
         // 订单号生成
@@ -145,7 +149,7 @@ public class OrdersAppController {
         }
         // 套餐权益支付
         if (orderPayInfo.getPayType() == PayTypeEnum.VIP.getType()) {
-            R r2 = orderPayBiz.packagePay(userId, orders.getPayAmount(), orders.getOrderNo());
+            R r2 = orderPayBiz.packagePay(userId, orders.getPayAmount(), orders);
             if (r2.isFail()) {
                 throw new BaseException(r2);
             }

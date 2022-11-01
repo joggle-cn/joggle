@@ -32,7 +32,12 @@
             up.proxy_enable = rp.proxy_enable,
             up.wol_enable = rp.wol_enable,
             up.resource_package_id = rp.id,
-            up.end_time = null
+            up.end_time = null,
+            up.domain_use = 0,
+            up.port_use = 0,
+            up.peer_use = 0,
+            up.flow_use = 0,
+            up.device_use = 0
         where rp.id = 1 and up.user_id = #{userId}
     </update>
 

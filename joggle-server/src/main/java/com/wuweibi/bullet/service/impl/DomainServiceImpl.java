@@ -271,4 +271,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return page;
     }
 
+    @Override
+    public boolean updateUserDueTime(Long userId, Date endTime) {
+        return this.baseMapper.updateUserDueTime(userId, endTime);
+    }
+
 }

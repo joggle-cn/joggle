@@ -74,7 +74,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                         $scope.payMoney = res.data.payAmount;
                         $scope.discountMoney = res.data.discountAmount;
                         $scope.dueTime = res.data.dueTime;
-                        if ($scope.amount != res.data.amount) {
+                        if ($scope.amount != res.data.amount && $scope.payType != 3) {
                             layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});
                         }
                         $scope.amount = res.data.amount;

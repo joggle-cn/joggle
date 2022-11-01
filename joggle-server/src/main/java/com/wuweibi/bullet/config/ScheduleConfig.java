@@ -71,7 +71,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
     private UserPackageManager userPackageManager;
 
     /**
-     * 用户资源包释放
+     * VIP用户资源包释放
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void userPackageRelease() {

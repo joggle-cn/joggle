@@ -3,6 +3,7 @@ package com.wuweibi.bullet.business;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
+import com.wuweibi.bullet.orders.entity.Orders;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -49,6 +50,6 @@ public interface OrderPayBiz {
      * @param orderNo 订单号
      * @return
      */
-    R packagePay(Long userId, BigDecimal payAmount, String orderNo);
+    R packagePay(Long userId, BigDecimal payAmount, Orders orderNo);
 
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.res.mapper.UserPackageRightsMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.res.entity.UserPackageRights">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="resourceType" column="resource_type" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <select id="checkByResourceTypeAndId" resultType="java.lang.Boolean">
+        select count(1) from user_package_rights
+        where resource_type = #{resourceType} and resource_id = #{resourceId}
+    </select>
+
+</mapper>
+

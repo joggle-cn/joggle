@@ -18,17 +18,21 @@ import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
+import com.wuweibi.bullet.res.domain.UserPackageRightsDTO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -46,6 +50,7 @@ import java.util.Map;
  * @author marker
  *
  */
+@Slf4j
 @Service
 public class OrderPayBizImpl implements OrderPayBiz {
 
@@ -129,11 +134,11 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 calendar.setTime(domain.getDueTime());
                 calendar.add(Calendar.DATE, amount.intValue());
                 dueTime = calendar.getTime();
-                if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()) {
+                if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()) { // VIP权益支付
                     UserPackage userPackage = userPackageService.getById(userId);
                     dueTime = userPackage.getEndTime();
                     long size = DateUtil.betweenDay(domain.getDueTime(), dueTime, true); // 计算两个时间的天数
-                    amount = new Long(size  -1);
+                    amount = size == 0 ? 0 : new Long(size  -1);
                 } else {
                     if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
                         long size = DateUtil.betweenDay(domain.getDueTime(), serverTunnel.getServerEndTime(), true);
@@ -155,12 +160,15 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 orderPayInfo.setDueTime(dueTime.getTime());
                 orderPayInfo.setAmount(amount);
                 orderPayInfo.setRealAmount(amount*24*60*60l);
-                orderPayInfo.setDiscountAmount(BigDecimal.ZERO);
+                orderPayInfo.setDiscountAmount(originalAmount.subtract(payAmount));
                 orderPayInfo.setPriceAmount(originalAmount);
                 orderPayInfo.setPayAmount(payAmount);
                 orderPayInfo.setResourceType(domain.getType());
                 break;
             case 3:
+                if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()){
+                    return R.fail("支付方式不支持");
+                }
                 // 查询流量价格套餐 1.6元
                 BigDecimal priceAmount = BigDecimal.valueOf(1.6);
                 payAmount = priceAmount.multiply(BigDecimal.valueOf(amount));
@@ -185,8 +193,14 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 }
                 ResourcePackage resourcePackage =  resourcePackageService.getById(resId);
                 UserPackage userPackage = userPackageService.getByUserId(ordersDTO.getUserId());
-                if (userPackage != null && userPackage.getLevel() >= resourcePackage.getLevel()) {
+                if (userPackage != null && userPackage.getLevel() > resourcePackage.getLevel()) {
                     return R.fail("请重新选择套餐，原因不支持降级。");
+                }
+                if (resourcePackage.getId() != userPackage.getResourcePackageId() && userPackage.getLevel() != 0) {
+                    return R.fail("暂不支持切换购买套餐,敬请期待！");
+                }
+                if (userPackage.getEndTime() == null) {
+                    userPackage.setEndTime(new Date());
                 }
 
                 BigDecimal totalAmount = resourcePackage.getPrice().multiply(BigDecimal.valueOf(amount));
@@ -198,21 +212,13 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 orderPayInfo.setRealAmount(amount);
 
                 calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
+                calendar.setTime(userPackage.getEndTime());
                 calendar.add(Calendar.DATE, amount.intValue()*30);
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 59);
-                calendar.set(Calendar.SECOND, 59);
                 dueTime = calendar.getTime();
 
                 orderPayInfo.setDueTime(dueTime.getTime());
                 break;
         }
-        if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()){
-            orderPayInfo.setDiscountAmount(orderPayInfo.getPayAmount());
-            orderPayInfo.setPayAmount(BigDecimal.ZERO);
-        }
-
         return R.success(orderPayInfo);
     }
 
@@ -263,11 +269,14 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 // 计算到期
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(domain.getDueTime());
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 59);
-                calendar.set(Calendar.SECOND, 59);
                 calendar.add(Calendar.SECOND, orders.getAmount().intValue());
-                domainService.updateDueTime(orders.getDomainId(), calendar.getTime().getTime());
+                Date packageEndTime = calendar.getTime();
+                if (orders.getPayType() == PayTypeEnum.VIP.getType()) { // 如果是VIP支付
+                    UserPackage userPackage = userPackageService.getById(orders.getUserId());
+                    packageEndTime = userPackage.getEndTime();
+                }
+
+                domainService.updateDueTime(orders.getDomainId(), packageEndTime.getTime());
                 break;
             case 3: // 流量
                 long flow = orders.getAmount() * 1024 * 1024;
@@ -275,20 +284,27 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 break;
 
             case 5: // 套餐
-
                 Integer packageId = orders.getDomainId().intValue();
                 Integer amount =  orders.getAmount() .intValue();
+                R<UserPackage> r2 = userPackageManager.openService(orders.getUserId(), packageId, amount);
+                if(r2.isFail()){
+                    log.error("userPackageManager.openService() {}", r2.getMsg());
+                }
+                UserPackage userPackage = r2.getData();
+                Date endTime = userPackage.getEndTime();
 
-                userPackageManager.openService(orders.getUserId(), packageId, amount);
-
-
+                // 批量更新用户的权益内资源结束时间
+                domainService.updateUserDueTime(orders.getUserId(), endTime);
                 break;
         }
         return true;
     }
 
+
     @Resource
     private UserPackageManager userPackageManager;
+    @Resource
+    private UserPackageRightsService userPackageRightsService;
 
 
 
@@ -319,18 +335,28 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
 
     @Override
-    public R packagePay(Long userId, BigDecimal payMoney, String orderNo) {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public R packagePay(Long userId, BigDecimal payMoney, Orders orders) {
         if (payMoney == null){
             return R.fail(SystemErrorType.PAY_MONEY_NOT_NULL);
         }
+        String orderNo = orders.getOrderNo();
 
-        Orders orders = this.ordersService.getByOrderNo(orderNo);
         UserPackageLimitEnum enumObj = transToPackageEnum(orders.getResourceType());
 
-        // 权益使用增加
-        R r1 = userPackageManager.usePackageAdd(userId, enumObj, 1);
-        if (r1.isFail()) {
-            return r1;
+        // 校验资源不在套餐权益内
+        if (!userPackageRightsService.checkResource(orders.getResourceType(), orders.getDomainId())) {
+            R r1 = userPackageManager.usePackageAdd(userId, enumObj, 1);
+            if (r1.isFail()) {
+                return r1;
+            }
+            // 权益使用增加
+            UserPackageRightsDTO packageRightsDTO = new UserPackageRightsDTO();
+            packageRightsDTO.setUserId(userId);
+            packageRightsDTO.setResourceType(orders.getResourceType());
+            packageRightsDTO.setResourceId(orders.getDomainId());
+            packageRightsDTO.setStatus(1);
+            userPackageRightsService.addPackageRights(packageRightsDTO);
         }
         OrderPayBiz orderPayBiz = SpringUtils.getBean(OrderPayBiz.class);
         Map<String, Object> params = new HashMap<>(3);

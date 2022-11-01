@@ -124,4 +124,6 @@ public interface DomainService extends IService<Domain> {
      * @return
      */
     Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params);
+
+    boolean updateUserDueTime(Long userId, Date endTime);
 }
