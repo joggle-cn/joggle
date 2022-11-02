@@ -41,7 +41,7 @@ public class UserFlowServiceImpl extends ServiceImpl<UserFlowMapper, UserFlow> i
     @Override
     public boolean hasFlow(Long userId) {
         UserFlow userFlow = this.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
-        return userFlow.getFlow() <= 0;
+        return userFlow.getFlow() > 0;
     }
 
     @Override
