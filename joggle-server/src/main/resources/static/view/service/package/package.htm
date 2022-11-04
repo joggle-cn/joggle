@@ -35,11 +35,11 @@
 							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" ng-if="item.level != 0" title="每个月的流量限额"></span>
 							<div class="pull-right">{{item.flowNum/1024/1024}}GB</div>
 						</li>
-						<li class="list-group-item">网络速率
-							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="目前未实施该限制"></span>
+						<li class="list-group-item">隧道宽带
+							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="单条隧道宽带峰值"></span>
 							<div class="pull-right">{{item.broadbandRate}}Mbps</div></li>
-						<li class="list-group-item">可用端口 <div class="pull-right">{{item.portNum}}个</div></li>
-						<li class="list-group-item">可用域名 <div class="pull-right">{{item.domainNum}}个</div></li>
+						<li class="list-group-item">端口隧道 <div class="pull-right">{{item.portNum}}个</div></li>
+						<li class="list-group-item">域名隧道 <div class="pull-right">{{item.domainNum}}个</div></li>
 						<li class="list-group-item">P2P隧道
 							<span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="不是所有网路都支持P2P打洞"></span>
 							<div class="pull-right">{{item.p2pNum}}条</div></li>
@@ -63,7 +63,8 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="alert alert-info" role="alert">
-				注意：购买VIP套餐后，所有的资源可以通过VIP权益支付方式0元购买。
+				注意：购买VIP套餐后，所有的资源可以通过VIP权益支付方式0元购买。<br/>
+				需要无限速大宽带的用户，可以选择通道私有部署。
 			</div>
 		</div>
 	</div>
