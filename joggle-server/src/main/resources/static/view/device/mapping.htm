@@ -81,7 +81,6 @@
 				<p>{{features.portCount}}个</p>
 			</div>
 		</div>
-
 	</div>
 
 
@@ -103,13 +102,14 @@
 		  <table class="table table-hover">
 			  <thead>
 			  <tr>
-				  <th width=60>序号</th>
-				  <th>协议地址</th>
-				  <th>内网地址</th>
-				  <th>今日流量</th>
-				  <th>状态</th>
-				  <th>备注</th>
-				  <th width="200">操作</th>
+				  <th width="36">序号</th>
+				  <th width="140">外网地址</th>
+				  <th width="140">内网地址</th>
+				  <th width="60">宽带峰值</th>
+				  <th width="60">今日流量</th>
+				  <th width="35">状态</th>
+				  <th width="120">备注</th>
+				  <th width="90">操作</th>
 			  </tr>
 			  </thead>
 			  <tbody>
@@ -120,6 +120,7 @@
 					  <span ng-if="item.protocol == 2">tcp://{{item.host}}:{{item.port}}</span>
 					  <span ng-if="item.protocol == 5">udp://{{item.host}}:{{item.port}}</span>
 				  </td>
+				  <td>{{item.bandwidth}}Mbps</td>
 				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
@@ -152,13 +153,14 @@
 		  <table class="table table-hover">
 			  <thead>
 			  <tr>
-				  <th width=60>序号</th>
-				  <th>外网地址</th>
-				  <th>内网地址</th>
-				  <th>今日流量</th>
-				  <th>状态</th>
-				  <th>备注</th>
-				  <th width="200">操作</th>
+				  <th width="36">序号</th>
+				  <th width="140">外网地址</th>
+				  <th width="140">内网地址</th>
+				  <th width="60">宽带峰值</th>
+				  <th width="60">今日流量</th>
+				  <th width="35">状态</th>
+				  <th width="120">备注</th>
+				  <th width="90">操作</th>
 			  </tr>
 			  </thead>
 			  <tbody>
@@ -172,6 +174,7 @@
 				  <td>
 					  <span ng-if="item.protocol == 1 || item.protocol == 3 || item.protocol == 4 ">{{item.host}}:{{item.port}}</span>
 				  </td>
+				  <td>{{item.bandwidth}}Mbps</td>
 				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>

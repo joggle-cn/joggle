@@ -31,4 +31,7 @@ public class DomainBuyListVO {
     private String tunnelCountry;
     @ApiModelProperty("通道宽带")
     private Integer tunnelBroadband;
+
+    @ApiModelProperty("宽带峰值 mbps")
+    private Integer bandwidth;
 }

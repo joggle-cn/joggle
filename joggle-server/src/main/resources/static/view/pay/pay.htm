@@ -27,16 +27,16 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3" style="text-align: right"><span>类型</span>:</label>
+					<label class="col-sm-3" style="text-align: right"><span>宽带峰值</span>:</label>
 					<div class="col-sm-9">
-						<div ng-bind="data.typeName" ></div>
+						<div>{{data.bandwidth}}Mbps</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3" style="text-align: right">价格:</label>
 					<div class="col-sm-9">
 						<div>
-							<b>{{data.salesPrice}}</b> 元/天 （原价：<span class="original-price">{{data.originalPrice}} 元/天</span>）
+							<b>{{salesPrice}}</b> 元/天 （原价：<span class="original-price">{{data.originalPrice}} 元/天</span>）
 						</div>
 					</div>
 				</div>

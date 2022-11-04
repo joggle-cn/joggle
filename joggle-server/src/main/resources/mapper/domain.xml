@@ -33,7 +33,8 @@
 		st.country tunnelCountry,
 		st.area tunnelArea,
 		st.name tunnelName,
-		st.broadband tunnelBroadband
+		st.broadband tunnelBroadband,
+		d.bandwidth
 		from t_domain d
 		left join t_server_tunnel st on st.id = d.server_tunnel_id
 		<where>

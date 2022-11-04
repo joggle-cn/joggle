@@ -58,5 +58,8 @@ public class ServerTunnel  {
 
     @ApiModelProperty("服务器上线时间")
     private Date serverUpTime;
+
+    @ApiModelProperty("服务器离线时间")
+    private Date serverDownTime;
 }
 

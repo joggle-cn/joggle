@@ -18,6 +18,7 @@ public enum ResourceTypeEnum {
     PORT(2, "域名"),
     FLOW(3, "流量"),
     CHARGE(4, "充值"),
+    PACKAGES(5, "套餐"),
 
     ;
 

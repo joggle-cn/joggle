@@ -49,8 +49,12 @@ public class ServerTunnelOpenController {
                 item.setOnlineTime("-");
                 return;
             }
-           String subTime =  DateTimeUtil.diffDate(item.getServerUpTime().getTime(), nowTime);
-           item.setOnlineTime(subTime);
+            Date time = item.getServerUpTime().compareTo(item.getServerDownTime()) >=0?item.getServerDownTime(): item.getServerUpTime();
+            if (time == null) {
+                time = new Date();
+            }
+            String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
+            item.setOnlineTime(subTime);
         });
         return R.ok(page);
     }

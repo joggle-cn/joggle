@@ -68,11 +68,38 @@
 		   dm.auth,
 		   dm.status,
 		   dm.server_tunnel_id,
-		   domain_id,
+		   dm.domain_id,
+		   td.bandwidth,
 			ifnull((select sum( a.bytes_in + a.bytes_out )/ 1024 / 1024 from data_metrics a
 					where a.mapping_id = dm.id  AND a.create_date = CURRENT_DATE ),0) todayFlow
 		from t_device_mapping dm
+		left join t_domain td on dm.domain_id = td.id
 		where dm.device_id = #{deviceId}
+
+	</select>
+
+
+    <select id="selectMapping4ProtocolByDeviceNo"
+            resultType="com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol">
+		select
+			dm.id,
+			dm.device_id,
+			dm.domain,
+			dm.port,
+			dm.host,
+			dm.createTime,
+			dm.protocol,
+			dm.description,
+			dm.userId,
+			dm.remote_port,
+			dm.hostname,
+			td.bandwidth
+		from t_device_mapping dm
+		left join t_domain td on dm.domain_id = td.id
+
+		where dm.status=1  and td.id >0
+		  and dm.device_id in (select id from t_device where deviceId = #{deviceNo})
+		  and td.due_time >= SYSDATE() or td.due_time is null
 
 	</select>
 

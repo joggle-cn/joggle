@@ -72,11 +72,12 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//�
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.payMoney = res.data.payAmount;
+                        $scope.salesPrice = res.data.price;
                         $scope.discountMoney = res.data.discountAmount;
                         $scope.dueTime = res.data.dueTime;
-                        if ($scope.amount != res.data.amount && $scope.payType != 4) {
-                            layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});
-                        }
+                        // if ($scope.amount != res.data.amount && $scope.payType != 4) {
+                        //     layer.msg("该通道服务器到期时间：<br/><b>" + res.data.serverEndTime + "</b>", {icon: 9});
+                        // }
                         $scope.amount = res.data.amount;
                     });
                 }else{

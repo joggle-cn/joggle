@@ -50,10 +50,10 @@
                   <thead>
                     <tr>
                       <th width="60">#</th>
-                      <th width="200">服务器地区</th>
-                      <th width="60">宽带</th>
-                      <th width="200">域名/端口</th>
-                      <th width="80">类型</th>
+                      <th width="260">服务器地区</th>
+                        <th width="80">类型</th>
+                      <th width="200">地址</th>
+                      <th width="80">宽带峰值</th>
                       <th width="200">价格</th>
                       <th width="80">状态</th>
                       <th>操作</th>
@@ -63,12 +63,13 @@
                     <tr ng-repeat="item in page.records">
                       <th scope="row">{{$index + 1+(page.current -1) * page.size}}</th>
                       <td>
-                        <span class="label label-info">{{item.tunnelArea}}</span> {{item.tunnelName}}</td>
-                      <td>{{item.tunnelBroadband}}Mbps</td>
+                        <span class="label label-info">{{item.tunnelArea}}</span> {{item.tunnelName}}<{{item.tunnelBroadband}}Mbps></td>
+
+                      <td ng-bind="item.typeName"></td>
                       <td>
                         <span class="label label-default item-domain">{{item.domain}}</span>
                       </td>
-                      <td ng-bind="item.typeName"></td>
+                      <td>{{item.bandwidth}}Mbps</td>
                       <td><i style="text-decoration: line-through;">{{item.originalPrice}}元/天</i> <b>{{item.salesPrice}}</b>元/天</td>
                       <td>
                         <span ng-if="item.status == 0" class="label label-success">可售</span>

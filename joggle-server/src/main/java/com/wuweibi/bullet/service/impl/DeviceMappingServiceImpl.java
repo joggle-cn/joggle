@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -152,6 +152,11 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
                 .eq(DeviceMapping::getDeviceId, deviceId)
                 .eq(DeviceMapping::getDomainId, domainId)
         );
+    }
+
+    @Override
+    public List<DeviceMappingProtocol> getMapping4ProtocolByDeviceNo(String deviceNo) {
+        return this.baseMapper.selectMapping4ProtocolByDeviceNo(deviceNo);
     }
 
 

@@ -7,12 +7,12 @@ import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.entity.DeviceWhiteIps;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
-import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.protocol.*;
@@ -106,6 +106,10 @@ public class Bullet3Annotation {
     public void end(CloseReason closeReason) {
         log.debug("websocket close [{}]", closeReason.toString());
         ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+
+        if (closeReason.getCloseCode().getCode() == 1001) { // 应用停止时主动关闭
+            return;
+        }
         serverTunnelService.updateStatus(tunnelId, 0);
     }
 
@@ -211,8 +215,8 @@ public class Bullet3Annotation {
         log.info("update device[{}] status=1", deviceNo);
         deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.ONLINE.status);
 
-        List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
-        for (DeviceMapping entity : list) {
+        List<DeviceMappingProtocol> list = deviceMappingService.getMapping4ProtocolByDeviceNo(deviceNo);
+        for (DeviceMappingProtocol entity : list) {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 log.info("device[{}] {}", deviceNo, data);

@@ -43,6 +43,8 @@ public class ServerTunnelNodeVO {
 
     @ApiModelProperty("通道上线时间")
     private Date serverUpTime;
+    @ApiModelProperty("通道离线时间")
+    private Date serverDownTime;
 
 
 }

@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.device.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -36,11 +37,14 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
 
     @Override
     public boolean updateStatus(Integer tunnelId, int status) {
-        return this.update(Wrappers.<ServerTunnel>lambdaUpdate()
+        LambdaUpdateWrapper<ServerTunnel> wp = Wrappers.<ServerTunnel>lambdaUpdate()
                 .eq(ServerTunnel::getId, tunnelId)
                 .set(ServerTunnel::getStatus, status)
-                .set(ServerTunnel::getServerUpTime, new Date())
-                );
+                .set(ServerTunnel::getServerUpTime, new Date());
+        if (status == 0) {// 离线
+            wp.set(ServerTunnel::getServerDownTime, new Date());
+        }
+        return this.update(wp);
     }
 
     @Override

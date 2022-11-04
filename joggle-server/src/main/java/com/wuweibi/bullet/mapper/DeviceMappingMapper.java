@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -85,4 +86,12 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @return
      */
     List<MappingDeviceVO> selectByDeviceId(@Param("deviceId") Long deviceId);
+
+
+    /**
+     * 根据设备编号查询设备映射清单
+     * @param deviceNo 设备编号
+     * @return
+     */
+    List<DeviceMappingProtocol> selectMapping4ProtocolByDeviceNo(@Param("deviceNo")String deviceNo);
 }

@@ -30,7 +30,6 @@ import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,10 +86,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
         Long userId  = ordersDTO.getUserId();
         Integer resourceType  = ordersDTO.getResourceType();
 
+
         if (amount.compareTo(0l) <= 0) {
             return R.fail("购买数量参数错误");
         }
-        BigDecimal payPrice = null;
         Date dueTime = null;
 
         OrderPayInfo orderPayInfo = new OrderPayInfo();
@@ -139,25 +138,30 @@ public class OrderPayBizImpl implements OrderPayBiz {
                     dueTime = userPackage.getEndTime();
                     long size = DateUtil.betweenDay(domain.getDueTime(), dueTime, true); // 计算两个时间的天数
                     amount = size == 0 ? 0 : new Long(size  -1);
-                } else {
-                    if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
-                        long size = DateUtil.betweenDay(domain.getDueTime(), serverTunnel.getServerEndTime(), true);
-                        dueTime = DateUtils.addDays(domain.getDueTime(), (int) size);
-                        amount = new Long(size);
-//                    return R.fail("该通道服务器到期时间：\n" + DateFormatUtils.format(serverTunnel.getServerEndTime(), "yyyy-MM-dd HH:mm:ss"));
-                    }
                 }
+//                else {
+//                    if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
+//                        long size = DateUtil.betweenDay(domain.getDueTime(), serverTunnel.getServerEndTime(), true);
+//                        dueTime = DateUtils.addDays(domain.getDueTime(), (int) size);
+//                        amount = new Long(size);
+////                    return R.fail("该通道服务器到期时间：\n" + DateFormatUtils.format(serverTunnel.getServerEndTime(), "yyyy-MM-dd HH:mm:ss"));
+//                    }
+//                }
 
                 // 计算价格 单价 * 天数
                 BigDecimal price = domain.getSalesPrice();
+//                if (amount < 7) { // 低于7天的按原价8折
+//                    price = domain.getOriginalPrice().multiply(BigDecimal.valueOf(0.35)).setScale(BigDecimal.ROUND_HALF_UP);
+//                }
                 BigDecimal payAmount = price.multiply(BigDecimal.valueOf(amount));
                 BigDecimal originalAmount = domain.getOriginalPrice().multiply(BigDecimal.valueOf(amount));
 
                 String name = ResourceTypeEnum.toName(resourceType);
                 orderPayInfo.setName(String.format("%s%s:%s", text, name , domain.getDomainFull()));
 
-                // 计算到期
-                orderPayInfo.setDueTime(dueTime.getTime());
+
+                orderPayInfo.setDueTime(dueTime.getTime()); // 计算到期
+                orderPayInfo.setPrice(price);
                 orderPayInfo.setAmount(amount);
                 orderPayInfo.setRealAmount(amount*24*60*60l);
                 orderPayInfo.setDiscountAmount(originalAmount.subtract(payAmount));

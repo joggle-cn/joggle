@@ -8,8 +8,10 @@ import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -26,6 +28,7 @@ import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -169,7 +172,12 @@ public class DeviceMappingController {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
 
-        JSONObject data = (JSONObject)JSON.toJSON(entity);
+        DeviceMappingProtocol deviceMappingProtocol = new DeviceMappingProtocol();
+        BeanUtils.copyProperties(entity, deviceMappingProtocol);
+        Domain domain = domainMapper.selectById(entity.getDomainId());
+        deviceMappingProtocol.setBandwidth(domain.getBandwidth());
+
+        JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
         Message msg;
         if (entity.getStatus() == 1) { // 启用映射
             msg = new MsgMapping(data.toJSONString());

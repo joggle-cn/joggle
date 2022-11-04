@@ -3,6 +3,7 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
@@ -17,6 +18,7 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
+import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
@@ -148,7 +150,12 @@ public class OpenController {
         userFlowService.save(userFlow);
 
         // 开通普通用户永久服务
-        userPackageManager.openService(user.getId(), 1, null);
+        R<UserPackage> r1 = userPackageManager.openService(user.getId(), 1, null);
+        if (r1.isFail()) {
+            throw new RException(r1);
+        }
+        UserPackage userPackage = r1.getData();
+
 
         if (status) {
             Long userId = user.getId();
@@ -184,16 +191,17 @@ public class OpenController {
             domain.setBuyTime(time);
             domain.setDueTime(dueTime);
             domain.setOriginalPrice(BigDecimal.valueOf(1));
-            domain.setSalesPrice(BigDecimal.valueOf(0.25));
+            domain.setSalesPrice(BigDecimal.valueOf(0.15));
             domain.setStatus(1);
             domain.setType(2);
+            domain.setBandwidth(userPackage.getBroadbandRate()); // 宽带速率mbps
+
             domainService.save(domain);
 
         }
 
         return R.success();
     }
-
 
     /**
      * 激活用户

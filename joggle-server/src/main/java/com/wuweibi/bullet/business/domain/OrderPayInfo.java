@@ -15,6 +15,9 @@ public class OrderPayInfo {
     // 原价
     private BigDecimal priceAmount;
 
+    @ApiModelProperty("单价")
+    private BigDecimal price;
+
     /**
      * 购买的时长(天)，购买的流量
      */
