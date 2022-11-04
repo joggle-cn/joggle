@@ -151,7 +151,6 @@ where up.user_id = uf.user_id;
 
 
 
--- 线上已执
 
 ALTER TABLE `t_domain`
     ADD COLUMN `bandwidth` int(10) NULL COMMENT '宽带限制 Mbps' AFTER `original_price`;
@@ -162,3 +161,5 @@ ALTER TABLE `t_server_tunnel`
     ADD COLUMN `server_down_time` datetime NULL COMMENT '通道服务器下线时间' AFTER `server_up_time`;
 
 update t_server_tunnel set server_down_time = server_up_time;
+
+-- 线上已执

@@ -99,7 +99,7 @@
 
 		where dm.status=1  and td.id >0
 		  and dm.device_id in (select id from t_device where deviceId = #{deviceNo})
-		  and td.due_time >= SYSDATE() or td.due_time is null
+		  and (td.due_time >= SYSDATE() or td.due_time is null)
 
 	</select>
 
