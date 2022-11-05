@@ -127,9 +127,7 @@
 		from t_device_mapping dm
 				 left join t_domain td on dm.domain_id = td.id
 				 left join user_package up on td.user_id = up.user_id
-		where dm.status=1 and td.id >0
-		  and dm.id = #{mappingId}
-		  and (td.due_time >= SYSDATE() or td.due_time is null)
+		where td.id >0 and dm.id = #{mappingId}
 	</select>
 
 </mapper>
