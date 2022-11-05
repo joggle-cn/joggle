@@ -1,9 +1,2 @@
 #!/bin/sh
-/opt/ngrok/bin/ngrokd \
--serverUrl="xxx.cn:8081" \
--domain=xx.com \
--httpAddr=:80 \
--httpsAddr=:443 \
--tunnelAddr=:8083 \
--serverTunnelId=3 \
--serverApiToken=xxx
+/opt/ngrok/bin/ngrokd

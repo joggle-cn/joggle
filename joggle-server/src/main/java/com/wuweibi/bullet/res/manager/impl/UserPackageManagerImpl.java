@@ -113,6 +113,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setName(resourcePackage.getName());
             userPackage.setResourcePackageId(resourcePackage.getId());
             userPackage.setConcurrentNum(resourcePackage.getConcurrentNum());
+            userPackage.setBroadbandRate(resourcePackage.getBroadbandRate());
             userPackage.setWolEnable(resourcePackage.getWolEnable());
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
             userPackage.setStartTime(new Date());
@@ -124,10 +125,14 @@ public class UserPackageManagerImpl implements UserPackageManager {
             if (userPackage.getLevel() > resourcePackage.getLevel()) {
                 return R.fail("套餐升级失败，原因不支持降级。");
             }
+            if (userPackage.getStartTime() == null) {
+                userPackage.setStartTime(new Date());
+            }
             userPackage.setLevel(resourcePackage.getLevel());
             userPackage.setName(resourcePackage.getName());
             userPackage.setResourcePackageId(resourcePackage.getId());
             userPackage.setConcurrentNum(resourcePackage.getConcurrentNum());
+            userPackage.setBroadbandRate(resourcePackage.getBroadbandRate());
             userPackage.setWolEnable(resourcePackage.getWolEnable());
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
         }

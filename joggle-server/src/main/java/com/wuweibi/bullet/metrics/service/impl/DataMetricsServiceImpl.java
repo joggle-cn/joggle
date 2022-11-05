@@ -68,6 +68,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
     @Transactional
     public R uploadData(DataMetricsDTO dataMetrics) {
         String deviceNo = dataMetrics.getDeviceNo();
+        log.debug("流量deviceNo={}->{}", deviceNo, dataMetrics.toString());
         DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
         if (deviceDetail == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);

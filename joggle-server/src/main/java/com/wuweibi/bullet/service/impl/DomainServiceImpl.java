@@ -23,6 +23,8 @@ import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
@@ -144,6 +146,11 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             return false;
         }
 
+        ResourcePackage resourcePackage = resourcePackageService.getByLevel(1);
+        if (resourcePackage == null) {
+            return false;
+        }
+
         if (dto.getType() == DomainTypeEnum.PORT.getType()) {
             Integer port = this.baseMapper.selectMaxPort(dto.getServerTunnelId());
             if (port == null) {
@@ -159,13 +166,14 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
                 domain.setSalesPrice(BigDecimal.valueOf(0.35)); //
                 domain.setStatus(DomainStatusEnum.BUY.getStatus());
                 domain.setServerTunnelId(dto.getServerTunnelId());// 默认通道
+                domain.setBandwidth(resourcePackage.getBroadbandRate());// 宽带
                 this.baseMapper.insert(domain);
             }
         }
 
 
-        if(dto.getType() == DomainTypeEnum.DOMAIN.getType()){
-            for (int i=0 ;i< 10;i++){
+        if (dto.getType() == DomainTypeEnum.DOMAIN.getType()) {
+            for (int i = 0; i < 10; i++) {
                 Domain domain = new Domain();
                 domain.setType(DomainTypeEnum.DOMAIN.getType());
                 domain.setCreateTime(new Date());
@@ -174,6 +182,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
                 domain.setSalesPrice(BigDecimal.valueOf(0.25));
                 domain.setStatus(DomainStatusEnum.BUY.getStatus());
                 domain.setServerTunnelId(dto.getServerTunnelId());// 默认通道
+                domain.setBandwidth(resourcePackage.getBroadbandRate());// 宽带
                 this.baseMapper.insert(domain);
             }
         }
@@ -205,16 +214,14 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public boolean releaseById(Long id) {
-
-        // TODO 存在映射释放映射
-
+    public boolean releaseById(ResourcePackage resourcePackageLevel1, Long domainId) {
+        // 存在映射释放映射
+        deviceMappingMapper.removeByDomainId(domainId);
 
         // 如果该域名是VIP权益的，扣除使用权益数量
-
-
         return this.update(Wrappers.<Domain>lambdaUpdate()
-                .eq(Domain::getId, id)
+                .eq(Domain::getId, domainId)
+                .set(Domain::getBandwidth, resourcePackageLevel1.getBroadbandRate())
                 .set(Domain::getUserId, null)
                 .set(Domain::getDueTime, null)
                 .set(Domain::getBuyTime, null)
@@ -232,9 +239,16 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Resource
     private BulletConfig bulletConfig;
 
+    @Resource
+    private ResourcePackageService resourcePackageService;
+
     @Override
     public boolean resourceDueTimeRelease() {
         log.debug("[资源到期释放] 开始");
+
+        // 基础套餐 level 1
+        ResourcePackage resourcePackageLevel1 = resourcePackageService.getByLevel(1);
+
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
         params.put("days", 2);
@@ -250,7 +264,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(),"yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s到期释放提醒", domain.getDomainFull());
 
-            this.releaseById(domain.getId());
+            this.releaseById(resourcePackageLevel1, domain.getId());
             mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
         }
         try {
@@ -275,8 +289,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public boolean updateUserDueTime(Long userId, Date endTime) {
-        return this.baseMapper.updateUserDueTime(userId, endTime);
+    public boolean updateUserDueTime(Long userId, Integer bandwidth, Date endTime) {
+        return this.baseMapper.updateUserDueTime(userId, bandwidth, endTime);
     }
 
 }

@@ -196,6 +196,12 @@ public class OrderPayBizImpl implements OrderPayBiz {
                     return R.fail("仅支持支付宝购买");
                 }
                 ResourcePackage resourcePackage =  resourcePackageService.getById(resId);
+                if (resourcePackage == null) {
+                    return R.fail("套餐不存在");
+                }
+                if (resourcePackage.getStatus() != 1) {
+                    return R.fail("套餐状态不允许购买");
+                }
                 UserPackage userPackage = userPackageService.getByUserId(ordersDTO.getUserId());
                 if (userPackage != null && userPackage.getLevel() > resourcePackage.getLevel()) {
                     return R.fail("请重新选择套餐，原因不支持降级。");
@@ -296,9 +302,11 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 }
                 UserPackage userPackage = r2.getData();
                 Date endTime = userPackage.getEndTime();
+                Integer bandwidth = userPackage.getBroadbandRate();
 
-                // 批量更新用户的权益内资源结束时间
-                domainService.updateUserDueTime(orders.getUserId(), endTime);
+
+                // 批量更新用户的权益内资源结束时间 & 套餐网速
+                domainService.updateUserDueTime(orders.getUserId(), bandwidth, endTime);
                 break;
         }
         return true;

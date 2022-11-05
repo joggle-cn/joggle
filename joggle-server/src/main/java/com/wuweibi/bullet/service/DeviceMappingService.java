@@ -130,4 +130,5 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
 
     List<DeviceMappingProtocol> getMapping4ProtocolByDeviceNo(String deviceNo);
 
+    DeviceMappingProtocol getMapping4ProtocolByMappingId(Long mappingId);
 }

@@ -11,6 +11,7 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -110,10 +111,12 @@ public interface DomainService extends IService<Domain> {
 
     /**
      * 释放资源id
-     * @param id domainId
+     *
+     * @param resourcePackageLevel1
+     * @param id                    domainId
      * @return
      */
-    boolean releaseById(Long id);
+    boolean releaseById(ResourcePackage resourcePackageLevel1, Long id);
 
     boolean resourceDueTimeRelease();
 
@@ -125,5 +128,5 @@ public interface DomainService extends IService<Domain> {
      */
     Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params);
 
-    boolean updateUserDueTime(Long userId, Date endTime);
+    boolean updateUserDueTime(Long userId, Integer bandwidth, Date endTime);
 }

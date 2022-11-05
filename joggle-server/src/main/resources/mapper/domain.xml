@@ -6,7 +6,8 @@
 
 	<update id="updateUserDueTime">
 		update t_domain d , user_package_rights upr set
-			d.due_time = #{endTime}
+			d.due_time = #{endTime},
+			d.bandwidth = if(#{bandwidth}>d.bandwidth,#{bandwidth},d.bandwidth)
 		where upr.resource_id = d.id and upr.resource_type in (1,2)
 		  and d.user_id = upr.user_id
 		  and d.user_id = #{userId}

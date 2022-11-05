@@ -159,5 +159,10 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         return this.baseMapper.selectMapping4ProtocolByDeviceNo(deviceNo);
     }
 
+    @Override
+    public DeviceMappingProtocol getMapping4ProtocolByMappingId(Long mappingId) {
+        return this.baseMapper.selectMapping4ProtocolByMappingId(mappingId);
+    }
+
 
 }

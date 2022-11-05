@@ -11,7 +11,6 @@ import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -28,7 +27,6 @@ import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -115,6 +113,7 @@ public class DeviceMappingController {
      * @param entity
      * @return
      */
+    @ApiOperation("更新映射信息")
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public R save(DeviceMapping entity ){
         Long userId = SecurityUtils.getUserId();
@@ -171,11 +170,10 @@ public class DeviceMappingController {
         if (annotation == null) {// 设备不在线
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
-
-        DeviceMappingProtocol deviceMappingProtocol = new DeviceMappingProtocol();
-        BeanUtils.copyProperties(entity, deviceMappingProtocol);
-        Domain domain = domainMapper.selectById(entity.getDomainId());
-        deviceMappingProtocol.setBandwidth(domain.getBandwidth());
+        DeviceMappingProtocol deviceMappingProtocol = deviceMappingService.getMapping4ProtocolByMappingId(entity.getId());
+        if (deviceMappingProtocol == null) {
+            return R.fail("映射信息不存在");
+        }
 
         JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
         Message msg;

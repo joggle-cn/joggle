@@ -46,6 +46,7 @@ define(['app','jquery','layer', 'css!./pay.css'], function (app, $, layer) {//åŠ
 
 
         $scope.$watch('amount', function(newVal, oldVal){
+            $scope.amount = parseInt(newVal);
             if(newVal != oldVal){
                 calculate();
             }

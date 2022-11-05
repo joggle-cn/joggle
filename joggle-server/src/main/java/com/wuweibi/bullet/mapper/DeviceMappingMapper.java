@@ -94,4 +94,8 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @return
      */
     List<DeviceMappingProtocol> selectMapping4ProtocolByDeviceNo(@Param("deviceNo")String deviceNo);
+
+    DeviceMappingProtocol selectMapping4ProtocolByMappingId(@Param("mappingId")Long mappingId);
+
+    boolean removeByDomainId(@Param("domainId")Long domainId);
 }

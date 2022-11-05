@@ -133,9 +133,11 @@ public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 批量更新用户所有权益域名的结束时间
-     * @param userId 用户id
-     * @param endTime 过期时间
+     *
+     * @param userId    用户id
+     * @param bandwidth
+     * @param endTime   过期时间
      * @return
      */
-    boolean updateUserDueTime( @Param("userId") Long userId,  @Param("endTime") Date endTime);
+    boolean updateUserDueTime(@Param("userId") Long userId, @Param("bandwidth") Integer bandwidth, @Param("endTime") Date endTime);
 }
