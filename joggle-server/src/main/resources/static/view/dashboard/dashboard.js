@@ -20,7 +20,7 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//加�
         $scope.deviceRank = [];
 		// 校验是否登录
 
-        // 加载用户登录信息
+        //
         faceinner.get(api['user.dashboard.statistics'], function(res){
             if(res.code == '040006'){ // 没有登录
                 window.location.href='#/login';
@@ -51,7 +51,6 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//加�
         $scope.isSelected = function (checkedTab) {/*页面的切换*/
             return this.tab === checkedTab;
         }
-        $scope.selectTab(1);
 
 
 
@@ -89,8 +88,8 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//加�
         }
         // 加载用户登录信息
         faceinner.get(api['user.dashboard.device.trend'], params, function(res){
-            if(res.code == '040006'){ // 没有登录
-                window.location.href='#/login';
+            if (res.code == '040006') { // 没有登录
+                window.location.href = '#/login';
             }
             $scope.$apply(function(){
                 option.xAxis.data = [];
@@ -109,6 +108,7 @@ define(['app','echarts','css!./dashboard.css'], function (app, echarts) {//加�
         });
 
 
+        $scope.selectTab(1);
 
 
     }];

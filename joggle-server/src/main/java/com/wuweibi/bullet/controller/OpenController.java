@@ -209,7 +209,7 @@ public class OpenController {
     @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
     public R activate(
             @RequestParam String code,// 激活码
-            @RequestParam(required = false) String inviteCode, // 邀请码
+            @RequestParam(required = false, name = "ic") String inviteCode, // 邀请码
             HttpServletRequest request) {
         return userService.activate(code, inviteCode);
     }

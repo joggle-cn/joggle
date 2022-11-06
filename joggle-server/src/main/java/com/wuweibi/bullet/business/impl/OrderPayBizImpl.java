@@ -98,8 +98,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
         switch (resourceType){
             case 1: // 域名
             case 2: // 端口
-                if (amount.compareTo(MAX_BUY_DAYS) > 0) {
-                    return R.fail("最大支持购买360天");
+                if (ordersDTO.getPayType() != PayTypeEnum.VIP.getType()) { // 非VIP权益支付
+                    if (amount.compareTo(MAX_BUY_DAYS) > 0) {
+                        return R.fail("最大支持购买360天");
+                    }
                 }
                 DomainDetail domain = domainService.getDetail(resId);
                 // 校验域名是否存在
