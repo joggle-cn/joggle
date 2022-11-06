@@ -66,9 +66,9 @@ public class HomeController {
         map.put("website", website);
         map.put("websiteUrl", websiteUrl);
         map.put("clientVersion", version);
-        map.put("serverVersion", "v1.3.0");
-        map.put("dockerClientVersion", "0.0.7");
-        map.put("apkClientVersion", "0.0.2");
+        map.put("serverVersion", "v1.3.3");
+        map.put("dockerClientVersion", "0.0.14");
+        map.put("apkClientVersion", "1.3.3");
 		resourceManager.loadResource();
 		return R.success(map);
 	}
