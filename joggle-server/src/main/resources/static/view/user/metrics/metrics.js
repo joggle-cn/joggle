@@ -47,7 +47,9 @@ define(['app','jquery','layer','pagintation', 'css!./metrics.css'], function (ap
                 if (res.code == 'S00') {
                     $scope.$apply(function() {
                         $scope.page = res.data;
-
+                        if(res.data.records.length == 0){
+                            return
+                        }
                         let $pager = $('#pagination');
                         $pager.empty();
                         $pager.removeData("twbs-pagination");
@@ -63,7 +65,7 @@ define(['app','jquery','layer','pagintation', 'css!./metrics.css'], function (ap
                             last :"尾页",
                             hideOnlyOnePage : true,
                             onPageClick :function(event,page){
-                                $scope.queryMetricsList(page)
+                                queryMetricsList(page)
                             }
                         });
                     });
