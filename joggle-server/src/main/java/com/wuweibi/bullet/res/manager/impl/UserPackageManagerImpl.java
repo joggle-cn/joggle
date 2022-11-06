@@ -143,7 +143,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
         if (amount != null) { // 购买数量空代表永久
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(userPackage.getEndTime());
-            calendar.add(Calendar.DATE, amount * 30);
+            calendar.add(Calendar.MONTH, amount);
             userPackage.setEndTime(calendar.getTime());
         }
 

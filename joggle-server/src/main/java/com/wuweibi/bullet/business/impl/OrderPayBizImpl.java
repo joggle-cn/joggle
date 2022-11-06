@@ -225,7 +225,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
                 calendar = Calendar.getInstance();
                 calendar.setTime(userPackage.getEndTime());
-                calendar.add(Calendar.DATE, amount.intValue()*30);
+                calendar.add(Calendar.MONTH, amount.intValue());
                 dueTime = calendar.getTime();
 
                 orderPayInfo.setDueTime(dueTime.getTime());
