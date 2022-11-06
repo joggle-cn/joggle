@@ -9,10 +9,6 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
-import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
-import com.wuweibi.bullet.system.domain.vo.UserListVO;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
@@ -20,8 +16,13 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -176,11 +177,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 如果存在邀请码的人存在，赠送流量给邀请人
         User inviteUser = this.getByInviteCode(inviteCode);
-        if (inviteUser != null) {
-            userFlowService.updateFLow(inviteUser.getId(), 1048576L);
+        if (inviteUser != null) { // 赠送到用户的套餐流量中
+            userPackageService.updateFLow(inviteUser.getId(), 1048576L);
         }
         return R.success();
     }
+
+    @Resource
+    private UserPackageService userPackageService;
 
 
 
