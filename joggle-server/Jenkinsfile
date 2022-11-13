@@ -68,7 +68,7 @@ pipeline {
                             if [ "$JAR_DEPLOY"  = "是" ];then
                                 scp -o StrictHostKeyChecking=no -l 4500 ./joggle-server/target/joggle-server.jar root@joggle.cn:/opt/data/springboot/prod/app.tmp.jar
                                 echo "bullet-server restart ....."
-                                ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart springboot-prod"
+                                ssh -o StrictHostKeyChecking=no root@joggle.cn "cd /opt/data/springboot/prod/ && mv -f app.tmp.jar app.jar && docker restart joggle-prod"
                             fi
                             if [ "$OSS_DEPLOY"  = "是" ];then
                                 echo "预处理前端页面"
