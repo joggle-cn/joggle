@@ -8,7 +8,7 @@ pipeline {
                       echo 'Deploying....'
                       sh '''
                          echo "copy admin web..."
-                         scp -rp -o StrictHostKeyChecking=no root@192.168.1.5:/tmp/joggleAdmin/dist/* ./joggle-server/src/main/resources/static/manager/;
+                         scp -rp -o StrictHostKeyChecking=no root@192.168.1.5:/opt/build/joggleAdmin/dist/* ./joggle-server/src/main/resources/static/manager/;
 
                          echo "fix ip"
 
