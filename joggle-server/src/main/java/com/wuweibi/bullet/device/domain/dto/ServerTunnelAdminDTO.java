@@ -51,6 +51,10 @@ public class ServerTunnelAdminDTO {
     @NotNull(message = "请选择启用扣量状态")
     private Integer enableFlow;
 
+    @ApiModelProperty("启用TLS 1是 0否")
+    @NotNull(message = "请选择启用TLS")
+    private Integer enableTls;
+
 
 
 

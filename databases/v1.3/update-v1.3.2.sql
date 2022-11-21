@@ -162,4 +162,10 @@ ALTER TABLE `t_server_tunnel`
 
 update t_server_tunnel set server_down_time = server_up_time;
 
+
+ALTER TABLE `t_server_tunnel`
+    ADD COLUMN `enable_tls` tinyint(1) NULL DEFAULT 0 COMMENT '启用TLS 1是 0否' AFTER `enable_flow`;
+
+
 -- 线上已执
+

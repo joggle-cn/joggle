@@ -6,6 +6,7 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
 import com.wuweibi.bullet.device.entity.Device;
@@ -30,6 +31,7 @@ import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -191,7 +193,7 @@ public class OpenController {
             domain.setBuyTime(time);
             domain.setDueTime(dueTime);
             domain.setOriginalPrice(BigDecimal.valueOf(1));
-            domain.setSalesPrice(BigDecimal.valueOf(0.15));
+            domain.setSalesPrice(BigDecimal.valueOf(0.25));
             domain.setStatus(1);
             domain.setType(2);
             domain.setBandwidth(userPackage.getBroadbandRate()); // 宽带速率mbps
@@ -310,6 +312,18 @@ public class OpenController {
         return R.success(data);
     }
 
+    @Resource
+    private WebsocketPool websocketPool;
+
+
+    @RequestMapping(value = "/ws")
+    public R ws(HttpServletRequest request) {
+        HashMap<String, String> data = new HashMap<>();
+        for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){
+            data.put(k.getKey(), k.getValue().toString());
+        }
+        return R.success(data);
+    }
 
     @Resource
     private DataMetricsService dataMetricsService;
