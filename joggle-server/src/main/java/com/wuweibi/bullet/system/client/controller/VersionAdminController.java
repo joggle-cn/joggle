@@ -65,7 +65,7 @@ public class VersionAdminController {
      */
     @PostMapping(value = "/update")
     public R update(@RequestBody String text, HttpServletRequest request) {
-        String[] lines = text.split("\r\n");
+        String[] lines = text.split("\n");
         for(String line: lines){
             String[] strings = line.split(":");
             String[] binPath = strings[0].split("/");
@@ -73,7 +73,7 @@ public class VersionAdminController {
             String os = oss[0];
             String arch = oss[1];
             String checksum = strings[1];
-            String version = strings[2];
+            String version = strings[2].trim();
             String binFilePath = strings[0];
             clientVersionService.updateChecksumByOsArch(version, os, arch,binFilePath, checksum);
         }
