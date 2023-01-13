@@ -34,7 +34,7 @@ steps:
 volumes:
   - name: mavenRep
     host:
-      path: /.m2
+      path: /opt/data/drone/.m2
   - name: dockerSock
     host:
       path: /var/run/docker.sock
