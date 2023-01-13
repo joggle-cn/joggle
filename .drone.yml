@@ -20,6 +20,7 @@ steps:
     settings:
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
+      dockerfile: joggle-server/Dockerfile
       build_args:
         JAR: joggle-server/target/joggle-server.jar
       username:
@@ -37,3 +38,12 @@ volumes:
   - name: dockerSock
     host:
       path: /var/run/docker.sock
+trigger:
+  event:
+    include:
+      - push
+      - pull_request
+  branch:
+    - master
+    - test
+    - dev
