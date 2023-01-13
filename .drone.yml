@@ -1,0 +1,40 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build
+    image: maven:3.8.6-jdk-8-slim
+    volumes:
+      - name: mavenRep
+        path: /root/.m2
+    commands:
+      - echo ${DRONE_BRANCH}
+      - mvn install -s settings.xml -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+  - name: image
+    image: plugins/docker
+
+    volumes:
+      - name: dockerSock
+        path: /var/run/docker.sock
+    settings:
+      mirror: https://dkwe3jow.mirror.aliyuncs.com
+      storage_path: /docker
+      build_args:
+        JAR: target/demo-0.0.1-SNAPSHOT.jar
+      username:
+        from_secret: registry_hub_username
+      password:
+        from_secret: registry_hub_password
+      repo: wuweiit/test
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+volumes:
+  - name: mavenRep
+    host:
+      path: /.m2
+  - name: dockerSock
+    host:
+      path: /var/run/docker.sock
