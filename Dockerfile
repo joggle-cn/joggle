@@ -1,4 +1,4 @@
-FROM ascdc/jdk8:latest
+FROM redspark/oracle-jdk-8:latest
 
 # 构建参数
 ARG JAR

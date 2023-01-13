@@ -5,24 +5,26 @@ name: default
 steps:
   - name: build
     image: maven:3.8.6-jdk-8-slim
+    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
     volumes:
       - name: mavenRep
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
-      - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - mvn package -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
   - name: image
     image: plugins/docker
+    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
     volumes:
       - name: dockerSock
         path: /var/run/docker.sock
     settings:
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
-      dockerfile: build/server/Dockerfile
+      dockerfile: Dockerfile
       build_args:
-        JAR: joggle-server/target/joggle-server.jar
+        JAR: ./joggle-server/target/joggle-server.jar
       username:
         from_secret: registry_hub_username
       password:
