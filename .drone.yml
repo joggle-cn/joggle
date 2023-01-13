@@ -14,7 +14,6 @@ steps:
 
   - name: image
     image: plugins/docker
-
     volumes:
       - name: dockerSock
         path: /var/run/docker.sock
@@ -22,12 +21,12 @@ steps:
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       build_args:
-        JAR: target/demo-0.0.1-SNAPSHOT.jar
+        JAR: joggle-server/target/joggle-server.jar
       username:
         from_secret: registry_hub_username
       password:
         from_secret: registry_hub_password
-      repo: wuweiit/test
+      repo: wuweiit/joggle-server
       tags:
         - latest
         - ${DRONE_BUILD_NUMBER}
