@@ -10,7 +10,7 @@ steps:
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
-      - mvn install -s settings.xml -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
   - name: image
     image: plugins/docker
