@@ -4,7 +4,7 @@ FROM ascdc/jdk8:latest
 ARG JAR
 
 # 工作空间
-WORKDIR /opt/bullet-server
+WORKDIR /app
 
 # 开发者
 MAINTAINER docker_user admin@wuweibi.com
@@ -12,8 +12,6 @@ MAINTAINER docker_user admin@wuweibi.com
 ARG VERSION='0.0.1'
 # 时区处理
 ENV TZ Asia/Shanghai
-# Bullet设备编码
-ENV NGROKD_BIN '/opt/bullet-server/bin/ngrokd'
 
 # 邮箱配置
 ENV BULLET_MAIL_USERNAME notice@wuweibi.com
@@ -31,15 +29,14 @@ ENV BULLET_MYSQL_PASSWORD 123
 # 中文乱码处理
 ENV LANG C.UTF-8
 
+# maven输出的jar包复制到镜像中
+COPY $JAR /app/app.jar
 
-# 容器内部文件处理
-ADD ../build/server/bin /opt/bullet-server/bin/
-ADD ../build/server/conf /opt/bullet-server/conf/
-ADD ./target/bullet-server.jar /opt/bullet-server/lib/bullet-server.jar
-ADD ../build/server/logs /opt/bullet-server/logs/
+# 日志输出目录
+RUN mkdir -p /data
 
 # 导出的端口
 EXPOSE 8081
 
 # 启动项目命令
-ENTRYPOINT ["/opt/bullet-server/bin/bullet-server"]
+CMD java -jar /app/app.jar

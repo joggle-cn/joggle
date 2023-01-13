@@ -20,7 +20,7 @@ steps:
     settings:
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
-      dockerfile: joggle-server/Dockerfile
+      dockerfile: build/server/Dockerfile
       build_args:
         JAR: joggle-server/target/joggle-server.jar
       username:
