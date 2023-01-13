@@ -36,10 +36,7 @@ ADD ./target/bullet-server.jar /opt/bullet-server/lib/bullet-server.jar
 ADD ../build/server/logs /opt/bullet-server/logs/
 
 # 导出的端口
-EXPOSE 8083
 EXPOSE 8081
-EXPOSE 80
-EXPOSE 443
 
 # 启动项目命令
 ENTRYPOINT ["/opt/bullet-server/bin/bullet-server"]
