@@ -21,16 +21,16 @@ steps:
         path: /var/run/docker.sock
     settings:
       insecure: false
-      registry: registry.cn-chengdu.aliyuncs.com
+      registry: 192.168.1.6:32588
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       dockerfile: Dockerfile
       build_args: JAR=./joggle-server/target/joggle-server.jar
       username:
-        from_secret: registry_aliyun_username
+        from_secret: registry_nexus_username
       password:
-        from_secret: registry_aliyun_password
-      repo: registry.cn-chengdu.aliyuncs.com/wuweiit/joggle-server
+        from_secret: registry_nexus_password
+      repo: 192.168.1.6:32588/wuweiit/joggle-server
       tags:
         - latest
         - ${DRONE_BUILD_NUMBER}
