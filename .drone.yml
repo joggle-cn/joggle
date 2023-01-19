@@ -11,7 +11,7 @@ steps:
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
-      - mvn package -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - mvn package -DskipTests=true -Dmaven.javadoc.skip=true
 
   - name: image
     image: plugins/docker
