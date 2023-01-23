@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.controller;
 
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.domain.vo.CountVO;
@@ -52,7 +53,11 @@ public class HomeController {
 	@Resource
 	private ClientVersionService clientVersionService;
 
-    /**
+
+	@Resource
+	private WebsocketPool websocketPool;
+
+	/**
      * 初始化接口
      * @return
      */
@@ -69,6 +74,7 @@ public class HomeController {
         map.put("serverVersion", "v1.3.3");
         map.put("dockerClientVersion", "0.0.14");
         map.put("apkClientVersion", "1.3.3");
+        map.put("websocketConn", websocketPool.getInfo());
 		resourceManager.loadResource();
 		return R.success(map);
 	}

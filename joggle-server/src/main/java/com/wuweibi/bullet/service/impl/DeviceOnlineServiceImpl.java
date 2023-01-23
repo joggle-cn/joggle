@@ -5,14 +5,18 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
+import com.wuweibi.bullet.device.entity.DeviceOnlineLog;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.DeviceOnlineLogService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     @Resource
     private DeviceMapper deviceMapper;
+
+    @Resource
+    private DeviceOnlineLogService deviceOnlineLogService;
 
 
     @Override
@@ -168,9 +175,30 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         return true;
     }
 
+    @Resource
+    private DeviceService deviceService;
+
     @Override
     public boolean updateDeviceStatus(String deviceNo, int status) {
-        return this.baseMapper.updateDeviceStatus(deviceNo, status);
+        DeviceDetail deviceDetail = this.deviceService.getDetailByDeviceNo(deviceNo);
+        if (deviceDetail == null) {
+            return false;
+        }
+        this.baseMapper.updateDeviceStatus(deviceNo, status);
+
+        DeviceOnlineLog deviceOnlineLog = new DeviceOnlineLog();
+        deviceOnlineLog.setDeviceId(deviceDetail.getId());
+        deviceOnlineLog.setMacAddr(deviceDetail.getMacAddr());
+        deviceOnlineLog.setIntranetIp(deviceDetail.getIntranetIp());
+        deviceOnlineLog.setPublicIp(deviceDetail.getPublicIp());
+        deviceOnlineLog.setStatus(status);
+        deviceOnlineLog.setServerTunnelId(deviceDetail.getServerTunnelId());
+        deviceOnlineLog.setArch(deviceDetail.getArch());
+        deviceOnlineLog.setOs(deviceDetail.getOs());
+        deviceOnlineLog.setCreateTime(new Date());
+        deviceOnlineLog.setUpdateTime(new Date());
+        this.deviceOnlineLogService.save(deviceOnlineLog);
+        return true;
     }
 
     @Override

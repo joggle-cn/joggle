@@ -104,9 +104,9 @@ public class ConfigUtils {
             return domain;
         }
 
-        String bulletDomain = System.getProperty("BULLET_DOMAIN");
+        String bulletDomain = System.getProperty("JOGGLE_DOMAIN");
         if (StringUtils.isNotBlank(bulletDomain)) {
-            logger.debug("读取env BULLET_DOMAIN={}", bulletDomain);
+            logger.debug("读取env domain={}", bulletDomain);
             return bulletDomain;
         }
 

@@ -5,6 +5,7 @@ import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -147,4 +148,14 @@ public final class WebsocketPool {
         log.info("============= clientConnections size {} ============= ", this.clientConnections.size());
     }
 
+    public Object getInfo() {
+        Map<String, String> data =  new HashMap<>();
+        for(Map.Entry<String, Bullet3Annotation> item:clientConnections.entrySet()){
+            data.put(item.getKey(), item.getValue().toString());
+        };
+
+
+
+        return data;
+    }
 }

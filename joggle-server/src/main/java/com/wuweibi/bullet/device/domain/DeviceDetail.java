@@ -60,6 +60,7 @@ public class DeviceDetail extends Model<DeviceDetail> {
 
 	@ApiModelProperty("CPU架构")
 	private String arch;
+	private String macAddr;
 
 
 	@Override

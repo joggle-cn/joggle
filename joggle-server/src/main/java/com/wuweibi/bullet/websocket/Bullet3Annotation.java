@@ -22,6 +22,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.Utils;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,7 @@ import static com.wuweibi.bullet.protocol.Message.*;
  * @version 1.0
  */
 @Slf4j
+@ToString
 @ServerEndpoint(value = "/inner/open/ws/{tunnelId}", configurator = WebSocketConfigurator.class)
 public class Bullet3Annotation {
  
@@ -60,6 +62,11 @@ public class Bullet3Annotation {
      * 设备ID
      */
     private Integer tunnelId;
+
+    /**
+     * 登录的ip地址
+     */
+    private String ip;
 
 
     public Bullet3Annotation() {  }
@@ -137,7 +144,7 @@ public class Bullet3Annotation {
                     String clientNo = msgAuthResp.getClientNo();
                     this.sendMappingInfo(clientNo);
                     break;
-                case Message.AUTH:// 认证
+                case Message.AUTH:// 认证（废弃）
                     MsgAuth msgAuth = new MsgAuth(head);
                     msgAuth.read(bis);
                     break;
@@ -235,6 +242,7 @@ public class Bullet3Annotation {
             devicePeersService.sendMsgPeerConfig(configDTO);
         }
 
+        // 发送ip白名单信息
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
         if (deviceDetail != null) {

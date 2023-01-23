@@ -14,7 +14,7 @@ spring:
       exclude: classpath:/static/**
       # additional-paths: classpath:/static
 
-BULLET_SERVER_URL: "http://localhost:8081"
+JOGGLE_SERVER_URL: "http://localhost:8081"
 
 ## 支付宝配置 [沙箱环境]
 ALIPAY_MERCHANT_APPID: 2021000121630337
