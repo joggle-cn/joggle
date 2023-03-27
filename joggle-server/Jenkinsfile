@@ -23,7 +23,7 @@ pipeline {
                           fi
                          if [ "$BRANCH_NAME"  = "prod" ];then
                             sed -ie 's/http:\\/\\/joggle-server:8081/https:\\/\\/api.joggle.cn:1443/g' joggle-server/src/main/resources/static/js/faceinner.ajax.js
-                            sed -ie 's/https:\\/\\/api.joggle.cn:1443//g' joggle-server/src/main/resources/static/manager/static/js/app.js
+//                             sed -ie 's/https:\\/\\/api.joggle.cn:1443//g' joggle-server/src/main/resources/static/manager/static/js/app.js
 //                             sed -ie 's/http:\\/\\/joggle-server:8081//g' joggle-server/src/main/resources/static/manager/static/js/app.js
                          fi
 
