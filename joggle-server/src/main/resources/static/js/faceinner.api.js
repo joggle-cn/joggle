@@ -87,6 +87,7 @@ let api = {
     "user.dashboard.statistics": '/api/dashboard/statistics',
     "user.dashboard.device.rank": '/api/dashboard/device/rank',
     "user.dashboard.device.trend": '/api/dashboard/device/trend',
+    "dashboard.flow.trend": '/api/open/all/flow/trend',
 
     "user.orders.calculate": '/api/orders/calculate',
     "user.orders.create": '/api/orders/create',

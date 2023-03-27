@@ -3,13 +3,17 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
@@ -21,10 +25,7 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
-import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.service.MailService;
-import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.service.*;
 import com.wuweibi.bullet.system.client.entity.ClientVersion;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.entity.User;
@@ -327,6 +328,24 @@ public class OpenController {
 
     @Resource
     private DataMetricsService dataMetricsService;
+
+    @Resource
+    private CountService countService;
+
+
+    /**
+     * 近30日流量情况
+     * @return
+     */
+    @ApiOperation("近30日流量情况")
+    @GetMapping("/all/flow/trend")
+    @ResponseBody
+    public R<List<DeviceCountInfoVO>> getFlowTrend(
+            @JwtUser Session session){
+        int day = 30;
+        List<DeviceDateItemVO> list = countService.getAllFlowTrend(day);
+        return R.success(list);
+    }
 
 
     /**

@@ -5,7 +5,8 @@
 
 #index .jumbotron {
     position: relative;
-    padding: 40px 0;
+    padding: 0px 0;
+    padding-top: 40px;
     color: #fff;
     text-align: center;
     text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);

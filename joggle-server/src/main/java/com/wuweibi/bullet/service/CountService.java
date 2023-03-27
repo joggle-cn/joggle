@@ -45,4 +45,6 @@ public interface CountService {
      * @return
      */
     List<DeviceDateItemVO> getUserDeviceTrend(Long userId, Long deviceId);
+
+    List<DeviceDateItemVO> getAllFlowTrend(int day);
 }
