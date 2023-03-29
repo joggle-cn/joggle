@@ -11,31 +11,85 @@ steps:
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
-      - scp -rp -o StrictHostKeyChecking=no root@192.168.1.5:/opt/build/joggleAdmin/dist/* ./joggle-server/src/main/resources/static/manager/;
       - mvn package -DskipTests=true -Dmaven.javadoc.skip=true
 
-#  - name: image
-#    image: plugins/docker
-#    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
-#    volumes:
-#      - name: dockerSock
-#        path: /var/run/docker.sock
+
+#  - name: scp to ${DRONE_BRANCH}
+#    image: appleboy/drone-scp
 #    settings:
-#      insecure: false
-#      registry: 192.168.1.6:32588
-#      mirror: https://dkwe3jow.mirror.aliyuncs.com
-#      storage_path: /docker
-#      dockerfile: Dockerfile
-#      build_args: JAR=./joggle-server/target/joggle-server.jar
-#      username:
-#        from_secret: registry_nexus_username
+#      host: joggle.cn
+#      username: root
 #      password:
-#        from_secret: registry_nexus_password
-#      repo: 192.168.1.6:32588/wuweiit/joggle-server
-#      tags:
-#        - latest
-#        - ${DRONE_BUILD_NUMBER}
+#        from_secret: dev_pass
+#      port: 22
+#      strip_components: 1
+#      target: /home/pzds/${DRONE_REPO_NAME}
+#      source: joggle-server/target/joggle-server.jar
+#    when:
+#      branch:
+#        - dev
+
+  - name: image
+    image: plugins/docker
+    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
+    volumes:
+      - name: dockerSock
+        path: /var/run/docker.sock
+    settings:
+      insecure: false
+      registry: 192.168.1.6:32588
+      mirror: https://dkwe3jow.mirror.aliyuncs.com
+      storage_path: /docker
+      dockerfile: Dockerfile
+      build_args: JAR=./joggle-server/target/joggle-server.jar
+      username:
+        from_secret: registry_nexus_username
+      password:
+        from_secret: registry_nexus_password
+      repo: 192.168.1.6:32588/wuweiit/joggle-server
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+    when:
+      branch:
+        - dev
+
+  - name: deploy-to-test
+    pull: if-not-exists
+    image: registry.cn-hangzhou.aliyuncs.com/sanchar/kubectl:v1.20.1
+    extra_hosts:
+      - lb.kubesphere.local:192.168.1.6
+    volumes:
+      - name: kube
+        path: /root/.kube
+    commands:
+      - kubectl --kubeconfig /root/.kube/config set image deployment/${DRONE_REPO_NAME} *='192.168.1.6:32588/wuweiit/joggle-server:${DRONE_BUILD_NUMBER}' -n home
+    when:
+      branch:
+        - dev
+
+
+  - name: clean image
+    image: plugins/docker
+    pull: if-not-exists
+    volumes:
+      - name: dockerSock
+        path: /var/run/docker.sock
+    commands:
+      - if [ "${DRONE_BRANCH}" = "dev" ];then docker rmi -f $(docker image ls --filter=reference="192.168.1.6:32588/wuweiit/joggle-server:*" -q); fi
+      - if [ "${DRONE_BRANCH}" = "test" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/paazhi/${DRONE_REPO_NAME}:*" -q); fi
+      - if [ "${DRONE_BRANCH}" = "prod" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/panzhi/${DRONE_REPO_NAME}:*" -q); fi
+    when:
+      branch:
+        - dev
+        - test
+        - prod
+
+
 volumes:
+  - name: kube
+    host:
+      path: /root/.kube
   - name: mavenRep
     host:
       path: /opt/data/drone/.m2
