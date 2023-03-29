@@ -11,29 +11,30 @@ steps:
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
+      - scp -rp -o StrictHostKeyChecking=no root@192.168.1.5:/opt/build/joggleAdmin/dist/* ./joggle-server/src/main/resources/static/manager/;
       - mvn package -DskipTests=true -Dmaven.javadoc.skip=true
 
-  - name: image
-    image: plugins/docker
-    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
-    volumes:
-      - name: dockerSock
-        path: /var/run/docker.sock
-    settings:
-      insecure: false
-      registry: 192.168.1.6:32588
-      mirror: https://dkwe3jow.mirror.aliyuncs.com
-      storage_path: /docker
-      dockerfile: Dockerfile
-      build_args: JAR=./joggle-server/target/joggle-server.jar
-      username:
-        from_secret: registry_nexus_username
-      password:
-        from_secret: registry_nexus_password
-      repo: 192.168.1.6:32588/wuweiit/joggle-server
-      tags:
-        - latest
-        - ${DRONE_BUILD_NUMBER}
+#  - name: image
+#    image: plugins/docker
+#    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
+#    volumes:
+#      - name: dockerSock
+#        path: /var/run/docker.sock
+#    settings:
+#      insecure: false
+#      registry: 192.168.1.6:32588
+#      mirror: https://dkwe3jow.mirror.aliyuncs.com
+#      storage_path: /docker
+#      dockerfile: Dockerfile
+#      build_args: JAR=./joggle-server/target/joggle-server.jar
+#      username:
+#        from_secret: registry_nexus_username
+#      password:
+#        from_secret: registry_nexus_password
+#      repo: 192.168.1.6:32588/wuweiit/joggle-server
+#      tags:
+#        - latest
+#        - ${DRONE_BUILD_NUMBER}
 volumes:
   - name: mavenRep
     host:
@@ -45,7 +46,7 @@ trigger:
   event:
     include:
       - push
-      - pull_request
+      - custom
   branch:
     - master
     - test
