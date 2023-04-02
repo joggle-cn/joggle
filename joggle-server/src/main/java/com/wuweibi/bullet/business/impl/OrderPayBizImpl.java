@@ -138,7 +138,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()) { // VIP权益支付
                     UserPackage userPackage = userPackageService.getById(userId);
                     dueTime = userPackage.getEndTime();
-                    long size = DateUtil.betweenDay(domain.getDueTime(), dueTime, true); // 计算两个时间的天数
+                    Date startTime = domain.getDueTime()==null?new Date():domain.getDueTime();
+                    long size = DateUtil.betweenDay(startTime, dueTime, true); // 计算两个时间的天数
                     amount = size == 0 ? 0 : new Long(size  -1);
                 }
 //                else {
