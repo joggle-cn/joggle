@@ -54,28 +54,30 @@
 		<div class="col-md-3">
 			<div class="mapping-feature-item">
 				<h5>线路 <a href ng-click="switchLineDialog()">切换</a></h5>
-				<p><span ng-bind="deviceInfo.lineName"></span> <{{deviceInfo.broadband}}mbps></p>
+				<p>
+					<span class="label label-info">{{deviceInfo.broadband}}Mbps</span>
+				</p>
 			</div>
 		</div>
-		<div class="col-md-2 col-xs-6">
-			<div class="mapping-feature-item">
-				<h5>并发连接 <a href ng-click="upgradeConnect()">升级</a></h5>
-				<p><span class="label label-info">{{deviceInfo.concurrentNum}}个</span> </p>
-			</div>
-		</div>
-		<div class="col-md-2 col-xs-6">
+<!--		<div class="col-md-2 col-xs-6">-->
+<!--			<div class="mapping-feature-item">-->
+<!--				<h5>并发连接 <a href ng-click="upgradeConnect()">升级</a></h5>-->
+<!--				<p><span class="label label-info">{{deviceInfo.concurrentNum}}个</span> </p>-->
+<!--			</div>-->
+<!--		</div>-->
+		<div class="col-md-3 col-xs-6">
 			<div class="mapping-feature-item">
 				<h5>公网IP</h5>
 				<p>{{deviceInfo.publicIp}}</p>
 			</div>
 		</div>
-		<div class="col-md-2 col-xs-6">
+		<div class="col-md-3 col-xs-6">
 			<div class="mapping-feature-item">
 				<h5>域名</h5>
 				<p>{{features.domainCount}}个</p>
 			</div>
 		</div>
-		<div class="col-md-2 col-xs-6">
+		<div class="col-md-3 col-xs-6">
 			<div class="mapping-feature-item">
 				<h5>端口</h5>
 				<p>{{features.portCount}}个</p>
@@ -106,6 +108,7 @@
 				  <th width="140">外网地址</th>
 				  <th width="140">内网地址</th>
 				  <th width="60">宽带峰值</th>
+				  <th width="60">最大并发</th>
 				  <th width="60">今日流量</th>
 				  <th width="35">状态</th>
 				  <th width="120">备注</th>
@@ -121,6 +124,7 @@
 					  <span ng-if="item.protocol == 5">udp://{{item.host}}:{{item.port}}</span>
 				  </td>
 				  <td>{{item.bandwidth}}Mbps</td>
+				  <td>{{item.concurrentNum}}</td>
 				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>
@@ -157,6 +161,7 @@
 				  <th width="140">外网地址</th>
 				  <th width="140">内网地址</th>
 				  <th width="60">宽带峰值</th>
+				  <th width="60">最大并发</th>
 				  <th width="60">今日流量</th>
 				  <th width="35">状态</th>
 				  <th width="120">备注</th>
@@ -175,6 +180,7 @@
 					  <span ng-if="item.protocol == 1 || item.protocol == 3 || item.protocol == 4 ">{{item.host}}:{{item.port}}</span>
 				  </td>
 				  <td>{{item.bandwidth}}Mbps</td>
+				  <td>{{item.concurrentNum}}</td>
 				  <td>{{item.todayFlow}}</td>
 				  <td>
 					  <span class="label label-success" ng-if="item.status == 1">启用</span>

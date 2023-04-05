@@ -105,6 +105,10 @@ spring:
     type: PER_CLIENT
     ignoreUrls:
       - /inner/**
+      - /css/**
+      - /js/**
+      - /lib/**
+      - /resource/**
 
   # 数据库配置
   datasource:

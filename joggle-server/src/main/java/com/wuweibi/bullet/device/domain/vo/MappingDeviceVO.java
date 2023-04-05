@@ -87,5 +87,8 @@ public class MappingDeviceVO {
 	@ApiModelProperty("宽带mbps")
 	private Integer bandwidth;
 
+	@ApiModelProperty("最大并发连接数")
+	private Integer concurrentNum;
+
 
 }
