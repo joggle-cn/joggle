@@ -19,4 +19,4 @@ echo "              \  \ `-.   \_\_`. _.'_/_/  -' _.' /       "
 echo "            ===`-.`___`-.__\ \___  /__.-'_.'_.-'===     "
 setlocal
 
-joggle-service.exe install
+service.exe install
