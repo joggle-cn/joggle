@@ -140,4 +140,6 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * @return
      */
     boolean updateUserDueTime(@Param("userId") Long userId, @Param("bandwidth") Integer bandwidth, @Param("endTime") Date endTime);
+
+    Domain selectByMappingId(Long mappingId);
 }

@@ -132,5 +132,11 @@
 			</if>
 		</where>
 	</select>
+    <select id="selectByMappingId" resultType="com.wuweibi.bullet.domain2.entity.Domain">
+		select a.*
+		from t_domain a
+		left join t_device_mapping cv on a.id = cv.domain_id
+		where cv.id = #{mappingId}
+	</select>
 
 </mapper>

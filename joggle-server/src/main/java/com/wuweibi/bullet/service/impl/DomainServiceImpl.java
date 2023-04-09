@@ -293,4 +293,15 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.baseMapper.updateUserDueTime(userId, bandwidth, endTime);
     }
 
+    @Override
+    public Domain getByMappingId(Long mappingId) {
+        return baseMapper.selectByMappingId(mappingId);
+    }
+
+    @Override
+    public boolean exists(Long domainId) {
+        return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
+                .eq(Domain::getId, domainId)) > 0;
+    }
+
 }

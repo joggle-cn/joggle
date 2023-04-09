@@ -314,6 +314,7 @@ public class Bullet3Annotation {
      * @param message 消息
      * @throws IOException
      */
+    @Deprecated
     public void sendObject(Object message) throws IOException {
         Message message1 = (Message) message;
 
