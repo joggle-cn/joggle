@@ -25,7 +25,7 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring.version>5.3.20</spring.version>
+        <spring.version>5.3.27</spring.version>
     </properties>
 
 
