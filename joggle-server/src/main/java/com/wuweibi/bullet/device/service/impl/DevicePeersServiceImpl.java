@@ -63,9 +63,10 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         entity.setCreateTime(new Date());
         entity.setUpdateTime(entity.getCreateTime());
         entity.setStatus(dto.getStatus());
+        entity.setServerMtu(dto.getClientMtu());
+        entity.setClientMtu(dto.getClientMtu());
 
         this.baseMapper.insert(entity);
-
 
         String appName = DigestUtils.md5Hex(String.valueOf(entity.getId()));
         entity.setAppName(appName);
@@ -104,6 +105,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setHost(dto.getServerLocalHost());
             doorConfig.setType(PeerConfig.SERVER);
             doorConfig.setEnable(dto.getStatus());
+            doorConfig.setMtu(dto.getServerMtu());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(serverDeviceNo, msg);
@@ -117,6 +119,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setHost(dto.getClientProxyHost());
             doorConfig.setType(PeerConfig.CLIENT);
             doorConfig.setEnable(dto.getStatus());
+            doorConfig.setMtu(dto.getClientMtu());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(clientDeviceNo, msg);

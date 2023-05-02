@@ -32,6 +32,7 @@
                dp.`server_local_port`, dp.`server_local_host`, dp.`client_proxy_port`,
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
+               dp.`client_mtu`, dp.`server_mtu`, dp.`server_mtu` as mtu,
                dc.deviceId clientDeviceNo,
                (select intranet_ip from t_device_online do where do.deviceNo = dc.deviceId) clientDeviceIp,
                ds.deviceId serverDeviceNo,

@@ -39,6 +39,7 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("服务侧设备No")
     private String serverDeviceNo;
     private Integer serverDeviceTunnelId;
+    private Integer serverMtu;
 
     /**
      * 客户侧设备id
@@ -49,6 +50,8 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("客户侧设备No")
     private String clientDeviceNo;
     private Integer clientDeviceTunnelId;
+    private Integer clientMtu;
+
 
     /**
      * 服务侧本地端口

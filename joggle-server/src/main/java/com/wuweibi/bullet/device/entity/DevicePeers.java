@@ -51,7 +51,10 @@ public class DevicePeers {
      */
     @ApiModelProperty("服务侧本地端口")
  	private Integer serverLocalPort;
-    
+
+    @ApiModelProperty("服务侧MTU")
+ 	private Integer serverMtu;
+
     /**
      * 客户侧代理端口
      */
@@ -65,6 +68,9 @@ public class DevicePeers {
 
     @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
     private String clientProxyHost;
+
+    @ApiModelProperty("客户侧MTU")
+    private Integer clientMtu;
 
 
     @ApiModelProperty("备注")

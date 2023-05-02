@@ -15,4 +15,6 @@ public class PeerConfig {
     private String host;
 
     private Integer enable;
+
+    private Integer mtu;
 }

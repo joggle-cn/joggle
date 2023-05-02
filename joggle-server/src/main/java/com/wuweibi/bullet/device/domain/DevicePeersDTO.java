@@ -66,6 +66,9 @@ public class DevicePeersDTO {
     @ApiModelProperty("状态 1启用 0禁用")
  	private Integer status;
 
+    @ApiModelProperty("通信MTU 默认：1350")
+ 	private Integer clientMtu = 1350;
+
 
 
 }
