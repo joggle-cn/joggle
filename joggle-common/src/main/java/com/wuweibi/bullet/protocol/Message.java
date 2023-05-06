@@ -34,6 +34,8 @@ public abstract class Message {
 
     public static final int DEVICE_METRICS = 0x10000015; // 统计数据
 
+    public static final int CHECK_UPDATE = 0x10000016; // 检查更新
+
 
     public static final int NEW_MAPPING = 0x6;
     public static final int NEW_UNMAPPING = 0x60000001;
