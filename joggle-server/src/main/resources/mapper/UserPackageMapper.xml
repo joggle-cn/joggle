@@ -73,6 +73,7 @@
         select
             up.user_id,
             up.resource_package_id,
+            rp.name,
             up.`level`,
             up.`flow`,
             up.`name`,

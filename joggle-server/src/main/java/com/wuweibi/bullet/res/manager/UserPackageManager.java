@@ -22,5 +22,8 @@ public interface UserPackageManager {
      */
     R expireFree();
 
+    /**
+     * 重置流量数量
+     */
     void resetPackageFlow();
 }

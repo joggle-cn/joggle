@@ -40,7 +40,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * 每10秒点执行检查是否过期，过期域名，自动关闭映射
+     * 每10秒点执行检查域名是否过期，过期域名，自动关闭映射
      */
     @Scheduled(fixedRate = 1000*10)
     public void checkStatus() {
@@ -58,7 +58,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * 到期超过2天未续费的资源释放。
+     * VIP到期超过2天未续费的资源释放。
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void resourceDueTimeRelease() {
@@ -79,6 +79,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
     /**
      * 发放套餐流量（每月1日 00:00:00）
+     * email提醒
      */
     @Scheduled(cron = "0 0 0 1 * ?")
     public void resetFlow() {
