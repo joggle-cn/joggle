@@ -26,7 +26,7 @@ public class Orders extends Model<Orders> {
     private String orderNo;
     //用户id
     private Long userId;
-    //资源类型 1域名 2端口 3流量 4 充值
+    //资源类型 1端口 2域名 3流量 4 充值
     private Integer resourceType;
     //资源id
     private Long domainId;

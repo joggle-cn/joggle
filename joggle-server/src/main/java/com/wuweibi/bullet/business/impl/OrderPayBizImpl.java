@@ -300,13 +300,12 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 Integer packageId = orders.getDomainId().intValue();
                 Integer amount =  orders.getAmount() .intValue();
                 R<UserPackage> r2 = userPackageManager.openService(orders.getUserId(), packageId, amount);
-                if(r2.isFail()){
+                if (r2.isFail()){
                     log.error("userPackageManager.openService() {}", r2.getMsg());
                 }
                 UserPackage userPackage = r2.getData();
                 Date endTime = userPackage.getEndTime();
                 Integer bandwidth = userPackage.getBroadbandRate();
-
 
                 // 批量更新用户的权益内资源结束时间 & 套餐网速
                 domainService.updateUserDueTime(orders.getUserId(), bandwidth, endTime);
@@ -389,9 +388,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
     private UserPackageLimitEnum transToPackageEnum(Integer resourceType) {
         switch (resourceType){
             case 1:
-                return UserPackageLimitEnum.DomainNum;
-            case 2:
                 return UserPackageLimitEnum.PortNum;
+            case 2:
+                return UserPackageLimitEnum.DomainNum;
         }
         return null;
     }
