@@ -100,6 +100,7 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.auth,
 			td.bandwidth
 		from t_device_mapping dm
 		left join t_domain td on dm.domain_id = td.id
@@ -124,6 +125,7 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.auth,
 			td.bandwidth
 		from t_device_mapping dm
 				 left join t_domain td on dm.domain_id = td.id
