@@ -107,6 +107,8 @@
 			   d.buy_time,
 			   d.due_time,
 			   d.user_id,
+			   d.bandwidth ,
+			   d.concurrent_num ,
 			   (select concat(d2.name,'|',d2.deviceId) from t_device d2
 				left join t_device_mapping  dm on d2.id = dm.device_id
 				left join t_domain dom on dm.domain = dom.domain and dom.server_tunnel_id = dm.server_tunnel_id
