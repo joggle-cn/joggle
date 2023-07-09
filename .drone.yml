@@ -63,7 +63,7 @@ steps:
       - name: kube
         path: /root/.kube
     commands:
-      - kubectl --kubeconfig /root/.kube/config set image deployment/joggle *='192.168.1.6:32588/wuweiit/joggle-server:${DRONE_BUILD_NUMBER}' -n home
+      - kubectl --kubeconfig /root/.kube/config set image deployment/joggle *='192.168.1.6:8082/wuweiit/joggle-server:${DRONE_BUILD_NUMBER}' -n home
     when:
       branch:
         - dev
