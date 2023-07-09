@@ -37,7 +37,7 @@ steps:
         path: /var/run/docker.sock
     settings:
       insecure: false
-      registry: 192.168.1.6:32588
+      registry: 192.168.1.6:8082
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       dockerfile: Dockerfile
@@ -46,7 +46,7 @@ steps:
         from_secret: registry_nexus_username
       password:
         from_secret: registry_nexus_password
-      repo: 192.168.1.6:32588/wuweiit/joggle-server
+      repo: 192.168.1.6:8082/wuweiit/joggle-server
       tags:
         - latest
         - ${DRONE_BUILD_NUMBER}
