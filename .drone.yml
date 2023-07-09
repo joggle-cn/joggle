@@ -11,7 +11,7 @@ steps:
         path: /root/.m2
     commands:
       - echo ${DRONE_BRANCH}
-      - mvn package -DskipTests=true -Dmaven.javadoc.skip=true
+      - mvn package -DskipTests=true -Dmaven.javadoc.skip=true -U
 
 
 #  - name: scp to ${DRONE_BRANCH}
