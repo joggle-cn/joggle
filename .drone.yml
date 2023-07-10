@@ -104,6 +104,6 @@ trigger:
       - push
       - custom
   branch:
-    - master
+    - prod
     - test
     - dev
