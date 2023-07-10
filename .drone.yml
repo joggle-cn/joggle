@@ -23,7 +23,7 @@ steps:
     settings:
       host: joggle.cn
       username: root
-      key-path: /root/.ssh/id_rsa
+      keyPath: /root/.ssh/id_rsa
       port: 22
       strip_components: 2
       target: /opt/data/springboot/prod/app.jar
