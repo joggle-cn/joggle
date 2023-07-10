@@ -28,7 +28,7 @@ steps:
       keyPath: /root/.ssh/id_rsa
       port: 22
       strip_components: 2
-      target: /opt/data/springboot/prod/app.jar
+      target: /opt/data/springboot/prod/
       source: joggle-server/target/joggle-server.jar
     when:
       branch:
