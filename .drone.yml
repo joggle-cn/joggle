@@ -14,20 +14,20 @@ steps:
       - mvn package -DskipTests=true -Dmaven.javadoc.skip=true -U
 
 
-#  - name: scp to ${DRONE_BRANCH}
-#    image: appleboy/drone-scp
-#    settings:
-#      host: joggle.cn
-#      username: root
-#      password:
-#        from_secret: dev_pass
-#      port: 22
-#      strip_components: 1
-#      target: /home/pzds/${DRONE_REPO_NAME}
-#      source: joggle-server/target/joggle-server.jar
-#    when:
-#      branch:
-#        - dev
+  - name: scp to prod
+    image: appleboy/drone-scp
+    settings:
+      host: joggle.cn
+      username: root
+      password:
+        from_secret: dev_pass
+      port: 22
+      strip_components: 2
+      target: /opt/data/springboot/prod/app.jar
+      source: joggle-server/target/joggle-server.jar
+    when:
+      branch:
+        - prod
 
   - name: image
     image: plugins/docker
@@ -53,6 +53,8 @@ steps:
     when:
       branch:
         - dev
+        - test
+        - prod
 
   - name: deploy-to-test
     pull: if-not-exists
@@ -69,21 +71,21 @@ steps:
         - dev
 
 
-  - name: clean image
-    image: plugins/docker
-    pull: if-not-exists
-    volumes:
-      - name: dockerSock
-        path: /var/run/docker.sock
-    commands:
-      - if [ "${DRONE_BRANCH}" = "dev" ];then docker rmi -f $(docker image ls --filter=reference="192.168.1.6:32588/wuweiit/joggle-server:*" -q); fi
-      - if [ "${DRONE_BRANCH}" = "test" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/paazhi/${DRONE_REPO_NAME}:*" -q); fi
-      - if [ "${DRONE_BRANCH}" = "prod" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/panzhi/${DRONE_REPO_NAME}:*" -q); fi
-    when:
-      branch:
-        - dev
-        - test
-        - prod
+#  - name: clean image
+#    image: plugins/docker
+#    pull: if-not-exists
+#    volumes:
+#      - name: dockerSock
+#        path: /var/run/docker.sock
+#    commands:
+#      - if [ "${DRONE_BRANCH}" = "dev" ];then docker rmi -f $(docker image ls --filter=reference="192.168.1.6:32588/wuweiit/joggle-server:*" -q); fi
+#      - if [ "${DRONE_BRANCH}" = "test" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/paazhi/${DRONE_REPO_NAME}:*" -q); fi
+#      - if [ "${DRONE_BRANCH}" = "prod" ];then docker rmi -f $(docker image ls --filter=reference="registry.cn-chengdu.aliyuncs.com/panzhi/${DRONE_REPO_NAME}:*" -q); fi
+#    when:
+#      branch:
+#        - dev
+#        - test
+#        - prod
 
 
 volumes:
