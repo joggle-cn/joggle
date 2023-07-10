@@ -24,7 +24,7 @@ public class ServerTunnelNodeVO {
     private String serverAddr;
 
     @ApiModelProperty("在线时长")
-    private String onlineTime;
+    private String onlineTime = "-";
 
     @ApiModelProperty("入网流量GB")
     private Long flowIn;
@@ -38,7 +38,7 @@ public class ServerTunnelNodeVO {
     @ApiModelProperty("在线通道数量")
     private Long tunnelNum;
 
-    @ApiModelProperty("通道状态")
+    @ApiModelProperty("通道状态 1在线 0不在线")
     private Integer status;
 
     @ApiModelProperty("通道上线时间")

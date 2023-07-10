@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 通道(ServerTunnel)表控制层
@@ -53,8 +54,11 @@ public class ServerTunnelOpenController {
             if (time == null) {
                 time = new Date();
             }
-            String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
-            item.setOnlineTime(subTime);
+            // 如果在线则计算在线时间
+            if (Objects.equals(1, item.getStatus())){
+                String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
+                item.setOnlineTime(subTime);
+            }
         });
         return R.ok(page);
     }
