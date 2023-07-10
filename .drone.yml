@@ -19,8 +19,8 @@ steps:
     settings:
       host: joggle.cn
       username: root
-      password:
-        from_secret: dev_pass
+      key:
+        from_secret: prod_key
       port: 22
       strip_components: 2
       target: /opt/data/springboot/prod/app.jar
