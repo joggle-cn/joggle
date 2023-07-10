@@ -16,11 +16,14 @@ steps:
 
   - name: scp to prod
     image: appleboy/drone-scp
+    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
+    volumes:
+      - name: ssh
+        path: /root/.ssh
     settings:
       host: joggle.cn
       username: root
-      key-path:
-        from_secret: prod_key
+      key-path: /root/.ssh/id_rsa
       port: 22
       strip_components: 2
       target: /opt/data/springboot/prod/app.jar
@@ -89,6 +92,9 @@ steps:
 
 
 volumes:
+  - name: ssh
+    host:
+      path: /root/.ssh
   - name: kube
     host:
       path: /root/.kube
