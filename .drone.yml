@@ -19,7 +19,7 @@ steps:
     settings:
       host: joggle.cn
       username: root
-      key:
+      key-path:
         from_secret: prod_key
       port: 22
       strip_components: 2
