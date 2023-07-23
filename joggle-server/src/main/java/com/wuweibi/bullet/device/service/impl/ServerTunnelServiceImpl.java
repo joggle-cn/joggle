@@ -60,5 +60,10 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
     public Page<ServerTunnelNodeVO> getNodeStatusList(Page pageInfo) {
         return this.baseMapper.selectNodeStatusList(pageInfo);
     }
+
+    @Override
+    public boolean checkDomain(String baseDomain) {
+        return this.baseMapper.checkDomain(baseDomain);
+    }
 }
 

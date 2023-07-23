@@ -37,5 +37,10 @@
 		order by st.id desc
 	</select>
 
+<!--	检查域名是否存在-->
+    <select id="checkDomain" resultType="java.lang.Boolean">
+		select count(1) from t_server_tunnel where server_addr = #{baseDomain}
+	</select>
+
 
 </mapper>

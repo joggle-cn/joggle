@@ -898,4 +898,26 @@ public class StringUtil {
 	public static String str(CharSequence cs) {
 		return null == cs ? null : cs.toString();
 	}
+
+
+	private static final String RE_TOP_DOMAIN = "(com\\.cn|net\\.cn|gov\\.cn|org\\.nz|org\\.cn|com|net|org|gov|cc|biz|info|cn|co|me)";
+
+	// 一级域名提取
+	private static final String RE_TOP_1 = "([0-9a-zA-Z-]*\\.?){1}\\." + RE_TOP_DOMAIN;
+
+	private static Pattern p = Pattern.compile(RE_TOP_1);
+
+
+	/**
+	 * 获取URL中的一级域名
+	 * @param url
+	 * @return
+	 */
+	public static String getBaseDomain(String url){
+		Matcher m = p.matcher(url);
+		if(m.find()){
+			return m.group();
+		}
+		return "";
+	}
 }

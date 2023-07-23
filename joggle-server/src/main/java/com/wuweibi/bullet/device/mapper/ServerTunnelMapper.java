@@ -30,5 +30,11 @@ public interface ServerTunnelMapper extends BaseMapper<ServerTunnel> {
      */
     Page<ServerTunnelNodeVO> selectNodeStatusList(Page pageInfo);
 
+    /**
+     * 检查域名是否存在
+     * @param baseDomain 一级域名
+     * @return
+     */
+    boolean checkDomain(String baseDomain);
 }
 
