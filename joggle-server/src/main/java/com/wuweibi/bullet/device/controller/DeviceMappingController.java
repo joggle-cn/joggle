@@ -9,6 +9,7 @@ import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -23,6 +24,7 @@ import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -107,6 +109,8 @@ public class DeviceMappingController {
     private DomainMapper domainMapper;
     @Resource
     private UserFlowService userFlowService;
+    @Resource
+    private ServerTunnelService serverTunnelService;
 
     /**
      * 保存或者更新数据
@@ -147,6 +151,13 @@ public class DeviceMappingController {
         // 如果没有流量了，不能操作映射，会有一个缓冲过程
         if(!userFlowService.hasFlow(userId)){
             return R.fail(SystemErrorType.FLOW_IS_DUE);
+        }
+
+        if(StringUtil.isNotBlank(entity.getHostname())){
+            String baseDomain = StringUtil.getBaseDomain(entity.getHostname());
+            if(this.serverTunnelService.checkDomain(baseDomain)){
+                return R.fail("自定义域名不支持配置官方域名");
+            }
         }
 
         if(entity.getId() != null){
