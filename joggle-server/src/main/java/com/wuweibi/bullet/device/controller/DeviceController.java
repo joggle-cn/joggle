@@ -290,11 +290,7 @@ public class DeviceController {
 
         // 域名
         domainList.forEach(item -> {
-            if (StringUtil.isNotBlank(item.getHostname())) {
-                item.setDomain(item.getHostname());
-            } else {
-                item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
-            }
+            item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
         });
 
         mapBuilder

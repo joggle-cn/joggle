@@ -58,7 +58,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * VIP到期超过2天未续费的资源释放。
+     * 域名到期超过2天未续费的资源释放。
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void resourceDueTimeRelease() {

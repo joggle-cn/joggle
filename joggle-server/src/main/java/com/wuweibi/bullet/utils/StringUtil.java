@@ -920,4 +920,26 @@ public class StringUtil {
 		}
 		return "";
 	}
+
+
+	/**
+	 * 获取格式化的byte数据量
+	 * @param byteNum
+	 * @return
+	 */
+	public static String getByteFormat(Long byteNum){
+		if (byteNum < 1024) {
+			return String.format("%dB", byteNum);
+		}
+		if (byteNum < 1024 * 1024) {
+			return String.format("%dKB", byteNum / 1024);
+		}
+		if (byteNum < 1024 * 1024 * 1024) {
+			return String.format("%dMB", byteNum / 1024 / 1024);
+		}
+		if (byteNum < 1024 * 1024 * 1024 * 1024) {
+			return String.format("%dGB", byteNum / 1024 / 1024 / 1024);
+		}
+		return String.format("%dGB", byteNum / 1024 / 1024 / 1024);
+	}
 }
