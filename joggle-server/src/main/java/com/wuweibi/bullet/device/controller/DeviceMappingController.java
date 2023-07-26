@@ -96,7 +96,7 @@ public class DeviceMappingController {
      * @param deviceId
      * @return
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping( "/")
     public R<List<DeviceMapping>> device(@JwtUser Session session, @RequestParam Long deviceId){
         Long userId = session.getUserId();
         return R.success(deviceMappingService.listByMap(newMap(2)

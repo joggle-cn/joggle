@@ -22,8 +22,13 @@ public class MappingDeviceVO {
 	@TableField("device_id")
 	private Long deviceId;
 
+	@ApiModelProperty("购买的域名前缀")
 	private String domain;
 
+	@ApiModelProperty("格式化的访问URL")
+	private String url;
+
+	@ApiModelProperty("端口")
 	private Integer port;
 
 

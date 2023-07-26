@@ -4,6 +4,7 @@ package com.wuweibi.bullet.device.controller;
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
@@ -285,12 +286,24 @@ public class DeviceController {
 
         // 端口
         portList.forEach(item->{
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
             item.setDomain(deviceInfo.getServerAddr() + ":" + item.getRemotePort());
+            String domain = item.getDomain();
+            if (StringUtil.isNotBlank(item.getHostname())) {
+                domain = item.getHostname();
+            }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         // 域名
         domainList.forEach(item -> {
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
             item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
+            String domain = item.getDomain();
+            if (StringUtil.isNotBlank(item.getHostname())) {
+                domain = item.getHostname();
+            }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         mapBuilder
