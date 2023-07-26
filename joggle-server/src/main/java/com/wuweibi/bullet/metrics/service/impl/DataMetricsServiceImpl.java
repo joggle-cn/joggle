@@ -1,5 +1,6 @@
 package com.wuweibi.bullet.metrics.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.business.DeviceBiz;
@@ -24,7 +25,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -65,17 +65,19 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
 
 
     @Override
-    @Transactional
+//    @Transactional()
     public R uploadData(DataMetricsDTO dataMetrics) {
         String deviceNo = dataMetrics.getDeviceNo();
         log.debug("流量deviceNo={}->{}", deviceNo, dataMetrics.toString());
         DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
         if (deviceDetail == null) {
+            log.warn("上报的设备不存在, 上报:{}", JSON.toJSONString(dataMetrics));
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
 
         ServerTunnel serverTunnel = serverTunnelService.getById(deviceDetail.getServerTunnelId());
         if (serverTunnel == null) {
+            log.warn("上报的通道服务器不存在, 上报:{}", JSON.toJSONString(dataMetrics));
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
 
@@ -102,12 +104,12 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                 byteKb = 1; // 至少消耗1KB
             }
             // 优先扣套餐流量 (带有保护，不支持负数)
-            boolean status = userPackageService.updateFLow(userId, -byteKb);
+            boolean status = userPackageService.updateFLow(userId, - byteKb);
             if (status){
                 return R.ok();
             }
             // 套餐流量扣失败了，扣充值流量（没有保护只有成功）
-            status = userFlowService.updateFLow(userId, -bytes / 1024);
+            status = userFlowService.updateFLow(userId, - byteKb);
             if (!status) { // 后面判断基本不走
                 log.warn("流量扣取失败 userId={}", userId);
                 return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
