@@ -25,10 +25,12 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 数据收集(DataMetrics)表服务实现类
@@ -63,9 +65,10 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
     @Resource
     private DeviceBiz deviceBiz;
 
+    @Resource
+    private TransactionTemplate transactionTemplate;
 
     @Override
-//    @Transactional()
     public R uploadData(DataMetricsDTO dataMetrics) {
         String deviceNo = dataMetrics.getDeviceNo();
         log.debug("流量deviceNo={}->{}", deviceNo, dataMetrics.toString());
@@ -81,6 +84,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
             return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
         }
 
+
         DataMetrics entity = new DataMetrics();
         BeanUtils.copyProperties(dataMetrics, entity);
         entity.setCreateTime(new Date());
@@ -91,38 +95,43 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
         entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
         entity.setRemoteAddr(dataMetrics.getRemoteAddr());
-        this.save(entity);
 
         Long userId = deviceDetail.getUserId();
 
-        // 扣取流量
-        if (serverTunnel.getEnableFlow() == 1) {
-            Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+        synchronized (userId) {
+            return transactionTemplate.execute(e -> {
+                this.save(entity);
 
-            long byteKb = bytes / 1024;
-            if (byteKb == 0) {
-                byteKb = 1; // 至少消耗1KB
-            }
-            // 优先扣套餐流量 (带有保护，不支持负数)
-            boolean status = userPackageService.updateFLow(userId, - byteKb);
-            if (status){
+                // 判断是否扣取流量
+                if (!Objects.equals(1, serverTunnel.getEnableFlow())) {
+                    return R.ok();
+                }
+
+                Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+                long byteKb = bytes / 1024;
+                if (byteKb == 0) {
+                    byteKb = 1; // 至少消耗1KB
+                }
+                // 优先扣套餐流量 (带有保护，不支持负数)
+                boolean status = userPackageService.updateFLow(userId, -byteKb);
+                if (status) {
+                    return R.ok();
+                }
+                // 套餐流量扣失败了，扣充值流量（没有保护只有成功）
+                status = userFlowService.updateFLow(userId, -byteKb);
+                if (!status) { // 后面判断基本不走
+                    log.warn("流量扣取失败 userId={}", userId);
+                    return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
+                }
+                UserFlow userFlow = userFlowService.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
+                if (userFlow.getFlow() < -(1024)) { // 如果流量超出1兆，关闭映射
+                    // 由于用户没有流量了，默认关闭所有映射
+                    deviceBiz.closeAllMappingByUserId(userId);
+                }
                 return R.ok();
-            }
-            // 套餐流量扣失败了，扣充值流量（没有保护只有成功）
-            status = userFlowService.updateFLow(userId, - byteKb);
-            if (!status) { // 后面判断基本不走
-                log.warn("流量扣取失败 userId={}", userId);
-                return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
-            }
-            UserFlow userFlow = userFlowService.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
-            if (userFlow.getFlow() < -(1024)){ // 如果流量超出1兆，关闭映射
-                // 由于用户没有流量了，默认关闭所有映射
-                deviceBiz.closeAllMappingByUserId(userId);
-            }
+            });
         }
-        return R.ok();
     }
-
     @Resource
     private UserPackageService userPackageService;
 
