@@ -25,6 +25,12 @@ public class DeviceOnlineLog {
   	private Long id;
     
     /**
+     * userId
+     */
+    @ApiModelProperty("用户id")
+ 	private Long userId;
+
+    /**
      * 设备id
      */
     @ApiModelProperty("设备id")

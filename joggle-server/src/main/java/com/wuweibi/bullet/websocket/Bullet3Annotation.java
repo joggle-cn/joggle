@@ -132,7 +132,7 @@ public class Bullet3Annotation {
                     MsgProxy msgProxy = new MsgProxy(head);
                     msgProxy.read(bis);
                     break;
-                case Message.DEVICE_METRICS:// Bind响应命令
+                case Message.DEVICE_METRICS:// 上报数据
                     MsgDataMetrics msgDataMetrics = new MsgDataMetrics(head);
                     msgDataMetrics.read(bis);
                     DataMetricsService dataMetricsService = SpringUtils.getBean(DataMetricsService.class);

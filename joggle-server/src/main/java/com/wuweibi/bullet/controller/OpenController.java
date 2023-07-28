@@ -209,7 +209,7 @@ public class OpenController {
     /**
      * 激活用户
      */
-    @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
+    @PostMapping(value = "/user/activate" )
     public R activate(
             @RequestParam String code,// 激活码
             @RequestParam(required = false, name = "ic") String inviteCode, // 邀请码
@@ -226,7 +226,7 @@ public class OpenController {
      */
     @Deprecated
     @ApiOperation("设备秘钥校验【服务端调用校验】")
-    @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
+    @PostMapping(value = "/device/secret" )
     public R devicesecret(@RequestParam String clientNo,
                           @RequestParam String secret,
                           HttpServletRequest request) {
@@ -251,7 +251,7 @@ public class OpenController {
      * @return
      */
     @ApiOperation("客户端检查更新接口")
-    @RequestMapping(value = "/checkUpdate")
+    @PostMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
 
         ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
@@ -280,28 +280,28 @@ public class OpenController {
      * @return
      */
     @Profile("dev")
-    @RequestMapping(value = "/package/release")
+    @PostMapping(value = "/package/release")
     public R packageRelease(HttpServletRequest request) {
         userPackageManager.expireFree();
         return R.success( );
     }
 
     @Profile("dev")
-    @RequestMapping(value = "/domain/release")
+    @PostMapping(value = "/domain/release")
     public R domainRelease(HttpServletRequest request) {
         domainService.resourceDueTimeRelease();
         return R.success( );
     }
 
     @Profile("dev")
-    @RequestMapping(value = "/package/flow-reset")
+    @PostMapping(value = "/package/flow-reset")
     public R resetPackageFlow(HttpServletRequest request) {
         userPackageManager.resetPackageFlow();
         return R.success( );
     }
 
     @Profile("dev")
-    @RequestMapping(value = "/test")
+    @PostMapping(value = "/test")
     public R checkUpdate(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
         HashMap<String, String> data = new HashMap<>();
@@ -317,7 +317,7 @@ public class OpenController {
     private WebsocketPool websocketPool;
 
 
-    @RequestMapping(value = "/ws")
+    @GetMapping(value = "/ws")
     public R ws(HttpServletRequest request) {
         HashMap<String, String> data = new HashMap<>();
         for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){

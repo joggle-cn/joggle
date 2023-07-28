@@ -2,6 +2,7 @@ package com.wuweibi.bullet.metrics.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.flow.service.UserFlowService;
@@ -48,15 +49,15 @@ public class DataMetricsController {
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
+     * @param pageParam 分页对象
      * @return 所有数据
      */
     @ApiOperation("流量明细分页查询")
     @GetMapping("/list")
-    public R<Page<DataMetricsListVO>> getPage(Page<DataMetrics> page, DataMetricsParam params) {
+    public R<Page<DataMetricsListVO>> getPage(PageParam<DataMetrics> pageParam, DataMetricsParam params) {
         Long userId = SecurityUtils.getUserId();
         params.setUserId(userId);
-        return R.ok(this.dataMetricsService.getList(page, params));
+        return R.ok(this.dataMetricsService.getList(pageParam.toMybatisPlusPage(), params));
     }
 
 

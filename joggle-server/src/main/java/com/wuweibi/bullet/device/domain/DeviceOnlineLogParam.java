@@ -1,11 +1,7 @@
 package com.wuweibi.bullet.device.domain;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.io.Serializable;
-import lombok.Data; 
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
 
 /**
  * 设备在线日志(DeviceOnlineLog)分页对象
@@ -19,8 +15,9 @@ public class DeviceOnlineLogParam {
 
     /**
      * id
-     */        @ApiModelProperty("id")
-  	private Long id;    
+     */
+    @ApiModelProperty(value = "用户id", hidden = true)
+  	private Long userId;
 
     /**
      * 设备id
@@ -34,40 +31,5 @@ public class DeviceOnlineLogParam {
     @ApiModelProperty("mac地址")
  	private String macAddr;
 
-    /**
-     * 内网ip
-     */        
-    @ApiModelProperty("内网ip")
- 	private String intranetIp;
-
-    /**
-     * 公网ip
-     */        
-    @ApiModelProperty("公网ip")
- 	private String publicIp;
-
-    /**
-     * 通道id
-     */        
-    @ApiModelProperty("通道id")
- 	private Integer serverTunnelId;
-
-    /**
-     * 状态 1 上线 0 下线
-     */        
-    @ApiModelProperty("状态 1 上线 0 下线")
- 	private Integer status;
-
-    /**
-     * 创建时间
-     */        
-    @ApiModelProperty("创建时间")
- 	private Date createTime;
-
-    /**
-     * 更新时间
-     */        
-    @ApiModelProperty("更新时间")
- 	private Date updateTime;
 
 }

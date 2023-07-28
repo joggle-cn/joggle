@@ -1,17 +1,18 @@
 package com.wuweibi.bullet.controller;
 
-import com.wuweibi.bullet.conn.WebsocketPool;
-import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.service.CountService;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.utils.HttpUtils;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,31 @@ public class HomeController {
 	public R statistics(){
 		CountVO countVO = countService.getCountInfo();
 		return R.success(countVO);
+	}
+
+
+
+	/**
+	 * OAuth登录
+	 * @return
+	 */
+	@ApiOperation("OAuth登录")
+	@PostMapping("/oauth/token1")
+	public R<Boolean> login(@RequestHeader("Authorization") String authorization, LoginForm loginForm){
+		return null;
+	}
+
+
+	@Data
+	public static class LoginForm {
+		@ApiModelProperty(value = "账号")
+		private String username;
+
+		@ApiModelProperty(value = "密码")
+		private String password;
+
+		@ApiModelProperty(value = "授权类型", example="password" )
+		private String grant_type = "password";
 	}
 
 }
