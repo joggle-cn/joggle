@@ -1,11 +1,9 @@
 package com.wuweibi.bullet.device.domain;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.io.Serializable;
-import lombok.Data; 
 import io.swagger.annotations.ApiModelProperty;
-import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 设备在线日志(DeviceOnlineLog)分页对象
@@ -19,7 +17,8 @@ public class DeviceOnlineLogVO {
 
     /**
      * id
-     */        @ApiModelProperty("id")
+     */
+    @ApiModelProperty("id")
   	private Long id;    
 
     /**
@@ -27,6 +26,9 @@ public class DeviceOnlineLogVO {
      */        
     @ApiModelProperty("设备id")
  	private Long deviceId;
+
+    @ApiModelProperty("设备名称")
+ 	private String deviceName;
 
     /**
      * mac地址

@@ -22,14 +22,9 @@ public class DeviceOnlineLogParam {
     /**
      * 设备id
      */        
-    @ApiModelProperty("设备id")
+    @ApiModelProperty(value = "设备id",required = false)
  	private Long deviceId;
 
-    /**
-     * mac地址
-     */        
-    @ApiModelProperty("mac地址")
- 	private String macAddr;
 
 
 }
