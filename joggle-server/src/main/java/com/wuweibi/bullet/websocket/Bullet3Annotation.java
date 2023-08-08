@@ -378,7 +378,7 @@ public class Bullet3Annotation {
 
 
 
-    public void sendMessageToServer(MsgGetDeviceStatus msg) {
+    public void sendMessageToServer(Message msg) {
         log.info("Control -> Server: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {

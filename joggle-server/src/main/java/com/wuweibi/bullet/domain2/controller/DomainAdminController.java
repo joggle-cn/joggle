@@ -3,10 +3,13 @@ package com.wuweibi.bullet.domain2.controller;
  * Created by marker on 2017/12/6.
  */
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
@@ -16,11 +19,16 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainDetailAdminVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.protocol.MsgTunnelConfig;
+import com.wuweibi.bullet.protocol.domain.DomainConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -103,6 +111,10 @@ public class DomainAdminController {
     @Resource
     private WebsocketPool coonPool;
 
+
+    @Resource
+    private DeviceService deviceService;
+
     /**
      * 更新域名信息
      *
@@ -125,23 +137,31 @@ public class DomainAdminController {
         domain.setOriginalPrice(dto.getOriginalPrice());
         domainService.updateById(domain);
 
-        // TODO 通知到对应的通道
+        // 如果宽带信息发生了更变
 
-//        Bullet3Annotation annotation = coonPool.getByTunnelId(domain.getServerTunnelId());
-//        if (annotation != null) {
-//            PeerConfig doorConfig = new PeerConfig();
-//            doorConfig.setAppName(dto.getAppName());
-//            doorConfig.setPort(dto.getServerLocalPort());
-//            doorConfig.setHost(dto.getServerLocalHost());
-//            doorConfig.setType(PeerConfig.SERVER);
-//            doorConfig.setEnable(dto.getStatus());
-//            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-//            MsgPeer msg = new MsgPeer(data.toJSONString());
-//            annotation.sendMessage(serverDeviceNo, msg);
-//        }
+        // 根据域名id查询映射
+        DeviceMapping deviceMapping = deviceMappingService.getByDomainId(null, domainId);
+        if (deviceMapping == null) {
+            return R.fail("设备映射不存在");
+        }
 
+        DeviceDetail deviceDetail = deviceService.getDetail(deviceMapping.getDeviceId());
+        if (deviceDetail == null) {
+            return R.fail("设备不存在");
+        }
+        String deviceNo = deviceDetail.getDeviceNo();
 
-
+        // 通知到对应的通道
+        Bullet3Annotation annotation = coonPool.getByTunnelId(domain.getServerTunnelId());
+        if (annotation != null) {
+            DomainConfig domainConfig = new DomainConfig();
+            domainConfig.setMapId(deviceMapping.getId());
+            domainConfig.setDeviceNo(deviceNo);
+            domainConfig.setConcurrentNum(domain.getConcurrentNum());
+            domainConfig.setBandwidth(domain.getBandwidth());
+            MsgTunnelConfig tunnelConfig = new MsgTunnelConfig((JSONObject) JSON.toJSON(domainConfig));
+            annotation.sendMessageToServer(tunnelConfig);
+        }
         return R.success();
     }
 

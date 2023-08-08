@@ -45,6 +45,7 @@ public abstract class Message {
     public static final int AUTH = 0xa; // 认证
     public static final int AUTH_RESP = 0xa000001; //
 
+    public static final int TUNNEL_CONFIG   = 0x14;
 
 
     //** 服务器管理端与服务端的消息
