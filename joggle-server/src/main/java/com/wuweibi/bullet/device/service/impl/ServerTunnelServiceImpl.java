@@ -11,10 +11,12 @@ import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.utils.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 通道(ServerTunnel)表服务实现类
@@ -49,9 +51,24 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
 
     @Override
     public Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params) {
+        long nowTime = new Date().getTime();
         Page<ServerTunnelAdminVO> page = this.baseMapper.selectAdminPage(pageInfo, params);
         page.getRecords().forEach(item->{
             item.setName("["+item.getCountry()+"|"+item.getArea()+"] "+item.getName());
+
+            if(item.getServerUpTime() == null){
+                item.setOnlineTime("-");
+                return;
+            }
+            Date time = item.getServerUpTime().compareTo(item.getServerDownTime()) >=0?item.getServerDownTime(): item.getServerUpTime();
+            if (time == null) {
+                time = new Date();
+            }
+            // 如果在线则计算在线时间
+            if (Objects.equals(1, item.getStatus())){
+                String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
+                item.setOnlineTime(subTime);
+            }
         });
         return page;
     }
