@@ -5,3 +5,4 @@ ALTER TABLE `device_peers`
 
 ALTER TABLE `device_online_log`
     ADD COLUMN `user_id` bigint(22) NULL COMMENT '用户id' AFTER `id`;
+
