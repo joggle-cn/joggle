@@ -299,6 +299,12 @@ public class OpenController {
         userPackageManager.resetPackageFlow();
         return R.success( );
     }
+    @Profile("dev")
+    @PostMapping(value = "/package/exp")
+    public R userPackageExp(HttpServletRequest request) {
+        userPackageManager.taskUserPackageExpirationReminder();
+        return R.success( );
+    }
 
     @Profile("dev")
     @PostMapping(value = "/test")

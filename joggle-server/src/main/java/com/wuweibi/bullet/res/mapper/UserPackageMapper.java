@@ -17,10 +17,18 @@ import java.util.List;
 public interface UserPackageMapper extends BaseMapper<UserPackage> {
 
 
+    /**
+     * 查询到期的用户套餐列表
+     * （具体调用是使用的游标）
+     * @return
+     */
+    List<UserPackageExpireVO> selectByExpireDay();
 
-
-
-    List<UserPackageExpireVO> selectByExpireDay( );
+    /**
+     * 查询到期的套餐用户
+     * @return
+     */
+    List<UserPackageFowVO> selectByExpiration();
 
 
     /**

@@ -26,4 +26,11 @@ public interface UserPackageManager {
      * 重置流量数量
      */
     void resetPackageFlow();
+
+    /**
+     * VIP用户资源包到期前2天提醒，每日一次
+     */
+    void taskUserPackageExpirationReminder();
+
+
 }

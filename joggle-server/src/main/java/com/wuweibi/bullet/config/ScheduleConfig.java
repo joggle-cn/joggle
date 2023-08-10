@@ -26,6 +26,8 @@ public class ScheduleConfig implements SchedulingConfigurer {
     @Resource
     private UserCertificationTaskService userCertificationTaskService;
 
+    @Resource
+    private UserPackageManager userPackageManager;
 
 
     @Bean
@@ -49,9 +51,9 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * 每60秒执行检查 用户认证自动化检查
+     * 用户认证自动化审核 每60秒执行检查
      */
-    @Scheduled(fixedRate = 1000*60)
+    @Scheduled(fixedRate = 1000 * 60)
     public void work4UserCertificationProgress() {
         userCertificationTaskService.progress();
     }
@@ -65,15 +67,22 @@ public class ScheduleConfig implements SchedulingConfigurer {
         domainService.resourceDueTimeRelease();
     }
 
-    @Resource
-    private UserPackageManager userPackageManager;
 
     /**
-     * VIP用户资源包释放 10分钟一次
+     * VIP用户资源包到期释放 10分钟一次
+     * （到期立即释放）
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void userPackageRelease() {
         userPackageManager.expireFree();
+    }
+
+    /**
+     * VIP用户资源包到期前2天提醒，每日9点执行一次
+     */
+    @Scheduled(cron = "0 0 9 * * ? ")
+    public void userPackageExpirationReminder() {
+        userPackageManager.taskUserPackageExpirationReminder();
     }
 
 
