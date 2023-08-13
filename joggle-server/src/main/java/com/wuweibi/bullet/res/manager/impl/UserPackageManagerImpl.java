@@ -251,8 +251,8 @@ public class UserPackageManagerImpl implements UserPackageManager {
             param.put("packageName", userPackage.getName());
             param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
             param.put("url", bulletConfig.getServerUrl());
-            param.put("dueTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s套餐即将到期提醒", userPackage.getName());
+            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("Joggle%s套餐即将到期提醒", userPackage.getName());
             mailService.send(userPackage.getUserEmail(), subject, param, "package_expiration_notice.htm");
         }
         try {
@@ -262,7 +262,6 @@ public class UserPackageManagerImpl implements UserPackageManager {
         } finally {
             sqlSession.close();
         }
-
         log.info("[资源包到期前2日检查] 结束 处理数据量：{}", count);
     }
 
