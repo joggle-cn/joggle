@@ -86,7 +86,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/","/api/open/**","/inner/open/**", "/logout", "/tunnel/**", "/_ws/log/**", "/swagger-resources", "/webjars/**", "/v3/api-docs").permitAll()
 
                 // 放过静态资源
-                .antMatchers("/manager/**","/lib/**", "/js/**","/css/**","/template/**", "/resource/**","/view/**", "/doc.html", "/index.html", "/favicon.ico").permitAll()
+                .antMatchers("/robots.txt","/manager/**","/lib/**", "/js/**","/css/**","/template/**", "/resource/**","/view/**", "/doc.html", "/index.html", "/favicon.ico").permitAll()
 
                 .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
 
