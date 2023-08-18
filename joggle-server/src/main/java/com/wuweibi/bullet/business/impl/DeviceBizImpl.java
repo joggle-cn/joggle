@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingUpdateDTO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -63,5 +65,15 @@ public class DeviceBizImpl implements DeviceBiz {
         }
 
 
+    }
+
+    @Override
+    public R updateMapping(DeviceMappingUpdateDTO deviceMappingDTO) {
+
+        // TODO 更新映射信息
+
+
+
+        return null;
     }
 }

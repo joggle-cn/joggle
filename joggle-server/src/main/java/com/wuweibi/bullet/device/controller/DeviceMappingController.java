@@ -4,6 +4,7 @@ package com.wuweibi.bullet.device.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
@@ -112,29 +113,33 @@ public class DeviceMappingController {
     @Resource
     private ServerTunnelService serverTunnelService;
 
+
+    @Resource
+    private DeviceBiz deviceBiz;
+
     /**
      * 保存或者更新数据
-     * @param entity
+     * @param deviceMapping
      * @return
      */
     @ApiOperation("更新映射信息")
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public R save(DeviceMapping entity ){
+    public R save(DeviceMapping deviceMapping ){
         Long userId = SecurityUtils.getUserId();
-        entity.setUserId(userId);
-        if (!IpAddrUtils.isIpv4(entity.getHost())) {
+        deviceMapping.setUserId(userId);
+        if (!IpAddrUtils.isIpv4(deviceMapping.getHost())) {
             return R.fail("请填写ipV4地址");
         }
         // 判断ip是内网ip
-        if (!IpAddrUtils.internalIp(entity.getHost())) {
+        if (!IpAddrUtils.internalIp(deviceMapping.getHost())) {
             return R.fail("请填写内网ip地址");
         }
 
-        DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
+        DeviceMapping entity = deviceMappingService.getById(deviceMapping.getId());
         entity.setDomainId(deviceMapping.getDomainId());
         entity.setDomain(deviceMapping.getDomain());
-        entity.setPort(entity.getPort());
-        entity.setProtocol(entity.getProtocol());
+        entity.setPort(deviceMapping.getPort());
+        entity.setProtocol(deviceMapping.getProtocol());
         entity.setRemotePort(deviceMapping.getRemotePort());
 
         // 验证设备映射是自己的
