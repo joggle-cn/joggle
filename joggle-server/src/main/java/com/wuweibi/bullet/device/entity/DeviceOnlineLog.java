@@ -61,9 +61,9 @@ public class DeviceOnlineLog {
  	private Integer serverTunnelId;
     
     /**
-     * 状态 1 上线 0 下线
+     * 状态 1 上线 -1 下线
      */
-    @ApiModelProperty("状态 1 上线 0 下线")
+    @ApiModelProperty("状态 1 上线 -1 下线")
  	private Integer status;
 
     @ApiModelProperty("操作系统")

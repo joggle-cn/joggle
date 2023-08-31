@@ -3,6 +3,7 @@ package com.wuweibi.bullet.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
@@ -17,14 +18,17 @@ import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.service.MailService;
+import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -155,6 +159,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
     /**
      * 一般初始化启动的时候调用该方法得到每个设备的状态
+     *
      * @return
      */
     @Override
@@ -199,8 +204,39 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         deviceOnlineLog.setCreateTime(new Date());
         deviceOnlineLog.setUpdateTime(new Date());
         this.deviceOnlineLogService.save(deviceOnlineLog);
+
+        // 查询设备对应用户的信息
+        if (Objects.isNull(deviceDetail.getUserId())) {
+            return true;
+        }
+        if (status != 1) {
+            User user = userService.getById(deviceDetail.getUserId());
+            if (user == null) {
+                log.warn("设备用户[{}] 不能存在...", deviceDetail.getUserId());
+                return true;
+            }
+
+            // 设备下线通知
+            log.info("user[{}] device[{}] is down...", user.getId(), deviceDetail.getDeviceNo());
+            Map<String, Object> param = new HashMap<>(3);
+            param.put("deviceNo", deviceDetail.getDeviceNo());
+            param.put("publicIp", deviceDetail.getPublicIp());
+            param.put("reason", "可能断电、断网等原因导致");
+            param.put("url", bulletConfig.getServerUrl());
+            param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("%s设备下线提醒", deviceDetail.getDeviceNo());
+            mailService.send(user.getEmail(), subject, param, "device_down_notice.htm");
+        }
+
         return true;
     }
+
+    @Resource
+    private UserService userService;
+    @Resource
+    private MailService mailService;
+    @Resource
+    private BulletConfig bulletConfig;
 
     @Override
     public int batchUpdateStatus(List<String> deviceNoList, int status) {
