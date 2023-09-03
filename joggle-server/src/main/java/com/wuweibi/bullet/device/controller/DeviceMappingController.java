@@ -136,18 +136,23 @@ public class DeviceMappingController {
         }
 
         DeviceMapping entity = deviceMappingService.getById(deviceMapping.getId());
-        entity.setDomainId(deviceMapping.getDomainId());
-        entity.setDomain(deviceMapping.getDomain());
-        entity.setPort(deviceMapping.getPort());
+//        entity.setDomainId(deviceMapping.getDomainId());
+//        entity.setDomain(deviceMapping.getDomain());
         entity.setProtocol(deviceMapping.getProtocol());
+        entity.setHostname(deviceMapping.getHostname());
+        entity.setHost(deviceMapping.getHost());
+        entity.setPort(deviceMapping.getPort());
         entity.setRemotePort(deviceMapping.getRemotePort());
+        entity.setAuth(deviceMapping.getAuth());
+        entity.setDescription(deviceMapping.getDescription());
+        entity.setStatus(deviceMapping.getStatus());
 
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
             return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
         }
         // 判断映射的域名是否过期，过期后不允许开启
-        if(!domainMapper.checkDoaminIdDue(userId, deviceMapping.getDomainId())){
+        if(!domainMapper.checkDoaminIdDue(userId, entity.getDomainId())){
             if(entity.getStatus() == 1){ // 不能启用
                 return R.fail(SystemErrorType.DOMAIN_IS_DUE);
             }
