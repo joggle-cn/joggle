@@ -220,6 +220,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             log.info("user[{}] device[{}] is down...", user.getId(), deviceDetail.getDeviceNo());
             Map<String, Object> param = new HashMap<>(3);
             param.put("deviceNo", deviceDetail.getDeviceNo());
+            param.put("deviceName", deviceDetail.getName());
             param.put("publicIp", deviceDetail.getPublicIp());
             param.put("reason", "可能断电、断网等原因导致");
             param.put("url", bulletConfig.getServerUrl());
