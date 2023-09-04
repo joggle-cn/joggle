@@ -101,6 +101,7 @@ public class UserController {
         result.put("userFlow", userFlow.getFlow()/1024); //MB
         result.put("userPackageFlow", user.getUserPackageFlow()/1024); //MB
         result.put("userCertification", user.getUserCertification());
+        result.put("systemNotice", user.getSystemNotice());
 
         if (user.getUserCertification() != 1) {
             UserCertification userCertification = userCertificationService.getLastResult(userId);

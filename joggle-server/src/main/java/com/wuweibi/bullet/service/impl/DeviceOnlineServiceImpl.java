@@ -218,6 +218,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
 
             // 设备下线通知
             log.info("user[{}] device[{}] is down...", user.getId(), deviceDetail.getDeviceNo());
+            if (!Objects.equals(1, user.getSystemNotice())){
+                return true;
+            }
             Map<String, Object> param = new HashMap<>(3);
             param.put("deviceNo", deviceDetail.getDeviceNo());
             param.put("deviceName", deviceDetail.getName());
