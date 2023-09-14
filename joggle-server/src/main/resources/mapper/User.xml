@@ -22,6 +22,10 @@
 		update t_sys_users set user_certification = #{state}, updated_time=sysdate() where id =#{userId}
 	</update>
 
+<!--	更新用户的系统通知开关状态-->
+    <update id="updateSystemNotice">
+		update t_sys_users set system_notice = #{status}, updated_time=sysdate() where id = #{userId}
+	</update>
 
 
     <select id="selectUserList" resultType="com.wuweibi.bullet.system.domain.vo.UserListVO">

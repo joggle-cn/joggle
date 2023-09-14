@@ -104,8 +104,8 @@ public class R<T> {
      * @param data 对象
      * @return Result
      */
-    public static R success(Object data) {
-        return new R(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
+    public static <T>  R<T>  success(T data) {
+        return new R<T>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
     }
 
     /**
@@ -113,7 +113,7 @@ public class R<T> {
      *
      * @return Result
      */
-    public static R success() {
+    public static <T>   R<T>  success() {
         return success(null);
     }
 
@@ -129,8 +129,8 @@ public class R<T> {
      *
      * @return Result
      */
-    public static R fail() {
-        return new R(SystemErrorType.CUSTOM_ERROR);
+    public static <T> R<T>  fail() {
+        return new R<T>(SystemErrorType.CUSTOM_ERROR);
     }
 
     /**

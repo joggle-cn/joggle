@@ -63,7 +63,7 @@ public class DashboardController {
     @ApiOperation("统计设备流量走势")
     @GetMapping("/device/trend")
     @ResponseBody
-    public R<List<DeviceCountInfoVO>> getUserDeviceTrend(
+    public R<List<DeviceDateItemVO>> getUserDeviceTrend(
             @RequestParam(value = "deviceId",required = false) Long deviceId,
             @JwtUser Session session){
         Long userId = session.getUserId();

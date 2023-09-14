@@ -10,7 +10,6 @@ import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
-import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.domain.session.Session;
@@ -346,7 +345,7 @@ public class OpenController {
     @ApiOperation("近30日流量情况")
     @GetMapping("/all/flow/trend")
     @ResponseBody
-    public R<List<DeviceCountInfoVO>> getFlowTrend(
+    public R<List<DeviceDateItemVO>> getFlowTrend(
             @JwtUser Session session){
         int day = 30;
         List<DeviceDateItemVO> list = countService.getAllFlowTrend(day);

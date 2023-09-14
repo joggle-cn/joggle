@@ -20,6 +20,7 @@ import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.dto.NoticeSwitchParam;
 import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
@@ -193,6 +194,21 @@ public class UserController {
         }
         Long userId = session.getUserId();
         boolean status = userService.updatePassword(userId, dto);
+        if (status) {
+            return R.success();
+        }
+        return R.fail();
+    }
+
+    /**
+     * 系统通知开关
+     */
+    @ApiOperation("系统通知开关")
+    @ResponseMessage
+    @PostMapping(value = "/notice/switch")
+    public R<Boolean> noticeSwitch(@RequestBody @Valid NoticeSwitchParam dto, @JwtUser Session session) {
+        Long userId = session.getUserId();
+        boolean status = userService.updateSystemNotice(userId, dto.getStatus());
         if (status) {
             return R.success();
         }

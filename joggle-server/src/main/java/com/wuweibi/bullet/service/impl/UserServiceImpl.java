@@ -25,6 +25,7 @@ import com.wuweibi.bullet.system.domain.vo.UserListVO;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +60,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private PasswordEncoder passwordEncoder;
-
 
 
     @Transactional
@@ -187,7 +187,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserPackageService userPackageService;
 
 
-
     @Override
     public boolean updatePassword(Long userId, PasswordParam dto) {
         User user = this.baseMapper.selectById(userId);
@@ -223,6 +222,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserDetailVO getDetailById(Long userId) {
         return this.baseMapper.selectDetailById(userId);
+    }
+
+    @Override
+    public boolean updateSystemNotice(Long userId, Integer status) {
+        if (!ArrayUtils.contains(new int[]{1, 0}, status)) {
+            return false;
+        }
+        return this.baseMapper.updateSystemNotice(userId, status);
     }
 
 
