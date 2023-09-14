@@ -230,6 +230,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
 
+
     @Resource
     private MailService mailService;
 
@@ -246,8 +247,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     public boolean resourceDueTimeRelease() {
         log.debug("[资源到期释放] 开始");
 
-        // 基础套餐 level 1
-        ResourcePackage resourcePackageLevel1 = resourcePackageService.getByLevel(1);
+        // 基础套餐 level 0
+        ResourcePackage resourcePackageLevel1 = resourcePackageService.getByLevel(0);
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
