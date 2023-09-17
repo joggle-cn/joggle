@@ -142,7 +142,8 @@ public class DomainAdminController {
         // 根据域名id查询映射
         DeviceMapping deviceMapping = deviceMappingService.getByDomainId(null, domainId);
         if (deviceMapping == null) {
-            return R.fail("设备映射不存在");
+            log.info("域名id={} 设备映射不存在", domainId);
+            return R.ok();
         }
 
         DeviceDetail deviceDetail = deviceService.getDetail(deviceMapping.getDeviceId());

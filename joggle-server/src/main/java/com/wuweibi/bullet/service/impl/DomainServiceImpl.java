@@ -222,6 +222,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.update(Wrappers.<Domain>lambdaUpdate()
                 .eq(Domain::getId, domainId)
                 .set(Domain::getBandwidth, resourcePackageLevel1.getBroadbandRate())
+                .set(Domain::getConcurrentNum, resourcePackageLevel1.getConcurrentNum())
                 .set(Domain::getUserId, null)
                 .set(Domain::getDueTime, null)
                 .set(Domain::getBuyTime, null)
