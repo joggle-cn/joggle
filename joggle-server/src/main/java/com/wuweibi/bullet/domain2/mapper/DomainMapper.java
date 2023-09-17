@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.mapper;
+package com.wuweibi.bullet.domain2.mapper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

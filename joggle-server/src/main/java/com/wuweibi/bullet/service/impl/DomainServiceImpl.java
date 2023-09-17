@@ -21,7 +21,7 @@ import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
-import com.wuweibi.bullet.mapper.DomainMapper;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;

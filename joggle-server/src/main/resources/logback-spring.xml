@@ -23,7 +23,7 @@
     <logger name="org.springframework.web.servlet.handler" level="info"> </logger>
     <logger name="org.springframework.web.servlet.mvc.method.annotation" level="info"> </logger>
     <!-- no log   -->
-    <logger name="com.wuweibi.bullet.mapper.DomainMapper.selectDueDomain" level="ERROR" />
+    <logger name="com.wuweibi.bullet.domain2.mapper.DomainMapper.selectDueDomain" level="ERROR" />
 
 
     <!-- 多配制环境设置 -->

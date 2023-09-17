@@ -17,7 +17,7 @@ import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.mapper.DomainMapper;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
