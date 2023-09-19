@@ -3,16 +3,18 @@ package com.wuweibi.bullet.domain2.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
-import com.wuweibi.bullet.common.domain.IdDTO;
+import com.wuweibi.bullet.common.domain.IdLongDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
+import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +88,19 @@ public class UserDomainController {
     /**
      * 修改数据
      *
+     * @param domainCertUpdate 实体对象
+     * @return 修改结果
+     */
+    @ApiOperation("用户域名更新证书")
+    @PutMapping("/cert")
+    public R<Boolean> updateDomainCert(@RequestBody @Valid DomainCertUpdate domainCertUpdate) {
+        return this.userDomainService.updateDomainCert(domainCertUpdate);
+    }
+
+
+    /**
+     * 修改数据
+     *
      * @param userDomain 实体对象
      * @return 修改结果
      */
@@ -96,17 +111,26 @@ public class UserDomainController {
     }
 
 
-
     /**
      * 删除数据
      *
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除数据")
-    @DeleteMapping()
-    public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
-        return R.ok(this.userDomainService.removeById(idDTO.getId()));
+    @ApiOperation("删除用户域名")
+    @DeleteMapping("/")
+    public R<Boolean> deleteById(@RequestBody @Valid IdLongDTO idDTO) {
+
+        Long userId = SecurityUtils.getUserId();
+        // 校验归属
+        if (!this.userDomainService.checkUserDomain(userId, idDTO.getId())) {
+            return R.fail("域名不存在");
+        }
+        // TODO 如果被映射使用，不能删除
+
+
+
+        return this.userDomainService.removeDomain(idDTO.getId());
     }
 
 }

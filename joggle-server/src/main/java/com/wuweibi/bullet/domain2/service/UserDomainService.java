@@ -2,6 +2,7 @@ package com.wuweibi.bullet.domain2.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
@@ -41,4 +42,28 @@ public interface UserDomainService extends IService<UserDomain> {
      * @return
      */
     boolean checkDomain(Long userId, String domain);
+
+
+    /**
+     * 更新域名证书
+     * @param domainCertUpdate
+     * @return
+     */
+    R<Boolean> updateDomainCert(DomainCertUpdate domainCertUpdate);
+
+    /**
+     * 删除用户域名
+     * @param id id
+     * @return
+     */
+    R<Boolean> removeDomain(Long id);
+
+    /**
+     * 检查用户域名是否存在
+     * @param userId 用户id
+     * @param userDomainId 用户域名id
+     * @return
+     */
+    boolean checkUserDomain(Long userId, Long userDomainId);
+
 }

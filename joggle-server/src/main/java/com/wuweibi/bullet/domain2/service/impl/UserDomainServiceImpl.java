@@ -1,10 +1,12 @@
 package com.wuweibi.bullet.domain2.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
+import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
@@ -21,6 +23,8 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
+import java.io.ByteArrayInputStream;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Objects;
@@ -95,5 +99,61 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             log.warn("{}", e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public R<Boolean> updateDomainCert(DomainCertUpdate domainCertUpdate) {
+        UserDomain userDomain = this.baseMapper.selectById(domainCertUpdate.getId());
+        if (userDomain == null) {
+            return R.fail("域名id不存在");
+        }
+
+        String domain = userDomain.getDomain();
+
+        // 加载证书识别域名一致性
+        String certPem = domainCertUpdate.getCertPem();
+        try {
+            X509Certificate certificate = (X509Certificate) SecureUtil.readX509Certificate(new ByteArrayInputStream(certPem.getBytes()));
+            log.debug("证书验证通过 domain={}", domain);
+            if (!certificate.getSubjectDN().getName().contains(domain)) {
+                log.warn("域名证书不一致cert={} your={}", certificate.getSubjectDN().getName(), domain);
+                return R.fail("域名证书不一致");
+            }
+            // 获取证书证书时间
+            Date startTime = certificate.getNotBefore();
+            Date endTime = certificate.getNotAfter();
+            userDomain.setApplyTime(startTime);
+            userDomain.setDueTime(endTime);
+        } catch (Exception e) {
+            log.warn("证书格式错误 domain={}", domain);
+            return R.fail("证书格式错误");
+        }
+
+        userDomain.setCertKey(domainCertUpdate.getCertKey());
+        userDomain.setCertPem(domainCertUpdate.getCertPem());
+        userDomain.setUpdateTime(new Date());
+        this.baseMapper.updateById(userDomain);
+
+        // TODO 通知所有节点更新证书。
+
+
+        return R.ok();
+    }
+
+    @Override
+    public R<Boolean> removeDomain(Long id) {
+        // TODO 通知所有节点删除证书
+
+
+        this.baseMapper.deleteById(id);
+        return R.ok();
+    }
+
+    @Override
+    public boolean checkUserDomain(Long userId, Long userDomainId) {
+        return this.baseMapper.selectCount(Wrappers.<UserDomain>lambdaQuery()
+                .eq(UserDomain::getUserId, userId)
+                .eq(UserDomain::getId, userDomainId)
+        ) > 0;
     }
 }

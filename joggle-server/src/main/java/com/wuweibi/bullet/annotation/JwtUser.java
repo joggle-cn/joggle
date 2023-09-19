@@ -11,6 +11,7 @@ import java.lang.annotation.*;
  * @author marker
  * @create 2018-05-28 14:06
  **/
+@Deprecated
 @Documented
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
