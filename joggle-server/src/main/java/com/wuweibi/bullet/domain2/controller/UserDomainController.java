@@ -2,11 +2,9 @@ package com.wuweibi.bullet.domain2.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.domain.IdLongDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
 import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
@@ -19,7 +17,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -52,8 +49,8 @@ public class UserDomainController {
      */
     @ApiOperation("用户域名分页查询")
     @GetMapping("/list")
-    public R<Page<UserDomainVO>> getPageList(@ApiIgnore @JwtUser Session session, PageParam page, UserDomainParam params) {
-        params.setUserId(session.getUserId());
+    public R<Page<UserDomainVO>> getPageList(PageParam page, UserDomainParam params) {
+        params.setUserId(SecurityUtils.getUserId());
         return R.ok(this.userDomainService.getPage(page.toMybatisPlusPage(), params));
     }
 
@@ -77,8 +74,8 @@ public class UserDomainController {
      */
     @ApiOperation("用户域名新增")
     @PostMapping
-    public R<Boolean> saveUserDomain(@ApiIgnore @JwtUser Session session, @RequestBody @Valid UserDomainAddDTO addDTO) {
-        addDTO.setUserId(session.getUserId());
+    public R<Boolean> saveUserDomain(@RequestBody @Valid UserDomainAddDTO addDTO) {
+        addDTO.setUserId(SecurityUtils.getUserId());
         if (!this.userDomainService.checkDomain(addDTO.getUserId(), addDTO.getDomain())) {
             return R.fail("域名TXT解析校验不通过");
         }

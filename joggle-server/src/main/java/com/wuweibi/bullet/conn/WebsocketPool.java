@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  *
@@ -157,5 +158,14 @@ public final class WebsocketPool {
 
 
         return data;
+    }
+
+
+    /**
+     * 获取所有节点链接
+     * @return
+     */
+    public Stream<Bullet3Annotation> listStream() {
+        return clientConnections.values().stream();
     }
 }

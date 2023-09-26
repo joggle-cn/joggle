@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
 import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
@@ -12,8 +13,10 @@ import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.protocol.MsgDomainCert;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.entity.User;
+import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -134,9 +137,13 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
         userDomain.setUpdateTime(new Date());
         this.baseMapper.updateById(userDomain);
 
-        // TODO 通知所有节点更新证书。
+        // 通知所有节点更新证书。
+        MsgDomainCert msgDomainCert = new MsgDomainCert(userDomain.getDomain(), userDomain.getCertKey(), userDomain.getCertPem());
 
-
+        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
+        pool.listStream().forEach(conn->{
+            conn.sendMessageToServer(msgDomainCert);
+        });
         return R.ok();
     }
 
