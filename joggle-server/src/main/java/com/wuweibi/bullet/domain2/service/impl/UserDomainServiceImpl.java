@@ -85,8 +85,10 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             return false;
         }
         String activeCode = user.getActivateCode();
+        // 获取根域名
+        String rootDomain = domain.replaceAll(".*\\.(?=.*\\.)", "");
 
-        String url = "accept_joggle." + domain;
+        String url = "accept_joggle." + rootDomain;
         try {
             log.info("DNS TXT {}", url);
             Hashtable<String, String> env = new Hashtable<String, String>(1);
