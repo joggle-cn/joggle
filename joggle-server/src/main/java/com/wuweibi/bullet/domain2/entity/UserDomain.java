@@ -34,7 +34,7 @@ public class UserDomain {
  	private String domain;
 
     @ApiModelProperty("是否配置证书 1已配置 0未配置")
- 	private String isCert;
+ 	private Boolean isCert;
 
     /**
      * 证书私钥

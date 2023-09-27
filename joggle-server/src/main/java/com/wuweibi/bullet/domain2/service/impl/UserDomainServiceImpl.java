@@ -139,6 +139,7 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             return R.fail("证书格式错误");
         }
 
+        userDomain.setIsCert(true);
         userDomain.setCertKey(domainCertUpdate.getCertKey());
         userDomain.setCertPem(domainCertUpdate.getCertPem());
         userDomain.setUpdateTime(new Date());
