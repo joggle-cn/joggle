@@ -31,16 +31,10 @@ public class UserDomainVO {
     private String domain;
 
     /**
-     * 证书私钥
-     */
-    @ApiModelProperty("证书私钥")
-    private String certKey;
-
-    /**
      * 证书pem
      */
-    @ApiModelProperty("证书pem")
-    private String certPem;
+    @ApiModelProperty("是否配置证书")
+    private Boolean isCert;
 
     /**
      * 证书颁发时间

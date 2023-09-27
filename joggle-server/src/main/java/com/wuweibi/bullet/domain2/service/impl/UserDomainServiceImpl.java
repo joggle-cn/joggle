@@ -61,16 +61,21 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
     @Override
     public R<Boolean> saveUserDomain(UserDomainAddDTO addDTO) {
         // 校验域名重复
-        if (this.baseMapper.selectCount(Wrappers.<UserDomain>lambdaQuery()
-                .eq(UserDomain::getDomain, addDTO.getDomain())) > 0) {
-            return R.fail("域名已经存在");
+        UserDomain userDomain = this.baseMapper.selectOne(Wrappers.<UserDomain>lambdaQuery()
+                .eq(UserDomain::getDomain, addDTO.getDomain())
+                .last("limit 1"));
+        // 如果域名已存在 且还是自己的 提示存在
+        if (Objects.nonNull(userDomain) && Objects.equals(addDTO.getUserId(), userDomain.getUserId())) {
+            return R.fail("该域名已经存在");
         }
-
-        UserDomain userDomain = new UserDomain();
+        if (Objects.isNull(userDomain)) {
+            userDomain = new UserDomain();
+            userDomain.setCreateTime(new Date());
+        }
         BeanUtils.copyProperties(addDTO, userDomain);
-        userDomain.setCreateTime(new Date());
         userDomain.setUpdateTime(new Date());
-        return R.ok(this.baseMapper.insert(userDomain) > 0);
+        this.saveOrUpdate(userDomain);
+        return R.ok();
     }
 
     @Resource
@@ -143,7 +148,7 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
         MsgDomainCert msgDomainCert = new MsgDomainCert(userDomain.getDomain(), userDomain.getCertKey(), userDomain.getCertPem());
 
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
-        pool.listStream().forEach(conn->{
+        pool.listStream().forEach(conn -> {
             conn.sendMessageToServer(msgDomainCert);
         });
         return R.ok();

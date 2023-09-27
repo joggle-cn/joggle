@@ -1,12 +1,11 @@
 package com.wuweibi.bullet.domain2.entity;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.io.Serializable;
-import lombok.Data; 
-import lombok.EqualsAndHashCode;
-import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 /**
  * 用户域名(UserDomain)表实体类
@@ -33,7 +32,10 @@ public class UserDomain {
      */
     @ApiModelProperty("域名")
  	private String domain;
-    
+
+    @ApiModelProperty("是否配置证书 1已配置 0未配置")
+ 	private String isCert;
+
     /**
      * 证书私钥
      */

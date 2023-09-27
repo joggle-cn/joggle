@@ -10,3 +10,8 @@ CREATE TABLE `user_domain`  (
     `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户域名' ROW_FORMAT = Compact;
+
+
+ALTER TABLE `user_domain`
+    ADD COLUMN `is_cert` tinyint(1) NULL DEFAULT 0 COMMENT '是否配置证书 1已配置 0未配置' AFTER `domain`;
+
