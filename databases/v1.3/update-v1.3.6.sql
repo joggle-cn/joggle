@@ -15,3 +15,6 @@ CREATE TABLE `user_domain`  (
 ALTER TABLE `user_domain`
     ADD COLUMN `is_cert` tinyint(1) NULL DEFAULT 0 COMMENT '是否配置证书 1已配置 0未配置' AFTER `domain`;
 
+ALTER TABLE `t_server_tunnel`
+    MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id' FIRST,
+    ADD COLUMN `user_id` bigint NULL COMMENT '用户id' AFTER `id`;
