@@ -17,4 +17,8 @@ public class PeerConfig {
     private Integer enable;
 
     private Integer mtu;
+
+
+    // ("传输压缩 1启用 0禁用")
+    private Integer compress;
 }

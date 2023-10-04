@@ -52,6 +52,9 @@ public class DevicePeersConfigDTO {
     private Integer clientDeviceTunnelId;
     private Integer clientMtu;
 
+    @ApiModelProperty("传输压缩 1启用 0禁用")
+    private Integer configCompress;
+
 
     /**
      * 服务侧本地端口

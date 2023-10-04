@@ -18,3 +18,6 @@ ALTER TABLE `user_domain`
 ALTER TABLE `t_server_tunnel`
     MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id' FIRST,
     ADD COLUMN `user_id` bigint NULL COMMENT '用户id' AFTER `id`;
+
+ALTER TABLE `device_peers`
+    ADD COLUMN `config_compress` tinyint(1) NULL DEFAULT 1 COMMENT '传输压缩 1是 0否' AFTER `update_time`;

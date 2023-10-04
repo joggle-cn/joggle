@@ -197,6 +197,7 @@ public class DevicePeersController {
         entity.setUpdateTime(new Date());
         entity.setClientMtu(dto.getClientMtu());
         entity.setServerMtu(dto.getClientMtu());
+        entity.setConfigCompress(dto.getConfigCompress());
         this.devicePeersService.updateById(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());

@@ -94,6 +94,8 @@ public class DevicePeers {
     @ApiModelProperty("更新时间")
  	private Date updateTime;
 
+    @ApiModelProperty("传输压缩 1启用 0禁用")
+    private Integer configCompress;
 
 
 }

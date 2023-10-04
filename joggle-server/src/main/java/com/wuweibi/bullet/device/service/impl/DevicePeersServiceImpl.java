@@ -65,6 +65,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         entity.setStatus(dto.getStatus());
         entity.setServerMtu(dto.getClientMtu());
         entity.setClientMtu(dto.getClientMtu());
+        entity.setConfigCompress(dto.getConfigCompress());//传输压缩
 
         this.baseMapper.insert(entity);
 
@@ -106,6 +107,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setType(PeerConfig.SERVER);
             doorConfig.setEnable(dto.getStatus());
             doorConfig.setMtu(dto.getServerMtu());
+            doorConfig.setCompress(dto.getConfigCompress());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(serverDeviceNo, msg);
@@ -120,6 +122,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setType(PeerConfig.CLIENT);
             doorConfig.setEnable(dto.getStatus());
             doorConfig.setMtu(dto.getClientMtu());
+            doorConfig.setCompress(dto.getConfigCompress());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(clientDeviceNo, msg);

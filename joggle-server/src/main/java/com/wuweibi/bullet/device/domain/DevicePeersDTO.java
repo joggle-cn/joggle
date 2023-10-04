@@ -71,4 +71,10 @@ public class DevicePeersDTO {
 
 
 
+    @NotNull(message = "传输压缩必填")
+    @ApiModelProperty("传输压缩 1启用 0禁用")
+    private Integer configCompress = 1;
+
+
+
 }
