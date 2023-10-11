@@ -68,6 +68,16 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
     @Resource
     private TransactionTemplate transactionTemplate;
 
+    /**
+     * 根据1TB流量推算出来与阿里云之间的流量差异得出的误差因子
+     * joggle 的 时间范围内  总流量除以总连接数 = 每个链接的平均
+     *
+     */
+    private static final long FLOW_ERROR_FACTOR = 100;
+
+
+
+
     @Override
     public R uploadData(DataMetricsDTO dataMetrics) {
         String deviceNo = dataMetrics.getDeviceNo();
@@ -107,11 +117,13 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                     return R.ok();
                 }
 
-                Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
-                long byteKb = bytes / 1024;
+                long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+                long byteKb = bytes / 1000;
                 if (byteKb == 0) {
                     byteKb = 1; // 至少消耗1KB
                 }
+                byteKb = byteKb + FLOW_ERROR_FACTOR;
+
                 // 优先扣套餐流量 (带有保护，不支持负数)
                 boolean status = userPackageService.updateFLow(userId, -byteKb);
                 if (status) {
@@ -124,7 +136,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                     return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
                 }
                 UserFlow userFlow = userFlowService.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
-                if (userFlow.getFlow() < -(1024)) { // 如果流量超出1兆，关闭映射
+                if (userFlow.getFlow() < -(1000)) { // 如果流量超出1兆，关闭映射
                     // 由于用户没有流量了，默认关闭所有映射
                     deviceBiz.closeAllMappingByUserId(userId);
                 }
