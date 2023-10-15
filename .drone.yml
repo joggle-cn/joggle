@@ -42,7 +42,7 @@ steps:
         path: /var/run/docker.sock
     settings:
       insecure: false
-      registry: nas.mrcms.cn:8082
+      registry: nas.mrcms.cn:8083
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       dockerfile: Dockerfile
@@ -51,7 +51,7 @@ steps:
         from_secret: registry_nexus_username
       password:
         from_secret: registry_nexus_password
-      repo: nas.mrcms.cn:8082/wuweiit/joggle-server
+      repo: nas.mrcms.cn:8083/wuweiit/joggle-server
       tags:
         - ${DRONE_BUILD_NUMBER}
     when:
@@ -69,7 +69,7 @@ steps:
       - name: kube
         path: /root/.kube
     commands:
-      - kubectl --kubeconfig /root/.kube/config set image deployment/joggle *='nas.mrcms.cn:8082/wuweiit/joggle-server:${DRONE_BUILD_NUMBER}' -n home
+      - kubectl --kubeconfig /root/.kube/config set image deployment/joggle *='nas.mrcms.cn:8083/wuweiit/joggle-server:${DRONE_BUILD_NUMBER}' -n home
     when:
       branch:
         - dev
