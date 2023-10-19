@@ -71,11 +71,11 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
     /**
      * 根据1TB流量推算出来与阿里云之间的流量差异得出的误差因子
      * joggle 的 时间范围内  总流量除以总连接数 = 每个链接的平均
+     * 2023年07月24日 到 2023年10月18日 跑完1TB流量
+     * joggle 统计流量 939GB 相差85GB 除以总连接数 平均每个链接需要补 30kb 流量。
      *
      */
-    private static final long FLOW_ERROR_FACTOR = 100;
-
-
+    private static final long FLOW_ERROR_FACTOR = 30 * 1024;
 
 
     @Override
@@ -105,6 +105,8 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
         entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
         entity.setRemoteAddr(dataMetrics.getRemoteAddr());
+        entity.setBytesIn(dataMetrics.getBytesIn() + FLOW_ERROR_FACTOR / 2);
+        entity.setBytesOut(dataMetrics.getBytesOut() + FLOW_ERROR_FACTOR / 2);
 
         Long userId = deviceDetail.getUserId();
 
@@ -117,12 +119,11 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                     return R.ok();
                 }
 
-                long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
+                long bytes = entity.getBytesIn() + entity.getBytesOut();
                 long byteKb = bytes / 1000;
                 if (byteKb == 0) {
                     byteKb = 1; // 至少消耗1KB
                 }
-                byteKb = byteKb + FLOW_ERROR_FACTOR;
 
                 // 优先扣套餐流量 (带有保护，不支持负数)
                 boolean status = userPackageService.updateFLow(userId, -byteKb);
