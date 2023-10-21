@@ -55,6 +55,9 @@ spring:
   ## spring-boot-admin 配置
   boot:
     admin:
+      ui:
+        publicUrl: ${JOGGLE_MONITOR_URL}
+
       ## admin 服务端访问地址
       context-path: /monitor
       ## admin 客户端连接服务端
