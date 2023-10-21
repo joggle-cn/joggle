@@ -16,11 +16,15 @@ server:
 
 
 management:
+  health:
+    mail:
+      enabled: false
   endpoints:
     web:
       basePath: ${spring.boot.admin.context-path}/actuator
       exposure:
         include: "*"
+        exclude: "mail"
   endpoint:
     health:
       show-details: ALWAYS
