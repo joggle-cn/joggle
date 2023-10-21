@@ -7,15 +7,16 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.service.CountService;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
-import com.wuweibi.bullet.utils.HttpUtils;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,17 +36,6 @@ public class HomeController {
 	 */
 	@Resource
 	private ResourceManager resourceManager;
-
-
-	/**
-	 * 首页
-	 */
-	@RequestMapping("/index.html")
-	public String home(HttpServletRequest request){
-        request.setAttribute("url", HttpUtils.getRequestURL(request));// 网址路径
-        request.setAttribute("lang", HttpUtils.getLanguage(request));// 网址路径
-		return "index";
-	}
 
 	@Resource
 	private BulletConfig bulletConfig;

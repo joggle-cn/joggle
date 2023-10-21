@@ -12,6 +12,20 @@ LOGGING_PATH: logs/
 #
 server:
   port: ${SERVER_PORT:8081}
+
+
+
+management:
+  endpoints:
+    web:
+      basePath: ${spring.boot.admin.context-path}/actuator
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+#  server:
+#    port: 8080
 #
 # Spring 配置
 #
@@ -30,8 +44,29 @@ knife4j:
     enableFooterCustom: true
     footerCustomContent: Apache License 2.0
 
-
 spring:
+  session:
+    store-type: redis
+    timeout: 86400
+  ## spring-boot-admin 配置
+  boot:
+    admin:
+      ## admin 服务端访问地址
+      context-path: /monitor
+      ## admin 客户端连接服务端
+      client:
+        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
+        instance:
+          prefer-ip: true
+        url: http://localhost:${server.port}/${spring.boot.admin.context-path}
+#      instanceAuth:
+#        defaultUserName: client_manager
+#        defaultPassword: password
+      instanceProxy:
+        # 单体服务应用 确保能够传递jessionid
+        ignored-headers:
+          - "Set-Cookie"
+          - "Authorization"
   profiles:
     active: dev
   application:
@@ -43,10 +78,13 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   security:
+#    user:
+#      name: admin     #
+#      password: 123456 #
     oauth2:
       jwt:
         signingKey: ${JOGGLE_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay
+      ignoreUrls:   /api/orders/alipay,/bootAdmin/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠

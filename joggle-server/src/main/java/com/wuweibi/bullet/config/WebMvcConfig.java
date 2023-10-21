@@ -54,13 +54,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //                .allowCredentials(true);
 //    }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/index.html");
-        registry.addViewController("/manager/").setViewName("forward:/manager/index.html");
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        WebMvcConfigurer.super.addViewControllers(registry);
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("forward:/index.html");
+//        registry.addViewController("/manager/").setViewName("forward:/manager/index.html");
+//        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        WebMvcConfigurer.super.addViewControllers(registry);
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

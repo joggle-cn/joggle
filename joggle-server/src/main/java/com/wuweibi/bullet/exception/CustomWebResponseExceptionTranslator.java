@@ -5,6 +5,9 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.exception.MyAuth2Exception;
+import com.wuweibi.bullet.ratelimiter.util.WebUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,7 +42,7 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
 
 
     @Override
-    public ResponseEntity translate(Exception e) {
+    public ResponseEntity translate(Exception e) throws Exception {
         // Try to extract a SpringSecurityException from the stacktrace
         Throwable[] causeChain = throwableAnalyzer.determineCauseChain(e);
 
@@ -73,6 +76,10 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
                     .status(200).body(R.fail(SystemErrorType.newErrorType(msg)));
 
         } else if (e instanceof InsufficientAuthenticationException) {
+            AdminServerProperties adminServerProperties = SpringUtils.getBean(AdminServerProperties.class);
+            if (WebUtils.getRequest().getRequestURI().startsWith(adminServerProperties.getContextPath())) { // 监控
+                throw e;
+            }
             log.warn("", e);
             return ResponseEntity
                     .status(200).body(R.fail(AuthErrorType.INVALID_LOGIN));
