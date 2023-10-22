@@ -129,7 +129,7 @@ public class DevicePeersController {
         }
 
         DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
-        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
+        R<Boolean> r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
         if (r1.isFail()) {
             return r1;
         }

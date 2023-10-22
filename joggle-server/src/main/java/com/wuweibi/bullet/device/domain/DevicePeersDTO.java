@@ -75,6 +75,14 @@ public class DevicePeersDTO {
     @ApiModelProperty("传输压缩 1启用 0禁用")
     private Integer configCompress = 1;
 
+    @NotNull(message = "传输加密方式必填  默认 none")
+    @ApiModelProperty("传输加密方式 none aes aes-128")
+    private String configEncryption;
+
+    @NotNull(message = "循环周期必填 默认 40")
+    @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
+    private Integer configInterval;
+
 
 
 }

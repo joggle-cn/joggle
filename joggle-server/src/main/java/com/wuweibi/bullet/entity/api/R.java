@@ -104,7 +104,7 @@ public class R<T> {
      * @param data 对象
      * @return Result
      */
-    public static <T>  R<T>  success(T data) {
+    public static <T> R<T> success(T data) {
         return new R<T>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
     }
 
@@ -113,7 +113,7 @@ public class R<T> {
      *
      * @return Result
      */
-    public static <T>   R<T>  success() {
+    public static <T> R<T>  success() {
         return success(null);
     }
 
@@ -139,7 +139,7 @@ public class R<T> {
      * @param baseException 异常
      * @return Result
      */
-    public static R fail(BaseException baseException) {
+    public static <T> R<T> fail(BaseException baseException) {
         return fail(baseException, null);
     }
 
@@ -150,7 +150,7 @@ public class R<T> {
      * @param data 对象
      * @return Result
      */
-    public static R fail(BaseException baseException, Object data) {
+    public static <T> R<T> fail(BaseException baseException, Object data) {
          baseException.getResult().data = data;
         return baseException.getResult();
     }
@@ -162,11 +162,11 @@ public class R<T> {
      * @param data 对象
      * @return Result
      */
-    public static R fail(ErrorType errorType, Object data) {
-        return new R<>(errorType, data);
+    public static <T> R<T> fail(ErrorType errorType, T data) {
+        return new R<T>(errorType, data);
     }
-    public static R fail(ErrorType errorType, String msg, Object data) {
-        return new R<>(errorType, msg, data);
+    public static <T> R<T> fail(ErrorType errorType, String msg, T data) {
+        return new R<T>(errorType, msg, data);
     }
 
     /**
@@ -175,7 +175,7 @@ public class R<T> {
      * @param errorType 错误类型
      * @return Result
      */
-    public static R fail(ErrorType errorType) {
+    public static <T> R<T> fail(ErrorType errorType) {
         return R.fail(errorType, null);
     }
 
@@ -186,7 +186,7 @@ public class R<T> {
      * @param errors SpringMVC错误
      * @return
      */
-    public static R fail(Errors errors) {
+    public static <T> R<T> fail(Errors errors) {
         List<FieldError> errorList = errors.getFieldErrors();
         Iterator<FieldError> it = errorList.iterator();
         FormFieldMessage[] errorCode = new FormFieldMessage[errorList.size()];
@@ -206,12 +206,12 @@ public class R<T> {
      * @param data 对象
      * @return Result
      */
-    public static R fail(Object data) {
+    public static <T> R<T> fail(T data) {
         return new R<>(SystemErrorType.SYSTEM_ERROR, data);
     }
 
 
-    public static R fail(String msg) {
+    public static <T> R<T> fail(String msg) {
         return new R<>(SystemErrorType.SYSTEM_ERROR, msg, null);
     }
 

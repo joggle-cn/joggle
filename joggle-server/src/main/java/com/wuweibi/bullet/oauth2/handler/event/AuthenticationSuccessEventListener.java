@@ -3,6 +3,7 @@ package com.wuweibi.bullet.oauth2.handler.event;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.ratelimiter.util.WebUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -28,8 +29,9 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         // 用于监控会话
-        WebUtils.setSessionAttribute(WebUtils.getRequest() ,"monitor", "true");
-
+        if (StringUtil.isNotBlank(WebUtils.getRequest().getRequestedSessionId())) {
+            WebUtils.setSessionAttribute(WebUtils.getRequest(), "monitor", "true");
+        }
 
 //        Authentication authentication = (Authentication) event.getSource();
 //        if (isUserAuthentication(authentication)) {

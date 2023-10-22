@@ -97,5 +97,11 @@ public class DevicePeers {
     @ApiModelProperty("传输压缩 1启用 0禁用")
     private Integer configCompress;
 
+    @ApiModelProperty("传输加密方式 none aes aes-128")
+    private String configEncryption;
+
+    @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
+    private Integer configInterval;
+
 
 }

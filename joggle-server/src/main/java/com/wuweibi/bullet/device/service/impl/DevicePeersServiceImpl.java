@@ -66,12 +66,12 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         entity.setServerMtu(dto.getClientMtu());
         entity.setClientMtu(dto.getClientMtu());
         entity.setConfigCompress(dto.getConfigCompress());//传输压缩
+        entity.setConfigEncryption(dto.getConfigEncryption());// 传输加密方式
+        entity.setConfigInterval(dto.getConfigInterval());// 配置循环周期ms
 
-        this.baseMapper.insert(entity);
-
-        String appName = DigestUtils.md5Hex(String.valueOf(entity.getId()));
+        String appName = DigestUtils.md5Hex(String.valueOf(new Date().getTime()));
         entity.setAppName(appName);
-        this.baseMapper.updateById(entity);
+        this.baseMapper.insert(entity);
         return entity;
     }
 
@@ -108,6 +108,8 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setEnable(dto.getStatus());
             doorConfig.setMtu(dto.getServerMtu());
             doorConfig.setCompress(dto.getConfigCompress());
+            doorConfig.setEncryption(dto.getConfigEncryption());
+            doorConfig.setInterval(dto.getConfigInterval());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(serverDeviceNo, msg);
@@ -123,6 +125,8 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             doorConfig.setEnable(dto.getStatus());
             doorConfig.setMtu(dto.getClientMtu());
             doorConfig.setCompress(dto.getConfigCompress());
+            doorConfig.setEncryption(dto.getConfigEncryption());
+            doorConfig.setInterval(dto.getConfigInterval());
             JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
             MsgPeer msg = new MsgPeer(data.toJSONString());
             annotation.sendMessage(clientDeviceNo, msg);
