@@ -1,9 +1,6 @@
 package com.wuweibi.bullet.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
@@ -101,5 +98,10 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	@TableField("server_tunnel_id")
 	private Integer serverTunnelId;
 
+	/**
+	 * 用户域名id
+	 */
+	@TableField(value = "user_domain_id",updateStrategy = FieldStrategy.IGNORED)
+	private Long userDomainId;
 
 }

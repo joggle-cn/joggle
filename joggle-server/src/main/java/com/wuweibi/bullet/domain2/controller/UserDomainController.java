@@ -9,10 +9,12 @@ import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
 import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
+import com.wuweibi.bullet.domain2.domain.vo.UserDomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 用户域名(UserDomain)表控制层
@@ -107,6 +110,8 @@ public class UserDomainController {
         return R.ok(this.userDomainService.updateById(userDomain));
     }
 
+    @Resource
+    private DeviceMappingService deviceMappingService;
 
     /**
      * 删除数据
@@ -117,17 +122,30 @@ public class UserDomainController {
     @ApiOperation("删除用户域名")
     @DeleteMapping("/")
     public R<Boolean> deleteById(@RequestBody @Valid IdLongDTO idDTO) {
-
         Long userId = SecurityUtils.getUserId();
         // 校验归属
         if (!this.userDomainService.checkUserDomain(userId, idDTO.getId())) {
             return R.fail("域名不存在");
         }
-        // TODO 如果被映射使用，不能删除
-
-
-
+        // 如果被映射使用，不能删除
+        if (deviceMappingService.checkUserDomain(null, idDTO.getId())){
+            return R.fail("用户域名已绑定，不能删除");
+        }
         return this.userDomainService.removeDomain(idDTO.getId());
+    }
+
+
+    /**
+     * 用户域名下拉
+     *
+     * @return
+     */
+    @ApiOperation("用户域名下拉")
+    @GetMapping("/options")
+    public R<List<UserDomainOptionVO>> deviceOptions() {
+        Long userId = SecurityUtils.getUserId();
+        List<UserDomainOptionVO> list = userDomainService.getOptionByUserId(userId);
+        return R.ok(list);
     }
 
 }

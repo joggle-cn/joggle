@@ -101,7 +101,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 // 特殊接口
                 .antMatchers("/", "/api/open/**", "/inner/open/**", "/logout", "/tunnel/**", "/_ws/log/**",
-                        "/swagger-resources", "/webjars/**", "/v3/api-docs", adminServerProperties.path("/**")).permitAll()
+                        "/swagger-resources", "/webjars/**", "/v3/api-docs", "/doc.html", adminServerProperties.path("/**")).permitAll()
 
                 // 放过静态资源 【废弃】
 //                .antMatchers("/robots.txt","/manager/**","/lib/**", "/js/**","/css/**","/template/**", "/resource/**","/view/**", "/doc.html", "/index.html", "/favicon.ico").permitAll()

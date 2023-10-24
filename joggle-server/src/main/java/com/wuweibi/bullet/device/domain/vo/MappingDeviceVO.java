@@ -48,6 +48,9 @@ public class MappingDeviceVO {
 	 */
 	private String hostname;
 
+	@ApiModelProperty("用户域名id")
+	private Long userDomainId;
+
 	/**
 	 * 简单认证
 	 * "demo:secret"

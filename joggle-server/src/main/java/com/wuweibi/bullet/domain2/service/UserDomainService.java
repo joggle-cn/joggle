@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
+import com.wuweibi.bullet.domain2.domain.vo.UserDomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
 import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.entity.api.R;
+
+import java.util.List;
 
 /**
  * 用户域名(UserDomain)表服务接口
@@ -66,4 +69,10 @@ public interface UserDomainService extends IService<UserDomain> {
      */
     boolean checkUserDomain(Long userId, Long userDomainId);
 
+    /**
+     * 根据用户id查询自定义域名
+     * @param userId 用户id
+     * @return
+     */
+    List<UserDomainOptionVO> getOptionByUserId(Long userId);
 }

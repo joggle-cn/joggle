@@ -18,8 +18,18 @@
 <!--    分页查询用户域名-->
     <select id="selectListPage" resultType="com.wuweibi.bullet.domain2.domain.UserDomainVO">
         select ud.*
-
         from user_domain ud where ud.user_id = #{params.userId}
+        order by ud.id desc
+    </select>
+
+<!--    用户的域名 下拉查询-->
+    <select id="selectOptionByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.UserDomainOptionVO">
+        select
+            ud.id ,
+            ud.domain,
+            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id) as bind
+        from user_domain ud
+        where ud.user_id = #{userId}
         order by ud.id desc
     </select>
 

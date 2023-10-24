@@ -168,5 +168,15 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
         return this.baseMapper.selectMapping4ProtocolByMappingId(mappingId);
     }
 
+    @Override
+    public boolean checkUserDomain(Long excludeMapId, Long userDomainId) {
+        LambdaQueryWrapper<DeviceMapping> lqw = Wrappers.lambdaQuery();
+        lqw.eq(DeviceMapping::getUserDomainId, userDomainId);
+        if (Objects.nonNull(excludeMapId)) {
+            lqw.ne(DeviceMapping::getId, excludeMapId);
+        }
+        return this.baseMapper.selectCount(lqw) > 0;
+    }
+
 
 }

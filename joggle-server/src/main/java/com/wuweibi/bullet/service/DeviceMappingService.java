@@ -131,4 +131,12 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
     List<DeviceMappingProtocol> getMapping4ProtocolByDeviceNo(String deviceNo);
 
     DeviceMappingProtocol getMapping4ProtocolByMappingId(Long mappingId);
+
+    /**
+     * 检查域名是否被除了自己以外的其他映射
+     * @param excludeMapId 排除id
+     * @param userDomainId 用户域名id
+     * @return
+     */
+    boolean checkUserDomain(Long excludeMapId, Long userDomainId);
 }

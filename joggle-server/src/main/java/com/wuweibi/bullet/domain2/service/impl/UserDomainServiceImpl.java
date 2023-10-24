@@ -9,6 +9,7 @@ import com.wuweibi.bullet.domain2.domain.UserDomainParam;
 import com.wuweibi.bullet.domain2.domain.UserDomainVO;
 import com.wuweibi.bullet.domain2.domain.dto.DomainCertUpdate;
 import com.wuweibi.bullet.domain2.domain.dto.UserDomainAddDTO;
+import com.wuweibi.bullet.domain2.domain.vo.UserDomainOptionVO;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
@@ -30,6 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -170,5 +172,10 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
                 .eq(UserDomain::getUserId, userId)
                 .eq(UserDomain::getId, userDomainId)
         ) > 0;
+    }
+
+    @Override
+    public List<UserDomainOptionVO> getOptionByUserId(Long userId) {
+        return this.baseMapper.selectOptionByUserId(userId);
     }
 }

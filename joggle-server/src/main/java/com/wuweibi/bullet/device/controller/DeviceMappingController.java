@@ -13,11 +13,13 @@ import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain2.entity.UserDomain;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
+import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
@@ -25,7 +27,6 @@ import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
-import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
@@ -116,6 +118,8 @@ public class DeviceMappingController {
 
     @Resource
     private DeviceBiz deviceBiz;
+    @Resource
+    private UserDomainService userDomainService;
 
     /**
      * 保存或者更新数据
@@ -146,6 +150,7 @@ public class DeviceMappingController {
         entity.setAuth(deviceMapping.getAuth());
         entity.setDescription(deviceMapping.getDescription());
         entity.setStatus(deviceMapping.getStatus());
+        entity.setUserDomainId(deviceMapping.getUserDomainId());
 
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
@@ -163,14 +168,27 @@ public class DeviceMappingController {
             return R.fail(SystemErrorType.FLOW_IS_DUE);
         }
 
-        if(StringUtil.isNotBlank(entity.getHostname())){
-            String baseDomain = StringUtil.getBaseDomain(entity.getHostname());
-            if(this.serverTunnelService.checkDomain(baseDomain)){
-                return R.fail("自定义域名不支持配置官方域名");
+//        if(StringUtil.isNotBlank(entity.getHostname())){
+//            String baseDomain = StringUtil.getBaseDomain(entity.getHostname());
+//            if(this.serverTunnelService.checkDomain(baseDomain)){
+//                return R.fail("自定义域名不支持配置官方域名");
+//            }
+//        }
+        // 查询自定义域名信息
+        entity.setHostname("");
+        if (Objects.nonNull(entity.getUserDomainId())) {
+            UserDomain userDomain = userDomainService.getById(entity.getUserDomainId());
+            if(!userId.equals(userDomain.getUserId())){
+                return R.fail("用户域名id不存在");
+            }
+            entity.setHostname(userDomain.getDomain());
+
+            // 校验用户域名是否绑定其他映射
+            if (deviceMappingService.checkUserDomain(entity.getId(), entity.getUserDomainId())) {
+                return R.fail("用户域名已绑定其他映射");
             }
         }
-
-        if(entity.getId() != null){
+        if (entity.getId() != null){
             deviceMappingService.updateById(entity);
         } else {
             // 验证域名是否被使用

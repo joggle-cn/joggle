@@ -70,6 +70,7 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.user_domain_id,
 		   dm.auth,
 		   dm.status,
 		   dm.server_tunnel_id,
