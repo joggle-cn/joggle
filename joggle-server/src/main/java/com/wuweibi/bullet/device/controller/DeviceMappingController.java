@@ -4,18 +4,22 @@ package com.wuweibi.bullet.device.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
+import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain2.entity.UserDomain;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
+import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import com.wuweibi.bullet.mapper.DomainMapper;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgMapping;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
@@ -94,7 +99,7 @@ public class DeviceMappingController {
      * @param deviceId
      * @return
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping( "/")
     public R<List<DeviceMapping>> device(@JwtUser Session session, @RequestParam Long deviceId){
         Long userId = session.getUserId();
         return R.success(deviceMappingService.listByMap(newMap(2)
@@ -107,38 +112,52 @@ public class DeviceMappingController {
     private DomainMapper domainMapper;
     @Resource
     private UserFlowService userFlowService;
+    @Resource
+    private ServerTunnelService serverTunnelService;
+
+
+    @Resource
+    private DeviceBiz deviceBiz;
+    @Resource
+    private UserDomainService userDomainService;
 
     /**
      * 保存或者更新数据
-     * @param entity
+     * @param deviceMapping
      * @return
      */
     @ApiOperation("更新映射信息")
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public R save(DeviceMapping entity ){
+    public R save(DeviceMapping deviceMapping ){
         Long userId = SecurityUtils.getUserId();
-        entity.setUserId(userId);
-        if (!IpAddrUtils.isIpv4(entity.getHost())) {
+        deviceMapping.setUserId(userId);
+        if (!IpAddrUtils.isIpv4(deviceMapping.getHost())) {
             return R.fail("请填写ipV4地址");
         }
         // 判断ip是内网ip
-        if (!IpAddrUtils.internalIp(entity.getHost())) {
+        if (!IpAddrUtils.internalIp(deviceMapping.getHost())) {
             return R.fail("请填写内网ip地址");
         }
 
-        DeviceMapping deviceMapping = deviceMappingService.getById(entity.getId());
-        entity.setDomainId(deviceMapping.getDomainId());
-        entity.setDomain(deviceMapping.getDomain());
-        entity.setPort(entity.getPort());
-        entity.setProtocol(entity.getProtocol());
+        DeviceMapping entity = deviceMappingService.getById(deviceMapping.getId());
+//        entity.setDomainId(deviceMapping.getDomainId());
+//        entity.setDomain(deviceMapping.getDomain());
+        entity.setProtocol(deviceMapping.getProtocol());
+        entity.setHostname(deviceMapping.getHostname());
+        entity.setHost(deviceMapping.getHost());
+        entity.setPort(deviceMapping.getPort());
         entity.setRemotePort(deviceMapping.getRemotePort());
+        entity.setAuth(deviceMapping.getAuth());
+        entity.setDescription(deviceMapping.getDescription());
+        entity.setStatus(deviceMapping.getStatus());
+        entity.setUserDomainId(deviceMapping.getUserDomainId());
 
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
             return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);
         }
         // 判断映射的域名是否过期，过期后不允许开启
-        if(!domainMapper.checkDoaminIdDue(userId, deviceMapping.getDomainId())){
+        if(!domainMapper.checkDoaminIdDue(userId, entity.getDomainId())){
             if(entity.getStatus() == 1){ // 不能启用
                 return R.fail(SystemErrorType.DOMAIN_IS_DUE);
             }
@@ -149,7 +168,27 @@ public class DeviceMappingController {
             return R.fail(SystemErrorType.FLOW_IS_DUE);
         }
 
-        if(entity.getId() != null){
+//        if(StringUtil.isNotBlank(entity.getHostname())){
+//            String baseDomain = StringUtil.getBaseDomain(entity.getHostname());
+//            if(this.serverTunnelService.checkDomain(baseDomain)){
+//                return R.fail("自定义域名不支持配置官方域名");
+//            }
+//        }
+        // 查询自定义域名信息
+        entity.setHostname("");
+        if (Objects.nonNull(entity.getUserDomainId())) {
+            UserDomain userDomain = userDomainService.getById(entity.getUserDomainId());
+            if(!userId.equals(userDomain.getUserId())){
+                return R.fail("用户域名id不存在");
+            }
+            entity.setHostname(userDomain.getDomain());
+
+            // 校验用户域名是否绑定其他映射
+            if (deviceMappingService.checkUserDomain(entity.getId(), entity.getUserDomainId())) {
+                return R.fail("用户域名已绑定其他映射");
+            }
+        }
+        if (entity.getId() != null){
             deviceMappingService.updateById(entity);
         } else {
             // 验证域名是否被使用

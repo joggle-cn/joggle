@@ -34,7 +34,7 @@ public class DeviceProxyDTO {
      * 端口id
      */        
     @ApiModelProperty("端口id")
- 	private Integer domainId;
+ 	private Long domainId;
 
     /**
      * 代理协议：http/https/socks5

@@ -88,7 +88,8 @@ public class Domain extends Model<Domain> {
 	@TableField(value = "bandwidth")
 	private Integer bandwidth;
 
-
+	@ApiModelProperty("并发连接数 每秒")
+	private Integer concurrentNum;
 
 
 	/**

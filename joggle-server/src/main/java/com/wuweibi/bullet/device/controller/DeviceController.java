@@ -4,11 +4,13 @@ package com.wuweibi.bullet.device.controller;
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
@@ -25,6 +27,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.protocol.MsgCheckUpdate;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
@@ -48,10 +51,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -286,16 +286,24 @@ public class DeviceController {
 
         // 端口
         portList.forEach(item->{
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
             item.setDomain(deviceInfo.getServerAddr() + ":" + item.getRemotePort());
+            String domain = item.getDomain();
+            if (StringUtil.isNotBlank(item.getHostname())) {
+                domain = item.getHostname();
+            }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         // 域名
         domainList.forEach(item -> {
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
+            item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
+            String domain = item.getDomain();
             if (StringUtil.isNotBlank(item.getHostname())) {
-                item.setDomain(item.getHostname());
-            } else {
-                item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
+                domain = item.getHostname();
             }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         mapBuilder
@@ -360,7 +368,6 @@ public class DeviceController {
         boolean status = deviceService.exists(userId, deviceId);
         if (!status) {
             return R.fail("设备不存在");
-
         }
 
         ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
@@ -397,6 +404,43 @@ public class DeviceController {
         }
 
         return R.success();
+    }
+
+
+
+    /**
+     * 检查更新接口
+     *
+     * @return
+     */
+    @ApiOperation("触发设备检查更新")
+    @PostMapping("/check-update")
+    public R<Boolean> checkUpdate(@JwtUser Session session,
+                                 @RequestBody @Valid DeviceCheckUpdateDTO dto) {
+        Long userId = session.getUserId();
+        Long deviceId = dto.getDeviceId();
+
+
+        // 校验设备是否是他的
+        Device device = deviceService.getById(deviceId);
+        if (!Objects.equals(userId, device.getUserId())){
+            return R.fail("设备不存在");
+        }
+        String deviceNo = device.getDeviceNo();
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(device.getServerTunnelId());
+        if (serverTunnel == null){
+            return R.fail("通道不存在");
+        }
+
+        // 发送切换消息给设备
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+        if (annotation == null) {
+            return R.fail("通道不在线");
+        }
+        MsgCheckUpdate msg = new MsgCheckUpdate();
+        annotation.sendMessage(deviceNo,  msg);
+        return R.ok();
     }
 
 

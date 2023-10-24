@@ -3,14 +3,15 @@ package com.wuweibi.bullet.device.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.device.domain.dto.DeviceAuthDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceAuthVO;
-import com.wuweibi.bullet.device.domain.dto.DeviceOnlineInfoDTO;
+import com.wuweibi.bullet.device.domain.dto.*;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.Api;
@@ -82,6 +83,22 @@ public class DeviceOpenInnerController {
 
     @Resource
     private DeviceOnlineService deviceOnlineService;
+    @Resource
+    private DeviceMappingService deviceMappingService;
 
+    @Resource
+    private DomainService  domainService;
+
+    @ApiOperation("获取映射扩展配置")
+    @PostMapping(value = "/mapping/ext")
+    public R<DomainConfigVO> deviceSecret(@RequestBody @Valid DeviceMappingConfigParam param) {
+        Long mappingId = param.getMappingId();
+        deviceMappingService.getMapping4ProtocolByMappingId(mappingId);
+        Domain domain = domainService.getByMappingId(mappingId);
+        DomainConfigVO domainConfigVO = new DomainConfigVO();
+        domainConfigVO.setBandwidth(domain.getBandwidth());
+        domainConfigVO.setConcurrentNum(domain.getConcurrentNum());
+        return R.ok(domainConfigVO);
+    }
 
 }

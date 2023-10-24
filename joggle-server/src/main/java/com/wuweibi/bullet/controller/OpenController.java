@@ -3,13 +3,16 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
+import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
@@ -21,10 +24,7 @@ import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
-import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.service.MailService;
-import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.service.*;
 import com.wuweibi.bullet.system.client.entity.ClientVersion;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.entity.User;
@@ -208,7 +208,7 @@ public class OpenController {
     /**
      * 激活用户
      */
-    @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
+    @PostMapping(value = "/user/activate" )
     public R activate(
             @RequestParam String code,// 激活码
             @RequestParam(required = false, name = "ic") String inviteCode, // 邀请码
@@ -225,7 +225,7 @@ public class OpenController {
      */
     @Deprecated
     @ApiOperation("设备秘钥校验【服务端调用校验】")
-    @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
+    @PostMapping(value = "/device/secret" )
     public R devicesecret(@RequestParam String clientNo,
                           @RequestParam String secret,
                           HttpServletRequest request) {
@@ -250,7 +250,7 @@ public class OpenController {
      * @return
      */
     @ApiOperation("客户端检查更新接口")
-    @RequestMapping(value = "/checkUpdate")
+    @PostMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
 
         ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
@@ -279,28 +279,34 @@ public class OpenController {
      * @return
      */
     @Profile("dev")
-    @RequestMapping(value = "/package/release")
+    @PostMapping(value = "/package/release")
     public R packageRelease(HttpServletRequest request) {
         userPackageManager.expireFree();
         return R.success( );
     }
 
     @Profile("dev")
-    @RequestMapping(value = "/domain/release")
+    @PostMapping(value = "/domain/release")
     public R domainRelease(HttpServletRequest request) {
         domainService.resourceDueTimeRelease();
         return R.success( );
     }
 
     @Profile("dev")
-    @RequestMapping(value = "/package/flow-reset")
+    @PostMapping(value = "/package/flow-reset")
     public R resetPackageFlow(HttpServletRequest request) {
         userPackageManager.resetPackageFlow();
         return R.success( );
     }
+    @Profile("dev")
+    @PostMapping(value = "/package/exp")
+    public R userPackageExp(HttpServletRequest request) {
+        userPackageManager.taskUserPackageExpirationReminder();
+        return R.success( );
+    }
 
     @Profile("dev")
-    @RequestMapping(value = "/test")
+    @PostMapping(value = "/test")
     public R checkUpdate(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
         HashMap<String, String> data = new HashMap<>();
@@ -316,7 +322,7 @@ public class OpenController {
     private WebsocketPool websocketPool;
 
 
-    @RequestMapping(value = "/ws")
+    @GetMapping(value = "/ws")
     public R ws(HttpServletRequest request) {
         HashMap<String, String> data = new HashMap<>();
         for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){
@@ -327,6 +333,24 @@ public class OpenController {
 
     @Resource
     private DataMetricsService dataMetricsService;
+
+    @Resource
+    private CountService countService;
+
+
+    /**
+     * 近30日流量情况
+     * @return
+     */
+    @ApiOperation("近30日流量情况")
+    @GetMapping("/all/flow/trend")
+    @ResponseBody
+    public R<List<DeviceDateItemVO>> getFlowTrend(
+            @JwtUser Session session){
+        int day = 30;
+        List<DeviceDateItemVO> list = countService.getAllFlowTrend(day);
+        return R.success(list);
+    }
 
 
     /**

@@ -117,4 +117,13 @@ public interface UserService extends IService<User> {
     Page<UserListVO> getList(Page pageInfo, UserAdminParam params);
 
     UserDetailVO getDetailById(Long userId);
+
+
+    /**
+     * 更新系统通知状态
+     * @param userId 用户id
+     * @param status 状态 1打开 0关闭
+     * @return
+     */
+    boolean updateSystemNotice(Long userId, Integer status);
 }

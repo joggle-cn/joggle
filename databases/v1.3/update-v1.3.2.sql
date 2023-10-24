@@ -167,5 +167,21 @@ ALTER TABLE `t_server_tunnel`
     ADD COLUMN `enable_tls` tinyint(1) NULL DEFAULT 0 COMMENT '启用TLS 1是 0否' AFTER `enable_flow`;
 
 
+CREATE TABLE `device_online_log`  (
+  `id` bigint(22) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `device_id` bigint(22) NULL DEFAULT NULL COMMENT '设备id',
+  `mac_addr` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'mac地址',
+  `intranet_ip` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '内网ip',
+  `public_ip` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '公网ip',
+  `server_tunnel_id` int(11) NULL DEFAULT NULL COMMENT '通道id',
+  `arch` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作系统',
+  `os` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'CPU架构',
+  `status` tinyint(1) NULL DEFAULT NULL COMMENT '状态 1 上线 -1 下线',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '设备在线日志' ROW_FORMAT = Dynamic;
+
+
 -- 线上已执
 

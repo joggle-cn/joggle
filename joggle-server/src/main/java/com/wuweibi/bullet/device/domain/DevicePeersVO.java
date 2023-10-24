@@ -91,4 +91,8 @@ public class DevicePeersVO {
     @ApiModelProperty("更新时间")
     private Date updateTime;
 
+
+    @ApiModelProperty("通信MTU 默认：1350")
+    private Integer mtu = 1350;
+
 }

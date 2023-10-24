@@ -21,6 +21,9 @@ public class ServerTunnel  {
 
     @TableId
     private Integer id;
+
+    // 用户id 公用 为 0
+    private Long userId;
     //通道名称
     private String name;
     private String country;

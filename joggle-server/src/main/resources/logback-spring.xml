@@ -23,7 +23,12 @@
     <logger name="org.springframework.web.servlet.handler" level="info"> </logger>
     <logger name="org.springframework.web.servlet.mvc.method.annotation" level="info"> </logger>
     <!-- no log   -->
-    <logger name="com.wuweibi.bullet.mapper.DomainMapper.selectDueDomain" level="ERROR" />
+    <logger name="com.wuweibi.bullet.domain2.mapper.DomainMapper.selectDueDomain" level="ERROR" />
+    <logger name="org.apache.http" level="INFO" />
+    <logger name="reactor.netty" level="INFO" />
+    <logger name="org.springframework.web.reactive.function.client" level="INFO" />
+    <logger name="de.codecentric.boot.admin.server.web.reactive" level="INFO" />
+    <logger name="de.codecentric.boot.admin.server" level="INFO" />
 
 
     <!-- 多配制环境设置 -->

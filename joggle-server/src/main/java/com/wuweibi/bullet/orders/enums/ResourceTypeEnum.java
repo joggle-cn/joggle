@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.Map;
 
 /**
- * 资源类型 1域名 2端口 3流量 4 充值
+ * 资源类型 1端口 2域名 3流量 4 充值
  * @author marker
  */
 @AllArgsConstructor

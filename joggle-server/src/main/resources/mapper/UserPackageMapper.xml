@@ -64,7 +64,21 @@
             su.email as userEmail
         from user_package up
         left join t_sys_users su on su.id = up.user_id
-        where  up.user_id >0 and up.end_time &lt; sysdate()
+        where  up.user_id >0  and up.level > 0 and up.end_time &lt; sysdate()
+    </select>
+
+<!--    查询到期的套餐用户-->
+    <select id="selectByExpiration" resultType="com.wuweibi.bullet.res.domain.UserPackageFowVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            up.`level`,
+            up.`name`,
+            up.end_time,
+            su.email as userEmail
+        from user_package up
+        left join t_sys_users su on su.id = up.user_id
+        where up.user_id > 0 and up.level > 0 and up.end_time &lt; DATE_ADD(sysdate(), INTERVAL #{day} DAY);
     </select>
 
 
@@ -73,6 +87,7 @@
         select
             up.user_id,
             up.resource_package_id,
+            rp.name,
             up.`level`,
             up.`flow`,
             up.`name`,

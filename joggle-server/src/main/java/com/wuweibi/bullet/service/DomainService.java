@@ -129,4 +129,8 @@ public interface DomainService extends IService<Domain> {
     Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params);
 
     boolean updateUserDueTime(Long userId, Integer bandwidth, Date endTime);
+
+    Domain getByMappingId(Long mappingId);
+
+    boolean exists(Long domainId);
 }

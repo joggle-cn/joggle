@@ -37,7 +37,7 @@ public class DataMetricsOpenInnerController {
 
     /**
      * 上报流量数据
-     *
+     * （已采用websocket方式上报）
      * @param dataMetrics 实体对象
      * @return 新增结果
      */

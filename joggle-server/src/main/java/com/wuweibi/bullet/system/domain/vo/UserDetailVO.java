@@ -70,6 +70,9 @@ public class UserDetailVO extends Model<UserDetailVO> {
 
 	private Integer userCertification;
 
+	@ApiModelProperty("系统通知 1打开 0关闭")
+	private Integer systemNotice;
+
 	@ApiModelProperty("套餐id")
 	private Integer resourcePackageId;
 

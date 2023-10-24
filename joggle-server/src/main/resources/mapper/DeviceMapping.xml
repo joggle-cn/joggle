@@ -70,11 +70,13 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.user_domain_id,
 		   dm.auth,
 		   dm.status,
 		   dm.server_tunnel_id,
 		   dm.domain_id,
 			td.bandwidth,
+			td.concurrent_num,
 		    ifnull((select sum( a.bytes_in + a.bytes_out )/ 1024 / 1024 from data_metrics a
 					where a.mapping_id = dm.id  AND a.create_date = CURRENT_DATE ),0) todayFlow
 		from t_device_mapping dm
@@ -99,6 +101,7 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.auth,
 			td.bandwidth
 		from t_device_mapping dm
 		left join t_domain td on dm.domain_id = td.id
@@ -123,6 +126,7 @@
 			dm.userId,
 			dm.remote_port,
 			dm.hostname,
+			dm.auth,
 			td.bandwidth
 		from t_device_mapping dm
 				 left join t_domain td on dm.domain_id = td.id

@@ -42,4 +42,11 @@ public class DomainListVO {
     private String deviceInfo;
 
 
+    @ApiModelProperty("宽带mbps")
+    private Integer bandwidth;
+
+    @ApiModelProperty("并发连接数 每秒")
+    private Integer concurrentNum;
+
+
 }

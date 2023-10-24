@@ -53,5 +53,11 @@ public interface ServerTunnelService extends IService<ServerTunnel> {
      */
     Page<ServerTunnelNodeVO> getNodeStatusList(Page pageInfo);
 
+    /**
+     * 检查域名是否存在
+     * @param baseDomain 一级域名
+     * @return
+     */
+    boolean checkDomain(String baseDomain);
 }
 

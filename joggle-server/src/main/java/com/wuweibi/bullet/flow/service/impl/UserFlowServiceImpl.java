@@ -35,7 +35,11 @@ public class UserFlowServiceImpl extends ServiceImpl<UserFlowMapper, UserFlow> i
 
     @Override
     public boolean updateFLow(Long userId, Long bytes) {
-        return this.baseMapper.updateFlow(userId, bytes);
+        boolean status = false;
+        synchronized(userId){
+            status = this.baseMapper.updateFlow(userId, bytes);
+        }
+        return status;
     }
 
     @Override

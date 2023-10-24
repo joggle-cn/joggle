@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.metrics.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -42,11 +43,11 @@ public class DataMetricsListVO {
     /**
      * 进入流量
      */
-    private Long bytesIn;
+    private Long bytesIn = 0L;
     /**
      * 出口流量
      */
-    private Long bytesOut;
+    private Long bytesOut = 0L;
 
     private Long flow;
 
@@ -78,18 +79,12 @@ public class DataMetricsListVO {
 
 
     public String getFlowStr() {
-        if (this.flow < 1024) {
-            return String.format("%dB", this.flow);
-        }
-        if (this.flow < 1024 * 1024) {
-            return String.format("%dKB", this.flow / 1024);
-        }
-        if (this.flow < 1024 * 1024 * 1024) {
-            return String.format("%dMB", this.flow / 1024 / 1024);
-        }
-        if (this.flow < 1024 * 1024 * 1024 * 1024) {
-            return String.format("%dGB", this.flow / 1024 / 1024 / 1024);
-        }
-        return String.format("%dGB", this.flow / 1024 / 1024 / 1024);
+        return StringUtil.getByteFormat(this.flow);
+    }
+    public String getBytesInStr() {
+        return StringUtil.getByteFormat(this.bytesIn);
+    }
+    public String getBytesOutStr() {
+        return StringUtil.getByteFormat(this.bytesOut);
     }
 }

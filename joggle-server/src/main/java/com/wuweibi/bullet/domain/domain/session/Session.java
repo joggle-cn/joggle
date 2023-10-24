@@ -4,6 +4,7 @@ package com.wuweibi.bullet.domain.domain.session;
  */
 
 import lombok.Data;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.Serializable;
 
@@ -25,6 +26,7 @@ import java.io.Serializable;
  * @author marker
  * @create 2019-08-21 09:29
  **/
+@ApiIgnore
 @Data
 public class Session implements Serializable {
 

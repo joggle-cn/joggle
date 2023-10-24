@@ -169,7 +169,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
     @Override
     public R expireFree() {
-        log.debug("[资源包到期释放] 开始");
+        log.debug("[套餐资源包到期释放] 开始");
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
         Cursor<UserPackageExpireVO> cursor = sqlSession.selectCursor(UserPackageMapper.class.getName() + ".selectByExpireDay", params);
@@ -182,7 +182,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             param.put("packageName", userPackage.getName());
             param.put("url", bulletConfig.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s到期提醒", userPackage.getName());
+            String subject = String.format("%s套餐到期释放提醒", userPackage.getName());
             this.free(userPackage);
 
             mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
@@ -210,20 +210,17 @@ public class UserPackageManagerImpl implements UserPackageManager {
         int count = 0;
         while (iter.hasNext()) {
             UserPackageFowVO userPackage = iter.next();
-            log.info("user[{}] package[{}] resetflow", userPackage.getUserId(), userPackage.getResourcePackageId());
+            log.info("user[{}] package[{}] reset flow", userPackage.getUserId(), userPackage.getResourcePackageId());
 
             this.userPackageService.updateRestFLow(userPackage.getUserId(), userPackage.getResourcePackageFlow());
 
-
-
-//            Map<String, Object> param = new HashMap<>(3);
-//            param.put("packageName", userPackage.getName());
-//            param.put("url", bulletConfig.getServerUrl());
-//            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-//            String subject = String.format("%s到期提醒", userPackage.getName());
-//            this.free(userPackage);
-
-//            mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
+            Map<String, Object> param = new HashMap<>(4);
+            param.put("packageName", userPackage.getName());
+            param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
+            param.put("url", bulletConfig.getServerUrl());
+            param.put("dueTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("%s套餐流量发放提醒", userPackage.getName());
+            mailService.send(userPackage.getUserEmail(), subject, param, "package_rest_flow_notice.htm");
         }
         try {
             cursor.close();
@@ -237,6 +234,37 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
     }
 
+    @Override
+    public void taskUserPackageExpirationReminder() {
+        log.info("[资源包到期前2日检查] 开始");
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("day", 2);
+        Cursor<UserPackageFowVO> cursor = sqlSession.selectCursor(UserPackageMapper.class.getName() + ".selectByExpiration", params);
+        Iterator<UserPackageFowVO> iter = cursor.iterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            UserPackageFowVO userPackage = iter.next();
+            log.info("user[{}] package[{}] expiration... ", userPackage.getUserId(), userPackage.getResourcePackageId());
+
+            Map<String, Object> param = new HashMap<>(4);
+            param.put("packageName", userPackage.getName());
+            param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
+            param.put("url", bulletConfig.getServerUrl());
+            param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
+            String subject = String.format("Joggle%s套餐即将到期提醒", userPackage.getName());
+            mailService.send(userPackage.getUserEmail(), subject, param, "package_expiration_notice.htm");
+        }
+        try {
+            cursor.close();
+        } catch (IOException e) {
+            log.error("", e);
+        } finally {
+            sqlSession.close();
+        }
+        log.info("[资源包到期前2日检查] 结束 处理数据量：{}", count);
+    }
+
 
     /**
      * 释放用户购买的资源
@@ -247,8 +275,10 @@ public class UserPackageManagerImpl implements UserPackageManager {
         Integer packageId = dto.getResourcePackageId();
         Long userId = dto.getUserId();
 
+        // 获取普通用户级别配置信息
         ResourcePackage resourcePackage = resourcePackageService.getByLevel(0);
 
+        // 获取用户的套餐使用情况
         UserPackage userPackage = userPackageService.getByUserId(userId);
         if (userPackage.getResourcePackageId() != packageId) {
             log.error("释放资源失败，资源包不一致 userId={}", userId);
@@ -266,7 +296,6 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
         // 删除用户的所有权益
         userPackageRightsService.removeResourceByUserId(userId);
-
 
     }
 

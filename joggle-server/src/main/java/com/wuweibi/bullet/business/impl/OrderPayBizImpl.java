@@ -96,8 +96,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
         orderPayInfo.setPayType(ordersDTO.getPayType());
         orderPayInfo.setResourceType(resourceType);
         switch (resourceType){
-            case 1: // 域名
-            case 2: // 端口
+            case 1: // 端口
+            case 2: // 域名
                 if (ordersDTO.getPayType() != PayTypeEnum.VIP.getType()) { // 非VIP权益支付
                     if (amount.compareTo(MAX_BUY_DAYS) > 0) {
                         return R.fail("最大支持购买360天");
@@ -138,7 +138,8 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()) { // VIP权益支付
                     UserPackage userPackage = userPackageService.getById(userId);
                     dueTime = userPackage.getEndTime();
-                    long size = DateUtil.betweenDay(domain.getDueTime(), dueTime, true); // 计算两个时间的天数
+                    Date startTime = domain.getDueTime()==null?new Date():domain.getDueTime();
+                    long size = DateUtil.betweenDay(startTime, dueTime, true); // 计算两个时间的天数
                     amount = size == 0 ? 0 : new Long(size  -1);
                 }
 //                else {
@@ -299,13 +300,12 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 Integer packageId = orders.getDomainId().intValue();
                 Integer amount =  orders.getAmount() .intValue();
                 R<UserPackage> r2 = userPackageManager.openService(orders.getUserId(), packageId, amount);
-                if(r2.isFail()){
+                if (r2.isFail()){
                     log.error("userPackageManager.openService() {}", r2.getMsg());
                 }
                 UserPackage userPackage = r2.getData();
                 Date endTime = userPackage.getEndTime();
                 Integer bandwidth = userPackage.getBroadbandRate();
-
 
                 // 批量更新用户的权益内资源结束时间 & 套餐网速
                 domainService.updateUserDueTime(orders.getUserId(), bandwidth, endTime);
@@ -388,9 +388,9 @@ public class OrderPayBizImpl implements OrderPayBiz {
     private UserPackageLimitEnum transToPackageEnum(Integer resourceType) {
         switch (resourceType){
             case 1:
-                return UserPackageLimitEnum.DomainNum;
-            case 2:
                 return UserPackageLimitEnum.PortNum;
+            case 2:
+                return UserPackageLimitEnum.DomainNum;
         }
         return null;
     }

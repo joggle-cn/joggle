@@ -52,6 +52,7 @@ public class RequestParamsFilter extends OncePerRequestFilter {
             "/js/**",
             "/css/**",
             "/template/**",
+            "/monitor/**",
     };
 
 

@@ -2,12 +2,14 @@ package com.wuweibi.bullet.device.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.DeviceProxyDTO;
 import com.wuweibi.bullet.device.domain.DeviceProxyParam;
 import com.wuweibi.bullet.device.domain.DeviceProxyVO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingUpdateDTO;
 import com.wuweibi.bullet.device.entity.DeviceProxy;
 import com.wuweibi.bullet.device.service.DeviceProxyService;
 import com.wuweibi.bullet.entity.api.R;
@@ -82,8 +84,11 @@ public class DeviceProxyController  {
      * @return 新增结果
      */
     @ApiOperation("配置设备代理")
-    @PutMapping("/config/one")
+    @PutMapping("/proxy-config")
     public R<Boolean> saveOrUpdate(@RequestBody @Valid DeviceProxyDTO dto) {
+
+        // TODO 校验设备是否自己的
+
         DeviceProxy entity = this.deviceProxyService.getByDeviceId(dto.getDeviceId());
         if (entity == null) {
             entity = new DeviceProxy();
@@ -105,11 +110,14 @@ public class DeviceProxyController  {
             config.setStatus(dto.getStatus());
             MsgProxy msg = new MsgProxy(config);
             annotation.sendMessage(device.getDeviceNo(), msg);
-
-            // TODO 自动映射处理
         }
-        return R.ok();
+        // 自动映射处理
+        DeviceMappingUpdateDTO deviceMappingUpdateDTO = new DeviceMappingUpdateDTO();
+        
+        return deviceBiz.updateMapping(deviceMappingUpdateDTO);
     }
 
+    @Resource
+    private DeviceBiz deviceBiz;
 
 }

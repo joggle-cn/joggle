@@ -66,7 +66,7 @@ public class DefaultGlobalExceptionHandlerAdvice {
      */
     @ExceptionHandler(value = {BindException.class})
     @ResponseStatus(HttpStatus.OK)
-    public R<FieldMsg> exception(BindException e) {
+    public R<List<FieldMsg>> exception(BindException e) {
         BindingResult bindingResult = e.getBindingResult();
         List<ObjectError> list = bindingResult.getAllErrors();
         List<FieldMsg> dataList = new ArrayList(list.size());

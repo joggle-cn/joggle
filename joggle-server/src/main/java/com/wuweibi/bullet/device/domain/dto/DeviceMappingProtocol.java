@@ -74,6 +74,7 @@ public class DeviceMappingProtocol {
 
 	@ApiModelProperty("宽带mbps")
     private Integer bandwidth;
+	
 
 
 	/**

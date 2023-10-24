@@ -12,6 +12,24 @@ LOGGING_PATH: logs/
 #
 server:
   port: ${SERVER_PORT:8081}
+
+
+
+management:
+  health:
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      basePath: ${spring.boot.admin.context-path}/actuator
+      exposure:
+        include: "*"
+        exclude: "mail"
+  endpoint:
+    health:
+      show-details: ALWAYS
+#  server:
+#    port: 8080
 #
 # Spring 配置
 #
@@ -30,8 +48,32 @@ knife4j:
     enableFooterCustom: true
     footerCustomContent: Apache License 2.0
 
-
 spring:
+  session:
+    store-type: redis
+    timeout: 86400
+  ## spring-boot-admin 配置
+  boot:
+    admin:
+      ui:
+        publicUrl: ${JOGGLE_MONITOR_URL}
+
+      ## admin 服务端访问地址
+      context-path: /monitor
+      ## admin 客户端连接服务端
+      client:
+        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
+        instance:
+          prefer-ip: true
+        url: http://localhost:${server.port}/${spring.boot.admin.context-path}
+#      instanceAuth:
+#        defaultUserName: client_manager
+#        defaultPassword: password
+      instanceProxy:
+        # 单体服务应用 确保能够传递jessionid
+        ignored-headers:
+          - "Set-Cookie"
+          - "Authorization"
   profiles:
     active: dev
   application:
@@ -43,10 +85,13 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   security:
+#    user:
+#      name: admin     #
+#      password: 123456 #
     oauth2:
       jwt:
-        signingKey: ${BULLET_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay
+        signingKey: ${JOGGLE_SIGNNING_KEY:123456}
+      ignoreUrls:   /api/orders/alipay,/bootAdmin/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
@@ -74,10 +119,10 @@ spring:
     suffix: .html
   # 邮件 配置
   mail:
-    host: ${BULLET_MAIL_HOST:smtp.ym.163.com}
-    port: ${BULLET_MAIL_PORT:994}
-    username: ${BULLET_MAIL_USERNAME:notice@joggle.cn}
-    password: ${BULLET_MAIL_PASSWORD:nopassword}
+    host: ${JOGGLE_MAIL_HOST:smtp.ym.163.com}
+    port: ${JOGGLE_MAIL_PORT:994}
+    username: ${JOGGLE_MAIL_USERNAME:notice@joggle.cn}
+    password: ${JOGGLE_MAIL_PASSWORD:nopassword}
     default-encoding: UTF-8
     properties:
       mail.smtp.auth: true
@@ -90,7 +135,7 @@ spring:
   # redis 配置
   redis:
     host: ${JOGGLE_REDIS_HOST:192.168.1.6}
-    port: ${JOGGLE_REDIS_PORT:32259}
+    port: ${JOGGLE_REDIS_PORT:6379}
     password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
     lettuce:
       pool:
@@ -105,14 +150,18 @@ spring:
     type: PER_CLIENT
     ignoreUrls:
       - /inner/**
+      - /css/**
+      - /js/**
+      - /lib/**
+      - /resource/**
 
   # 数据库配置
   datasource:
     driverClassName : com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://${BULLET_MYSQL_HOST:bullet-server}:${BULLET_MYSQL_PORT:3306}/${BULLET_MYSQL_DATABASE:db_bullet}?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-    username: ${BULLET_MYSQL_USERNAME:root}
-    password: ${BULLET_MYSQL_PASSWORD:123456}
+    url: jdbc:mysql://${JOGGLE_MYSQL_HOST:bullet-server}:${JOGGLE_MYSQL_PORT:3306}/${JOGGLE_MYSQL_DATABASE:db_bullet}?useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${JOGGLE_MYSQL_USERNAME:root}
+    password: ${JOGGLE_MYSQL_PASSWORD:123456}
     initialSize: 20
     minIdle: 5
     maxActive: 200
@@ -132,7 +181,7 @@ spring:
 mybatis-plus:
   # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
   # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
-  mapper-locations: classpath*:/mapper/*.xml
+  mapper-locations: classpath*:/mapper/*.xml,classpath*:/mapper/*/*.xml
   #实体扫描，多个package用逗号或者分号分隔
   typeAliasesPackage: com.wuweibi.bullet.entity
   global-config:
@@ -180,9 +229,9 @@ gate:
 # joggle 配置
 joggle:
   # ngrokd服务路径
-  # ngrokd: ${BULLET_NGROKD_HOME:/opt/ngrok}
+  # ngrokd: ${JOGGLE_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
-  serverUrl: ${BULLET_SERVER_URL:https://www.joggle.cn}
+  serverUrl: ${JOGGLE_SERVER_URL:https://www.joggle.cn}
   # 调用接口的Token
   adminApiToken: ${JOGGLE_API_TOKEN:123456}
   aliAppcode: ${ALI_MARKET_APPCODE:xxxxx}

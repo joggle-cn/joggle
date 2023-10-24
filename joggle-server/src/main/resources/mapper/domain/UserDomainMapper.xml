@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.domain2.mapper.UserDomainMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.domain2.entity.UserDomain">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="domain" column="domain" jdbcType="VARCHAR"/>
+        <result property="certKey" column="cert_key" jdbcType="VARCHAR"/>
+        <result property="certPem" column="cert_pem" jdbcType="VARCHAR"/>
+        <result property="applyTime" column="apply_time" jdbcType="TIMESTAMP"/>
+        <result property="dueTime" column="due_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+<!--    分页查询用户域名-->
+    <select id="selectListPage" resultType="com.wuweibi.bullet.domain2.domain.UserDomainVO">
+        select ud.*
+        from user_domain ud where ud.user_id = #{params.userId}
+        order by ud.id desc
+    </select>
+
+<!--    用户的域名 下拉查询-->
+    <select id="selectOptionByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.UserDomainOptionVO">
+        select
+            ud.id ,
+            ud.domain,
+            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id) as bind
+        from user_domain ud
+        where ud.user_id = #{userId}
+        order by ud.id desc
+    </select>
+
+</mapper>
+

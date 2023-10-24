@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.domain2.mapper.DomainMapper">
+
+
+
+	<update id="updateUserDueTime">
+		update t_domain d , user_package_rights upr set
+			d.due_time = #{endTime},
+			d.bandwidth = if(#{bandwidth}>d.bandwidth,#{bandwidth},d.bandwidth)
+		where upr.resource_id = d.id and upr.resource_type in (1,2)
+		  and d.user_id = upr.user_id
+		  and d.user_id = #{userId}
+	</update>
+
+	<!--	根据用户ID查询归属域名-->
+	<select id="selectByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainVO" parameterType="java.lang.Long">
+		select d.id, d.domain,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
+			   d.type, d.status, d.due_time as dueDateTime,
+			   ifnull(upr.user_id, 0) as packageRights
+		from t_domain  d
+	    left join t_server_tunnel st on st.id = d.server_tunnel_id
+		left join user_package_rights upr on d.id = upr.resource_id and upr.user_id = d.user_id
+		where d.user_id = #{userId}
+		order by d.buy_time desc, d.id desc
+	</select>
+
+<!--	获取可购买的域名列表-->
+	<select id="selectBuyList" resultType="com.wuweibi.bullet.domain2.domain.DomainBuyListVO">
+		select d.id,
+		IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domain ,
+		d.type, d.status, d.original_price,d.sales_price,
+		st.country tunnelCountry,
+		st.area tunnelArea,
+		st.name tunnelName,
+		st.broadband tunnelBroadband,
+		d.bandwidth
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		<where>
+			d.status = 0 and d.user_id is null
+			<if test="params.type != null">
+				and d.type = #{params.type}
+			</if>
+				<if test="params.serverTunnelId != null">
+				and d.server_tunnel_id = #{params.serverTunnelId}
+			</if>
+			<if test="params.keyword != null and params.keyword != ''">
+				and d.domain like concat(#{params.keyword},'%')
+			</if>
+		</where>
+	</select>
+
+<!--	获取最大的端口号-->
+    <select id="selectMaxPort" resultType="java.lang.Integer">
+		select max(domain) from t_domain WHERE server_tunnel_id=#{serverTunnelId} and type = 1
+	</select>
+
+<!--	获取用户未绑定的域名端口-->
+    <select id="selectListNotBindByUserId" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO">
+		select d.id, d.domain, d.type, st.server_addr serverAddr,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		where d.user_id = #{userId} and d.type=#{type} and d.server_tunnel_id = #{serverTunnelId}
+		 and d.id not in (select DISTINCT IFNULL(domain_id,0) from t_device_mapping where userId = #{userId})
+
+	</select>
+
+
+    <select id="selectDetail" resultType="com.wuweibi.bullet.domain2.domain.DomainDetail">
+		select d.*,
+			IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		where d.id = #{domainId}
+	</select>
+
+
+	<select id="selectDueDomain" resultType="com.alibaba.fastjson.JSONObject">
+		 select b.id mappingId, a.domain, a.due_time dueTime,c.deviceId deviceNo  from t_domain a
+		 left join t_device_mapping b on a.id = b.domain_id
+		 left join t_device c on b.device_id = c.id
+		 where a.due_time &lt; SYSDATE() and c.deviceId is not null and b.`status` = 1
+	</select>
+
+
+	<select id="selectByDueDay" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainReleaseVO">
+		select d.*,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull,
+			   (select email from t_sys_users where t_sys_users.id = d.user_id) as userEmail
+		from t_domain d
+		left join t_server_tunnel st on st.id = d.server_tunnel_id
+		where d.user_id >0 and d.due_time &lt; date_add(sysdate(), interval -#{days} day)
+	</select>
+
+
+    <select id="selectAdminList" resultType="com.wuweibi.bullet.domain2.domain.vo.DomainListVO">
+		select d.id, d.domain,
+			   IF(d.type = 2, concat(d.domain,'.',st.server_addr), concat(st.server_addr,':',d.domain)) as domainFull ,
+			   d.type,
+			   d.status,
+			   st.name serverTunnelName,
+			   d.server_tunnel_id,
+			   d.create_time,
+			   d.buy_time,
+			   d.due_time,
+			   d.user_id,
+			   d.bandwidth ,
+			   d.concurrent_num ,
+			   (select concat(d2.name,'|',d2.deviceId) from t_device d2
+				left join t_device_mapping  dm on d2.id = dm.device_id
+				left join t_domain dom on dm.domain = dom.domain and dom.server_tunnel_id = dm.server_tunnel_id
+				where dom.id = d.id and d.user_id = dm.userId ) as deviceInfo
+		from t_domain  d
+	    left join t_server_tunnel st on st.id = d.server_tunnel_id
+
+		<where>
+			<if test="params.domain != null and params.domain != ''">
+				and d.domain like concat('%', #{params.domain},'%')
+			</if>
+			<if test="params.serverTunnelId != null ">
+				and d.server_tunnel_id = #{params.serverTunnelId}
+			</if>
+			<if test="params.userId != null ">
+				and d.user_id = #{params.userId}
+			</if>
+			<if test="params.status != null ">
+				and d.status = #{params.status}
+			</if>
+			<if test="params.type != null ">
+				and d.type = #{params.type}
+			</if>
+		</where>
+	</select>
+    <select id="selectByMappingId" resultType="com.wuweibi.bullet.domain2.entity.Domain">
+		select a.*
+		from t_domain a
+		left join t_device_mapping cv on a.id = cv.domain_id
+		where cv.id = #{mappingId}
+	</select>
+
+</mapper>

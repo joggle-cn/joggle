@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * (DevicePeers)表控制层
@@ -128,7 +129,7 @@ public class DevicePeersController {
         }
 
         DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
-        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
+        R<Boolean> r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
         if (r1.isFail()) {
             return r1;
         }
@@ -193,7 +194,10 @@ public class DevicePeersController {
         }
         BeanUtils.copyProperties(dto, entity);
         entity.setUserId(userId);
-        entity.setUpdateTime(entity.getCreateTime());
+        entity.setUpdateTime(new Date());
+        entity.setClientMtu(dto.getClientMtu());
+        entity.setServerMtu(dto.getClientMtu());
+        entity.setConfigCompress(dto.getConfigCompress());
         this.devicePeersService.updateById(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());

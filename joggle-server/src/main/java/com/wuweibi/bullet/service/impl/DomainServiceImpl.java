@@ -21,7 +21,7 @@ import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
-import com.wuweibi.bullet.mapper.DomainMapper;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
@@ -222,12 +222,14 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.update(Wrappers.<Domain>lambdaUpdate()
                 .eq(Domain::getId, domainId)
                 .set(Domain::getBandwidth, resourcePackageLevel1.getBroadbandRate())
+                .set(Domain::getConcurrentNum, resourcePackageLevel1.getConcurrentNum())
                 .set(Domain::getUserId, null)
                 .set(Domain::getDueTime, null)
                 .set(Domain::getBuyTime, null)
                 .set(Domain::getStatus, DomainStatusEnum.BUY.getStatus())
         );
     }
+
 
 
     @Resource
@@ -246,8 +248,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     public boolean resourceDueTimeRelease() {
         log.debug("[资源到期释放] 开始");
 
-        // 基础套餐 level 1
-        ResourcePackage resourcePackageLevel1 = resourcePackageService.getByLevel(1);
+        // 基础套餐 level 0
+        ResourcePackage resourcePackageLevel1 = resourcePackageService.getByLevel(0);
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
@@ -291,6 +293,17 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public boolean updateUserDueTime(Long userId, Integer bandwidth, Date endTime) {
         return this.baseMapper.updateUserDueTime(userId, bandwidth, endTime);
+    }
+
+    @Override
+    public Domain getByMappingId(Long mappingId) {
+        return baseMapper.selectByMappingId(mappingId);
+    }
+
+    @Override
+    public boolean exists(Long domainId) {
+        return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
+                .eq(Domain::getId, domainId)) > 0;
     }
 
 }

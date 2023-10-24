@@ -39,6 +39,7 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("服务侧设备No")
     private String serverDeviceNo;
     private Integer serverDeviceTunnelId;
+    private Integer serverMtu;
 
     /**
      * 客户侧设备id
@@ -49,6 +50,16 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("客户侧设备No")
     private String clientDeviceNo;
     private Integer clientDeviceTunnelId;
+    private Integer clientMtu;
+
+    @ApiModelProperty("传输压缩 1启用 0禁用")
+    private Integer configCompress;
+
+    @ApiModelProperty("传输加密方式 none aes aes-128")
+    private String configEncryption;
+
+    @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
+    private Integer configInterval;
 
     /**
      * 服务侧本地端口

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.oauth2.service.impl;
 
 
+import cn.hutool.core.text.AntPathMatcher;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.oauth2.consts.ClientScope;
@@ -10,7 +11,9 @@ import com.wuweibi.bullet.oauth2.exception.LoginException;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,6 +51,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     private ClientDetailsService clientDetailsService;
 
     /**
+     * springbootAdmin server 配置项
+     */
+    @Resource
+    private AdminServerProperties adminServerProperties;
+
+    private AntPathMatcher monitorAntPathMatcher = new AntPathMatcher();
+
+    /**
      * 包含注册账号（做了事务）
      *
      * @param username
@@ -65,11 +76,18 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         log.info("loadByUsername:{}", user.toString());
 
-        // 如果登录的管理端
+        // 【monitor】 仅仅管理员可以登录
+        if (monitorAntPathMatcher.match(adminServerProperties.path("/**"),request.getRequestURI()) && 1 == user.getUserAdmin()){
+            return getUserDetail(user);
+        }
+
+        // 【joggle】 登录的管理端
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (null == authentication) {
+            throw new LoginException("无权限登录");
+        }
         String clientId = authentication.getName();
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
-
         // 校验管理端登录必须有管理标识的用户
         if (clientDetails.getScope().contains(ClientScope.SCOPE_ADMIN) && 1 != user.getUserAdmin()) {
             throw new LoginException("无权限登录");
@@ -91,6 +109,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
         // 返回用户
+        return getUserDetail(user);
+    }
+
+
+    /**
+     * 包装UserDetail
+     * @param user joggle用户信息
+     * @return
+     */
+    @NotNull
+    private UserDetail getUserDetail(OauthUser user) {
         return new UserDetail(
                 user.getId(),
                 user.getName(),
@@ -102,9 +131,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getCredentialsNonExpired(),
                 user.getAccountNonLocked(),
                 this.obtainGrantedAuthorities(user));
-
-
     }
+
 
     /**
      * 获得登录者所有角色的权限集合.

@@ -69,6 +69,11 @@ public class User extends Model<User> {
 
 	private Integer userCertification;
 
+	/**
+	 * 系统通知 1打开 0 关闭
+	 */
+	private Integer systemNotice;
+
 
 
 }
