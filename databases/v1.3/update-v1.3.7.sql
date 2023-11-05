@@ -16,4 +16,10 @@ INSERT INTO  `user_domain`(`id`, `user_id`, `domain`, `is_cert`, `cert_key`, `ce
      `apply_time`, `due_time`, `create_time`, `update_time`) (
     select null,userId, hostname, 0,null,null, null, null,now(),now() from t_device_mapping where hostname is not null and hostname != ''
       and hostname not in (select domain from user_domain)
-)
+);
+
+update t_device_mapping a , user_domain b
+set a.user_domain_id = b.id
+where a.hostname = b.domain;
+
+
