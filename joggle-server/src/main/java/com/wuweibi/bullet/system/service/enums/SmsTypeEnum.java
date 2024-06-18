@@ -4,6 +4,7 @@ package com.wuweibi.bullet.system.service.enums;
 public enum SmsTypeEnum {
     AUTH("AUTH", "SMS_251740093",  ""),
     LOGIN("LOGIN", " ",  "验证码：${code}，您正在登录，90秒内有效，验证码提供给他人可能导致账号被盗，请勿泄露，谨防被骗。"),
+    DEVICE_DOWN("DEVICE_DOWN", "SMS_251740093",  "设备下线通知"),
 
     ;
 

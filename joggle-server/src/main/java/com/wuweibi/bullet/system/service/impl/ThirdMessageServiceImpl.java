@@ -1,10 +1,12 @@
 package com.wuweibi.bullet.system.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson.JSON;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.tea.TeaException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.system.domain.SendSmsDTO;
 import com.wuweibi.bullet.system.domain.SmsDTO;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
 import com.wuweibi.bullet.system.service.enums.SmsTypeEnum;
@@ -39,6 +41,45 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
 
     @Resource
     private com.aliyun.dysmsapi20170525.Client client;
+
+
+    @Override
+    public R sendSms(SendSmsDTO sendSmsDTO) {
+        String phone = sendSmsDTO.getPhone();
+        SmsTypeEnum smsTypeEnum;
+        try {
+            smsTypeEnum = SmsTypeEnum.valueOf(sendSmsDTO.getType());
+        } catch (Exception e) {
+            return R.fail("短信验证码类型错误");
+        }
+
+        String templateCode = smsTypeEnum.getTemplateCode();
+
+        // 发送短信
+        com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
+                .setSignName("joggle")
+                .setTemplateCode(templateCode)
+                .setPhoneNumbers(phone)
+                .setTemplateParam(JSON.toJSONString(sendSmsDTO.getParam()));
+        com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
+        try {
+            // 复制代码运行请自行打印 API 的返回值
+            SendSmsResponse sendSmsResponse = client.sendSmsWithOptions(sendSmsRequest, runtime);
+            if(!"OK".equals(sendSmsResponse.getBody().getCode())){
+                log.error("短信发送异常：{}",sendSmsResponse.getBody().getMessage());
+            }
+        } catch (TeaException error) {
+            // 如有需要，请打印 error
+            log.error(error.message);
+            com.aliyun.teautil.Common.assertAsString(error.message);
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            // 如有需要，请打印 error
+            log.error(error.message);
+        }
+        return R.ok();
+    }
+
 
     @Override
     public R sendSmsCode(SmsDTO smsDTO) {

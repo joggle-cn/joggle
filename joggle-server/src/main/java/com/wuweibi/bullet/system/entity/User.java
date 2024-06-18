@@ -28,6 +28,7 @@ public class User extends Model<User> {
 	private Long id;
 	private String email;
 	private String nickname;
+	private String phone;
 	private String username;
 	private String password;
 	private String agree;
@@ -73,6 +74,11 @@ public class User extends Model<User> {
 	 * 系统通知 1打开 0 关闭
 	 */
 	private Integer systemNotice;
+
+	/**
+	 * 短信通知 1打开 0关闭
+	 */
+	private Integer smsNotice;
 
 
 
