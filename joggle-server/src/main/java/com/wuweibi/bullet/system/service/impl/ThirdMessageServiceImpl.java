@@ -8,6 +8,7 @@ import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.domain.SendSmsDTO;
 import com.wuweibi.bullet.system.domain.SmsDTO;
+import com.wuweibi.bullet.system.service.SysConfigService;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
 import com.wuweibi.bullet.system.service.enums.SmsTypeEnum;
 import com.wuweibi.bullet.utils.SpringUtils;
@@ -38,6 +39,10 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
     @Resource
     private BulletConfig yogaConfig;
 
+    @Resource
+    private SysConfigService sysConfigService;
+
+
 
     @Resource
     private com.aliyun.dysmsapi20170525.Client client;
@@ -53,14 +58,18 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
             return R.fail("短信验证码类型错误");
         }
 
-        String templateCode = smsTypeEnum.getTemplateCode();
+        String typeName = smsTypeEnum.getClass().getSimpleName();
+        String templateCode = sysConfigService.getConfigValue(typeName, smsTypeEnum.toString());
+        String smsSign = sysConfigService.getConfigValue(typeName, "SMS_SIGN");
 
+        String templateParam = JSON.toJSONString(sendSmsDTO.getParam());
+        log.info("templateParam: {}", templateParam);
         // 发送短信
         com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
-                .setSignName("joggle")
+                .setSignName(smsSign)
                 .setTemplateCode(templateCode)
                 .setPhoneNumbers(phone)
-                .setTemplateParam(JSON.toJSONString(sendSmsDTO.getParam()));
+                .setTemplateParam(templateParam);
         com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
         try {
             // 复制代码运行请自行打印 API 的返回值
@@ -91,7 +100,10 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
             return R.fail("短信验证码类型错误");
         }
 
-        String templateCode = smsTypeEnum.getTemplateCode();
+        String typeName = smsTypeEnum.getClass().getSimpleName();
+        String templateCode = sysConfigService.getConfigValue(typeName, smsTypeEnum.toString());
+        String smsSign = sysConfigService.getConfigValue(typeName, "SMS_SIGN");
+
         String codeKey = String.format(SMS_CODE_FORMAT, smsDTO.getType() , smsDTO.getCountryCode(), phone);
         Object cdv = redisTemplate.opsForValue().get(codeKey);
        if (cdv != null) {
@@ -113,7 +125,7 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
         }
         // 发送验证码
         com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
-                .setSignName("joggle")
+                .setSignName(smsSign)
                 .setTemplateCode(templateCode)
                 .setPhoneNumbers(phone)
                 .setTemplateParam("{\"code\":\""+code+"\"}");

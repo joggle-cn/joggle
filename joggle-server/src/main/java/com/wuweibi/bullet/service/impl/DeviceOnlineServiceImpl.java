@@ -3,7 +3,6 @@ package com.wuweibi.bullet.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
@@ -216,8 +215,6 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             param.put("deviceNo", deviceDetail.getDeviceNo());
             param.put("deviceName", deviceDetail.getName());
             param.put("publicIp", deviceDetail.getPublicIp());
-            param.put("reason", "可能断电、断网等原因导致");
-            param.put("url", bulletConfig.getServerUrl());
             param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             notifyBiz.notification(deviceDetail.getUserId(), NotifyBiz.NotifyType.DEVICE_DOWN, param);
         }
@@ -229,8 +226,6 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     private UserService userService;
     @Resource
     private NotifyBiz notifyBiz;
-    @Resource
-    private BulletConfig bulletConfig;
 
     @Override
     public int batchUpdateStatus(List<String> deviceNoList, int status) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.system.mapper.SysConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.system.entity.SysConfig">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="key" column="key" jdbcType="VARCHAR"/>
+        <result property="value" column="value" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+        
+</mapper>
+
