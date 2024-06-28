@@ -13,11 +13,13 @@ import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
+import com.wuweibi.bullet.domain2.domain.dto.DomainAddDTO;
 import com.wuweibi.bullet.domain2.domain.dto.DomainUpdateDTO;
 import com.wuweibi.bullet.domain2.domain.dto.ReleaseResourceDTO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainDetailAdminVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainListVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
@@ -29,6 +31,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Date;
 
 /**
  * 我的域名接口
@@ -47,6 +51,7 @@ import javax.validation.Valid;
  **/
 @Slf4j
 @AdminApi
+@Api(tags = "域名管理")
 @RestController
 @RequestMapping("/admin/domain")
 public class DomainAdminController {
@@ -166,6 +171,36 @@ public class DomainAdminController {
         return R.success();
     }
 
+
+    /**
+     * 新增域名
+     */
+    @ApiOperation(value = "新增域名", tags="后台")
+    @PostMapping("/")
+    public R<Boolean> addDomain(@RequestBody @Valid DomainAddDTO dto) {
+        // 校验参数
+        if (!ArrayUtils.contains(new int[]{1, 2}, dto.getType())) {
+            return R.fail("资源类型错误");
+        }
+
+        // 校验通道师傅存在
+        ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
+        if (serverTunnel == null) {
+            return R.fail("服务器通道不存在");
+        }
+        Domain domain = new Domain();
+        domain.setType(DomainTypeEnum.DOMAIN.getType());
+        domain.setCreateTime(new Date());
+        domain.setDomain(dto.getDomain());
+        domain.setOriginalPrice(dto.getOriginalPrice());
+        domain.setSalesPrice(dto.getSalesPrice());
+        domain.setStatus(DomainStatusEnum.BUY.getStatus());
+        domain.setServerTunnelId(dto.getServerTunnelId());// 默认通道
+        domain.setBandwidth(dto.getBandwidth());// 宽带
+        this.domainService.save(domain);
+
+        return R.ok( );
+    }
 
 
     /**

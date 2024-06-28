@@ -28,4 +28,4 @@ CREATE TABLE `sys_config`  (
 -- ----------------------------
 INSERT INTO `sys_config` VALUES (1, 'SmsTypeEnum', 'AUTH', 'SMS_468430684', '2024-06-23 20:29:55', '2024-06-23 20:57:28');
 INSERT INTO `sys_config` VALUES (2, 'SmsTypeEnum', 'DEVICE_DOWN', 'SMS_468420666', '2024-06-23 20:30:47', '2024-06-23 20:57:26');
-
+INSERT INTO `sys_config` VALUES (3, 'SmsTypeEnum', 'SMS_SIGN', '纠狗', '2024-06-23 20:30:47', '2024-06-23 20:57:26');

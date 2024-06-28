@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // 关闭HTTP Basic认证
-//        http.httpBasic().disable();
+        http.httpBasic().disable();
 //        http.csrf().disable();
 //        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable();
 //        http .anonymous().disable();
@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //            .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
 //        ;
 
+        // monitor 访问路径
         String monitorContextPath = adminServerProperties.getContextPath();
 
         // @formatter:off
@@ -78,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .headers().frameOptions().disable()
                 .and().authorizeRequests()
+//                .antMatchers( "/index.html"
 //                .antMatchers(monitorContextPath + "/assets/**"
 //                        , monitorContextPath + "/login"
 //                        , monitorContextPath + "/instances" // 注册入口
