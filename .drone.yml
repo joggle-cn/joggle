@@ -78,7 +78,7 @@ steps:
       port: 22
       strip_components: 2
       target: /opt/data/joggle/prod/
-      source: joggle-server/target/joggle-server.jar
+      source: joggle-server/target/app.jar
     when:
       branch:
         - prod
@@ -95,7 +95,7 @@ steps:
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       dockerfile: Dockerfile
-      build_args: JAR=./joggle-server/target/joggle-server.jar
+      build_args: JAR=./joggle-server/target/app.jar
       username:
         from_secret: registry_nexus_username
       password:
@@ -168,3 +168,4 @@ trigger:
     - prod
     - test
     - dev
+    - release
