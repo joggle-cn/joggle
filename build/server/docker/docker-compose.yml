@@ -1,0 +1,75 @@
+version: '2'
+services:
+  nginx:
+    container_name: nginx
+    image: 'bitnami/nginx:1.12'
+    restart: always
+    environment:
+      TZ: 'Asia/Shanghai'
+    ports:
+      - '1443:8443'
+    volumes:
+      - /opt/data/nginx/conf:/bitnami/nginx/conf
+      - /opt/data/nginx/html:/opt/bitnami/nginx/html
+    networks:
+      - app_net
+  mysql:
+    container_name: mysql
+    image: 'mysql:5.6'
+    restart: always
+    environment:
+      TZ: 'Asia/Shanghai'
+      MYSQL_ROOT_PASSWORD : 'rcnk5mRRPkHZVsbQ'
+    ports:
+      - '3306:3306'
+    volumes:
+      - /opt/data/mysql/data:/var/lib/mysql
+      - /opt/data/mysql/logs:/var/log/mysql
+    networks:
+      - app_net
+  redis:
+    container_name: redis
+    image: 'bitnami/redis:latest'
+    restart: always
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=rcnk5mRRPkHZVsbQ
+    volumes:
+      - '/opt/data/bitnami-redis:/bitnami'
+    networks:
+      - app_net
+  joggle-prod:
+    container_name: joggle-prod
+    image: 'wuweiit/springboot:0.0.1'
+    environment:
+      APP_ENV: 'prod'
+      BULLET_MYSQL_HOST: mysql
+      BULLET_MYSQL_PASSWORD: 'rcnk5mRRPkHZVsbQ'
+      BULLET_MAIL_HOST: smtp.qiye.aliyun.com
+      BULLET_MAIL_PORT: 465
+      BULLET_MAIL_USERNAME: notice@xxx.cn
+      BULLET_MAIL_PASSWORD: xxxxx
+      JOGGLE_REDIS_HOST: redis
+      JOGGLE_REDIS_PORT: 6379
+      JOGGLE_REDIS_PASSWORD: rcnk5mRRPkHZVsbQ
+      ALI_MARKET_APPCODE: caa85xxed9a5cb2
+      ALI_SMS_ACCESSKEYID: LTAI5tAF7fUuxxxx
+      ALI_SMS_KEYSECRET: xxxx
+      JOGGLE_API_TOKEN: xxxx
+      ALIPAY_MERCHANT_APPID: xxxxxx
+      ALIPAY_MERCHANT_PRIVATE_KEY: ""
+      ALIPAY_PUBLIC_KEY: ""
+      ALIPAY_NOTIFY_URL: "https://xxxx.xxxx.cn/api/open/orders/alipay/callback"
+    restart: always
+    extra_hosts:
+      - "bullet-server:172.22.8.1"
+    ports:
+      - '8081:8081'
+    volumes:
+      - /opt/data/springboot/prod:/data
+    networks:
+      - app_net
+networks:
+  app_net:
+    external: true

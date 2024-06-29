@@ -3,7 +3,6 @@ package com.wuweibi.bullet.config;
 import com.alipay.easysdk.kernel.Config;
 import com.wuweibi.bullet.config.properties.AliSmsProperties;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
-import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -47,11 +48,6 @@ public class BeanConfig {
     /**
      * WebSocket链接池
      */
-    @Bean
-    public CoonPool beanCoonPool() {
-        return new CoonPool();
-    }
-
     @Bean
     public WebsocketPool beanC2oonPool() {
         return new WebsocketPool();
@@ -113,5 +109,15 @@ public class BeanConfig {
         config.endpoint = "dysmsapi.aliyuncs.com";
         return new com.aliyun.dysmsapi20170525.Client(config);
     }
+
+
+    /**
+     * redis session 序列化方式
+     */
+    @Component("springSessionDefaultRedisSerializer")
+    public class SessionSerializer extends GenericJackson2JsonRedisSerializer {
+
+    }
+
 
 }

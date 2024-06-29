@@ -16,8 +16,8 @@
  */
 package com.wuweibi.bullet.websocket;
 
-import com.wuweibi.bullet.conn.CoonPool;
-import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.protocol.MsgLogOpen;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
@@ -58,19 +58,15 @@ public class LogAnnotation {
 
         // 通知对应的mapping
         // 找设备ID
-        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
-        Device device = deviceService.getById(this.deviceId);
-        BulletAnnotation annotation = pool.getByDeviceNo(device.getDeviceNo());
+        DeviceDetail device = deviceService.getDetail(this.deviceId);
+
+        Bullet3Annotation annotation = pool.getByTunnelId(device.getServerTunnelId());
 
         // 开启日志
         MsgLogOpen msgLogOpen = new MsgLogOpen(this.deviceId, 1);
-
-        try {
-            annotation.sendObject(msgLogOpen);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        annotation.sendMessage(device.getDeviceNo(), msgLogOpen);
 
 
 //        String message = String.format("* %s %s", nickname, "has joined.");
@@ -83,10 +79,11 @@ public class LogAnnotation {
         connections.remove(this);
 
 
-        CoonPool pool = SpringUtils.getBean(CoonPool.class);
+        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
-        Device device = deviceService.getById(this.deviceId);
-        BulletAnnotation annotation = pool.getByDeviceNo(device.getDeviceNo());
+        DeviceDetail device = deviceService.getDetail(this.deviceId);
+
+        Bullet3Annotation annotation = pool.getByTunnelId(device.getServerTunnelId());
 
 
         // 关闭日志
@@ -94,15 +91,7 @@ public class LogAnnotation {
         msgLogOpen.setDeviceId(this.deviceId);
         msgLogOpen.setOpen(0);
 
-        try {
-            if (annotation != null) {
-                annotation.sendObject(msgLogOpen);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        annotation.sendMessage(device.getDeviceNo(), msgLogOpen);
     }
 
 

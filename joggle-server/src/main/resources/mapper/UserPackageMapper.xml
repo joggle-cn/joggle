@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.res.mapper.UserPackageMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.res.entity.UserPackage">
+        <!--@Table -->
+        <result property="userId" column="user_id" />
+        <result property="resourcePackageId" column="resource_package_id" />
+        <result property="name" column="name" />
+        <result property="level" column="level" />
+        <result property="wolEnable" column="wol_enable" />
+        <result property="proxyEnable" column="proxy_enable" />
+        <result property="createTime" column="create_time" />
+        <result property="domainUse" column="domain_use" />
+        <result property="portUse" column="port_use" />
+        <result property="flowUse" column="flow_use" />
+        <result property="deviceUse" column="device_use" />
+        <result property="broadbandRate" column="broadband_rate" />
+        <result property="concurrentNum" column="concurrent_num" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="peerUse" column="peer_use" />
+    </resultMap>
+
+
+    <update id="updateToLevel0ByUserId">
+        update user_package up , resource_package rp set
+            up.level = rp.level,
+            up.name = rp.name,
+            up.concurrent_num = rp.concurrent_num,
+            up.broadband_rate = rp.broadband_rate,
+            up.proxy_enable = rp.proxy_enable,
+            up.wol_enable = rp.wol_enable,
+            up.resource_package_id = rp.id,
+            up.end_time = null,
+            up.domain_use = 0,
+            up.port_use = 0,
+            up.peer_use = 0,
+            up.flow_use = 0,
+            up.device_use = 0
+        where rp.id = 1 and up.user_id = #{userId}
+    </update>
+
+<!--    更新套餐流量-->
+    <update id="updateFlow">
+        update user_package set flow = flow + #{flow}
+        where user_id = #{userId} and (flow + #{flow})>= 0
+    </update>
+
+<!--    充值套餐流量-->
+    <update id="updateRestFLow">
+        update user_package set flow = #{flow}
+        where user_id = #{userId}
+    </update>
+
+
+    <select id="selectByExpireDay" resultType="com.wuweibi.bullet.res.domain.UserPackageExpireVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            up.`level`,
+            up.`name`,
+            up.end_time,
+            su.email as userEmail
+        from user_package up
+        left join t_sys_users su on su.id = up.user_id
+        where  up.user_id >0  and up.level > 0 and up.end_time &lt; sysdate()
+    </select>
+
+<!--    查询到期的套餐用户-->
+    <select id="selectByExpiration" resultType="com.wuweibi.bullet.res.domain.UserPackageFowVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            up.`level`,
+            up.`name`,
+            up.end_time,
+            su.email as userEmail
+        from user_package up
+        left join t_sys_users su on su.id = up.user_id
+        where up.user_id > 0 and up.level > 0 and up.end_time &lt; DATE_ADD(sysdate(), INTERVAL #{day} DAY);
+    </select>
+
+
+<!--   查询 没有过期的 付费套餐用户权益 -->
+    <select id="selectByRestPackageFlow" resultType="com.wuweibi.bullet.res.domain.UserPackageFowVO">
+        select
+            up.user_id,
+            up.resource_package_id,
+            rp.name,
+            up.`level`,
+            up.`flow`,
+            up.`name`,
+            up.end_time,
+            rp.flow_num as resourcePackageFlow,
+            su.email as userEmail
+        from user_package up
+         left join resource_package rp on up.resource_package_id = rp.id
+        left join t_sys_users su on su.id = up.user_id
+        where up.user_id >0 and up.level > 0 and up.end_time > sysdate()
+    </select>
+
+</mapper>
+

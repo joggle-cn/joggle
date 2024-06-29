@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -83,7 +84,12 @@ public class Domain extends Model<Domain> {
 	@TableField(value = "status")
 	private Integer status;
 
+	@ApiModelProperty("宽带mbps")
+	@TableField(value = "bandwidth")
+	private Integer bandwidth;
 
+	@ApiModelProperty("并发连接数 每秒")
+	private Integer concurrentNum;
 
 
 	/**

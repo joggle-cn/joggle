@@ -99,4 +99,25 @@
         GROUP BY a.create_date
         ORDER BY a.create_date asc
     </select>
+
+
+    <select id="selectAllFlowTrend" resultType="com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO">
+        select a.create_date as time, round(a.flow,2)  flow  from
+        (
+            (select create_date, SUM(flow)/1024/1024 flow from data_metrics_day where
+
+           <![CDATA[  create_date <= CURDATE() and create_date >= DATE_SUB(now(),INTERVAL #{day} day) ]]>
+            GROUP BY create_date)
+            UNION  (
+            SELECT
+            date(@date := DATE_ADD( @date, INTERVAL - 1 DAY )) create_date,
+            0 flow
+            FROM
+            ( SELECT @date := DATE_ADD( now(), INTERVAL + 1 DAY ) FROM data_metrics_day ) days
+            LIMIT #{day}
+            )
+        ) a
+        GROUP BY a.create_date
+        ORDER BY a.create_date asc
+    </select>
 </mapper>

@@ -33,4 +33,6 @@ public interface UserFlowService extends IService<UserFlow> {
      * @return
      */
     boolean hasFlow(Long userId);
+
+    UserFlow getUserFlowAndPackageFlow(Long userId);
 }

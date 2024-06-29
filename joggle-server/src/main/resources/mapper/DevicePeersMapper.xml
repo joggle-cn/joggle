@@ -32,8 +32,9 @@
                dp.`server_local_port`, dp.`server_local_host`, dp.`client_proxy_port`,
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
+               dp.`client_mtu`, dp.`server_mtu`, dp.`server_mtu` as mtu, dp.config_compress, dp.config_encryption, dp.config_interval,
                dc.deviceId clientDeviceNo,
-               dc.intranet_ip clientDeviceIp,
+               (select intranet_ip from t_device_online do where do.deviceNo = dc.deviceId) clientDeviceIp,
                ds.deviceId serverDeviceNo,
             (select server_tunnel_id from t_device_online where deviceNo = dc.deviceId)  as clientDeviceTunnelId,
             (select server_tunnel_id from t_device_online where deviceNo = ds.deviceId)  as serverDeviceTunnelId

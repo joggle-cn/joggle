@@ -4,11 +4,13 @@ package com.wuweibi.bullet.device.controller;
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.conn.CoonPool;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
@@ -25,9 +27,13 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.protocol.MsgCheckUpdate;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
+import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -39,15 +45,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
@@ -65,19 +69,14 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 @RequestMapping("/api/user/device")
 public class DeviceController {
 
-
-    @Resource
-    private CoonPool coonPool;
     @Resource
     private WebsocketPool websocketPool;
-
 
     /**
      * 设备管理
      */
     @Resource
     private DeviceService deviceService;
-
 
     @Resource
     private DeviceOnlineService deviceOnlineService;
@@ -112,8 +111,6 @@ public class DeviceController {
     }
 
 
-
-
     /**
      * 更新设备基本信息
      *
@@ -141,6 +138,7 @@ public class DeviceController {
      */
     @ApiOperation("删除设备")
     @DeleteMapping(value = "")
+    @Transactional
     public R<Boolean> delete(@JwtUser Session session,
                          @RequestBody @Valid DeviceDelDTO dto,
                          HttpServletRequest request) {
@@ -149,27 +147,37 @@ public class DeviceController {
 
         // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
-        if (status) {
-            // 验证是否存在
-            Device device = deviceService.getById(deviceId);
-            DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
-            if (deviceOnline == null) {
-                return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-            }
-            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-            if(bulletAnnotation != null){
-                MsgUnBind msg = new MsgUnBind();
-                bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
-            }
+        if (!status) {
+            return R.fail("设备不存在");
+        }
+        // 验证是否存在
+        Device device = deviceService.getById(deviceId);
+        DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
+        if (deviceOnline == null) {
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        }
+        Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
+        if(bulletAnnotation != null){
+            MsgUnBind msg = new MsgUnBind();
+            bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
+        }
 
-            // 删除映射
-            deviceMappingService.deleteByDeviceId(deviceId);
+        // 删除映射
+        deviceMappingService.deleteByDeviceId(deviceId);
+        deviceService.removeUserId(deviceId);
 
-            deviceService.removeUserId(deviceId);
+        // 设备移除，权益移除
+        R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, -1);
+        if (r1.isFail()) {
+            throw new RException(r1);
         }
         return R.ok();
     }
+    @Resource
+    private UserPackageRightsService userPackageRightsService;
 
+    @Resource
+    private UserPackageManager userPackageManager;
 
     /**
      * 设备校验(绑定)
@@ -178,6 +186,7 @@ public class DeviceController {
      */
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
+    @Transactional
     public R validate(String deviceId, HttpServletRequest request) {
         Long userId = SecurityUtils.getUserId();
         String deviceNo = deviceId;
@@ -211,17 +220,16 @@ public class DeviceController {
             device.setName(deviceId);
         }
 
-        // 限制普通用户绑定设备的数量10 排除自己的账号判断
-        Long deviceNum = deviceService.getCountByUserId(userId);
-        if (deviceNum >= 10 && userId != 1) {
+        // 套餐设备数量限制校验
+        if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
-
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
         device.setDeviceSecret(deviceSecret);
         device.setUserId(userId);
         deviceService.saveOrUpdate(device);
+        userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, 1);
 
         // 发送消息通知设备秘钥
         MsgDeviceSecret msg = new MsgDeviceSecret();
@@ -278,16 +286,24 @@ public class DeviceController {
 
         // 端口
         portList.forEach(item->{
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
             item.setDomain(deviceInfo.getServerAddr() + ":" + item.getRemotePort());
+            String domain = item.getDomain();
+            if (StringUtil.isNotBlank(item.getHostname())) {
+                domain = item.getHostname();
+            }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         // 域名
         domainList.forEach(item -> {
+            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
+            item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
+            String domain = item.getDomain();
             if (StringUtil.isNotBlank(item.getHostname())) {
-                item.setDomain(item.getHostname());
-            } else {
-                item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
+                domain = item.getHostname();
             }
+            item.setUrl(String.format("%s://%s", protocol, domain));
         });
 
         mapBuilder
@@ -352,7 +368,6 @@ public class DeviceController {
         boolean status = deviceService.exists(userId, deviceId);
         if (!status) {
             return R.fail("设备不存在");
-
         }
 
         ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
@@ -389,6 +404,43 @@ public class DeviceController {
         }
 
         return R.success();
+    }
+
+
+
+    /**
+     * 检查更新接口
+     *
+     * @return
+     */
+    @ApiOperation("触发设备检查更新")
+    @PostMapping("/check-update")
+    public R<Boolean> checkUpdate(@JwtUser Session session,
+                                 @RequestBody @Valid DeviceCheckUpdateDTO dto) {
+        Long userId = session.getUserId();
+        Long deviceId = dto.getDeviceId();
+
+
+        // 校验设备是否是他的
+        Device device = deviceService.getById(deviceId);
+        if (!Objects.equals(userId, device.getUserId())){
+            return R.fail("设备不存在");
+        }
+        String deviceNo = device.getDeviceNo();
+
+        ServerTunnel serverTunnel = serverTunnelService.getById(device.getServerTunnelId());
+        if (serverTunnel == null){
+            return R.fail("通道不存在");
+        }
+
+        // 发送切换消息给设备
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
+        if (annotation == null) {
+            return R.fail("通道不在线");
+        }
+        MsgCheckUpdate msg = new MsgCheckUpdate();
+        annotation.sendMessage(deviceNo,  msg);
+        return R.ok();
     }
 
 

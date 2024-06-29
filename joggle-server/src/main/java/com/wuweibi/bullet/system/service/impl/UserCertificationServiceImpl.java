@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.system.domain.UserCertificationParam;
 import com.wuweibi.bullet.system.domain.UserCertificationVO;
+import com.wuweibi.bullet.system.domain.dto.UserCertAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserCertificationAdminListVO;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.mapper.UserCertificationMapper;
 import com.wuweibi.bullet.system.service.UserCertificationService;
@@ -60,5 +62,10 @@ public class UserCertificationServiceImpl extends ServiceImpl<UserCertificationM
     @Override
     public UserCertification getLastResult(Long userId) {
         return this.baseMapper.selectLastResult(userId);
+    }
+
+    @Override
+    public Page<UserCertificationAdminListVO> getAdminList(Page pageInfo, UserCertAdminParam params) {
+        return this.baseMapper.selectAdminList(pageInfo, params);
     }
 }

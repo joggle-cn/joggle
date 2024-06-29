@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
@@ -126,4 +127,16 @@ public interface DeviceMappingService extends IService<DeviceMapping> {
     List<MappingDeviceVO> getByDeviceId(Long deviceId);
 
     DeviceMapping getByDomainId(Long deviceId, Long domainId);
+
+    List<DeviceMappingProtocol> getMapping4ProtocolByDeviceNo(String deviceNo);
+
+    DeviceMappingProtocol getMapping4ProtocolByMappingId(Long mappingId);
+
+    /**
+     * 检查域名是否被除了自己以外的其他映射
+     * @param excludeMapId 排除id
+     * @param userDomainId 用户域名id
+     * @return
+     */
+    boolean checkUserDomain(Long excludeMapId, Long userDomainId);
 }

@@ -7,6 +7,7 @@ import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.utils.DateTimeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * 通道(ServerTunnel)表控制层
@@ -41,6 +44,22 @@ public class ServerTunnelOpenController {
     @GetMapping("/node/list")
     public R<Page<ServerTunnelNodeVO>> getNodeList(PageParam pageParam) {
         Page<ServerTunnelNodeVO> page = this.serverTunnelService.getNodeStatusList(pageParam.toMybatisPlusPage());
+        long nowTime = new Date().getTime();
+        page.getRecords().forEach(item->{
+            if(item.getServerUpTime() == null){
+                item.setOnlineTime("-");
+                return;
+            }
+            Date time = item.getServerUpTime().compareTo(item.getServerDownTime()) >=0?item.getServerDownTime(): item.getServerUpTime();
+            if (time == null) {
+                time = new Date();
+            }
+            // 如果在线则计算在线时间
+            if (Objects.equals(1, item.getStatus())){
+                String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
+                item.setOnlineTime(subTime);
+            }
+        });
         return R.ok(page);
     }
 

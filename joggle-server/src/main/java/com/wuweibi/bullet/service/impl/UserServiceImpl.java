@@ -9,9 +9,6 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
-import com.wuweibi.bullet.system.domain.vo.UserListVO;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.UserForget;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
@@ -19,10 +16,16 @@ import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.mapper.UserForgetMapper;
 import com.wuweibi.bullet.mapper.UserMapper;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +60,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private PasswordEncoder passwordEncoder;
-
 
 
     @Transactional
@@ -175,12 +177,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 如果存在邀请码的人存在，赠送流量给邀请人
         User inviteUser = this.getByInviteCode(inviteCode);
-        if (inviteUser != null) {
-            userFlowService.updateFLow(inviteUser.getId(), 1048576L);
+        if (inviteUser != null) { // 赠送到用户的套餐流量中
+            userPackageService.updateFLow(inviteUser.getId(), 1048576L);
         }
         return R.success();
     }
 
+    @Resource
+    private UserPackageService userPackageService;
 
 
     @Override
@@ -213,6 +217,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<UserListVO> getList(Page pageInfo, UserAdminParam params) {
         return this.baseMapper.selectUserList(pageInfo, params);
+    }
+
+    @Override
+    public UserDetailVO getDetailById(Long userId) {
+        return this.baseMapper.selectDetailById(userId);
+    }
+
+    @Override
+    public boolean updateSystemNotice(Long userId, Integer status) {
+        if (!ArrayUtils.contains(new int[]{1, 0}, status)) {
+            return false;
+        }
+        return this.baseMapper.updateSystemNotice(userId, status);
+    }
+
+    @Override
+    public User getByUserId(Long userId) {
+        return this.baseMapper.selectById(userId);
     }
 
 

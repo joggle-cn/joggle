@@ -3,13 +3,15 @@ package com.wuweibi.bullet.business.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.business.DeviceBiz;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingUpdateDTO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
+import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.BulletAnnotation;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ public class DeviceBizImpl implements DeviceBiz {
     private DeviceService deviceService;
 
     @Resource
-    private CoonPool coonPool;
+    private WebsocketPool websocketPool;
 
     @Override
     @Async
@@ -49,7 +51,7 @@ public class DeviceBizImpl implements DeviceBiz {
             entity.setStatus(0);
             String deviceNo = entity.getDeviceNo();
             if (!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)) {
-                BulletAnnotation annotation = coonPool.getByDeviceNo(deviceNo);
+                Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
                 if (annotation == null) {// 设备不在线
                     continue;
                 }
@@ -58,10 +60,20 @@ public class DeviceBizImpl implements DeviceBiz {
                 log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
                 msg = new MsgUnMapping(data.toJSONString());
                 // 发送信息给设备
-                annotation.sendMessage(msg);
+                annotation.sendMessage(deviceNo, msg);
             }
         }
 
 
+    }
+
+    @Override
+    public R updateMapping(DeviceMappingUpdateDTO deviceMappingDTO) {
+
+        // TODO 更新映射信息
+
+
+
+        return null;
     }
 }

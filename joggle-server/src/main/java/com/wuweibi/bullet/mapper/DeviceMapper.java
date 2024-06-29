@@ -1,8 +1,11 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
+import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
@@ -70,4 +73,5 @@ public interface DeviceMapper extends BaseMapper<Device> {
 
     DeviceDetail selectDetailByDeviceNo(@Param("deviceNo") String deviceNo);
 
+    Page<DeviceListVO> selectAdminList(Page pageInfo, @Param("params")  DeviceAdminParam params);
 }

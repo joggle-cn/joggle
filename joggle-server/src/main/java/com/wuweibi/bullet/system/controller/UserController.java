@@ -7,11 +7,10 @@ import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
-import com.wuweibi.bullet.conn.CoonPool;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.ResultMessage;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -19,7 +18,11 @@ import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.service.AuthenticationService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.domain.dto.NoticeSwitchParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.utils.StringUtil;
@@ -51,7 +54,7 @@ public class UserController {
     private UserService userService;
 
     @Resource
-    private CoonPool pool;
+    private WebsocketPool websocketPool;
 
 
     @InitBinder
@@ -68,6 +71,9 @@ public class UserController {
     @Resource
     private UserCertificationService userCertificationService;
 
+    @Resource
+    private ResourcePackageService resourcePackageService;
+
     /**
      * 获取登录的用户信息
      */
@@ -81,20 +87,22 @@ public class UserController {
         Long userId = SecurityUtils.getUserId();
 
         // 验证邮箱正确性
-        User user = userService.getById(userId);
+        UserDetailVO user = userService.getDetailById(userId);
         UserFlow userFlow = userFlowService.getUserFlow(userId);
         user.setPassword(null);
 
         JSONObject result = (JSONObject) JSON.toJSON(user);
 
-        result.put("connNums", pool.count());
+        result.put("connNums", websocketPool.count());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         result.put("loginTime", sdf.format(user.getLoginTime()));
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
         result.put("userFlow", userFlow.getFlow()/1024); //MB
+        result.put("userPackageFlow", user.getUserPackageFlow()/1024); //MB
         result.put("userCertification", user.getUserCertification());
+        result.put("systemNotice", user.getSystemNotice());
 
         if (user.getUserCertification() != 1) {
             UserCertification userCertification = userCertificationService.getLastResult(userId);
@@ -186,6 +194,21 @@ public class UserController {
         }
         Long userId = session.getUserId();
         boolean status = userService.updatePassword(userId, dto);
+        if (status) {
+            return R.success();
+        }
+        return R.fail();
+    }
+
+    /**
+     * 系统通知开关
+     */
+    @ApiOperation("系统通知开关")
+    @ResponseMessage
+    @PostMapping(value = "/notice/switch")
+    public R<Boolean> noticeSwitch(@RequestBody @Valid NoticeSwitchParam dto, @JwtUser Session session) {
+        Long userId = session.getUserId();
+        boolean status = userService.updateSystemNotice(userId, dto.getStatus());
         if (status) {
             return R.success();
         }

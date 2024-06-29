@@ -55,17 +55,23 @@
 
     <select id="selectAdminList" resultType="com.wuweibi.bullet.orders.domain.OrdersListAdminVO">
         select
-            *
-        from orders
+            o.*
+        from orders o
         <where>
             <if test="params.orderNo != null and params.orderNo != '' ">
-                and order_no = #{params.orderNo}
+                and o.order_no = #{params.orderNo}
             </if>
             <if test="params.status != null">
-                and status = #{params.status}
+                and o.status = #{params.status}
+            </if>
+            <if test="params.payType != null">
+                and o.pay_type = #{params.payType}
+            </if>
+            <if test="params.userId != null">
+                and o.user_id = #{params.userId}
             </if>
         </where>
-        order by create_time desc, id desc
+        order by o.create_time desc, id desc
     </select>
 
 </mapper>

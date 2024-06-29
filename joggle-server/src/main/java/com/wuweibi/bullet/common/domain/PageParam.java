@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @ApiModel(value = "分页参数")
-public class PageParam {
+public class PageParam<T> {
 
 
     @ApiModelProperty(value = "页码 默认 1")
@@ -23,8 +23,7 @@ public class PageParam {
         this.size = size;
     }
 
-    public Page toMybatisPlusPage() {
-        Page page = new Page<>(this.current, this.size);
-        return page;
+    public Page<T> toMybatisPlusPage() {
+        return new Page<>(this.current, this.size);
     }
 }

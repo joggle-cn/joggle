@@ -1,12 +1,15 @@
 package com.wuweibi.bullet.device.controller;
 
 
+import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
+import com.wuweibi.bullet.device.domain.dto.ServerTunnelParam;
 import com.wuweibi.bullet.device.domain.vo.ServerTunnelVO;
 import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +58,24 @@ public class ServerTunnelController {
      */
     @GetMapping("/list")
     public R<List<ServerTunnelVO>> selectAll() {
+        List<ServerTunnel> list = this.serverTunnelService.list();
+        return R.success(list.stream().map(item -> {
+            ServerTunnelVO vo = new ServerTunnelVO();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).collect(Collectors.toList()));
+    }
+
+    /**
+     * 查询当前登录用户的通道列表
+     *
+     * @return 所有数据
+     */
+    @GetMapping("/page")
+    public R<List<ServerTunnelVO>> getMyTunnelPage(PageParam page, ServerTunnelParam params) {
+
+        params.setUserId(SecurityUtils.getUserId());
+
         List<ServerTunnel> list = this.serverTunnelService.list();
         return R.success(list.stream().map(item -> {
             ServerTunnelVO vo = new ServerTunnelVO();

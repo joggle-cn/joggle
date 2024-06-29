@@ -14,4 +14,5 @@ public class DomainVO {
  private Integer status;
  private Date dueDateTime;
  private String dueTime;
+ private Boolean packageRights;
 }

@@ -1,0 +1,11 @@
+# 通道的本地配置（兼容管理模式）
+#devices:
+#  7skzd1yw9iww:
+#    deviceSecret: 123456
+#    tunnels:
+#      231: '{"remotePort":2001,"deviceId":93,"userId":35,"hostname":"","protocol":2, "port":30974,"domain":"2001","host":"192.168.1.6","id":231}'
+#  dsasadsad2:
+#    deviceSecret: 123456
+#    tunnels:
+#      1dsd: "{\"dsadsa\"}"
+

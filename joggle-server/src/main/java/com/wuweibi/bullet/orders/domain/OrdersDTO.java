@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class OrdersDTO {
 
-    //资源类型 1域名 2端口 3流量 4 充值
+    @ApiModelProperty( "资源类型 1端口 2域名 3流量 4 充值 5 套餐")
     private Integer resourceType;
 
-    //支付方式 1余额 2支付宝
     @NotNull(message = "支付方式错误")
+    @ApiModelProperty( "支付方式 1余额 2支付宝 3VIP权益")
     private Integer payType;
 
     @ApiModelProperty("数量")

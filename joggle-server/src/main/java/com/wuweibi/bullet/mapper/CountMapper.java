@@ -47,4 +47,6 @@ public interface CountMapper {
      * @return
      */
     List<DeviceDateItemVO> selectUserDeviceTrend(@Param("userId")Long userId, @Param("deviceId")Long deviceId);
+
+    List<DeviceDateItemVO> selectAllFlowTrend(@Param("day") int day);
 }

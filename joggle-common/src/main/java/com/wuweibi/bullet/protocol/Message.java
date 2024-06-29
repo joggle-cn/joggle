@@ -32,6 +32,10 @@ public abstract class Message {
     public static final int DEVICE_DOOR = 0x10000013; // 设备任意门
     public static final int P2P_STUN = 0x10000014; // p2p
 
+    public static final int DEVICE_METRICS = 0x10000015; // 统计数据
+
+    public static final int CHECK_UPDATE = 0x10000016; // 检查更新
+
 
     public static final int NEW_MAPPING = 0x6;
     public static final int NEW_UNMAPPING = 0x60000001;
@@ -41,11 +45,16 @@ public abstract class Message {
     public static final int AUTH = 0xa; // 认证
     public static final int AUTH_RESP = 0xa000001; //
 
+    public static final int TUNNEL_CONFIG   = 0x14;
+    public static final int DOMAIN_CERT   = 0x15;// 域名证书配置
 
 
     //** 服务器管理端与服务端的消息
     public static final int CONTROL_SERVER_WRAPPER = 1; // 管理端与服务器之间的消息
     public static final int CONTROL_CLIENT_WRAPPER = 2; // 管理端与客户端之间的消息
+
+    public static final int CONTROL_WHITE_IPS = 3; // ip白名单
+
 
     //消息头
     private MsgHead head;

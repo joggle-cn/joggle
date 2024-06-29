@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.domain.message.MessageResult;
 import com.wuweibi.bullet.domain.params.PasswordParam;
-import com.wuweibi.bullet.system.domain.vo.UserListVO;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.domain.dto.UserAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.domain.vo.UserListVO;
+import com.wuweibi.bullet.system.entity.User;
 
 import java.math.BigDecimal;
 
@@ -114,4 +115,17 @@ public interface UserService extends IService<User> {
      * @return
      */
     Page<UserListVO> getList(Page pageInfo, UserAdminParam params);
+
+    UserDetailVO getDetailById(Long userId);
+
+
+    /**
+     * 更新系统通知状态
+     * @param userId 用户id
+     * @param status 状态 1打开 0关闭
+     * @return
+     */
+    boolean updateSystemNotice(Long userId, Integer status);
+
+    User getByUserId(Long userId);
 }

@@ -1,28 +1,17 @@
 package com.wuweibi.bullet.metrics.controller;
 
 
-import com.wuweibi.bullet.business.DeviceBiz;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
-import com.wuweibi.bullet.device.domain.DeviceDetail;
-import com.wuweibi.bullet.device.entity.ServerTunnel;
-import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
-import com.wuweibi.bullet.exception.type.SystemErrorType;
-import com.wuweibi.bullet.flow.entity.UserFlow;
-import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
-import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
-import com.wuweibi.bullet.service.DeviceService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.Date;
 
 /**
  * 数据收集(DataMetrics)表控制层
@@ -43,20 +32,12 @@ public class DataMetricsOpenInnerController {
     private DataMetricsService dataMetricsService;
 
     @Resource
-    private DeviceService deviceService;
-
-    @Resource
-    private UserFlowService userFlowService;
-
-    @Resource
     private BulletConfig bulletConfig;
 
-    @Resource
-    private ServerTunnelService serverTunnelService;
 
     /**
      * 上报流量数据
-     *
+     * （已采用websocket方式上报）
      * @param dataMetrics 实体对象
      * @return 新增结果
      */
@@ -72,49 +53,9 @@ public class DataMetricsOpenInnerController {
             return R.fail("链接时长错误");
         }
 
-        String deviceNo = dataMetrics.getDeviceNo();
-        DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
-        if (deviceDetail == null) {
-            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
-        }
-
-        ServerTunnel serverTunnel = serverTunnelService.getById(deviceDetail.getServerTunnelId());
-        if (serverTunnel == null) {
-            return R.fail(SystemErrorType.DEVICE_NOT_EXIST);
-        }
-
-        DataMetrics entity = new DataMetrics();
-        BeanUtils.copyProperties(dataMetrics, entity);
-        entity.setCreateTime(new Date());
-        entity.setServerTunnelId(deviceDetail.getServerTunnelId());
-        entity.setDeviceId(deviceDetail.getId());
-        entity.setUserId(deviceDetail.getUserId());
-        entity.setOpenTime(new Date(dataMetrics.getOpenTime()));
-        entity.setCloseTime(new Date(dataMetrics.getCloseTime()));
-        entity.setDuration(dataMetrics.getCloseTime() - dataMetrics.getOpenTime());
-        entity.setRemoteAddr(dataMetrics.getRemoteAddr());
-        this.dataMetricsService.save(entity);
-
-        Long userId = deviceDetail.getUserId();
-
-        // 扣取流量
-        if(serverTunnel.getEnableFlow() == 1){
-            Long bytes = dataMetrics.getBytesIn() + dataMetrics.getBytesOut();
-            UserFlow userFlow = userFlowService.getUserFlow(userId);
-            if (userFlow.getFlow() - bytes / 1024 <= 0) {
-                // 由于用户没有流量了，默认关闭所有映射
-                deviceBiz.closeAllMappingByUserId(userId);
-            }
-            boolean status = userFlowService.updateFLow(userId, -bytes / 1024);
-            if (!status) {
-                log.warn("流量扣取失败 userId={}", userId);
-                return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
-            }
-        }
-        return R.success();
+        return dataMetricsService.uploadData(dataMetrics);
     }
 
-    @Resource
-    private DeviceBiz deviceBiz;
+
 
 }

@@ -1,6 +1,9 @@
 package com.wuweibi.bullet.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.system.domain.dto.UserCertAdminParam;
+import com.wuweibi.bullet.system.domain.vo.UserCertificationAdminListVO;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,5 +22,13 @@ public interface UserCertificationMapper extends BaseMapper<UserCertification> {
     List<UserCertification> selectProgressList(int limit);
 
     UserCertification selectLastResult(@Param("userId") Long userId);
+
+    /**
+     * 分页查询用户的实名认证记录
+     * @param pageInfo 分页参数
+     * @param params 条件参数
+     * @return
+     */
+    Page<UserCertificationAdminListVO> selectAdminList(Page pageInfo,@Param("params") UserCertAdminParam params);
 
 }

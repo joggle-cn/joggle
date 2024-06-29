@@ -46,6 +46,10 @@ public class Device extends Model<Device> {
 	private Integer concurrentNum;
 
 
+	@ApiModelProperty("设备通道id")
+	private Integer serverTunnelId;
+
+
 
 	@Override
 	public String toString() {

@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.device.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,8 +22,13 @@ public class MappingDeviceVO {
 	@TableField("device_id")
 	private Long deviceId;
 
+	@ApiModelProperty("购买的域名前缀")
 	private String domain;
 
+	@ApiModelProperty("格式化的访问URL")
+	private String url;
+
+	@ApiModelProperty("端口")
 	private Integer port;
 
 
@@ -41,6 +47,9 @@ public class MappingDeviceVO {
 	 * hostname
 	 */
 	private String hostname;
+
+	@ApiModelProperty("用户域名id")
+	private Long userDomainId;
 
 	/**
 	 * 简单认证
@@ -82,6 +91,12 @@ public class MappingDeviceVO {
 
 
 	private BigDecimal todayFlow;
+
+	@ApiModelProperty("宽带mbps")
+	private Integer bandwidth;
+
+	@ApiModelProperty("最大并发连接数")
+	private Integer concurrentNum;
 
 
 }

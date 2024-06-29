@@ -114,6 +114,10 @@ public class OrdersAppController {
         }
         OrderPayInfo orderPayInfo = r.getData();
 
+        if (ordersDTO.getAmount().compareTo(orderPayInfo.getAmount()) != 0) {
+            return R.fail("数量错误，下单失败！");
+        }
+
         Orders orders = new Orders();
 
         // 订单号生成
@@ -143,6 +147,13 @@ public class OrdersAppController {
                 throw new BaseException(r2);
             }
         }
+        // 套餐权益支付
+        if (orderPayInfo.getPayType() == PayTypeEnum.VIP.getType()) {
+            R r2 = orderPayBiz.packagePay(userId, orders.getPayAmount(), orders);
+            if (r2.isFail()) {
+                throw new BaseException(r2);
+            }
+        }
 
         switch (orderPayInfo.getResourceType()) {
             case 1: // 域名
@@ -153,6 +164,9 @@ public class OrdersAppController {
                     return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
                 }
                 domainService.updateUserId(orders.getDomainId(), orders.getUserId(), DomainStatusEnum.SALE.getStatus());
+                break;
+            case 5: // 套餐
+
                 break;
         }
 

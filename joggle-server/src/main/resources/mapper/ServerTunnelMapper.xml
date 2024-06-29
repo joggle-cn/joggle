@@ -13,7 +13,7 @@
 	<select id="selectAdminPage" resultType="com.wuweibi.bullet.device.domain.vo.ServerTunnelAdminVO">
 		select `id`, `name`, `country`, `area`, `broadband`, `server_addr`, `create_time`,
 			   `price_type`, `sales_price`, `original_price`, `buy_status`, `status`,
-			   `server_end_time`
+			   `server_end_time`, server_up_time, server_down_time
 		from t_server_tunnel
   		<where>
 		  <if test="params.name != null and params.name != ''">
@@ -27,14 +27,19 @@
     <select id="selectNodeStatusList" resultType="com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO">
 		select st.`id`, st.`name`, st.`country`, st.`area`, st.`broadband`, st.`server_addr`, st.`create_time`,
 			   st.`price_type`,  st.`buy_status`, st.`status`,
-			   st.`server_end_time`,
+			   st.`server_end_time`, st.`server_up_time`, st.`server_down_time`,
 			   (select ifnull(sum(dmd.flow)/1024/1024/1024,0) from data_metrics_day dmd WHERE dmd.server_tunnel_id = st.id) flowIn,
 			   (select ifnull(sum(dmd.flow)/1024/1024/1024,0) from data_metrics_day dmd WHERE dmd.server_tunnel_id = st.id) flowOut,
-			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id) as deviceNum ,
-			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id) as tunnelNum
+			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id and ddo.status = 1) as deviceNum ,
+			   (select count(1) from t_device_online ddo where ddo.server_tunnel_id= st.id and ddo.status = 1) as tunnelNum
 
 		from t_server_tunnel st
 		order by st.id desc
+	</select>
+
+<!--	检查域名是否存在-->
+    <select id="checkDomain" resultType="java.lang.Boolean">
+		select count(1) from t_server_tunnel where server_addr = #{baseDomain}
 	</select>
 
 

@@ -21,6 +21,9 @@ public class ServerTunnel  {
 
     @TableId
     private Integer id;
+
+    // 用户id 公用 为 0
+    private Long userId;
     //通道名称
     private String name;
     private String country;
@@ -55,5 +58,14 @@ public class ServerTunnel  {
 
     @ApiModelProperty("启用扣量 1是 0 否")
     private Integer enableFlow;
+
+    @ApiModelProperty("启用TLS 1是 0否")
+    private Integer enableTls;
+
+    @ApiModelProperty("服务器上线时间")
+    private Date serverUpTime;
+
+    @ApiModelProperty("服务器离线时间")
+    private Date serverDownTime;
 }
 

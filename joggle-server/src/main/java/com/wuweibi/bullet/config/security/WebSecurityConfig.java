@@ -1,20 +1,18 @@
 package com.wuweibi.bullet.config.security;
 
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -33,32 +31,80 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * userDetailsService
      */
-    @Resource(name="userDetailsService")
+    @Resource
     private UserDetailsService userDetailsService;
 
 
+    /**
+     * springbootAdmin server 配置项
+     */
+    @Resource
+    private AdminServerProperties adminServerProperties;
 
 
 
+    // 当使用Oauth 资源服务器 该配置无效
     @Override
     public void configure(HttpSecurity http) throws Exception {
         // 关闭HTTP Basic认证
         http.httpBasic().disable();
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable();
-        http .anonymous().disable();
+//        http.csrf().disable();
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable();
+//        http .anonymous().disable();
 
-        // 允许跨域
-        http .addFilterBefore(corsFilter(), WebAsyncManagerIntegrationFilter.class)
-            .authorizeRequests()
-            //处理跨域请求中的Preflight请求
-            .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//        // 允许跨域
+//        http .addFilterBefore(corsFilter(), WebAsyncManagerIntegrationFilter.class)
+//            .authorizeRequests()
+//            //处理跨域请求中的Preflight请求
+//            .antMatchers(HttpMethod.OPTIONS).permitAll()
+//            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//
+//
+//
+//
+//
+//            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**","/inner/open/**", "/swagger-ui/**","/api/v2/api-docs")
+//            .permitAll()
+//            .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
+//        ;
 
-            .antMatchers("/oauth/**", "/actuator/**", "/logout", "/error","/api/open/**","/inner/open/**", "/swagger-ui/**","/api/v2/api-docs")
-            .permitAll()
-            .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
-        ;
+        // monitor 访问路径
+        String monitorContextPath = adminServerProperties.getContextPath();
+
+        // @formatter:off
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setTargetUrlParameter("redirectTo");
+        successHandler.setDefaultTargetUrl(monitorContextPath + "/");
+
+        http
+                .headers().frameOptions().disable()
+                .and().authorizeRequests()
+//                .antMatchers( "/index.html"
+//                .antMatchers(monitorContextPath + "/assets/**"
+//                        , monitorContextPath + "/login"
+//                        , monitorContextPath + "/instances" // 注册入口
+//                        , monitorContextPath + "/actuator/**"
+//                        , monitorContextPath + "/redis/info"
+//                        ,"/actuator/**"
+//                ).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage(monitorContextPath + "/login")
+                .successHandler(successHandler).and()
+                .logout().logoutUrl(monitorContextPath + "/logout")
+                .and().httpBasic().and()
+                .csrf()
+                .disable();
+    }
+
+    /**
+     * 将 AuthenticationManager 注册为 bean , 方便配置 oauth server 的时候使用
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        AuthenticationManager authenticationManager = super.authenticationManagerBean();
+        return authenticationManager;
     }
 
 
@@ -74,16 +120,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
 
-    }
-
-    /**
-     * 将 AuthenticationManager 注册为 bean , 方便配置 oauth server 的时候使用
-     */
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        AuthenticationManager authenticationManager = super.authenticationManagerBean();
-        return authenticationManager;
     }
 
     /**

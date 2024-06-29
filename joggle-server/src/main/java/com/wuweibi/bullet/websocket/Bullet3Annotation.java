@@ -5,17 +5,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.contrast.DevicePeerStatusEnum;
+import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
+import com.wuweibi.bullet.device.entity.DeviceWhiteIps;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.DevicePeersService;
+import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
-import com.wuweibi.bullet.entity.DeviceMapping;
+import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.protocol.*;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
+import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.Utils;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.wuweibi.bullet.protocol.Message.CONTROL_CLIENT_WRAPPER;
-import static com.wuweibi.bullet.protocol.Message.CONTROL_SERVER_WRAPPER;
+import static com.wuweibi.bullet.protocol.Message.*;
 
 
 /**
@@ -42,6 +48,7 @@ import static com.wuweibi.bullet.protocol.Message.CONTROL_SERVER_WRAPPER;
  * @version 1.0
  */
 @Slf4j
+@ToString
 @ServerEndpoint(value = "/inner/open/ws/{tunnelId}", configurator = WebSocketConfigurator.class)
 public class Bullet3Annotation {
  
@@ -55,6 +62,11 @@ public class Bullet3Annotation {
      * 设备ID
      */
     private Integer tunnelId;
+
+    /**
+     * 登录的ip地址
+     */
+    private String ip;
 
 
     public Bullet3Annotation() {  }
@@ -91,12 +103,8 @@ public class Bullet3Annotation {
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
         pool.addConnection(this);
 
-//        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-//        deviceOnlineService.checkDeviceStatus();
-
-        // 更新服务通道得在线状态
+        // 更新服务通道 在线状态
         serverTunnelService.updateStatus(tunnelId, 1);
-
         log.info("websocket[{}] online", tunnelId);
     }
 
@@ -105,6 +113,10 @@ public class Bullet3Annotation {
     public void end(CloseReason closeReason) {
         log.debug("websocket close [{}]", closeReason.toString());
         ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+
+        if (closeReason.getCloseCode().getCode() == 1001) { // 应用停止时主动关闭
+            return;
+        }
         serverTunnelService.updateStatus(tunnelId, 0);
     }
 
@@ -120,16 +132,19 @@ public class Bullet3Annotation {
                     MsgProxy msgProxy = new MsgProxy(head);
                     msgProxy.read(bis);
                     break;
+                case Message.DEVICE_METRICS:// 上报数据
+                    MsgDataMetrics msgDataMetrics = new MsgDataMetrics(head);
+                    msgDataMetrics.read(bis);
+                    DataMetricsService dataMetricsService = SpringUtils.getBean(DataMetricsService.class);
+                    dataMetricsService.uploadData(JSON.parseObject(msgDataMetrics.getData(), DataMetricsDTO.class));
+                    break;
                 case Message.AUTH_RESP:// 设备认证成功
                     MsgAuthResp msgAuthResp = new MsgAuthResp(head);
                     msgAuthResp.read(bis);
-
                     String clientNo = msgAuthResp.getClientNo();
-
                     this.sendMappingInfo(clientNo);
-
                     break;
-                case Message.AUTH:// 认证
+                case Message.AUTH:// 认证（废弃）
                     MsgAuth msgAuth = new MsgAuth(head);
                     msgAuth.read(bis);
                     break;
@@ -202,12 +217,16 @@ public class Bullet3Annotation {
      */
     public void sendMappingInfo(String deviceNo) {
         // 获取设备的配置数据,并将映射配置发送到客户端
+        DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-        List<DeviceMapping> list = deviceMappingService.getDeviceAll(deviceNo);
+        log.info("update device[{}] status=1", deviceNo);
+        deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.ONLINE.status);
 
-        for (DeviceMapping entity : list) {
+        List<DeviceMappingProtocol> list = deviceMappingService.getMapping4ProtocolByDeviceNo(deviceNo);
+        for (DeviceMappingProtocol entity : list) {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
+                log.info("device[{}] {}", deviceNo, data);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
                 this.sendMessage(deviceNo, msg);
             }
@@ -223,7 +242,21 @@ public class Bullet3Annotation {
             devicePeersService.sendMsgPeerConfig(configDTO);
         }
 
+        // 发送ip白名单信息
+        DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
+        DeviceDetail deviceDetail = deviceService.getDetailByDeviceNo(deviceNo);
+        if (deviceDetail != null) {
+            DeviceWhiteIpsService deviceWhiteIpsService = SpringUtils.getBean(DeviceWhiteIpsService.class);
+            DeviceWhiteIps deviceWhiteIps = deviceWhiteIpsService.getByDeviceId(deviceDetail.getId());
+            if (deviceWhiteIps != null) {
+                byte[] data = JSON.toJSONString(deviceWhiteIps.getIps().split(";")).getBytes();
+                this.sendMessageBytes(CONTROL_WHITE_IPS, deviceDetail.getDeviceNo(), data);
+            }
+
+        }
     }
+
+
 
     @OnError
     public void onError(Throwable t) throws Throwable {
@@ -281,6 +314,7 @@ public class Bullet3Annotation {
      * @param message 消息
      * @throws IOException
      */
+    @Deprecated
     public void sendObject(Object message) throws IOException {
         Message message1 = (Message) message;
 
@@ -300,10 +334,15 @@ public class Bullet3Annotation {
      */
     @SneakyThrows
     public void sendMessage(String clientNo, Message msg) {
+        sendMessage(CONTROL_CLIENT_WRAPPER, clientNo, msg);
+    }
+
+
+    public void sendMessage(int type, String clientNo, Message msg) {
         log.info("Control -> Server -> Client: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            outputStream.write(Utils.IntToBytes4(CONTROL_CLIENT_WRAPPER));
+            outputStream.write(Utils.IntToBytes4(type));
             outputStream.write(Utils.IntToBytes4(clientNo.length()));
             outputStream.write(clientNo.getBytes(StandardCharsets.UTF_8));
             msg.write(outputStream);
@@ -319,8 +358,27 @@ public class Bullet3Annotation {
     }
 
 
+    public void sendMessageBytes(int type, String clientNo, byte[] data) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            outputStream.write(Utils.IntToBytes4(type));
+            outputStream.write(Utils.IntToBytes4(clientNo.length()));
+            outputStream.write(clientNo.getBytes(StandardCharsets.UTF_8));
+            outputStream.write(data);
+            // 包装了Bullet协议的
+            byte[] resultBytes = outputStream.toByteArray();
+            ByteBuffer buf = ByteBuffer.wrap(resultBytes);
+            this.session.getBasicRemote().sendBinary(buf, true);
+        } catch (Exception e) {
+            log.error("", e);
+        } finally {
+            IOUtils.closeQuietly(outputStream);
+        }
+    }
 
-    public void sendMessageToServer(MsgGetDeviceStatus msg) {
+
+
+    public void sendMessageToServer(Message msg) {
         log.info("Control -> Server: {} {}", msg.getCommand(),msg.getSequence());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {

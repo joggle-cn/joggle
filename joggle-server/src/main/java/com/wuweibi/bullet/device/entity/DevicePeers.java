@@ -51,7 +51,10 @@ public class DevicePeers {
      */
     @ApiModelProperty("服务侧本地端口")
  	private Integer serverLocalPort;
-    
+
+    @ApiModelProperty("服务侧MTU")
+ 	private Integer serverMtu;
+
     /**
      * 客户侧代理端口
      */
@@ -65,6 +68,9 @@ public class DevicePeers {
 
     @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
     private String clientProxyHost;
+
+    @ApiModelProperty("客户侧MTU")
+    private Integer clientMtu;
 
 
     @ApiModelProperty("备注")
@@ -88,6 +94,14 @@ public class DevicePeers {
     @ApiModelProperty("更新时间")
  	private Date updateTime;
 
+    @ApiModelProperty("传输压缩 1启用 0禁用")
+    private Integer configCompress;
+
+    @ApiModelProperty("传输加密方式 none aes aes-128")
+    private String configEncryption;
+
+    @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
+    private Integer configInterval;
 
 
 }

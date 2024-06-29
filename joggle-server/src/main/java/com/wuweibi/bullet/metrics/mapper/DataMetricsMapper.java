@@ -1,6 +1,9 @@
 package com.wuweibi.bullet.metrics.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wuweibi.bullet.metrics.domain.DataMetricsListVO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsParam;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +21,5 @@ public interface DataMetricsMapper extends BaseMapper<DataMetrics> {
 
     boolean generateDayByTime(@Param("date") Date date);
 
+    Page<DataMetricsListVO> selectUserList(Page<DataMetrics> page, @Param("params")  DataMetricsParam params);
 }

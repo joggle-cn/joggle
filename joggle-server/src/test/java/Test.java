@@ -3,6 +3,7 @@
  */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.utils.StringUtil;
 
 /**
  * @author marker
@@ -29,6 +30,14 @@ public class Test {
         a.put("a",1);
         a.put("b",2);
         System.out.println( a.toJSONString());
+
+
+
+
+        System.out.println( StringUtil.getBaseDomain("www.joggle.cn"));
+        System.out.println( StringUtil.getBaseDomain("www.faceinner.cn"));
+        System.out.println( StringUtil.getBaseDomain("www.yl-blog.cn"));
+        System.out.println( StringUtil.getBaseDomain("22.www.yl-blog.cn"));
 
     }
 }

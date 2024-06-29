@@ -3,30 +3,35 @@ package com.wuweibi.bullet.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
-import com.wuweibi.bullet.client.entity.ClientVersion;
-import com.wuweibi.bullet.client.service.ClientVersionService;
+import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
+import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
+import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain2.entity.Domain;
-import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
-import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.service.MailService;
-import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.res.entity.UserPackage;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.service.*;
+import com.wuweibi.bullet.system.client.entity.ClientVersion;
+import com.wuweibi.bullet.system.client.service.ClientVersionService;
+import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
+import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -98,7 +103,8 @@ public class OpenController {
 
     @Resource
     private UserFlowService userFlowService;
-
+    @Resource
+    private UserPackageManager userPackageManager;
 
     /**
      * 注册账号
@@ -141,9 +147,17 @@ public class OpenController {
         // userflow
         UserFlow userFlow = new UserFlow();
         userFlow.setUserId(user.getId());
-        userFlow.setFlow(1048576L);// kb 默认赠送1G流量
+        userFlow.setFlow(0L);// kb
         userFlow.setUpdatedTime(new Date());
         userFlowService.save(userFlow);
+
+        // 开通普通用户永久服务
+        R<UserPackage> r1 = userPackageManager.openService(user.getId(), 1, null);
+        if (r1.isFail()) {
+            throw new RException(r1);
+        }
+        UserPackage userPackage = r1.getData();
+
 
         if (status) {
             Long userId = user.getId();
@@ -168,7 +182,7 @@ public class OpenController {
 
             Calendar calendar = Calendar.getInstance();
             Date time = calendar.getTime();
-            calendar.add(Calendar.DATE, 365); // 1年使用权
+            calendar.add(Calendar.DATE, 7); // 7天使用权
             Date dueTime = calendar.getTime();
 
             // 生成域名
@@ -178,10 +192,12 @@ public class OpenController {
             domain.setCreateTime(time);
             domain.setBuyTime(time);
             domain.setDueTime(dueTime);
-            domain.setOriginalPrice(BigDecimal.valueOf(2));
-            domain.setSalesPrice(BigDecimal.valueOf(1));
+            domain.setOriginalPrice(BigDecimal.valueOf(1));
+            domain.setSalesPrice(BigDecimal.valueOf(0.25));
             domain.setStatus(1);
             domain.setType(2);
+            domain.setBandwidth(userPackage.getBroadbandRate()); // 宽带速率mbps
+
             domainService.save(domain);
 
         }
@@ -189,14 +205,13 @@ public class OpenController {
         return R.success();
     }
 
-
     /**
      * 激活用户
      */
-    @RequestMapping(value = "/user/activate", method = RequestMethod.POST)
+    @PostMapping(value = "/user/activate" )
     public R activate(
             @RequestParam String code,// 激活码
-            @RequestParam(required = false) String inviteCode, // 邀请码
+            @RequestParam(required = false, name = "ic") String inviteCode, // 邀请码
             HttpServletRequest request) {
         return userService.activate(code, inviteCode);
     }
@@ -210,7 +225,7 @@ public class OpenController {
      */
     @Deprecated
     @ApiOperation("设备秘钥校验【服务端调用校验】")
-    @RequestMapping(value = "/device/secret", method = RequestMethod.POST)
+    @PostMapping(value = "/device/secret" )
     public R devicesecret(@RequestParam String clientNo,
                           @RequestParam String secret,
                           HttpServletRequest request) {
@@ -235,7 +250,7 @@ public class OpenController {
      * @return
      */
     @ApiOperation("客户端检查更新接口")
-    @RequestMapping(value = "/checkUpdate")
+    @PostMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
 
         ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
@@ -264,7 +279,34 @@ public class OpenController {
      * @return
      */
     @Profile("dev")
-    @RequestMapping(value = "/test")
+    @PostMapping(value = "/package/release")
+    public R packageRelease(HttpServletRequest request) {
+        userPackageManager.expireFree();
+        return R.success( );
+    }
+
+    @Profile("dev")
+    @PostMapping(value = "/domain/release")
+    public R domainRelease(HttpServletRequest request) {
+        domainService.resourceDueTimeRelease();
+        return R.success( );
+    }
+
+    @Profile("dev")
+    @PostMapping(value = "/package/flow-reset")
+    public R resetPackageFlow(HttpServletRequest request) {
+        userPackageManager.resetPackageFlow();
+        return R.success( );
+    }
+    @Profile("dev")
+    @PostMapping(value = "/package/exp")
+    public R userPackageExp(HttpServletRequest request) {
+        userPackageManager.taskUserPackageExpirationReminder();
+        return R.success( );
+    }
+
+    @Profile("dev")
+    @PostMapping(value = "/test")
     public R checkUpdate(HttpServletRequest request) {
         Enumeration<String> e = request.getHeaderNames();
         HashMap<String, String> data = new HashMap<>();
@@ -276,9 +318,39 @@ public class OpenController {
         return R.success(data);
     }
 
+    @Resource
+    private WebsocketPool websocketPool;
+
+
+    @GetMapping(value = "/ws")
+    public R ws(HttpServletRequest request) {
+        HashMap<String, String> data = new HashMap<>();
+        for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){
+            data.put(k.getKey(), k.getValue().toString());
+        }
+        return R.success(data);
+    }
 
     @Resource
     private DataMetricsService dataMetricsService;
+
+    @Resource
+    private CountService countService;
+
+
+    /**
+     * 近30日流量情况
+     * @return
+     */
+    @ApiOperation("近30日流量情况")
+    @GetMapping("/all/flow/trend")
+    @ResponseBody
+    public R<List<DeviceDateItemVO>> getFlowTrend(
+            @JwtUser Session session){
+        int day = 30;
+        List<DeviceDateItemVO> list = countService.getAllFlowTrend(day);
+        return R.success(list);
+    }
 
 
     /**

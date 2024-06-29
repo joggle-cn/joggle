@@ -42,4 +42,9 @@ public class CountServiceImpl implements CountService {
     public List<DeviceDateItemVO> getUserDeviceTrend(Long userId, Long deviceId) {
         return countMapper.selectUserDeviceTrend(userId, deviceId);
     }
+
+    @Override
+    public List<DeviceDateItemVO> getAllFlowTrend(int day) {
+        return countMapper.selectAllFlowTrend(day);
+    }
 }
