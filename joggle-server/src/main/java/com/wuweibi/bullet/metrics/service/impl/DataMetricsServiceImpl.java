@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.business.DeviceBiz;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
@@ -60,7 +60,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
     private UserFlowService userFlowService;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
     @Resource
     private DeviceBiz deviceBiz;
@@ -137,7 +137,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                     return R.fail(SystemErrorType.FLOW_IS_PAY_FAIL);
                 }
                 UserFlow userFlow = userFlowService.getUserFlowAndPackageFlow(userId); // 套餐流量和充值流量
-                if (userFlow.getFlow() < -(1000)) { // 如果流量超出1兆，关闭映射
+                if (userFlow.getFlow() < -(1000)) { // 如果流量超出，关闭映射
                     // 由于用户没有流量了，默认关闭所有映射
                     deviceBiz.closeAllMappingByUserId(userId);
                 }

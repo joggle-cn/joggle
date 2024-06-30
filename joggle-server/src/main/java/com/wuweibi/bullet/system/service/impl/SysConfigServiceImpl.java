@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuweibi.bullet.alias.CacheBlock;
 import com.wuweibi.bullet.system.domain.SysConfigParam;
 import com.wuweibi.bullet.system.domain.SysConfigVO;
 import com.wuweibi.bullet.system.entity.SysConfig;
 import com.wuweibi.bullet.system.mapper.SysConfigMapper;
 import com.wuweibi.bullet.system.service.SysConfigService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -41,13 +43,13 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
     }
 
 
-//    @Cacheable(cacheNames="systemConfig")
+    @Cacheable(cacheNames = CacheBlock.CACHE_SYSTEM_CONFIG,key = "#type.toString() + ':' + #key")
     @Override
     public String getConfigValue(String type, String key) {
         SysConfig sysConfig = this.baseMapper.selectOne(Wrappers.<SysConfig>lambdaQuery()
                 .eq(SysConfig::getType, type)
                 .eq(SysConfig::getKey, key));
-        if(Objects.isNull(sysConfig)){
+        if (Objects.isNull(sysConfig)) {
             throw new RuntimeException("配置不存在: " + key);
         }
         return sysConfig.getValue();

@@ -3,7 +3,7 @@ package com.wuweibi.bullet.feedback.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.feedback.domain.FeedbackListVO;
@@ -49,7 +49,7 @@ public class FeedbackAdminController {
     private MailService mailService;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
 
     /**
@@ -117,7 +117,7 @@ public class FeedbackAdminController {
         String email = user.getEmail();
 
         Map<String, Object> params = new HashMap<>(2);
-        params.put("url", bulletConfig.getServerUrl());
+        params.put("url", joggleProperties.getServerUrl());
         params.put("feedback", feedback);
         mailService.send(email, "Joggle意见反馈-回复", params, "feedback_reply.htm");
 

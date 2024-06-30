@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.controller;
 
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.entity.api.R;
@@ -38,7 +38,7 @@ public class HomeController {
 	private ResourceManager resourceManager;
 
 	@Resource
-	private BulletConfig bulletConfig;
+	private JoggleProperties joggleProperties;
 
 
 	@Resource
@@ -55,7 +55,7 @@ public class HomeController {
 	@GetMapping("/api/open/init")
 	@ResponseBody
 	public R init(){
-		String websiteUrl = bulletConfig.getServerUrl();
+		String websiteUrl = joggleProperties.getServerUrl();
 		String website = websiteUrl.substring(websiteUrl.indexOf("://")+3);
 		String version = clientVersionService.getMaxVersion();
         Map map = new HashMap(6);

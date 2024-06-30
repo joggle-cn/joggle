@@ -14,6 +14,7 @@ public interface CacheBlock {
 	 * 周期缓存30分钟
 	 */
 	String  CACHE_SERVICE_PERIOD = "ServicePeriodCache";
+	String  CACHE_SYSTEM_CONFIG = "sysconfig";
 
 	
 	

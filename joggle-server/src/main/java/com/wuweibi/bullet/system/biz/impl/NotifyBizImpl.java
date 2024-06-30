@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.system.biz.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.biz.NotifyBiz;
@@ -35,7 +35,7 @@ public class NotifyBizImpl implements NotifyBiz {
     @Resource
     private MailService mailService;
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
 
     @Override
@@ -52,7 +52,7 @@ public class NotifyBizImpl implements NotifyBiz {
         JSONObject jsonParams = new JSONObject(); // 转换更佳优雅的取值参数
         jsonParams.putAll(param);
 
-        jsonParams.put("url", bulletConfig.getServerUrl()); // 特殊参数，用于配置邮件跳转链接
+        jsonParams.put("url", joggleProperties.getServerUrl()); // 特殊参数，用于配置邮件跳转链接
 
         // TODO 这里需要改造为freemarker模板渲染
         String subject = String.format(notifyType.getEmailType().getSubject(), jsonParams.getString("deviceNo"));

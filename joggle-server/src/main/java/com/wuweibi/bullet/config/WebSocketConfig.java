@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.config;
 
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import com.wuweibi.bullet.websocket.LogAnnotation;
 import com.wuweibi.bullet.websocket.VideoAnnotation;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 public class WebSocketConfig {
 
     @Resource
-    private BulletConfig config;
+    private JoggleProperties config;
 
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {

@@ -1,6 +1,6 @@
 
 
-package com.wuweibi.bullet.cache.config;
+package com.wuweibi.bullet.config.cache;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.SocketOptions;
@@ -9,7 +9,6 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +24,6 @@ import javax.annotation.Resource;
  *
  * @author marker
  */
-@EnableCaching
 @Configuration(proxyBeanMethods = false)
 @AllArgsConstructor
 @AutoConfigureBefore(RedisAutoConfiguration.class)

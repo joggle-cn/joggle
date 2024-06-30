@@ -29,6 +29,8 @@
     <logger name="org.springframework.web.reactive.function.client" level="INFO" />
     <logger name="de.codecentric.boot.admin.server.web.reactive" level="INFO" />
     <logger name="de.codecentric.boot.admin.server" level="INFO" />
+    <logger name="org.thymeleaf.TemplateEngine.CONFIG" level="INFO" />
+    <logger name="org.thymeleaf.TemplateEngine" level="INFO" />
 
 
     <!-- 多配制环境设置 -->
