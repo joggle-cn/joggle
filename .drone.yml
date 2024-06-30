@@ -167,5 +167,5 @@ trigger:
   branch:
     - prod
     - test
-    - dev
+#    - dev
     - release
