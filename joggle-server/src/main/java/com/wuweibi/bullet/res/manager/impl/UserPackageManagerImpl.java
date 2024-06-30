@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.res.manager.impl;
 
 import com.wuweibi.bullet.common.exception.RException;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
 import com.wuweibi.bullet.res.domain.UserPackageFowVO;
@@ -161,7 +161,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
     private SqlSessionFactory sqlSessionFactory;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
     @Resource
     private MailService mailService;
@@ -180,7 +180,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             log.info("user[{}] package[{}] expireFree", userPackage.getUserId(), userPackage.getResourcePackageId());
             Map<String, Object> param = new HashMap<>(3);
             param.put("packageName", userPackage.getName());
-            param.put("url", bulletConfig.getServerUrl());
+            param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s套餐到期释放提醒", userPackage.getName());
             this.free(userPackage);
@@ -217,7 +217,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             Map<String, Object> param = new HashMap<>(4);
             param.put("packageName", userPackage.getName());
             param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
-            param.put("url", bulletConfig.getServerUrl());
+            param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s套餐流量发放提醒", userPackage.getName());
             mailService.send(userPackage.getUserEmail(), subject, param, "package_rest_flow_notice.htm");
@@ -250,7 +250,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             Map<String, Object> param = new HashMap<>(4);
             param.put("packageName", userPackage.getName());
             param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
-            param.put("url", bulletConfig.getServerUrl());
+            param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("Joggle%s套餐即将到期提醒", userPackage.getName());
             mailService.send(userPackage.getUserEmail(), subject, param, "package_expiration_notice.htm");

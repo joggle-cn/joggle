@@ -7,7 +7,7 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.common.domain.PageParam;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.FormFieldMessage;
@@ -179,7 +179,7 @@ public class UserAdminController {
 
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
     @Resource
     private UserForgetService userForgetService;
@@ -202,7 +202,7 @@ public class UserAdminController {
             return R.fail(ffm);
         }
         String ip  = HttpUtils.getRemoteHost(request);
-        String url = bulletConfig.getServerUrl();
+        String url = joggleProperties.getServerUrl();
 
         // 验证最近5分钟是否申请过
         boolean applyStatus = userForgetService.checkApply(email, 5 * 60);

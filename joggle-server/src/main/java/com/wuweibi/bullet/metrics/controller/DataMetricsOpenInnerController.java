@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.metrics.controller;
 
 
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
@@ -32,7 +32,7 @@ public class DataMetricsOpenInnerController {
     private DataMetricsService dataMetricsService;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
 
     /**
@@ -44,7 +44,7 @@ public class DataMetricsOpenInnerController {
     @PostMapping("/up")
     public R insert(@RequestHeader String authorization,
                     @RequestBody @Valid DataMetricsDTO dataMetrics) {
-        if (!bulletConfig.getAdminApiToken().equals(authorization)) {
+        if (!joggleProperties.getAdminApiToken().equals(authorization)) {
             log.warn("[上报流量]无接口调用权限token:{}", authorization);
             return R.fail("无接口调用权限");
         }

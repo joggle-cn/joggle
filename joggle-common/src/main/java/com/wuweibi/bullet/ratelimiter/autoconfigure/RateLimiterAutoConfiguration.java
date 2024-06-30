@@ -4,6 +4,7 @@ package com.wuweibi.bullet.ratelimiter.autoconfigure;
 import com.wuweibi.bullet.ratelimiter.properties.RateLimiterProperties;
 import com.wuweibi.bullet.ratelimiter.util.RateSpringUtils;
 import io.netty.channel.nio.NioEventLoopGroup;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.Codec;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
  *
  * @author marker
  */
+@Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = RateLimiterProperties.PREFIX, value = "enabled", havingValue = "true")
 public class RateLimiterAutoConfiguration {
@@ -36,6 +38,7 @@ public class RateLimiterAutoConfiguration {
 
     @Bean(name = "redissonClient", destroyMethod = "shutdown")
     public RedissonClient redissonClient() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        log.info("------------- redisson init -----------------------");
         Config config = new Config();
         if (properties.getClusterServer() != null) {
             config.useClusterServers().setPassword(redisProperties.getPassword())
@@ -48,7 +51,6 @@ public class RateLimiterAutoConfiguration {
                     .setClientName("rateLimiter");
         }
 
-        System.out.println("------------- redisson -----------------------");
         Codec codec = (Codec) ClassUtils.forName(properties.getCodec(), ClassUtils.getDefaultClassLoader()).newInstance();
         config.setCodec(codec);
         config.setEventLoopGroup(new NioEventLoopGroup());

@@ -61,7 +61,7 @@ steps:
       source: joggle-server/target/app.jar
     when:
       branch:
-        - dev
+        - test
 
   - name: scp to prod
     image: appleboy/drone-scp
@@ -167,5 +167,5 @@ trigger:
   branch:
     - prod
     - test
-    - dev
+#    - dev
     - release

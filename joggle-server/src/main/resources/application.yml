@@ -72,6 +72,7 @@ spring:
         # 单体服务应用 确保能够传递jessionid
         ignored-headers:
           - "Set-Cookie"
+          - "Cookie"
           - "Authorization"
   profiles:
     active: dev
@@ -175,7 +176,12 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-
+  cache:
+    cache-names:
+      - sysconfig
+    redis:
+      key-prefix: "cache:"
+      time-to-live: 1h
 # mybatis-plus 配置信息
 mybatis-plus:
   # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml

@@ -4,7 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.aliyun.dysmsapi20170525.models.SendSmsResponse;
 import com.aliyun.tea.TeaException;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.domain.SendSmsDTO;
 import com.wuweibi.bullet.system.domain.SmsDTO;
@@ -37,7 +37,7 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
     private RedisTemplate redisTemplate;
 
     @Resource
-    private BulletConfig yogaConfig;
+    private JoggleProperties joggleProperties;
 
     @Resource
     private SysConfigService sysConfigService;

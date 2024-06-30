@@ -1,13 +1,12 @@
 
 
-package com.wuweibi.bullet.cache.config;
+package com.wuweibi.bullet.config.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,9 +23,7 @@ import javax.annotation.Resource;
  *
  * @author marker
  */
-@EnableCaching
 @Configuration(proxyBeanMethods = false)
-@AllArgsConstructor
 @AutoConfigureBefore(RedisAutoConfiguration.class)
 @AutoConfigureAfter(RedisConnectionConfig.class)
 @Import(RedisConnectionConfig.class)
@@ -45,6 +42,7 @@ public class RedisTemplateConfig {
 		Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);
 		//序列化时添加对象信息
 		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
 		serializer.setObjectMapper(objectMapper);
 
@@ -65,6 +63,7 @@ public class RedisTemplateConfig {
 		Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);
 		//序列化时添加对象信息
 		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
 		serializer.setObjectMapper(objectMapper);
 

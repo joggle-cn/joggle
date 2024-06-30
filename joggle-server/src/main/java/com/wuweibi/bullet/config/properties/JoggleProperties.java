@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "joggle")
-public class BulletConfig {
+public class JoggleProperties {
 
 
     /**

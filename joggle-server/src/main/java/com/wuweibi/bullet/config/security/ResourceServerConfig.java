@@ -119,12 +119,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
                 // 监控相关配置
                 .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(monitorContextPath + "/login")
-                .successHandler(successHandler).and()
-                .logout().logoutUrl(monitorContextPath + "/logout")
-                .and().httpBasic().and()
-                .csrf().disable();
+                .and().formLogin()
+                    .loginPage(monitorContextPath + "/login")
+                    .successHandler(successHandler)
+                .and().logout()
+                    .logoutUrl(monitorContextPath + "/logout")
+                .and();
 //                .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
 
     }
