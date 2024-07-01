@@ -12,7 +12,7 @@ LOGGING_PATH: logs/
 #
 server:
   port: ${SERVER_PORT:8081}
-
+  address: ${SERVER_IP:localhost}
 
 
 management:
@@ -56,7 +56,7 @@ spring:
   boot:
     admin:
       ui:
-        publicUrl: ${JOGGLE_MONITOR_URL}
+#        publicUrl: ${JOGGLE_MONITOR_URL}
       ## admin 服务端访问地址
       context-path: /monitor
       ## admin 客户端连接服务端
@@ -64,7 +64,7 @@ spring:
         # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
         instance:
           prefer-ip: true
-        url: http://localhost:${server.port}/${spring.boot.admin.context-path}
+        url: http://${server.address}:${server.port}/${spring.boot.admin.context-path}
 #      instanceAuth:
 #        defaultUserName: client_manager
 #        defaultPassword: password

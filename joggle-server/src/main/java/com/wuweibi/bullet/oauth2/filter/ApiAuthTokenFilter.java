@@ -73,14 +73,14 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
-                if (NetUtil.isInnerIP(request.getRemoteHost()) &&
+                if (isInnerIP(request) &&
                         request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().startsWith(adminServerProperties.path("/instances"))
                 ) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
                 // 判断是内网ip才能访问
-                if (NetUtil.isInnerIP(request.getRemoteHost()) && request.getRequestURI().startsWith(adminServerProperties.path("/actuator"))) {
+                if (isInnerIP(request) && request.getRequestURI().startsWith(adminServerProperties.path("/actuator"))) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
@@ -97,6 +97,23 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+
+    /**
+     * 判断是否内部地址
+     * @param request 请求
+     * @return
+     */
+    private static boolean isInnerIP(HttpServletRequest request) {
+        String remoteAddr = request.getRemoteHost();
+        if ("localhost".equals(remoteAddr)) {
+            return true;
+        }
+        if ("0:0:0:0:0:0:0:1".equals(remoteAddr)) {
+            return true;
+        }
+        return NetUtil.isInnerIP(remoteAddr);
     }
 
 
