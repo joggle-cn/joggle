@@ -86,10 +86,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         // 关闭HTTP Basic认证
         http.httpBasic();
         http.csrf().disable();
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
+//        http.sessionManagement().disable().
         ;
-
-
         String monitorContextPath = adminServerProperties.getContextPath();
 
         // @formatter:off
@@ -111,7 +109,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/resource/**",
                         "/template/**",
                         "/view/**",
-                        adminServerProperties.path("/**")
+                          adminServerProperties.path("/**")
                 ).permitAll()
 
                 // 放过静态资源 【废弃】
