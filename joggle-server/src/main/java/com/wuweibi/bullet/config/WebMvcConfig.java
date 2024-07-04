@@ -19,7 +19,10 @@ import org.springframework.core.Ordered;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
@@ -219,6 +222,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);//设置最高优先级
         return registration;
     }
+
+
+
 
     @Bean
     public FilterRegistrationBean ApiAuthTokenFilter() {

@@ -12,7 +12,6 @@ LOGGING_PATH: logs/
 #
 server:
   port: ${SERVER_PORT:8081}
-  address: ${SERVER_IP:localhost}
 
 
 management:
@@ -64,7 +63,7 @@ spring:
         # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
         instance:
           prefer-ip: true
-        url: http://${server.address}:${server.port}/${spring.boot.admin.context-path}
+        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
 #      instanceAuth:
 #        defaultUserName: client_manager
 #        defaultPassword: password
@@ -72,8 +71,8 @@ spring:
         # 单体服务应用 确保能够传递jessionid
         ignored-headers:
           - "Set-Cookie"
-          - "Cookie"
-          - "Authorization"
+#          - "Cookie"
+#          - "Authorization"
   profiles:
     active: dev
   application:
@@ -91,7 +90,7 @@ spring:
     oauth2:
       jwt:
         signingKey: ${JOGGLE_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay,/bootAdmin/**
+      ignoreUrls:   /api/orders/alipay,/monitor/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
