@@ -63,7 +63,7 @@ steps:
       branch:
         - test
 
-  - name: scp to prod
+  - name: scp to prod jar
     image: appleboy/drone-scp
     pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
     environment:
