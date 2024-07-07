@@ -12,6 +12,7 @@ steps:
       - name: joggle-web-out
         path: /drone/web
     commands:
+      - chmod 600 /root/.ssh/id_rsa
       - echo "copy admin manager web..."
       - scp -rp -o StrictHostKeyChecking=no /drone/admin/dist/* ./joggle-server/src/main/resources/static/manager/;
       - echo "copy web..."
