@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.common.exception;
 
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.type.ErrorType;
 import lombok.NoArgsConstructor;
 
 /**
@@ -18,6 +19,11 @@ public class RException extends RuntimeException {
 	public RException(String message) {
 		super(message);
 		this.result = R.fail(message);
+	}
+
+	public RException(ErrorType errorType) {
+		super(errorType.getMsg());
+		this.result = R.fail(errorType);
 	}
 
 	public RException(R r) {

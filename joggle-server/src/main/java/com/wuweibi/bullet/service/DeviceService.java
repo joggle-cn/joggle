@@ -100,7 +100,19 @@ public interface DeviceService extends IService<Device> {
      */
     boolean existsUserDeviceId(Long userId, Long deviceId);
 
+    /**
+     * 根据设备id 删除设备的用户id
+     * @param deviceId 设备id
+     * @return
+     */
     boolean removeUserId(Long deviceId);
+
+    /**
+     * 根据设备编号 删除设备的用户id
+     * @param deviceNo 设备编号
+     * @return
+     */
+    Boolean removeUserIdByDeviceNo(String deviceNo);
 
     List<DeviceDto> getWebListByUserId(Long userId);
 
@@ -124,4 +136,11 @@ public interface DeviceService extends IService<Device> {
     Page<DeviceListVO> getAdminList(Page pageInfo, DeviceAdminParam params);
 
 
+    /**
+     * 用户绑定设备
+     * @param userId 用户id
+     * @param deviceNo 设备编号
+     * @return
+     */
+    Device bindDevice(Long userId, String deviceNo);
 }

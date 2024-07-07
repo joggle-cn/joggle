@@ -77,8 +77,7 @@
 		   dm.domain_id,
 			td.bandwidth,
 			td.concurrent_num,
-		    ifnull((select sum( a.bytes_in + a.bytes_out )/ 1024 / 1024 from data_metrics a
-					where a.mapping_id = dm.id  AND a.create_date = CURRENT_DATE ),0) todayFlow
+		    0 todayFlow
 		from t_device_mapping dm
 		left join t_domain td on dm.domain_id = td.id
 		left join user_package up on up.user_id = td.user_id

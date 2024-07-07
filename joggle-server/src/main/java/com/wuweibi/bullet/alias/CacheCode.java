@@ -23,8 +23,18 @@ public interface CacheCode {
 	
 	/** 学校列表缓存 */
 	String getSchoolByName = "'F11B8E803217CAD9' + #name";
-	
-	
+
+
+	/**
+	 * 统计今日设备映射流量in + out  (KB)
+	 */
+	String DEVICE_MAPPING_STATISTICS_FLOW_TODAY = "device:flowCount:%s:bytes";
+
+	/**
+	 * 统计今日设备映射流量 链接数
+	 */
+	String DEVICE_MAPPING_STATISTICS_LINK_TODAY = "device:flowCount:%s:link";
+
 	
 	
 	

@@ -3,10 +3,11 @@ package com.wuweibi.bullet.device.controller;
  * Created by marker on 2017/12/6.
  */
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
+import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
@@ -24,6 +25,7 @@ import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDto;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
@@ -43,17 +45,21 @@ import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_FLOW_TODAY;
+import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_LINK_TODAY;
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
@@ -145,13 +151,14 @@ public class DeviceController {
         Long userId = session.getUserId();
         Long deviceId = dto.getId();
 
-        // 校验设备是否是他的
-        boolean status = deviceService.exists(userId, deviceId);
-        if (!status) {
+        Device device = deviceService.getById(deviceId);
+        if (Objects.isNull(device)) { // 验证是否存在
             return R.fail("设备不存在");
         }
-        // 验证是否存在
-        Device device = deviceService.getById(deviceId);
+        if (!userId.equals(device.getUserId())) { // 校验设备是否是他的
+            return R.fail("您没有该设备权限");
+        }
+
         DeviceOnline deviceOnline = deviceOnlineService.getOneByDeviceNo(device.getDeviceNo());
         if (deviceOnline == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
@@ -162,9 +169,8 @@ public class DeviceController {
             bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
         }
 
-        // 删除映射
-        deviceMappingService.deleteByDeviceId(deviceId);
-        deviceService.removeUserId(deviceId);
+        deviceMappingService.deleteByDeviceId(deviceId); // 删除映射
+        deviceService.removeUserIdByDeviceNo(device.getDeviceNo()); // 清理用户归属
 
         // 设备移除，权益移除
         R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, -1);
@@ -184,6 +190,7 @@ public class DeviceController {
      *
      * @return
      */
+    @ApiOperation("绑定设备")
     @RequestMapping(value = "/validate", method = RequestMethod.GET)
     @ResponseBody
     @Transactional
@@ -200,40 +207,22 @@ public class DeviceController {
         if (deviceOnline == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
-        // 获取设备信息
-        Device device = deviceService.getByDeviceNo(deviceNo);
-        if (device!= null && device.getUserId() != null) {
-            return R.fail(SystemErrorType.DEVICE_OTHER_BIND);
-        }
 
         Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
         if (annotation == null) {
             return R.fail("ngrokd实例不在线, 请联系管理员");
         }
 
-        if (device == null) {
-            // 给当前用户存储最新的设备数据
-            device = new Device();
-            device.setDeviceNo(deviceId);
-            device.setUserId(userId);
-            device.setCreateTime(new Date());
-            device.setName(deviceId);
-        }
-
         // 套餐设备数量限制校验
         if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
-        // 生成设备秘钥
-        String deviceSecret = Md5Crypt.md5Crypt(deviceId.getBytes(), null, "");
-        device.setDeviceSecret(deviceSecret);
-        device.setUserId(userId);
-        deviceService.saveOrUpdate(device);
+        Device device = deviceService.bindDevice(userId, deviceNo);
         userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, 1);
 
         // 发送消息通知设备秘钥
         MsgDeviceSecret msg = new MsgDeviceSecret();
-        msg.setSecret(deviceSecret);
+        msg.setSecret(device.getDeviceSecret());
         annotation.sendMessage(deviceNo, msg);
 
         return R.success();
@@ -249,6 +238,12 @@ public class DeviceController {
         result.put("uuid", uuid);
         return result;
     }
+
+
+
+    @Resource(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
+    private RedisTemplate<String, Object> redisTemplate;
+
 
 
     /**
@@ -284,6 +279,14 @@ public class DeviceController {
                 .filter(item-> ArrayUtils.contains(new Integer[]{1, 3, 4},item.getProtocol()))
                 .collect(Collectors.toList());
 
+
+        String date = DateUtil.format(new Date(), "yyyyMMdd");
+        String keyBytes = String.format(DEVICE_MAPPING_STATISTICS_FLOW_TODAY, date);
+        String keyLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_TODAY, date);
+        BoundHashOperations<String, Object, Object> keyBytesMap = redisTemplate.boundHashOps(keyBytes);
+        BoundHashOperations<String, Object, Object> keyLinkMap = redisTemplate.boundHashOps(keyLink);
+
+
         // 端口
         portList.forEach(item->{
             String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
@@ -293,6 +296,12 @@ public class DeviceController {
                 domain = item.getHostname();
             }
             item.setUrl(String.format("%s://%s", protocol, domain));
+            // 今日流量 & 链接数
+            Integer flowKb = (Integer) keyBytesMap.get(item.getId().toString());
+            Integer linkNum = (Integer) keyLinkMap.get(item.getId().toString());
+            item.setTodayFlow(new BigDecimal(flowKb == null ? 0 : flowKb).divide(BigDecimal.valueOf(1024)));
+            item.setLink(linkNum == null ? 0 : linkNum);
+
         });
 
         // 域名
@@ -304,6 +313,11 @@ public class DeviceController {
                 domain = item.getHostname();
             }
             item.setUrl(String.format("%s://%s", protocol, domain));
+            // 今日流量 & 链接数
+            Integer flowKb = (Integer) keyBytesMap.get(item.getId().toString());
+            Integer linkNum = (Integer) keyLinkMap.get(item.getId().toString());
+            item.setTodayFlow(new BigDecimal(flowKb == null? 0: flowKb).divide(BigDecimal.valueOf(1024)));
+            item.setLink(linkNum == null ? 0 : linkNum);
         });
 
         mapBuilder

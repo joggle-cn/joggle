@@ -29,12 +29,14 @@ import javax.annotation.Resource;
 @Import(RedisConnectionConfig.class)
 public class RedisTemplateConfig {
 
+	public static final String BEAN_REDIS_TEMPLATE = "redisTemplate";
+
 
 	@Resource(name = "mainRedisConnectionFactory")
 	private RedisConnectionFactory redisConnectionFactory;
 
 
-	@Bean(name = "redisTemplate")
+	@Bean(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
 	public RedisTemplate<String, Object> redisTemplate() {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 

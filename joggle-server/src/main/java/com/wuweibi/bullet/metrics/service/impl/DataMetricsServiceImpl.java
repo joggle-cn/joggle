@@ -1,9 +1,11 @@
 package com.wuweibi.bullet.metrics.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.business.DeviceBiz;
+import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
@@ -23,6 +25,7 @@ import com.wuweibi.bullet.service.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -31,6 +34,9 @@ import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static com.wuweibi.bullet.alias.CacheCode.*;
 
 /**
  * 数据收集(DataMetrics)表服务实现类
@@ -77,6 +83,8 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
      */
     private static final long FLOW_ERROR_FACTOR = 30 * 1024;
 
+    @Resource(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public R uploadData(DataMetricsDTO dataMetrics) {
@@ -114,15 +122,27 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
             return transactionTemplate.execute(e -> {
                 this.save(entity);
 
+                // 流量in out 整合
+                long bytes = entity.getBytesIn() + entity.getBytesOut();
+                long byteKb = bytes / 1024;
+                if (byteKb <= 0) {
+                    byteKb = 1; // 至少消耗1KB
+                }
+
+                // 今日流量缓存 原子累加
+                String date = DateUtil.format(new Date(), "yyyyMMdd");
+                String keyBytes = String.format(DEVICE_MAPPING_STATISTICS_FLOW_TODAY, date);
+                String keyLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_TODAY, date);
+                redisTemplate.opsForHash().increment(keyBytes, String.valueOf(entity.getMappingId()), byteKb);
+                redisTemplate.opsForHash().increment(keyLink, String.valueOf(entity.getMappingId()), 1);
+                if (0 > redisTemplate.getExpire(DEVICE_MAPPING_STATISTICS_LINK_TODAY)) {
+                    redisTemplate.expire(keyBytes, 1, TimeUnit.DAYS);
+                    redisTemplate.expire(keyLink, 1, TimeUnit.DAYS);
+                }
+
                 // 判断是否扣取流量
                 if (!Objects.equals(1, serverTunnel.getEnableFlow())) {
                     return R.ok();
-                }
-
-                long bytes = entity.getBytesIn() + entity.getBytesOut();
-                long byteKb = bytes / 1000;
-                if (byteKb == 0) {
-                    byteKb = 1; // 至少消耗1KB
                 }
 
                 // 优先扣套餐流量 (带有保护，不支持负数)
