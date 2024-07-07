@@ -263,7 +263,7 @@ public class DeviceController {
         MapBuilder mapBuilder = newMap(3);
         // 设备信息
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
-        if(deviceInfo == null){
+        if (deviceInfo == null) {
             return R.fail("设备不存在");
         }
         if (!userId.equals(deviceInfo.getUserId())) {
@@ -385,7 +385,7 @@ public class DeviceController {
         }
 
         ServerTunnel serverTunnel = serverTunnelService.getById(dto.getServerTunnelId());
-        if(serverTunnel == null){
+        if (serverTunnel == null) {
             return R.fail("通道不存在");
         }
 
