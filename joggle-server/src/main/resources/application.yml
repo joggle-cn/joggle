@@ -55,7 +55,11 @@ spring:
   boot:
     admin:
       ui:
-#        publicUrl: https://admin.joggle.cn
+        resourceLocations:
+          - classpath*:META-INF/spring-boot-admin-server-ui/
+          - classpath:META-INF/spring-boot-admin-server-ui/
+#        template-location: classpath:META-INF/spring-boot-admin-server-ui/
+      #        publicUrl: https://admin.joggle.cn
       ## admin 服务端访问地址
       context-path: /monitor
       ## admin 客户端连接服务端
@@ -95,8 +99,8 @@ spring:
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
 
-  thymeleaf:
-    cache: false
+#  thymeleaf:
+#    cache: false
   http:
     encoding:
       force: on
@@ -106,16 +110,16 @@ spring:
       # 需要实时更新的目录
       # additional-paths: src/main/java
 
-  freemarker:
-    templateLoaderPath: classpath:/static
-    cache: false
-    charset: UTF-8
-    checkTemplateLocation: on
-    contentType: text/html
-    exposeRequestAttributes: false
-    exposeSessionAttributes: false
-    requestContextAttribute: request
-    suffix: .html
+#  freemarker:
+##    templateLoaderPath: classpath:/static
+#    cache: false
+#    charset: UTF-8
+#    checkTemplateLocation: on
+#    contentType: text/html
+#    exposeRequestAttributes: false
+#    exposeSessionAttributes: false
+#    requestContextAttribute: request
+#    suffix: .html
   # 邮件 配置
   mail:
     host: ${JOGGLE_MAIL_HOST:smtp.ym.163.com}
@@ -225,10 +229,10 @@ logging:
 # 设定ftl文件路径
 
 #网关白名单，无需要签权url
-gate:
-  ignore:
-    authentication:
-      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template,/manager
+#gate:
+#  ignore:
+#    authentication:
+#      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template,/manager
 
 # joggle 配置
 joggle:

@@ -31,6 +31,7 @@
     <logger name="de.codecentric.boot.admin.server" level="INFO" />
     <logger name="org.thymeleaf.TemplateEngine.CONFIG" level="INFO" />
     <logger name="org.thymeleaf.TemplateEngine" level="INFO" />
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor" level="INFO" />
 
 
     <!-- 多配制环境设置 -->
@@ -43,7 +44,7 @@
     <springProfile name="test">
         <root level="info">
             <appender-ref ref="console"/>
-            <appender-ref ref="alone"/>
+<!--            <appender-ref ref="alone"/>-->
         </root>
     </springProfile>
 
@@ -51,7 +52,7 @@
     <springProfile name="prod">
         <root level="info">
             <appender-ref ref="console"/>
-            <appender-ref ref="alone"/>
+<!--            <appender-ref ref="alone"/>-->
         </root>
     </springProfile>
 

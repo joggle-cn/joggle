@@ -11,7 +11,10 @@ steps:
         path: /drone/admin
       - name: joggle-web-out
         path: /drone/web
+      - name: ssh
+        path: /root/.ssh
     commands:
+      - chmod 600 /root/.ssh/id_rsa
       - echo "copy admin manager web..."
       - scp -rp -o StrictHostKeyChecking=no /drone/admin/dist/* ./joggle-server/src/main/resources/static/manager/;
       - echo "copy web..."
@@ -63,7 +66,7 @@ steps:
       branch:
         - test
 
-  - name: scp to prod
+  - name: scp to prod jar
     image: appleboy/drone-scp
     pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
     environment:
@@ -91,7 +94,7 @@ steps:
         path: /var/run/docker.sock
     settings:
       insecure: false
-      registry: nas.mrcms.cn:8083
+      registry: nexus.mrcms.cn:8083
       mirror: https://dkwe3jow.mirror.aliyuncs.com
       storage_path: /docker
       dockerfile: Dockerfile
@@ -100,7 +103,7 @@ steps:
         from_secret: registry_nexus_username
       password:
         from_secret: registry_nexus_password
-      repo: nas.mrcms.cn:8083/wuweiit/joggle-server
+      repo: nexus.mrcms.cn:8083/wuweiit/joggle-server
       tags:
         - ${DRONE_BUILD_NUMBER}
     when:

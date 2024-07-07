@@ -102,6 +102,7 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
+                // 内网无需登录 放行
                 if (isInnerIP(request) &&
                         request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().startsWith(adminServerProperties.path("/instances"))
                 ) {

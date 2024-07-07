@@ -67,13 +67,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if(!registry.hasMappingForPattern("/**")){
+        if (!registry.hasMappingForPattern("/**")) {
             registry.addResourceHandler("/static/**")
                     .addResourceLocations("classpath:/static/");
         }
-
-
-
     }
 
     //    @Bean
