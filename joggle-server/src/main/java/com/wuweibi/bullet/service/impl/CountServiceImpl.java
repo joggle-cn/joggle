@@ -47,19 +47,31 @@ public class CountServiceImpl implements CountService {
     @Override
     public UserCountVO getUserCountInfo(Long userId) {
         UserFlowCountDTO userFlowCountDTO =  countMapper.selectUserCountInfo(userId);
-
+        if (userFlowCountDTO == null) {
+            return new UserCountVO();
+        }
         UserCountVO userCountVO = new UserCountVO();
         BeanUtils.copyProperties(userFlowCountDTO, userCountVO);
+        // 今日实时流量数据
+        UserTodayFlowCountVO userTodayFlowCountVO = this.getUserTodayFow(userId, null);
+        userCountVO.setTodayFlow(userTodayFlowCountVO.getTodayFlow());
+        userCountVO.setTodayLink(userTodayFlowCountVO.getTodayLink());
+        // 计算环比
+        userCountVO.setTodayFlowOn(BigDecimalUtils
+                .getChainRatio(userTodayFlowCountVO.getTodayFlow(), userFlowCountDTO.getTodayFlow2()));
 
-        if (userCountVO == null) {
-            userCountVO = new UserCountVO();
-        }
+        return userCountVO;
+    }
 
+
+    // 获取用户今日流量
+    public UserTodayFlowCountVO getUserTodayFow(Long userId, Long deviceId){
+        // TODO 支持按设备筛选实时数据
         // 数据库查询今日数据为0， 获取今日流量
         // 查询用户得maping 列表， 遍历redis
         List<Integer> idList = deviceMappingMapper.getMappingIdByUserId(userId);
         if(CollectionUtils.isEmpty(idList)){
-            return userCountVO;
+            return new UserTodayFlowCountVO();
         }
         // redis 获取今日流量
         String date = DateUtil.format(new Date(), "yyyyMMdd");
@@ -80,13 +92,8 @@ public class CountServiceImpl implements CountService {
                 Collectors.mapping(TodayFlowInfo::getValue, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
                 )
         ));
-        userCountVO.setTodayFlow(todayData.get("flow").setScale(2, RoundingMode.HALF_UP));
-        userCountVO.setTodayLink(todayData.get("link").intValue());
-        userCountVO.setTodayFlowOn(BigDecimalUtils.getChainRatio(todayData.get("flow"), userFlowCountDTO.getTodayFlow2()));
-
-        return userCountVO;
+        return new UserTodayFlowCountVO(todayData.get("flow").setScale(2, RoundingMode.HALF_UP), todayData.get("link").intValue());
     }
-
 
 
     @Data

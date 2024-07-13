@@ -1,9 +1,11 @@
 package com.wuweibi.bullet.dashboard.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.dashboard.domain.UserCountVO;
+import com.wuweibi.bullet.dashboard.domain.UserTodayFlowCountVO;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.CountService;
@@ -12,7 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 仪表盘接口
@@ -68,6 +72,14 @@ public class DashboardController {
             @JwtUser Session session){
         Long userId = session.getUserId();
         List<DeviceDateItemVO> list = countService.getUserDeviceTrend(userId, deviceId);
+
+        String date = DateUtil.format(new Date(), "yyyy-MM-dd");
+        Optional<DeviceDateItemVO> toDayOptional = list.stream().filter(item->date.equals(item.getTime())).findFirst();
+        if (toDayOptional.isPresent()) {
+            // 获取今日流量
+            UserTodayFlowCountVO userTodayFlowCountVO = this.countService.getUserTodayFow(userId, deviceId);
+            toDayOptional.get().setFlow(userTodayFlowCountVO.getTodayFlow());
+        }
         return R.success(list);
     }
 
