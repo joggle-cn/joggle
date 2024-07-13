@@ -14,7 +14,7 @@
     </select>
 
 <!--    统计用户的流量情况-->
-    <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserCountVO">
+    <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO">
         select
             round(c.todayFlow,2) as todayFlow,
             round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
@@ -25,8 +25,8 @@
             round((c.monthLink+c.todayLink),2) monthLink,
             round(ifnull(((c.monthLink+c.todayLink) - monthLink2)/monthLink2, IF((c.monthLink+c.todayLink)=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
-                  (select IFNULL(sum(b.bytes_in+b.bytes_out  ),0)/1024/1024 from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayFlow,
-                  (select IFNULL(count(*),0) from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayLink,
+                  0 as todayFlow,
+                  0 as todayLink,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,

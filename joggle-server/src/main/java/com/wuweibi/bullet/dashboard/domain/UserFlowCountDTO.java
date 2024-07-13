@@ -1,17 +1,15 @@
 package com.wuweibi.bullet.dashboard.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class UserCountVO {
+public class UserFlowCountDTO {
 
-    @ApiModelProperty("今日新增流量(MB)")
     private BigDecimal todayFlow = BigDecimal.ZERO;
-    @ApiModelProperty("今日新增链数量")
-    private Integer todayLink =  0;
+    // 昨日流量
+    private BigDecimal todayFlow2 = BigDecimal.ZERO;
     private BigDecimal todayFlowOn = BigDecimal.ZERO; // 同比
     private BigDecimal monthFlow = BigDecimal.ZERO;
     private BigDecimal monthFlowOn = BigDecimal.ZERO; // 同比

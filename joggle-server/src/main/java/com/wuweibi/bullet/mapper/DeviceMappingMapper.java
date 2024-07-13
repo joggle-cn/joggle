@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wuweibi.bullet.dashboard.domain.DeviceMappingInfoDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
@@ -98,4 +99,18 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
     DeviceMappingProtocol selectMapping4ProtocolByMappingId(@Param("mappingId")Long mappingId);
 
     boolean removeByDomainId(@Param("domainId")Long domainId);
+
+    /**
+     * 获取用户得映射Id
+     * @param userId 用户Id
+     * @return
+     */
+    List<Integer> getMappingIdByUserId(@Param("userId") Long userId);
+
+    /**
+     * 根据用户id获取设备下的映射id集合
+     * @param userId 用户id
+     * @return
+     */
+    List<DeviceMappingInfoDTO> getDeviceMappingIdByUserId(@Param("userId") Long userId);
 }
