@@ -1,5 +1,7 @@
 package com.wuweibi.bullet.web.filter;
 
+import cn.hutool.core.util.ArrayUtil;
+import com.wuweibi.bullet.ratelimiter.util.WebUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.web.RequestBodyWrapper;
 import org.apache.commons.lang3.ArrayUtils;
@@ -68,20 +70,36 @@ public class RequestParamsFilter extends OncePerRequestFilter {
             return;
         }
 
-        logger.info("============== Request Info Start ================");
         String method = request.getMethod();
         String params = request.getQueryString();
-        logger.info("{} {}{}", method, uri, params == null ? "" : "?" + params);
-        if (ArrayUtils.contains(bodyRequestMethods, method)) {
+        String remoteHost = WebUtils.getIP(request);
+
+        String headers = String.format("ip=%s", remoteHost);
+        String body = "body:";
+        if (ArrayUtil.contains(bodyRequestMethods, method)) {
             if (isFormRequest(request)) {
-                logger.info("form:{}", getBody(request));
+                body = String.format("form:%s", getBody(request));
             } else {
-                logger.info("body:{}", getBody(request));
+                body = String.format("body:%s", getBody(request));
             }
         }
-        logger.info("============== Request Info End  =============");
-
+        long startTime = System.currentTimeMillis();
         filterChain.doFilter(request, response);
+        long endTime = System.currentTimeMillis();
+        long timeDiff = endTime - startTime; // 执行时长计算
+        logger.info("[time:{}] {}:{}{} [header:{}] {}",timeDiff, method, uri, (params == null ? "" : "?" + params),  headers, body);
+
+//        logger.info("{} {}{}", method, uri, params == null ? "" : "?" + params);
+//        if (ArrayUtils.contains(bodyRequestMethods, method)) {
+//            if (isFormRequest(request)) {
+//                logger.info("form:{}", getBody(request));
+//            } else {
+//                logger.info("body:{}", getBody(request));
+//            }
+//        }
+//        logger.info("============== Request Info End  =============");
+//
+//        filterChain.doFilter(request, response);
     }
 
 

@@ -82,6 +82,9 @@
 	<logger name="org.mybatis" level="INFO"/>
 	<logger name="weixin.popular.client" level="INFO"/>
 	<logger name="org.redisson" level="INFO"/>
+	<logger name="org.springframework.web.client.RestTemplate" level="INFO"/>
+	<logger name="org.springframework.web.HttpLogging" level="INFO"/>
+	<logger name="org.springframework.web.context.request.async.WebAsyncManager" level="INFO"/>
 
 
 
