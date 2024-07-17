@@ -10,30 +10,39 @@ import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
 import com.wuweibi.bullet.flow.service.UserFlowService;
+import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsHourSettleDTO;
 import com.wuweibi.bullet.metrics.domain.DataMetricsListVO;
 import com.wuweibi.bullet.metrics.domain.DataMetricsParam;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
+import com.wuweibi.bullet.metrics.entity.DataMetricsHour;
+import com.wuweibi.bullet.metrics.mapper.DataMetricsHourMapper;
 import com.wuweibi.bullet.metrics.mapper.DataMetricsMapper;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.utils.DateTimeUtil;
+import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.wuweibi.bullet.alias.CacheCode.*;
@@ -135,9 +144,22 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
                 String keyLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_TODAY, date);
                 redisTemplate.opsForHash().increment(keyBytes, String.valueOf(entity.getMappingId()), byteKb);
                 redisTemplate.opsForHash().increment(keyLink, String.valueOf(entity.getMappingId()), 1);
-                if (0 > redisTemplate.getExpire(DEVICE_MAPPING_STATISTICS_LINK_TODAY)) {
-                    redisTemplate.expire(keyBytes, 1, TimeUnit.DAYS);
-                    redisTemplate.expire(keyLink, 1, TimeUnit.DAYS);
+                if (0 > redisTemplate.getExpire(keyLink)) {
+                    redisTemplate.expire(keyBytes, 2, TimeUnit.DAYS);
+                    redisTemplate.expire(keyLink, 2, TimeUnit.DAYS);
+                }
+                // 小时级别数据统计
+                String dateHour = DateUtil.format(new Date(), "yyyyMMddHH");
+                String keyHourLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_HOUR, dateHour);
+                redisTemplate.opsForHash().increment(keyHourLink, String.valueOf(entity.getMappingId()), 1);
+                String keyHourFlowIn = String.format(DEVICE_MAPPING_STATISTICS_FLOW_IN_HOUR, dateHour);
+                redisTemplate.opsForHash().increment(keyHourFlowIn, String.valueOf(entity.getMappingId()), entity.getBytesIn());
+                String keyHourFlowOut = String.format(DEVICE_MAPPING_STATISTICS_FLOW_OUT_HOUR, dateHour);
+                redisTemplate.opsForHash().increment(keyHourFlowOut, String.valueOf(entity.getMappingId()), entity.getBytesOut());
+                if (0 > redisTemplate.getExpire(keyHourLink)) {
+                    redisTemplate.expire(keyHourFlowIn, 2, TimeUnit.DAYS);
+                    redisTemplate.expire(keyHourFlowOut, 2, TimeUnit.DAYS);
+                    redisTemplate.expire(keyHourLink, 2, TimeUnit.DAYS);
                 }
 
                 // 判断是否扣取流量
@@ -173,6 +195,67 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         return this.baseMapper.selectUserList(page, params);
     }
 
+    @Override
+    public void dataMetricsHourSettle(DataMetricsHourSettleDTO dataMetrics) {
+        String currentDateHour = DateUtil.format(dataMetrics.getDate(), "yyyyMMddHH");
+        log.info("结算流量小时级流量数据，当前:{}", currentDateHour);
+
+        String keyHourLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_HOUR, currentDateHour);
+//        redisTemplate.opsForHash().getOperations().opsForHash() keyHourLink, String.valueOf(entity.getMappingId()), 1);
+        String hourIndex = String.format("h%2d", Integer.valueOf(currentDateHour.substring(8,10)));
+        String createDateStr = currentDateHour.substring(0,8);
+        Date createDate = DateUtil.parse(createDateStr, "yyyyMMdd");
+
+        BoundHashOperations<String, Object, Object> keyLinkHourMap = redisTemplate.boundHashOps(keyHourLink);
+        Set<Map.Entry<Object, Object>> entrySet =  keyLinkHourMap.entries().entrySet();
+        String finalCurrentDateHour = currentDateHour;
+        entrySet.forEach(entry->{
+            Long mappingId = Long.valueOf((String) entry.getKey());
+            DeviceMapping deviceMapping = deviceMappingMapper.selectById(mappingId);
+
+            DataMetricsHour dataMetricsHour = new DataMetricsHour();
+            dataMetricsHour.setUserId(deviceMapping.getUserId());
+            dataMetricsHour.setServerTunnelId(deviceMapping.getServerTunnelId());
+            dataMetricsHour.setDeviceId(deviceMapping.getDeviceId());
+            dataMetricsHour.setMappingId(deviceMapping.getId());
+            dataMetricsHour.setCreateDate(createDate);
+            dataMetricsHour.setCreateTime(new Date());
+
+            Integer link = (Integer)entry.getValue();
+
+            String flowIn = getFlowValue(DEVICE_MAPPING_STATISTICS_FLOW_IN_HOUR, finalCurrentDateHour, mappingId);
+            String flowOut = getFlowValue(DEVICE_MAPPING_STATISTICS_FLOW_OUT_HOUR, finalCurrentDateHour, mappingId);
+
+            String hourValue = String.format("link:%s,in:%s,out:%s", link, flowIn,flowOut);
+
+            DataMetricsHour dataMetricsHour1 = dataMetricsHourMapper.selectByMappingDate(createDate, mappingId);
+            if (null == dataMetricsHour1) {
+                try {
+                    Field hourField = dataMetricsHour.getClass().getDeclaredField(hourIndex);
+                    hourField.setAccessible(true);
+                    hourField.set(dataMetricsHour, hourValue);
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                dataMetricsHourMapper.insert(dataMetricsHour);
+            } else {
+                try {
+                    Field hourField = dataMetricsHour.getClass().getDeclaredField(hourIndex);
+                    hourField.setAccessible(true);
+                    hourField.set(dataMetricsHour1, hourValue);
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                dataMetricsHourMapper.updateById(dataMetricsHour1);
+            }
+        });
+
+    }
+
 
     /**
      * 每天凌晨0.30执行昨日数据
@@ -186,5 +269,56 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
         calendar.add(Calendar.DATE, -1);
         Date date = calendar.getTime();
         this.baseMapper.generateDayByTime(date);
+    }
+
+    @Resource
+    private DeviceMappingMapper deviceMappingMapper;
+
+    @Resource
+    private DataMetricsHourMapper dataMetricsHourMapper;
+
+
+
+
+
+    /**
+     * 每1小时执行一次结算
+     *
+     * @return
+     */
+    @Scheduled(cron = "1 0 * * * ?")
+    public void settleHourFlow() {
+        String currentDateHour = (String) redisTemplate.opsForValue().get(DEVICE_MAPPING_STATISTICS_FLOW_HOUR_CURRENT);
+        LocalDateTime currentLocalDateHour = DateUtil.parseLocalDateTime(currentDateHour, "yyyyMMddHH");
+        if (StringUtil.isBlank(currentDateHour)) {
+            currentDateHour = DateUtil.format(new Date(), "yyyyMMddHH");
+            redisTemplate.opsForValue().set(DEVICE_MAPPING_STATISTICS_FLOW_HOUR_CURRENT, currentDateHour);
+            return;
+        }
+        // 判断间隔小时数，多了就需要补偿
+        String todayDateHour = DateUtil.format(new Date(), "yyyyMMddHH");
+        LocalDateTime todayLocalDateHour = DateUtil.parseLocalDateTime(todayDateHour, "yyyyMMddHH");
+        // 计算小时差
+        int hours = DateTimeUtil.getHourDiff(currentLocalDateHour, todayLocalDateHour);
+        if (hours <= 0) {
+            return;
+        }
+        for (int i =0 ; i < (hours); i++){
+            LocalDateTime cur = currentLocalDateHour.plusHours(i);
+            // 将LocalDateTime转换为Date
+            Date date = DateUtil.date(cur.atZone(ZoneId.systemDefault()).toInstant());
+            DataMetricsHourSettleDTO dataMetricsHourSettleDTO = new DataMetricsHourSettleDTO();
+            dataMetricsHourSettleDTO.setDate(date);
+            this.dataMetricsHourSettle(dataMetricsHourSettleDTO);
+        }
+
+        redisTemplate.opsForValue().set(DEVICE_MAPPING_STATISTICS_FLOW_HOUR_CURRENT, todayDateHour);
+    }
+
+
+
+    private String getFlowValue(String keyFormat, String currentDateHour, Long mappingId) {
+        String keyHour = String.format(keyFormat, currentDateHour);
+        return ((Integer) Objects.requireNonNull(redisTemplate.opsForHash().get(keyHour, String.valueOf(mappingId)))).toString();
     }
 }

@@ -34,6 +34,23 @@ public interface CacheCode {
 	 * 统计今日设备映射流量 链接数
 	 */
 	String DEVICE_MAPPING_STATISTICS_LINK_TODAY = "device:flowCount:%s:link";
+	/**
+	 * 统计小时级设备映射流量 链接数
+	 */
+	String DEVICE_MAPPING_STATISTICS_LINK_HOUR = "device:flowHour::%s:link";
+	/**
+	 * 统计小时级设备映射流量 入网流量
+	 */
+	String DEVICE_MAPPING_STATISTICS_FLOW_IN_HOUR = "device:flowHour::%s:in";
+	/**
+	 * 统计小时级设备映射流量 出口流量
+	 */
+	String DEVICE_MAPPING_STATISTICS_FLOW_OUT_HOUR = "device:flowHour::%s:out";
+
+	/**
+	 * 当前结算的小时数
+	 */
+	String DEVICE_MAPPING_STATISTICS_FLOW_HOUR_CURRENT = "device:flowHour:current";
 
 	
 	

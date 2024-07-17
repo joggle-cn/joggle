@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuweibi.bullet.metrics.mapper.DataMetricsHourMapper">
+
+    <resultMap id="BaseResultMap" type="com.wuweibi.bullet.metrics.entity.DataMetricsHour">
+        <!--@Table -->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="serverTunnelId" column="server_tunnel_id" jdbcType="INTEGER"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="mappingId" column="mapping_id" jdbcType="INTEGER"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="h01" column="h01" jdbcType="VARCHAR"/>
+        <result property="h02" column="h02" jdbcType="VARCHAR"/>
+        <result property="h03" column="h03" jdbcType="VARCHAR"/>
+        <result property="h04" column="h04" jdbcType="VARCHAR"/>
+        <result property="h05" column="h05" jdbcType="VARCHAR"/>
+        <result property="h06" column="h06" jdbcType="VARCHAR"/>
+        <result property="h07" column="h07" jdbcType="VARCHAR"/>
+        <result property="h08" column="h08" jdbcType="VARCHAR"/>
+        <result property="h09" column="h09" jdbcType="VARCHAR"/>
+        <result property="h10" column="h10" jdbcType="VARCHAR"/>
+        <result property="h11" column="h11" jdbcType="VARCHAR"/>
+        <result property="h12" column="h12" jdbcType="VARCHAR"/>
+        <result property="h13" column="h13" jdbcType="VARCHAR"/>
+        <result property="h14" column="h14" jdbcType="VARCHAR"/>
+        <result property="h15" column="h15" jdbcType="VARCHAR"/>
+        <result property="h16" column="h16" jdbcType="VARCHAR"/>
+        <result property="h17" column="h17" jdbcType="VARCHAR"/>
+        <result property="h18" column="h18" jdbcType="VARCHAR"/>
+        <result property="h19" column="h19" jdbcType="VARCHAR"/>
+        <result property="h20" column="h20" jdbcType="VARCHAR"/>
+        <result property="h21" column="h21" jdbcType="VARCHAR"/>
+        <result property="h22" column="h22" jdbcType="VARCHAR"/>
+        <result property="h23" column="h23" jdbcType="VARCHAR"/>
+        <result property="h24" column="h24" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectByMappingDate" resultType="com.wuweibi.bullet.metrics.entity.DataMetricsHour">
+        select * from data_metrics_hour where create_date = #{date} and mapping_id = #{mappingId}
+    </select>
+
+</mapper>
+

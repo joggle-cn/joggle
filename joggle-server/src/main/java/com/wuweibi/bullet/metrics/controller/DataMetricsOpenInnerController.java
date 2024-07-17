@@ -5,8 +5,10 @@ import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
+import com.wuweibi.bullet.metrics.domain.DataMetricsHourSettleDTO;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +56,25 @@ public class DataMetricsOpenInnerController {
         }
 
         return dataMetricsService.uploadData(dataMetrics);
+    }
+
+
+    /**
+     * 流量数据小时结算
+     * @param authorization
+     * @param dataMetrics
+     * @return
+     */
+    @ApiOperation("[内]流量数据小时结算")
+    @PostMapping("/hour/settle")
+    public R dataMetricsHourSettle(@RequestHeader String authorization,
+                    @RequestBody @Valid DataMetricsHourSettleDTO dataMetrics) {
+        if (!joggleProperties.getAdminApiToken().equals(authorization)) {
+            log.warn("[流量数据小时结算]无接口调用权限token:{}", authorization);
+            return R.fail("无接口调用权限");
+        }
+        dataMetricsService.dataMetricsHourSettle(dataMetrics);
+        return R.ok();
     }
 
 

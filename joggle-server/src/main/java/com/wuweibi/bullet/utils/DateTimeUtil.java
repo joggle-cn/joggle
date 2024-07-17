@@ -1,6 +1,24 @@
 package com.wuweibi.bullet.utils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class DateTimeUtil {
+
+
+    /**
+     * 获取两个时间的小时差
+     * @param form 来
+     * @param to 到
+     * @return
+     */
+    public static int getHourDiff(LocalDateTime form, LocalDateTime to) {
+        // 计算时间差
+        Duration duration = Duration.between(form, to);
+        // 输出时间差
+        long hours = duration.toHours(); // 获取小时数
+        return (int) hours;
+    }
 
 
     /**
