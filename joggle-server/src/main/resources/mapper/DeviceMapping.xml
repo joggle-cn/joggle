@@ -137,12 +137,13 @@
 		select dm.id  from t_device_mapping dm where dm.userId = #{userId}
 	</select>
 
-<!--	根据用户id获取设备下的映射id集合-->
+	<!-- 根据用户id获取设备下的映射id集合-->
 	<select id="getDeviceMappingIdByUserId"
 			resultType="com.wuweibi.bullet.dashboard.domain.DeviceMappingInfoDTO">
 		select d.id as deviceId, d.name as deviceName, group_concat(dm.id) as mappingIds  from t_device d
 		 left join t_device_mapping dm on dm.device_id = d.id
 		 where d.userId = #{userId}
+		GROUP BY d.id
 	</select>
 
 </mapper>

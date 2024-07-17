@@ -752,6 +752,9 @@ public class StringUtil {
 	 * @return
 	 */
 	public static List<Integer> splitInt(String ids, String charStr) {
+		if (Objects.isNull(ids)) {
+			return Collections.emptyList();
+		}
 		List<Integer> list = new ArrayList<>();
 		String[] strList = ids.split(charStr);
 		for(String tmp : strList){

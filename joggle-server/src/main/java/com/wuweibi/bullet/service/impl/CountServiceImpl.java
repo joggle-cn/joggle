@@ -120,15 +120,15 @@ public class CountServiceImpl implements CountService {
 
             // 匹配流量数据
             deviceMappingInfoDTOList.forEach(item->{
-                List<Integer> mappingId = StringUtil.splitInt(item.getMappingIds(),",");
-                mappingId.forEach(id -> {
+                List<Integer> mappingIdList = StringUtil.splitInt(item.getMappingIds(),",");
+                mappingIdList.forEach(id -> {
                     Integer flowKb = (Integer) keyBytesMap.get(id.toString());
                     BigDecimal val = new BigDecimal(flowKb == null ? 0 : flowKb)
                             .divide(BigDecimal.valueOf(1024));
                     item.setFlow(item.getFlow().add(val));
                 });
             });
-            return deviceMappingInfoDTOList.stream().map(item -> {
+            return deviceMappingInfoDTOList.stream().filter(item->BigDecimal.ZERO.compareTo(item.getFlow()) < 0).map(item -> {
                 DeviceCountInfoVO deviceCountInfoVO = new DeviceCountInfoVO();
                 BeanUtils.copyProperties(item, deviceCountInfoVO);
                 return deviceCountInfoVO;
