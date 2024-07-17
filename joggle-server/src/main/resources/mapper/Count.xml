@@ -17,6 +17,7 @@
     <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO">
         select
             round(c.todayFlow,2) as todayFlow,
+            round(c.todayFlow2,2) as todayFlow2,
             round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
             round((c.monthFlow+c.todayFlow),2) as monthFlow,
             round(ifnull(((c.monthFlow+c.todayFlow) - monthFlow2)/monthFlow2, IF((c.monthFlow+c.todayFlow)=0, 0, 1)) * 100,2) as monthFlowOn,
