@@ -10,9 +10,10 @@
  **/
 public class NumberTest {
 
+    public static void main(String[] args) {
 
-    public  void test( ) {
-
-
+        String hourIndex = String.format("h%02d",  11);
+        System.out.printf(hourIndex);
     }
+
 }

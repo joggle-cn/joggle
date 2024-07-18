@@ -14,7 +14,6 @@ server:
   port: ${SERVER_PORT:8081}
 
 
-
 management:
   health:
     mail:
@@ -56,8 +55,11 @@ spring:
   boot:
     admin:
       ui:
-        publicUrl: ${JOGGLE_MONITOR_URL}
-
+        resourceLocations:
+          - classpath*:META-INF/spring-boot-admin-server-ui/
+          - classpath:META-INF/spring-boot-admin-server-ui/
+#        template-location: classpath:META-INF/spring-boot-admin-server-ui/
+      #        publicUrl: https://admin.joggle.cn
       ## admin 服务端访问地址
       context-path: /monitor
       ## admin 客户端连接服务端
@@ -65,7 +67,7 @@ spring:
         # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
         instance:
           prefer-ip: true
-        url: http://localhost:${server.port}/${spring.boot.admin.context-path}
+        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
 #      instanceAuth:
 #        defaultUserName: client_manager
 #        defaultPassword: password
@@ -73,7 +75,8 @@ spring:
         # 单体服务应用 确保能够传递jessionid
         ignored-headers:
           - "Set-Cookie"
-          - "Authorization"
+#          - "Cookie"
+#          - "Authorization"
   profiles:
     active: dev
   application:
@@ -91,13 +94,13 @@ spring:
     oauth2:
       jwt:
         signingKey: ${JOGGLE_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay,/bootAdmin/**
+      ignoreUrls:   /api/orders/alipay,/monitor/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
 
-  thymeleaf:
-    cache: false
+#  thymeleaf:
+#    cache: false
   http:
     encoding:
       force: on
@@ -107,16 +110,16 @@ spring:
       # 需要实时更新的目录
       # additional-paths: src/main/java
 
-  freemarker:
-    templateLoaderPath: classpath:/static
-    cache: false
-    charset: UTF-8
-    checkTemplateLocation: on
-    contentType: text/html
-    exposeRequestAttributes: false
-    exposeSessionAttributes: false
-    requestContextAttribute: request
-    suffix: .html
+#  freemarker:
+##    templateLoaderPath: classpath:/static
+#    cache: false
+#    charset: UTF-8
+#    checkTemplateLocation: on
+#    contentType: text/html
+#    exposeRequestAttributes: false
+#    exposeSessionAttributes: false
+#    requestContextAttribute: request
+#    suffix: .html
   # 邮件 配置
   mail:
     host: ${JOGGLE_MAIL_HOST:smtp.ym.163.com}
@@ -176,7 +179,12 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-
+  cache:
+    cache-names:
+      - sysconfig
+    redis:
+      key-prefix: "cache:"
+      time-to-live: 1h
 # mybatis-plus 配置信息
 mybatis-plus:
   # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
@@ -221,10 +229,10 @@ logging:
 # 设定ftl文件路径
 
 #网关白名单，无需要签权url
-gate:
-  ignore:
-    authentication:
-      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template,/manager
+#gate:
+#  ignore:
+#    authentication:
+#      startWith: /oauth,/api/open,/logout,/druid,/index.html,/js,/lib,/css,/resource,/view,/template,/manager
 
 # joggle 配置
 joggle:

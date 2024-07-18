@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.oauth2.filter;
 
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.wuweibi.bullet.oauth2.consts.ClientScope;
 import com.wuweibi.bullet.utils.SpringUtils;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
@@ -17,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 
 /**
@@ -26,6 +33,28 @@ import java.io.IOException;
  */
 @Slf4j
 public class ApiAuthTokenFilter implements Filter, InitializingBean {
+
+    // 采集内网ip清单
+    private static List<String> LOCAL_IP_LIST = new ArrayList<>();
+
+    static {
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                while (inetAddresses.hasMoreElements()) {
+                    InetAddress inetAddress = inetAddresses.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String ipAddress = inetAddress.getHostAddress();
+                        LOCAL_IP_LIST.add(ipAddress);
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -73,14 +102,15 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
-                if (NetUtil.isInnerIP(request.getRemoteHost()) &&
+                // 内网无需登录 放行
+                if (isInnerIP(request) &&
                         request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().startsWith(adminServerProperties.path("/instances"))
                 ) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
                 // 判断是内网ip才能访问
-                if (NetUtil.isInnerIP(request.getRemoteHost()) && request.getRequestURI().startsWith(adminServerProperties.path("/actuator"))) {
+                if (isInnerIP(request) && request.getRequestURI().startsWith(adminServerProperties.path("/actuator"))) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
@@ -89,7 +119,7 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
                 if (httpSession != null && "true".equals(httpSession.getAttribute("monitor"))) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
-                }else{
+                } else {
                     response.sendRedirect(adminServerProperties.path("/login"));
                     return;
                 }
@@ -97,6 +127,29 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+
+    /**
+     * 判断是否内部地址
+     *
+     * @param request 请求
+     * @return
+     */
+    private static boolean isInnerIP(HttpServletRequest request) {
+        String remoteAddr = request.getRemoteHost();
+        if ("localhost".equals(remoteAddr)) {
+            return true;
+        }
+        if ("0:0:0:0:0:0:0:1".equals(remoteAddr)) {
+            return true;
+        }
+        // 内网的IP清单判断
+        if (ArrayUtil.contains(LOCAL_IP_LIST.toArray(), remoteAddr)) {
+
+            return true;
+        }
+        return NetUtil.isInnerIP(remoteAddr);
     }
 
 

@@ -86,10 +86,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         // 关闭HTTP Basic认证
         http.httpBasic();
         http.csrf().disable();
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).disable()
+//        http.sessionManagement().disable().
         ;
-
-
         String monitorContextPath = adminServerProperties.getContextPath();
 
         // @formatter:off
@@ -101,19 +99,30 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 // 特殊接口
                 .antMatchers("/", "/api/open/**", "/inner/open/**", "/logout", "/tunnel/**", "/_ws/log/**",
-                        "/swagger-resources", "/webjars/**", "/v3/api-docs", "/doc.html", adminServerProperties.path("/**")).permitAll()
+                        "/swagger-resources", "/webjars/**", "/v3/api-docs", "/doc.html",
+                        "/index.html",
+                        "/html/**",
+                        "/js/**",
+                        "/css/**",
+                        "/lib/**",
+                        "/manager/**",
+                        "/resource/**",
+                        "/template/**",
+                        "/view/**",
+                          adminServerProperties.path("/**")
+                ).permitAll()
 
                 // 放过静态资源 【废弃】
 //                .antMatchers("/robots.txt","/manager/**","/lib/**", "/js/**","/css/**","/template/**", "/resource/**","/view/**", "/doc.html", "/index.html", "/favicon.ico").permitAll()
 
                 // 监控相关配置
                 .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(monitorContextPath + "/login")
-                .successHandler(successHandler).and()
-                .logout().logoutUrl(monitorContextPath + "/logout")
-                .and().httpBasic().and()
-                .csrf().disable();
+                .and().formLogin()
+                    .loginPage(monitorContextPath + "/login")
+                    .successHandler(successHandler)
+                .and().logout()
+                    .logoutUrl(monitorContextPath + "/logout")
+                .and();
 //                .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
 
     }

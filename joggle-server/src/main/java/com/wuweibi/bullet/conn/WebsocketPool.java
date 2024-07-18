@@ -123,12 +123,25 @@ public final class WebsocketPool {
 
 
     /**
-     * 广播所有客户端 TODO
+     * 广播所有客户端
      * @param deviceNo
      * @param msg
      */
+    @Deprecated
     public void boradcast(String deviceNo, Message msg) {
         Bullet3Annotation bulletAnnotation = this.getByTunnelId( 1);
+        if (bulletAnnotation == null) {
+            return;
+        }
+        bulletAnnotation.sendMessage(deviceNo, msg);
+    }
+    /**
+     * 广播所有客户端
+     * @param deviceNo
+     * @param msg
+     */
+    public void boradcast(Integer tunnelId, String deviceNo, Message msg) {
+        Bullet3Annotation bulletAnnotation = this.getByTunnelId(tunnelId);
         if (bulletAnnotation == null) {
             return;
         }

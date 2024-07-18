@@ -3,7 +3,7 @@ package com.wuweibi.bullet.task.impl;
 import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.entity.User;
@@ -94,7 +94,7 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
             Map<String, Object> param = new HashMap<>(3);
             param.put("result", uc.getResult());
             param.put("resultMsg", uc.getResultMsg());
-            param.put("url", bulletConfig.getServerUrl() );
+            param.put("url", joggleProperties.getServerUrl() );
             mailService.send(user.getEmail(), "Joggle实名认证结果", param, "certification_result.ftl");
 
             count++;
@@ -111,7 +111,7 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
 
     }
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
 
 
@@ -137,7 +137,7 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
         String host = "https://zidv2.market.alicloudapi.com";
         String path = "/idcard/VerifyIdcardv2";
         String method = "GET";
-        String appcode = bulletConfig.getAliAppcode();
+        String appcode = joggleProperties.getAliAppcode();
         Map<String, String> headers = new HashMap<String, String>();
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);

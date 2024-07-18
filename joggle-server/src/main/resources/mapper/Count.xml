@@ -14,9 +14,10 @@
     </select>
 
 <!--    统计用户的流量情况-->
-    <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserCountVO">
+    <select id="selectUserCountInfo" resultType="com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO">
         select
             round(c.todayFlow,2) as todayFlow,
+            round(c.todayFlow2,2) as todayFlow2,
             round(ifnull((c.todayFlow-todayFlow2)/todayFlow2, IF(c.todayFlow=0, 0, 1)) * 100,2)  as todayFlowOn,
             round((c.monthFlow+c.todayFlow),2) as monthFlow,
             round(ifnull(((c.monthFlow+c.todayFlow) - monthFlow2)/monthFlow2, IF((c.monthFlow+c.todayFlow)=0, 0, 1)) * 100,2) as monthFlowOn,
@@ -25,8 +26,8 @@
             round((c.monthLink+c.todayLink),2) monthLink,
             round(ifnull(((c.monthLink+c.todayLink) - monthLink2)/monthLink2, IF((c.monthLink+c.todayLink)=0, 0, 1)) * 100,2) as monthLinkOn
         from (select
-                  (select IFNULL(sum(b.bytes_in+b.bytes_out  ),0)/1024/1024 from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayFlow,
-                  (select IFNULL(count(*),0) from data_metrics b where b.user_id = a.id and b.create_date = CURRENT_DATE) todayLink,
+                  0 as todayFlow,
+                  0 as todayLink,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_date = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 DAY),'%Y-%m-%d')) as todayFlow2,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(CURRENT_DATE,'%Y-%m-01')) as monthFlow,
                   (select ifnull(sum(flow),0)/1024/1024 from data_metrics_day b where b.user_id = a.id and b.create_month = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 MONTH),'%Y-%m-01')) as monthFlow2,
@@ -78,9 +79,16 @@
 
 <!--    统计设备流量趋势-->
     <select id="selectUserDeviceTrend" resultType="com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO">
-        select a.create_date as time, round(a.flow,2)  flow  from
+        select a.create_date as time, round(a.flow,2) as flow,
+        round(a.flowIn,2) as flowIn,
+        round(a.flowOut,2) as flowOut
+        from
         (
-            (select create_date, SUM(flow)/1024/1024 flow from data_metrics_day
+            (select create_date,
+                SUM(flow)/1024/1024 as flow,
+                SUM(bytes_in)/1024/1024 as flowIn,
+                SUM(bytes_out)/1024/1024 as flowOut
+                from data_metrics_day
                 WHERE user_id = #{userId}
                 <if test="deviceId != null">
                     and device_id = #{deviceId}
@@ -90,7 +98,9 @@
             UNION  (
                 SELECT
                 date(@date := DATE_ADD( @date, INTERVAL - 1 DAY )) create_date,
-                0 flow
+                0 flow,
+                0 flowIn,
+                0 flowOut
                 FROM
                 ( SELECT @date := DATE_ADD( now(), INTERVAL + 1 DAY ) FROM data_metrics_day ) days
                 LIMIT 30

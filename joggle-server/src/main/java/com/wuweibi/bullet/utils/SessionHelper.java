@@ -37,7 +37,7 @@ public class SessionHelper {
      */
     public static Long getUserId(HttpServletRequest request){
         HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
         try {
             Long userId = (Long) session.getAttribute(USER_ID);
             if(userId != null){

@@ -90,7 +90,11 @@ public class MappingDeviceVO {
 	private Integer serverTunnelId;
 
 
+	@ApiModelProperty("今日流量")
 	private BigDecimal todayFlow;
+
+	@ApiModelProperty("链接数")
+	private Integer link;
 
 	@ApiModelProperty("宽带mbps")
 	private Integer bandwidth;

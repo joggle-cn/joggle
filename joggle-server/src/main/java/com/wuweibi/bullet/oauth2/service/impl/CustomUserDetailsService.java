@@ -11,6 +11,7 @@ import com.wuweibi.bullet.oauth2.exception.LoginException;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
+import com.wuweibi.bullet.ratelimiter.util.WebUtils;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +79,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 【monitor】 仅仅管理员可以登录
         if (monitorAntPathMatcher.match(adminServerProperties.path("/**"),request.getRequestURI()) && 1 == user.getUserAdmin()){
+            request.getSession(true);// 第二次登录可使用到该session
+            WebUtils.setSessionAttribute(WebUtils.getRequest(), "monitor", "true");
             return getUserDetail(user);
         }
 

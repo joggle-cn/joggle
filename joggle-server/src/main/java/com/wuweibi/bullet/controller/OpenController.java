@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
@@ -87,7 +87,7 @@ public class OpenController {
     private ClientVersionService clientVersionService;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
 
     @InitBinder
@@ -168,8 +168,8 @@ public class OpenController {
             Map<String, Object> params = new HashMap<>(2);
 
             String url = HttpUtils.getRequestURL(request);
-            if (StringUtil.isNotBlank(bulletConfig.getServerUrl())) {
-                url = bulletConfig.getServerUrl();
+            if (StringUtil.isNotBlank(joggleProperties.getServerUrl())) {
+                url = joggleProperties.getServerUrl();
             }
             String activateUrl = url + "#/user/activate?code=" + code + "&ic=" + inviteCode;
             params.put("url", url);

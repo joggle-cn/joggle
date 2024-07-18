@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wuweibi.bullet.config.properties.BulletConfig;
+import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain2.domain.DomainAdminParam;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
@@ -239,7 +239,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     private SqlSessionFactory sqlSessionFactory;
 
     @Resource
-    private BulletConfig bulletConfig;
+    private JoggleProperties joggleProperties;
 
     @Resource
     private ResourcePackageService resourcePackageService;
@@ -262,7 +262,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             log.debug("user domain[{}] release", domain.getDomainFull());
             Map<String, Object> param = new HashMap<>(3);
             param.put("domain", domain.getDomainFull());
-            param.put("url", bulletConfig.getServerUrl() );
+            param.put("url", joggleProperties.getServerUrl() );
             param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(),"yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s到期释放提醒", domain.getDomainFull());
 

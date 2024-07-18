@@ -1,7 +1,7 @@
 FROM eclipse/alpine_jdk8
 
 # 构建参数
-ENV JAVA_OPTS -Xms512m -Xmx512m
+ENV JAVA_OPTS -Xms256m -Xmx512m
 ENV TZ Asia/Shanghai
 ENV APP_ENV dev
 ENV SERVER_PORT 80
@@ -19,7 +19,7 @@ MAINTAINER docker_user admin@wuweibi.com
 # Bullet设备编码
 #ENV NGROKD_BIN '/opt/bullet-server/bin/ngrokd'
 
-
+RUN sudo mkdir /app/logs && sudo chmod -R 777 /app/logs
 
 # 容器内部文件处理
 #ADD ../build/server/bin /opt/bullet-server/bin/

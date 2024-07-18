@@ -126,4 +126,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean updateSystemNotice(Long userId, Integer status);
+
+    User getByUserId(Long userId);
 }

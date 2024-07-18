@@ -3,7 +3,6 @@ package com.wuweibi.bullet.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wuweibi.bullet.config.properties.BulletConfig;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.contrast.DeviceOnlineStatus;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
@@ -18,9 +17,8 @@ import com.wuweibi.bullet.mapper.DeviceOnlineMapper;
 import com.wuweibi.bullet.protocol.MsgGetDeviceStatus;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
-import com.wuweibi.bullet.system.entity.User;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -210,26 +208,15 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             return true;
         }
         if (status != 1) {
-            User user = userService.getById(deviceDetail.getUserId());
-            if (user == null) {
-                log.warn("设备用户[{}] 不能存在...", deviceDetail.getUserId());
-                return true;
-            }
-
             // 设备下线通知
-            log.info("user[{}] device[{}] is down...", user.getId(), deviceDetail.getDeviceNo());
-            if (!Objects.equals(1, user.getSystemNotice())){
-                return true;
-            }
-            Map<String, Object> param = new HashMap<>(3);
+            log.info("user[{}] device[{}] is down...", deviceDetail.getUserId(), deviceDetail.getDeviceNo());
+
+            Map<String, Object> param = new HashMap<>(7);
             param.put("deviceNo", deviceDetail.getDeviceNo());
             param.put("deviceName", deviceDetail.getName());
             param.put("publicIp", deviceDetail.getPublicIp());
-            param.put("reason", "可能断电、断网等原因导致");
-            param.put("url", bulletConfig.getServerUrl());
             param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s设备下线提醒", deviceDetail.getDeviceNo());
-            mailService.send(user.getEmail(), subject, param, "device_down_notice.htm");
+            notifyBiz.notification(deviceDetail.getUserId(), NotifyBiz.NotifyType.DEVICE_DOWN, param);
         }
 
         return true;
@@ -238,9 +225,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
     @Resource
     private UserService userService;
     @Resource
-    private MailService mailService;
-    @Resource
-    private BulletConfig bulletConfig;
+    private NotifyBiz notifyBiz;
 
     @Override
     public int batchUpdateStatus(List<String> deviceNoList, int status) {

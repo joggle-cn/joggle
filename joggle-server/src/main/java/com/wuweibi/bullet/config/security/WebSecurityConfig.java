@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -68,31 +67,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //            .anyRequest().authenticated() // 剩下的所有请求登录后就能访问
 //        ;
 
-        String monitorContextPath = adminServerProperties.getContextPath();
-
-        // @formatter:off
-        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-        successHandler.setTargetUrlParameter("redirectTo");
-        successHandler.setDefaultTargetUrl(monitorContextPath + "/");
-
-        http
-                .headers().frameOptions().disable()
-                .and().authorizeRequests()
+        // monitor 访问路径
+//        String monitorContextPath = adminServerProperties.getContextPath();
+//
+//        // @formatter:off
+//        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+//        successHandler.setTargetUrlParameter("redirectTo");
+//        successHandler.setDefaultTargetUrl(monitorContextPath + "/");
+//
+//        http
+//                .headers().frameOptions().disable()
+//                .and().authorizeRequests()
+////                .antMatchers( "/index.html"
 //                .antMatchers(monitorContextPath + "/assets/**"
 //                        , monitorContextPath + "/login"
 //                        , monitorContextPath + "/instances" // 注册入口
 //                        , monitorContextPath + "/actuator/**"
 //                        , monitorContextPath + "/redis/info"
-//                        ,"/actuator/**"
 //                ).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(monitorContextPath + "/login")
-                .successHandler(successHandler).and()
-                .logout().logoutUrl(monitorContextPath + "/logout")
-                .and().httpBasic().and()
-                .csrf()
-                .disable();
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin().loginPage(monitorContextPath + "/login")
+//                .successHandler(successHandler).and()
+//                .logout().logoutUrl(monitorContextPath + "/logout")
+//                .and().httpBasic().and()
+//                .csrf()
+//                .disable();
     }
 
     /**

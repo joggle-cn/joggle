@@ -1,11 +1,14 @@
 package com.wuweibi.bullet.config;
 
 import com.alipay.easysdk.kernel.Config;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wuweibi.bullet.config.properties.AliSmsProperties;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -115,9 +118,24 @@ public class BeanConfig {
      * redis session 序列化方式
      */
     @Component("springSessionDefaultRedisSerializer")
-    public class SessionSerializer extends GenericJackson2JsonRedisSerializer {
+    public static class SessionSerializer extends GenericJackson2JsonRedisSerializer implements InitializingBean {
+        static ObjectMapper objectMapper = new ObjectMapper();
+        static {
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
+        }
 
+        public SessionSerializer( ) {
+            super(objectMapper);
+        }
+
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+
+        }
     }
+
 
 
 }

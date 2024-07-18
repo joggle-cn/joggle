@@ -232,5 +232,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.baseMapper.updateSystemNotice(userId, status);
     }
 
+    @Override
+    public User getByUserId(Long userId) {
+        return this.baseMapper.selectById(userId);
+    }
+
 
 }

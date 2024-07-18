@@ -2,7 +2,7 @@ package com.wuweibi.bullet.mapper;
 
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
-import com.wuweibi.bullet.dashboard.domain.UserCountVO;
+import com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +30,7 @@ public interface CountMapper {
      * @param userId 用户ID
      * @return
      */
-    UserCountVO selectUserCountInfo(@Param("userId") Long userId);
+    UserFlowCountDTO selectUserCountInfo(@Param("userId") Long userId);
 
     /**
      * 统计设备流量排行
