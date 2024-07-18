@@ -202,7 +202,7 @@ public class DataMetricsServiceImpl extends ServiceImpl<DataMetricsMapper, DataM
 
         String keyHourLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_HOUR, currentDateHour);
 //        redisTemplate.opsForHash().getOperations().opsForHash() keyHourLink, String.valueOf(entity.getMappingId()), 1);
-        String hourIndex = String.format("h%2d", Integer.valueOf(currentDateHour.substring(8,10)));
+        String hourIndex = String.format("h%02d", Integer.valueOf(currentDateHour.substring(8,10)));
         String createDateStr = currentDateHour.substring(0,8);
         Date createDate = DateUtil.parse(createDateStr, "yyyyMMdd");
 

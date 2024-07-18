@@ -16,7 +16,8 @@ public final class BigDecimalUtils {
             return BigDecimal.valueOf(100.00);
         }
         return newVal.subtract(oldVal)
-                .divide(oldVal).multiply(BigDecimal.valueOf(100))
+                .divide(oldVal, 4, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 

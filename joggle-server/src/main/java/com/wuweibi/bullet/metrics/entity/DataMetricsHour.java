@@ -62,8 +62,11 @@ public class DataMetricsHour {
     private Date createTime;
 
     /**
-     * 0-1小时
+     * 1小时
      */
+    @ApiModelProperty("1小时")
+    private String h00;
+
     @ApiModelProperty("0-1小时")
     private String h01;
 
