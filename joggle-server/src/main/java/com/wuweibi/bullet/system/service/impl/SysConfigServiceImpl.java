@@ -10,6 +10,8 @@ import com.wuweibi.bullet.system.domain.SysConfigVO;
 import com.wuweibi.bullet.system.entity.SysConfig;
 import com.wuweibi.bullet.system.mapper.SysConfigMapper;
 import com.wuweibi.bullet.system.service.SysConfigService;
+import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -54,4 +56,16 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         }
         return sysConfig.getValue();
     }
+
+    public Boolean getBooleanValue(String type, String key) {
+        SysConfigService sysConfigService = SpringUtils.getBean(SysConfigService.class);
+        String val = sysConfigService.getConfigValue(type, key);
+        if(StringUtil.isBlank(val)){
+            return Boolean.FALSE;
+        }
+        return Boolean.valueOf(val);
+    }
+
+
+
 }

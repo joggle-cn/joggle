@@ -9,13 +9,21 @@ import java.util.Map;
 public interface NotifyBiz {
 
     /**
-     * 系统通知
+     * 用户系统通知
      * @param userId 用户id
      * @param notifyType 通知类型
      * @param param 参数
      * @return
      */
     boolean notification(Long userId, NotifyType notifyType, Map<String, Object> param);
+
+    /**
+     * 系统通知
+     * @param notifyType 通知类型
+     * @param param 参数
+     * @return
+     */
+    boolean notification(NotifyType notifyType, Map<String, Object> param);
 
 
     @Getter

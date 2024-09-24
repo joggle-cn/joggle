@@ -23,3 +23,7 @@ ALTER TABLE `device_online_log`
 update device_online_log dol, t_device d
 set dol.device_name = d.name
 where dol.device_id = d.id;
+
+-- 新增平台级短信通知，支持多手机号
+INSERT INTO `sys_config` (`id`, `type`, `key`, `value`, `create_time`, `update_time`) VALUES (4, 'SystemConfigEnum', 'NOTICE_PHONES', '', '2024-09-24 21:41:46', '2024-09-24 21:41:48');
+INSERT INTO `sys_config` (`id`, `type`, `key`, `value`, `create_time`, `update_time`) VALUES (5, 'SystemConfigEnum', 'NOTICE_ENABLE', 'false', '2024-09-24 21:41:46', '2024-09-24 21:41:48');

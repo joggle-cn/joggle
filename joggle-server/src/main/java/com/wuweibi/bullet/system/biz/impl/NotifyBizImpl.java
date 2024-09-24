@@ -7,7 +7,10 @@ import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.biz.NotifyBiz;
 import com.wuweibi.bullet.system.domain.SendSmsDTO;
 import com.wuweibi.bullet.system.entity.User;
+import com.wuweibi.bullet.system.service.SysConfigService;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
+import com.wuweibi.bullet.system.service.enums.SystemConfigEnum;
+import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,8 @@ public class NotifyBizImpl implements NotifyBiz {
     @Resource
     private JoggleProperties joggleProperties;
 
+    @Resource
+    private SysConfigService sysConfigService;
 
     @Override
     public boolean notification(@NotNull Long userId, @NotNull NotifyType notifyType, @NotNull Map<String, Object> param) {
@@ -65,6 +70,32 @@ public class NotifyBizImpl implements NotifyBiz {
             smsDTO.setType(notifyType.getSmsType().toString());
             smsDTO.setParam(param);
             log.info("system notice send sms to userId[{}]", userId);
+            thirdMessageService.sendSms(smsDTO);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean notification(NotifyType notifyType, Map<String, Object> param) {
+        String typeName = SystemConfigEnum.class.getSimpleName();
+
+        Boolean noticeEnable = sysConfigService.getBooleanValue(typeName, SystemConfigEnum.NOTICE_ENABLE.getType());
+        if (!noticeEnable) {
+            return false;
+        }
+        // 获取通知手机号
+        String phones = sysConfigService.getConfigValue(typeName, SystemConfigEnum.NOTICE_PHONES.getType());
+        if (StringUtil.isBlank(phones)) {
+            return false;
+        }
+
+        // 如果开通了短信通知，
+        for (String phone : phones.split(",")) {
+            SendSmsDTO smsDTO = new SendSmsDTO();
+            smsDTO.setPhone(phone);
+            smsDTO.setType(notifyType.getSmsType().toString());
+            smsDTO.setParam(param);
+            log.info("system notice send sms  [{}]");
             thirdMessageService.sendSms(smsDTO);
         }
         return true;

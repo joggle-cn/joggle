@@ -33,5 +33,14 @@ public interface SysConfigService extends IService<SysConfig> {
     String getConfigValue(String type, String key);
 
 
+    /**
+     * 根据key 获取配置
+     * @param type 类型
+     * @param key key
+     * @return
+     */
+    Boolean getBooleanValue(String type, String key);
+
+
 
 }

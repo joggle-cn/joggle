@@ -263,21 +263,21 @@ public class Bullet3Annotation {
 
     @OnError
     public void onError(Throwable t) throws Throwable {
-//        log.error("Bullet Client[{}] Error: {}", this.deviceNo, t.toString());
+        log.error("Bullet tunnelId[{}] Error: {}", this.tunnelId, t.toString());
 ////        if (!(t instanceof EOFException)) {
 ////            log.error("", t);
 ////        }
 //        log.error("", t);
         WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
 //        if (this.deviceStatus) { // 正常设备才能移除
-            pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
+        pool.removeConnection(this, String.format("异常-%s",t.getMessage()));
 //
 //        }
 //        this.deviceStatus = false;
 
-
-        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
-        serverTunnelService.updateStatus(tunnelId, 0, null);
+        // error也会到end去
+//        ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+//        serverTunnelService.updateStatus(tunnelId, 0, null);
     }
 
 
