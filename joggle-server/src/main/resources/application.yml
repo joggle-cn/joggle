@@ -242,6 +242,8 @@ joggle:
   # ngrokd: ${JOGGLE_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
   serverUrl: ${JOGGLE_SERVER_URL:https://www.joggle.cn}
+  ## joggle运行模式 （standalone:单用户模式、sass:多用户模式）
+  serverMode: ${JOGGLE_SERVER_MODE:sass}
   # 调用接口的Token
   adminApiToken: ${JOGGLE_API_TOKEN:123456}
   aliAppcode: ${ALI_MARKET_APPCODE:xxxxx}

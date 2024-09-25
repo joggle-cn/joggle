@@ -2,6 +2,7 @@ package com.wuweibi.bullet.system.biz.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
+import com.wuweibi.bullet.enums.ServerModeEnum;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.biz.NotifyBiz;
@@ -45,6 +46,11 @@ public class NotifyBizImpl implements NotifyBiz {
 
     @Override
     public boolean notification(@NotNull Long userId, @NotNull NotifyType notifyType, @NotNull Map<String, Object> param) {
+        // 如果是单用户运行模式，使用系统配置
+        if (ServerModeEnum.standalone.equals(joggleProperties.getServerMode())) {
+            return this.notification(notifyType, param);
+        }
+        // 多用户模式通知
         User user = userService.getByUserId(userId); // 可以考虑缓存
         if (null == user) {
             log.warn("设备用户[{}] 不存在...", userId);
@@ -78,9 +84,9 @@ public class NotifyBizImpl implements NotifyBiz {
     @Override
     public boolean notification(NotifyType notifyType, Map<String, Object> param) {
         String typeName = SystemConfigEnum.class.getSimpleName();
-
         Boolean noticeEnable = sysConfigService.getBooleanValue(typeName, SystemConfigEnum.NOTICE_ENABLE.getType());
         if (!noticeEnable) {
+            log.warn("system notice is not open");
             return false;
         }
         // 获取通知手机号
