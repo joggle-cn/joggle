@@ -1,10 +1,7 @@
 package com.wuweibi.bullet.orders.controller;
 
 
-import com.alipay.easysdk.factory.Factory;
-import com.alipay.easysdk.kernel.Config;
-import com.alipay.easysdk.kernel.util.ResponseChecker;
-import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.OrderPayBiz;
@@ -24,6 +21,7 @@ import com.wuweibi.bullet.orders.domain.OrdersParam;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.enums.PayTypeEnum;
+import com.wuweibi.bullet.orders.payment.PaymentService;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
@@ -39,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * (Orders)表控制层
@@ -83,17 +79,13 @@ public class OrdersAppController {
      * @return
      */
     @ApiOperation("订单计算价格")
-    @RequestMapping(value = "/calculate", method = RequestMethod.POST)
+    @PostMapping(value = "/calculate")
     public Object calculate( @RequestBody @Valid OrdersDTO ordersDTO) {
         Long userId = SecurityUtils.getUserId();
         ordersDTO.setUserId(userId);
 
         return orderPayBiz.calculate(ordersDTO);
     }
-
-    @Resource
-    private Config alipayConfig;
-
 
     /**
      * 下单接口
@@ -177,6 +169,9 @@ public class OrdersAppController {
         return R.success(orders.getId());
     }
 
+    @Resource
+    private PaymentService paymentService;
+
 
     /**
      * 订单确认支付接口
@@ -198,30 +193,34 @@ public class OrdersAppController {
         if (orders == null) {
             return R.fail("订单不存在");
         }
-        if (orders.getStatus() == OrdersStatusEnum.WAIT_PAY.getStatus()) {
-            // 主动查询订单支付状态
-            Factory.setOptions(alipayConfig);
-            AlipayTradeQueryResponse result =
-                    Factory.Payment.Common().query(orders.getOrderNo());
+        if (orders.getStatus() == OrdersStatusEnum.PAYED.getStatus()) {
+            return R.ok(orders, "订单已支付");
+        }
 
-            if (ResponseChecker.success(result)) {
-                // {"alipay_trade_query_response":{"code":"10000","msg":"Success","buyer_logon_id":"gln***@sandbox.com","buyer_pay_amount":"0.00","buyer_user_id":"2088622987384692","buyer_user_type":"PRIVATE","invoice_amount":"0.00","out_trade_no":"999809380105","point_amount":"0.00","receipt_amount":"0.00","send_pay_date":"2022-07-21 23:23:03","total_amount":"70.00","trade_no":"2022072122001484690502290245","trade_status":"TRADE_SUCCESS"},"sign":"OP2QmZfPi25jL9ShqZWvssnzTbptPUFSWXiM5SanfetE7uruZyJDW+rR8Jyw/71OWdDRoUVF9fmKJsTak9lu2UHcLg8rLBpYfJ1Qlex2lUgINHfN2X+dBGFMwQ+y3hk0SfnzY34wNAnbuaeGPPzgmbv7KE16Rjw3mzVICBJUiPO+M5g4dgXw+lbEdRK30wGEYi4gbcN4lGYqUrOAN5DJ8Sl7ovaQ9yce2oE/gTu/NPHElYihUK8Ln1M4KDdK/mtTgEH2tiwtV7QsMaYD9ydkx5rCw78KsPnZPAdVmMPbVfg28cZI0ialk0EAjgPM/Of9LXfAFpVn86/wdhiHtvz2eA=="}
-                if ("TRADE_SUCCESS".equals(result.getTradeStatus())) {// 支付成功
-                    Map<String, Object> params = new HashMap<>(3);
-                    params.put("out_trade_no", result.getOutTradeNo());
-                    params.put("trade_no", result.getTradeNo());
-                    params.put("trade_status", result.getTradeStatus());
-
-                    boolean payResult = orderPayBiz.aliPayNotify(params);
-                    if (!payResult) {
-                        return R.fail("还收到支付通知");
-                    }
-                }
-            } else {
-                log.error("调用失败，原因：" + result.getBody());
-            }
+        if (orders.getStatus() != OrdersStatusEnum.WAIT_PAY.getStatus()) {
             return R.fail("订单未查询到支付信息");
         }
+
+        // 根据支付的渠道类型重新触发主动查询
+        JSONObject params = new JSONObject(5);
+        switch (PayTypeEnum.toEnum(orders.getPayType()) ){
+            case ALIPAY:
+                params  = paymentService.getAlipayCallbackParams(orders);
+                break;
+            case WECHAT:
+                params  = paymentService.getWechatPayCallbackParams(orders);
+                break;
+        }
+        // 校验转换 trade_status == ‘SUCCESS’ 代表支付成功
+        if(!"SUCCESS".equals(params.getString("trade_status"))){
+            return R.success(orders);
+        }
+
+        boolean payResult = orderPayBiz.aliPayNotify(params);
+        if (!payResult) {
+            return R.fail("收到支付通知");
+        }
+
         return R.success(orders);
     }
 

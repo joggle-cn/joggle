@@ -27,6 +27,10 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
+  trace:
+    http:
+      enabled: ${HTTP_TRACE_ENABLE:true}
 #  server:
 #    port: 8080
 #
@@ -96,7 +100,7 @@ spring:
     oauth2:
       jwt:
         signingKey: ${JOGGLE_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay,/monitor/**
+      ignoreUrls:   /api/orders/alipay,/api/open/**,/monitor/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
@@ -253,6 +257,14 @@ joggle:
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:https://pay.joggle.cn/api/open/orders/alipay/callback}
     returnUrl: ${joggle.serverUrl}${ALIPAY_RETURN_URL}
+  # 微信支付配置
+  wechatpay:
+    appId: ${WECHAT_PAY_APP_ID:xxx}
+    merchantId: ${WECHAT_PAY_MERCHANT_ID:xxx}
+    privateKey: ${WECHAT_PAY_PRIVATE_KEY}
+    merchantSerialNumber: ${WECHAT_PAY_MERCHANT_SN:xxx}
+    apiV3key: ${WECHAT_PAY_API3_KEY:xxx}
+    notifyUrl: ${WECHAT_PAY_NOTIFY_URL:https://xxx.xxx.cn/api/open/orders/wechatpay/callback}
   # oss 配置
   ali-oss:
     publicServerUrl: ${ALI_OSS_PUBLIC_URL:https://www.joggle.cn}
