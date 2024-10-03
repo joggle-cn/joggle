@@ -257,12 +257,7 @@
         </dependency>
         <!--swagger相关依赖 - 结束-->
 
-        <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
-        <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-easysdk</artifactId>
-            <version>2.2.2</version>
-        </dependency>
+
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
