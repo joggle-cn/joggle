@@ -58,7 +58,7 @@ public class PayConfig {
     public Config alipayConfig() {
         Config config = new Config();
         config.protocol = "https";
-        config.gatewayHost = "openapi.alipaydev.com";
+        config.gatewayHost = "openapi-sandbox.dl.alipaydev.com";
         if (springUtils.isProduction()) {
             config.gatewayHost = "openapi.alipay.com";
         }

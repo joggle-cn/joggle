@@ -252,7 +252,7 @@ joggle:
   adminApiToken: ${JOGGLE_API_TOKEN:123456}
   aliAppcode: ${ALI_MARKET_APPCODE:xxxxx}
   alipay:
-    appId: ${ALIPAY_MERCHANT_APPID:2021000121630337}
+    appId: ${ALIPAY_MERCHANT_APPID:9021000141609472}
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:https://pay.joggle.cn/api/open/orders/alipay/callback}

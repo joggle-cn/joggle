@@ -79,8 +79,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public void updateDueTime(Long domainId, Long dueTime) {
-        this.baseMapper.updateDueTime(domainId, new Date(dueTime));
+    public void updateDueTime(Long domainId, Date dueTime) {
+        this.baseMapper.updateDueTime(domainId, dueTime);
     }
 
     @Resource
@@ -132,7 +132,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public Page<DomainBuyListVO> getBuyList(Page pageParams, DomainSearchParam params) {
         Page<DomainBuyListVO> page = this.baseMapper.selectBuyList(pageParams, params);
-        page.getRecords().forEach(item->{
+        page.getRecords().forEach(item -> {
             item.setTypeName(DomainTypeEnum.toName(item.getType()));
         });
         return page;
@@ -231,7 +231,6 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
 
-
     @Resource
     private MailService mailService;
 
@@ -262,8 +261,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             log.debug("user domain[{}] release", domain.getDomainFull());
             Map<String, Object> param = new HashMap<>(3);
             param.put("domain", domain.getDomainFull());
-            param.put("url", joggleProperties.getServerUrl() );
-            param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(),"yyyy-MM-dd HH:mm:ss"));
+            param.put("url", joggleProperties.getServerUrl());
+            param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s到期释放提醒", domain.getDomainFull());
 
             this.releaseById(resourcePackageLevel1, domain.getId());
@@ -284,7 +283,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params) {
         Page<DomainListVO> page = this.baseMapper.selectAdminList(pageInfo, params);
-        page.getRecords().forEach(item->{
+        page.getRecords().forEach(item -> {
             item.setStatusName(DomainStatusEnum.toName(item.getStatus()));
         });
         return page;

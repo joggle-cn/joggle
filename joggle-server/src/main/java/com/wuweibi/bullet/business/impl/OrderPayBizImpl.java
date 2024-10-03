@@ -41,6 +41,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 
 /**
@@ -138,10 +139,14 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 dueTime = calendar.getTime();
                 if (ordersDTO.getPayType() == PayTypeEnum.VIP.getType()) { // VIP权益支付
                     UserPackage userPackage = userPackageService.getById(userId);
-                    dueTime = userPackage.getEndTime();
-                    Date startTime = domain.getDueTime() == null ? new Date() : domain.getDueTime();
-                    long size = DateUtil.betweenDay(startTime, dueTime, true); // 计算两个时间的天数
-                    amount = size == 0 ? 0 : new Long(size - 1);
+                    Date userPackageDueTime = userPackage.getEndTime();
+                    dueTime = userPackageDueTime; // 到期时间即VIP时间
+                    // 当VIP的j结束时间不是空，ca计算amount
+                    if (Objects.nonNull(userPackageDueTime)) {
+                        Date startTime = domain.getDueTime() == null ? new Date() : domain.getDueTime();
+                        long size = DateUtil.betweenDay(startTime, userPackageDueTime, true); // 计算两个时间的天数
+                        amount = size == 0 ? 0 : new Long(size - 1);
+                    }
                 }
 //                else {
 //                    if (serverTunnel.getServerEndTime().getTime() - dueTime.getTime() < SERVER_DIFF_TIME_MS) {
@@ -164,7 +169,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 orderPayInfo.setName(String.format("%s%s:%s", text, name, domain.getDomainFull()));
 
 
-                orderPayInfo.setDueTime(dueTime.getTime()); // 计算到期
+                orderPayInfo.setDueTime(Objects.isNull(dueTime)?null:dueTime.getTime()); // 计算到期
                 orderPayInfo.setPrice(price);
                 orderPayInfo.setAmount(amount);
                 orderPayInfo.setRealAmount(amount * 24 * 60 * 60l);
@@ -303,7 +308,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                     packageEndTime = userPackage.getEndTime();
                 }
 
-                domainService.updateDueTime(orders.getDomainId(), packageEndTime.getTime());
+                domainService.updateDueTime(orders.getDomainId(), packageEndTime);
 
                 break;
             case 3: // 流量
@@ -391,7 +396,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
             userPackageRightsService.addPackageRights(packageRightsDTO);
         }
         OrderPayBiz orderPayBiz = SpringUtils.getBean(OrderPayBiz.class);
-        JSONObject params = new JSONObject(3);
+        JSONObject params = new JSONObject(5);
         params.put("out_trade_no", orderNo);
         params.put("trade_no", "权益流水号");
         params.put("trade_status", "TRADE_SUCCESS");
