@@ -24,6 +24,7 @@ import com.wuweibi.bullet.orders.domain.OrdersPayDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -69,8 +70,6 @@ public class OrdersOpenController {
     @Resource
     private WechatpayProperties wechatpayProperties;
 
-    @Resource
-    private com.wechat.pay.java.core.Config wechatPayConfig;
 
 
     /**
@@ -141,6 +140,7 @@ public class OrdersOpenController {
             return R.fail("订单不存在");
         }
 
+        com.wechat.pay.java.core.Config wechatPayConfig= SpringUtils.getBean(com.wechat.pay.java.core.Config.class);
         // 构建service
         NativePayService service = new NativePayService.Builder().config(wechatPayConfig).build();
         // request.setXxx(val)设置所需参数，具体参数可见Request定义
@@ -177,6 +177,7 @@ public class OrdersOpenController {
             @RequestHeader("Wechatpay-Signature-Type") String signatureType,
             @RequestBody String body, HttpServletResponse response) throws Exception {
 
+        com.wechat.pay.java.core.Config wechatPayConfig= SpringUtils.getBean(com.wechat.pay.java.core.Config.class);
         // 构造 RequestParam
         com.wechat.pay.java.core.notification.RequestParam requestParam = new com.wechat.pay.java.core.notification.RequestParam.Builder()
                 .serialNumber(serial)

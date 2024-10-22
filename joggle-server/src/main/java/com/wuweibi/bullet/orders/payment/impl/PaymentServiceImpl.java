@@ -14,6 +14,7 @@ import com.wechat.pay.java.service.payments.nativepay.model.QueryOrderByOutTrade
 import com.wuweibi.bullet.config.properties.WechatpayProperties;
 import com.wuweibi.bullet.orders.entity.Orders;
 import com.wuweibi.bullet.orders.payment.PaymentService;
+import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +33,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Resource
     private WechatpayProperties wechatpayProperties;
-
-    @Resource
-    private com.wechat.pay.java.core.Config wechatPayConfig;
-
 
     @Override
     public JSONObject getAlipayCallbackParams(Orders orders) throws Exception {
@@ -67,6 +64,8 @@ public class PaymentServiceImpl implements PaymentService {
         com.wechat.pay.java.service.payments.nativepay.model.QueryOrderByOutTradeNoRequest queryRequest = new QueryOrderByOutTradeNoRequest();
         queryRequest.setMchid(wechatpayProperties.getMerchantId());
         queryRequest.setOutTradeNo(orders.getOrderNo());
+
+        com.wechat.pay.java.core.Config wechatPayConfig= SpringUtils.getBean(com.wechat.pay.java.core.Config.class);
 
         // 构建service
         NativePayService service = new NativePayService.Builder().config(wechatPayConfig).build();

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @ConfigurationProperties(prefix = "joggle.wechatpay")
 public class WechatpayProperties {
+    private String enable;
 
 
     /**

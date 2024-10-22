@@ -259,9 +259,10 @@ joggle:
     returnUrl: ${joggle.serverUrl}${ALIPAY_RETURN_URL}
   # 微信支付配置
   wechatpay:
+    enable: ${WECHAT_PAY_ENABLE:false}
     appId: ${WECHAT_PAY_APP_ID:xxx}
     merchantId: ${WECHAT_PAY_MERCHANT_ID:xxx}
-    privateKey: ${WECHAT_PAY_PRIVATE_KEY}
+    privateKey: ${WECHAT_PAY_PRIVATE_KEY:xxx}
     merchantSerialNumber: ${WECHAT_PAY_MERCHANT_SN:xxx}
     apiV3key: ${WECHAT_PAY_API3_KEY:xxx}
     notifyUrl: ${WECHAT_PAY_NOTIFY_URL:https://xxx.xxx.cn/api/open/orders/wechatpay/callback}

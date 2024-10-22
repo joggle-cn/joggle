@@ -5,7 +5,9 @@ import com.wechat.pay.java.core.RSAAutoCertificateConfig;
 import com.wuweibi.bullet.config.properties.AlipayProperties;
 import com.wuweibi.bullet.config.properties.WechatpayProperties;
 import com.wuweibi.bullet.utils.SpringUtils;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,17 +37,23 @@ public class PayConfig {
      * @return
      */
     @Bean
+    @ConditionalOnProperty(prefix = "joggle.wechatpay", value = "enable", havingValue = "true")
+    @SneakyThrows
     public com.wechat.pay.java.core.Config wechatpayConfig() {
         // 使用自动更新平台证书的RSA配置
         // 建议将 config 作为单例或全局静态对象，避免重复的下载浪费系统资源
-        com.wechat.pay.java.core.Config config =
-                new RSAAutoCertificateConfig.Builder()
-                        .merchantId(wechatpayProperties.getMerchantId())
+
+        com.wechat.pay.java.core.Config config = null;
+
+             config =
+                    new RSAAutoCertificateConfig.Builder()
+                            .merchantId(wechatpayProperties.getMerchantId())
 //                        .privateKeyFromPath("D:\\Users\\marker\\apiclient_key.pem")
-                        .privateKey(wechatpayProperties.getPrivateKey())
-                        .merchantSerialNumber(wechatpayProperties.getMerchantSerialNumber())
-                        .apiV3Key(wechatpayProperties.getApiV3key())
-                        .build();
+                            .privateKey(wechatpayProperties.getPrivateKey())
+                            .merchantSerialNumber(wechatpayProperties.getMerchantSerialNumber())
+                            .apiV3Key(wechatpayProperties.getApiV3key())
+                            .build();
+
 
         return config;
     }
