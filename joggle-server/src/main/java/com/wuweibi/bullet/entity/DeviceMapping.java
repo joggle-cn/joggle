@@ -101,7 +101,19 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/**
 	 * 用户域名id
 	 */
-	@TableField(value = "user_domain_id",updateStrategy = FieldStrategy.IGNORED)
+	@TableField(value = "user_domain_id", updateStrategy = FieldStrategy.IGNORED)
 	private Long userDomainId;
+
+	/**
+	 * 是否删除 1删除 0 正常
+	 */
+	@TableLogic
+	@TableField(value = "is_del",updateStrategy = FieldStrategy.IGNORED)
+	private Boolean isDel;
+	/**
+	 * 更新时间
+	 */
+	@TableField("update_time")
+	private Date updateTime;
 
 }

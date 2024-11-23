@@ -212,11 +212,12 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             // 设备下线通知
             log.info("user[{}] device[{}] is down...", deviceDetail.getUserId(), deviceDetail.getDeviceNo());
 
-            Map<String, Object> param = new HashMap<>(7);
+            Map<String, Object> param = new HashMap<>(5);
             param.put("deviceNo", deviceDetail.getDeviceNo());
             param.put("deviceName", deviceDetail.getName());
             param.put("publicIp", deviceDetail.getPublicIp());
             param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            param.put("subject", String.format("%s设备下线提醒", deviceDetail.getDeviceNo()));
             notifyBiz.notification(deviceDetail.getUserId(), NotifyBiz.NotifyType.DEVICE_DOWN, param);
         }
 

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.mapper.UserCertificationMapper;
@@ -87,15 +88,16 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
             }
             uc.setExamineTime(new Date());
             userCertificationMapper.updateById(uc);
-            userService.updateUserCertification(userId, uc.getResult());
+            // 实名认证通过，更新用户的手机号
+            userService.updateUserCertification(userId, uc.getResult(), uc.getPhone());
 
-            // 发送通过邮件
+            // 发送通过通知
             log.debug("send email[{}] notification 实名认证结果: {}", user.getEmail(), uc.getResultMsg());
             Map<String, Object> param = new HashMap<>(3);
             param.put("result", uc.getResult());
             param.put("resultMsg", uc.getResultMsg());
             param.put("url", joggleProperties.getServerUrl() );
-            mailService.send(user.getEmail(), "Joggle实名认证结果", param, "certification_result.ftl");
+            notifyBiz.notification(userId, NotifyBiz.NotifyType.USER_CERTIFICATION_NOTICE, param);
 
             count++;
         }
@@ -110,6 +112,10 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
         log.debug("[实名认证处理] 结束 处理数据量：{}", count);
 
     }
+    @Resource
+    private NotifyBiz notifyBiz;
+
+
     @Resource
     private JoggleProperties joggleProperties;
 

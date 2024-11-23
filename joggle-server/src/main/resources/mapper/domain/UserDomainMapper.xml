@@ -27,7 +27,7 @@
         select
             ud.id ,
             ud.domain,
-            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id) as bind
+            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id and tdm.is_del = 0) as bind
         from user_domain ud
         where ud.user_id = #{userId}
         order by ud.id desc

@@ -214,9 +214,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public boolean releaseById(ResourcePackage resourcePackageLevel1, Long domainId) {
+    public boolean releaseById(Long userId, ResourcePackage resourcePackageLevel1, Long domainId) {
         // 存在映射释放映射
-        deviceMappingMapper.removeByDomainId(domainId);
+        deviceMappingMapper.removeByDomainId(userId, domainId);
 
         // 如果该域名是VIP权益的，扣除使用权益数量
         return this.update(Wrappers.<Domain>lambdaUpdate()
@@ -265,7 +265,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(), "yyyy-MM-dd HH:mm:ss"));
             String subject = String.format("%s到期释放提醒", domain.getDomainFull());
 
-            this.releaseById(resourcePackageLevel1, domain.getId());
+            this.releaseById(domain.getUserId(), resourcePackageLevel1, domain.getId());
             mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
         }
         try {

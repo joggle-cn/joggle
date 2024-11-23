@@ -60,17 +60,19 @@ public class NotifyBizImpl implements NotifyBiz {
             log.warn("user[{}] not open system notice", userId);
             return false;
         }
-        JSONObject jsonParams = new JSONObject(); // 转换更佳优雅的取值参数
-        jsonParams.putAll(param);
-
+        JSONObject jsonParams = new JSONObject(param); // 转换更佳优雅的取值参数
         jsonParams.put("url", joggleProperties.getServerUrl()); // 特殊参数，用于配置邮件跳转链接
 
-        // TODO 这里需要改造为freemarker模板渲染
-        String subject = String.format(notifyType.getEmailType().getSubject(), jsonParams.getString("deviceNo"));
+        // 构造subject邮件标题
+        String subject = jsonParams.getString("subject");
+        if(StringUtil.isBlank(subject)){
+            subject =  notifyType.getEmailType().getDefaultSubject();
+        }
+//        String subject = String.format(notifyType.getEmailType().getSubject(), jsonParams.getString("deviceNo"));
         mailService.send(user.getEmail(), subject, param, notifyType.getEmailType().getTemplateCode());
 
         // 如果开通了短信通知，
-        if (Objects.equals(1, user.getSmsNotice())) {
+        if (Objects.equals(1, user.getSmsNotice()) && null != notifyType.getSmsType()) {
             SendSmsDTO smsDTO = new SendSmsDTO();
             smsDTO.setPhone(user.getPhone());
             smsDTO.setType(notifyType.getSmsType().toString());

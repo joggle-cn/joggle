@@ -14,7 +14,6 @@ import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import com.wuweibi.bullet.ratelimiter.util.WebUtils;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,6 +29,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.stream.Collectors;
 

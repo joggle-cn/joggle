@@ -16,24 +16,27 @@
 		<result column="remote_port" property="remotePort" />
 		<result column="hostname" property="hostname" />
 	</resultMap>
+	<update id="recoveryId">
+		update t_device_mapping set is_del=0, update_time = sysdate() where id = #{id}
+	</update>
 
-
+	<!--删除映射-->
 	<delete id="removeByDomainId">
-		delete from t_device_mapping where domain_id = #{domainId}
+		update t_device_mapping set is_del=1, update_time = sysdate() where userId = #{userId} and domain_id = #{domainId}
 	</delete>
 
 
 	<select id="existsDomain" resultType="boolean" parameterType="map">
-		select count(1) from t_device_mapping where domain = #{domain}
+		select count(1) from t_device_mapping where domain = #{domain} and is_del = 0
 	</select>
 
     <select id="exists" resultType="boolean" parameterType="map">
-		select count(1) from t_device_mapping where id = #{id} and userId =#{userId}
+		select count(1) from t_device_mapping where id = #{id} and userId =#{userId} and is_del = 0
 	</select>
 
 
     <select id="selectDeviceNo" resultType="java.lang.String">
-		select deviceId  from t_device where id = #{deviceId}
+		select deviceId from t_device where id = #{deviceId}
 	</select>
 
 	<!--根据设备编号获取 (新增有效期校验)-->
@@ -52,7 +55,7 @@
         hostname
 	 from t_device_mapping
 
-	where status=1 and device_id in (select id from t_device where deviceId = #{deviceNo})
+	where is_del = 0 and status=1 and device_id in (select id from t_device where deviceId = #{deviceNo})
 		and domain_id in (select id from t_domain where due_time >= SYSDATE() or due_time is null)
 
 	</select>
@@ -81,7 +84,7 @@
 		from t_device_mapping dm
 		left join t_domain td on dm.domain_id = td.id
 		left join user_package up on up.user_id = td.user_id
-		where dm.device_id = #{deviceId}
+		where dm.device_id = #{deviceId} and dm.is_del=0
 
 	</select>
 
@@ -106,7 +109,7 @@
 		left join t_domain td on dm.domain_id = td.id
 		left join user_package up on td.user_id = up.user_id
 
-		where dm.status=1  and td.id >0
+		where dm.status=1 and dm.is_del = 0 and td.id >0
 		  and dm.device_id in (select id from t_device where deviceId = #{deviceNo})
 		  and (td.due_time >= SYSDATE() or td.due_time is null)
 
@@ -134,7 +137,7 @@
 	</select>
 	<!-- 根据用户id获取映射id集合 -->
     <select id="getMappingIdByUserId" resultType="java.lang.Integer">
-		select dm.id  from t_device_mapping dm where dm.userId = #{userId}
+		select dm.id  from t_device_mapping dm where dm.userId = #{userId} and dm.is_del = 0
 	</select>
 
 	<!-- 根据用户id获取设备下的映射id集合-->
@@ -142,8 +145,13 @@
 			resultType="com.wuweibi.bullet.dashboard.domain.DeviceMappingInfoDTO">
 		select d.id as deviceId, d.name as deviceName, group_concat(dm.id) as mappingIds  from t_device d
 		 left join t_device_mapping dm on dm.device_id = d.id
-		 where d.userId = #{userId}
+		 where d.userId = #{userId} and dm.is_del = 0
 		GROUP BY d.id
+	</select>
+
+<!--	查询用户的域名id是否存在 （包含删除记录）-->
+	<select id="selectByUserAndDomainId" resultType="com.wuweibi.bullet.entity.DeviceMapping">
+		select * from t_device_mapping where  userId = #{userId} and domain_id = #{domainId} limit 1
 	</select>
 
 </mapper>

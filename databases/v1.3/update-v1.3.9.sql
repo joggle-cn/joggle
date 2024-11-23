@@ -31,3 +31,14 @@ INSERT INTO `sys_config` (`id`, `type`, `key`, `value`, `create_time`, `update_t
 
 ALTER TABLE `orders`
     ADD COLUMN `trade_type` varchar(50) NULL COMMENT '三方交易类型 JSAPI：公众号支付NATIVE：扫码支付APP：APP支付MICROPAY：付款码支付MWEB：H5支付FACEPAY：刷脸支付' AFTER `trade_no`;
+
+
+INSERT INTO `sys_config` (`id`, `type`, `key`, `value`, `create_time`, `update_time`) VALUES (6, 'SmsTypeEnum', 'VIP_EXPIRATION_NOTICE', 'SMS_475645154', '2024-11-23 17:35:35', '2024-11-23 17:37:41');
+
+ALTER TABLE `t_device_mapping`
+    ADD COLUMN `is_del` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除 1删除 ' AFTER `user_domain_id`;
+ALTER TABLE  `t_device_mapping`
+    ADD COLUMN `update_time` datetime NULL COMMENT '更新时间' AFTER `is_del`;
+
+ALTER TABLE `t_device_mapping`
+    ADD INDEX `idx_userId_domainId`(`userId`, `domain_id`);

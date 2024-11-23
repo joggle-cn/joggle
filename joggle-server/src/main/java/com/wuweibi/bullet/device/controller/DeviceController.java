@@ -253,8 +253,7 @@ public class DeviceController {
      * @return
      */
     @GetMapping(value = "/info")
-    @ResponseBody
-    public R device(@RequestParam Long deviceId) {
+    public R deviceInfo(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
         if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);

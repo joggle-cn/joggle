@@ -140,6 +140,10 @@ public class DeviceMappingController {
         }
 
         DeviceMapping entity = deviceMappingService.getById(deviceMapping.getId());
+        if (Objects.isNull(entity)) {
+            return R.fail("映射不存在");
+        }
+
 //        entity.setDomainId(deviceMapping.getDomainId());
 //        entity.setDomain(deviceMapping.getDomain());
         entity.setProtocol(deviceMapping.getProtocol());

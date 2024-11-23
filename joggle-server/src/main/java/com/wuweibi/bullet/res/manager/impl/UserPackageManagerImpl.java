@@ -14,6 +14,7 @@ import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.MailService;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.ibatis.cursor.Cursor;
@@ -26,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
+
+import static com.wuweibi.bullet.system.biz.NotifyBiz.NotifyType.VIP_EXPIRATION_NOTICE;
+
 
 @Slf4j
 @Service
@@ -247,13 +251,13 @@ public class UserPackageManagerImpl implements UserPackageManager {
             UserPackageFowVO userPackage = iter.next();
             log.info("user[{}] package[{}] expiration... ", userPackage.getUserId(), userPackage.getResourcePackageId());
 
-            Map<String, Object> param = new HashMap<>(4);
+            Map<String, Object> param = new HashMap<>(5);
             param.put("packageName", userPackage.getName());
             param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
             param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("Joggle%s套餐即将到期提醒", userPackage.getName());
-            mailService.send(userPackage.getUserEmail(), subject, param, "package_expiration_notice.htm");
+            param.put("subject", String.format("%s套餐即将到期提醒", userPackage.getName()));
+            notifyBiz.notification(userPackage.getUserId(), VIP_EXPIRATION_NOTICE, param);
         }
         try {
             cursor.close();
@@ -264,6 +268,9 @@ public class UserPackageManagerImpl implements UserPackageManager {
         }
         log.info("[资源包到期前2日检查] 结束 处理数据量：{}", count);
     }
+
+    @Resource
+    private NotifyBiz notifyBiz;
 
 
     /**

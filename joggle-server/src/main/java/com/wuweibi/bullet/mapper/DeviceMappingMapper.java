@@ -57,7 +57,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @param domainId 域名ID
      * @return
      */
-    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId}")
+    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId} and is_del = 0")
     boolean existsDomainId(@Param("deviceId") Long deviceId, @Param("domainId") Long domainId);
 
 
@@ -70,7 +70,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
     void updateStatusById(@Param("id") Long mappingId, @Param("status") int status);
 
 
-    @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId})")
+    @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId} and is_del =0)")
     String selectDeviceNoById(@Param("mappingId") Long mappingId);
 
 
@@ -78,7 +78,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
             "a.*,b.deviceId deviceNo\n" +
             "from t_device_mapping a \n" +
             "left join t_device b on a.device_id = b.id\n" +
-            "where a.userId = #{userId} and status = #{status}")
+            "where a.is_del = 0 and a.userId = #{userId} and status = #{status}")
     List<DeviceMappingDTO> selectAllByUserId(@Param("userId") Long userId, @Param("status") int status);
 
     /**
@@ -98,7 +98,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
 
     DeviceMappingProtocol selectMapping4ProtocolByMappingId(@Param("mappingId")Long mappingId);
 
-    boolean removeByDomainId(@Param("domainId")Long domainId);
+    boolean removeByDomainId(@Param("userId")Long userId, @Param("domainId")Long domainId);
 
     /**
      * 获取用户得映射Id
@@ -113,4 +113,18 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @return
      */
     List<DeviceMappingInfoDTO> getDeviceMappingIdByUserId(@Param("userId") Long userId);
+
+    /**
+     * 查询用户的域名id是否存在 （包含删除记录）
+     * @param userId 用户id
+     * @param domainId 域名id
+     * @return
+     */
+    DeviceMapping selectByUserAndDomainId(@Param("userId") Long userId,@Param("domainId")  Long domainId);
+
+    /**
+     * 恢复数据id
+     * @param id
+     */
+    boolean recoveryId(@Param("id") Long id);
 }
