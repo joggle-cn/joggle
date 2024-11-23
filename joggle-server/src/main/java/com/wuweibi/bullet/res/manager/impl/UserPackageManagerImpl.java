@@ -186,10 +186,10 @@ public class UserPackageManagerImpl implements UserPackageManager {
             param.put("packageName", userPackage.getName());
             param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s套餐到期释放提醒", userPackage.getName());
-            this.free(userPackage);
+            param.put("subject", String.format("%s套餐到期释放提醒", userPackage.getName()));
 
-            mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
+            this.free(userPackage);
+            notifyBiz.notification(userPackage.getUserId(), VIP_EXPIRATION_NOTICE, param);
         }
         try {
             cursor.close();

@@ -73,6 +73,7 @@ public class NotifyBizImpl implements NotifyBiz {
 
         // 如果开通了短信通知，
         if (Objects.equals(1, user.getSmsNotice()) && null != notifyType.getSmsType()) {
+            param.remove("url"); // 变量不支持传入URL ,过滤处理
             SendSmsDTO smsDTO = new SendSmsDTO();
             smsDTO.setPhone(user.getPhone());
             smsDTO.setType(notifyType.getSmsType().toString());

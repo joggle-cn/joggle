@@ -12,6 +12,7 @@ public enum EmailTypeEnum {
     DEVICE_DOWN("DEVICE_DOWN", "device_down_notice.htm",  "%s设备下线提醒"),
     USER_CERTIFICATION_NOTICE("USER_CERTIFICATION_NOTICE", "certification_result.ftl",  "Joggle实名认证结果"),
     VIP_EXPIRATION_NOTICE("VIP_EXPIRATION_NOTICE", "package_expiration_notice.htm",  "Joggle实名认证结果"),
+    VIP_END_NOTICE("VIP_END_NOTICE", "package_release.htm",  "套餐到期释放提醒"),
 
     ;
 

@@ -4,18 +4,24 @@ package com.wuweibi.bullet.config;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.task.UserCertificationTaskService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @EnableScheduling
+@RestController
+@RequestMapping("/inner/open/schedule")
 @Configuration
 public class ScheduleConfig implements SchedulingConfigurer {
 
@@ -80,6 +86,8 @@ public class ScheduleConfig implements SchedulingConfigurer {
     /**
      * VIP用户资源包到期前2天提醒，每日9点执行一次
      */
+    @ApiOperation("VIP用户资源包到期前2天提醒")
+    @PostMapping("/package/expiration/reminder")
     @Scheduled(cron = "0 0 9 * * ? ")
     public void userPackageExpirationReminder() {
         userPackageManager.taskUserPackageExpirationReminder();
