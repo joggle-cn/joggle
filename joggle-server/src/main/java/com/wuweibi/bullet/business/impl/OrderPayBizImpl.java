@@ -306,9 +306,12 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (orders.getPayType() == PayTypeEnum.VIP.getType()) { // 如果是VIP支付
                     UserPackage userPackage = userPackageService.getById(orders.getUserId());
                     packageEndTime = userPackage.getEndTime();
+                    domain.setBandwidth(userPackage.getBroadbandRate());
+                    domain.setConcurrentNum(userPackage.getConcurrentNum());
                 }
-
-                domainService.updateDueTime(orders.getDomainId(), packageEndTime);
+                domain.setDueTime(packageEndTime);
+                domain.setBuyTime(new Date());
+                domainService.updateById(domain);
 
                 break;
             case 3: // 流量
