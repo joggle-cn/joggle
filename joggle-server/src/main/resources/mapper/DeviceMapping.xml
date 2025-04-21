@@ -154,4 +154,9 @@
 		select * from t_device_mapping where  userId = #{userId} and domain_id = #{domainId} limit 1
 	</select>
 
+
+	<select id="selectServiceListPage" resultType="com.wuweibi.bullet.entity.DeviceMapping">
+		select * from t_device_mapping where device_id = #{params.deviceId} and is_del = 0
+	</select>
+
 </mapper>

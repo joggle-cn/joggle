@@ -12,7 +12,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.mapper.DeviceMapper;
@@ -159,8 +159,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public List<DeviceDto> getWebListByUserId(Long userId) {
-        return this.baseMapper.selectWebListByUserId(userId);
+    public List<DeviceDTO> getWebListByUserId(Long userId) {
+        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId);
+
+        return list;
     }
 
     @Override

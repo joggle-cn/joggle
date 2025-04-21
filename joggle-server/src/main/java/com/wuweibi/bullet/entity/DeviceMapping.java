@@ -33,8 +33,13 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Long deviceId;
 
 	private String domain;
+	private String name;
 
 	private Integer port;
+	/**
+	 * 协议 （rdp|http|tcp）
+	 */
+	private String portProtocol;
 
 
 	/**
@@ -78,6 +83,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 
 	/** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
 	private Integer protocol;
+
 
 	/** 备注 */
 	private String description;

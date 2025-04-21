@@ -8,7 +8,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public interface DeviceMapper extends BaseMapper<Device> {
      */
     List<DeviceOption> selectOptionListByUserId(@Param("userId") Long userId);
 
-    List<DeviceDto> selectWebListByUserId(@Param("userId")Long userId);
+    List<DeviceDTO> selectWebListByUserId(@Param("userId")Long userId);
 
     /**
      * 获取设备详情

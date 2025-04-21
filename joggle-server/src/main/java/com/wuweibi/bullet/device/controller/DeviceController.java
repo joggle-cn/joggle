@@ -22,7 +22,7 @@ import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.enums.ProtocolTypeEnum;
@@ -110,9 +110,9 @@ public class DeviceController {
      */
     @ApiOperation("用户的设备列表")
     @GetMapping
-    public R<List<DeviceDto>> device() {
+    public R<List<DeviceDTO>> device() {
         Long userId = SecurityUtils.getUserId();
-        List<DeviceDto> list = deviceService.getWebListByUserId(userId);
+        List<DeviceDTO> list = deviceService.getWebListByUserId(userId);
         return R.ok(list);
     }
 
