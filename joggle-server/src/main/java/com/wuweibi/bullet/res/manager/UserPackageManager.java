@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.res.manager;
 
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 
 public interface UserPackageManager {
 

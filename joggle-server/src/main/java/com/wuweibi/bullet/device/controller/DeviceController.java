@@ -33,7 +33,7 @@ import com.wuweibi.bullet.protocol.MsgCheckUpdate;
 import com.wuweibi.bullet.protocol.MsgDeviceSecret;
 import com.wuweibi.bullet.protocol.MsgSwitchLine;
 import com.wuweibi.bullet.protocol.MsgUnBind;
-import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.service.DeviceMappingService;
@@ -208,7 +208,8 @@ public class DeviceController {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
 
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
+        Integer serverTunnelId = deviceOnline.getServerTunnelId();
+        Bullet3Annotation annotation = websocketPool.getByTunnelId(serverTunnelId);
         if (annotation == null) {
             return R.fail("ngrokd实例不在线, 请联系管理员");
         }
@@ -217,7 +218,7 @@ public class DeviceController {
         if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
-        Device device = deviceService.bindDevice(userId, deviceNo);
+        Device device = deviceService.bindDevice(userId, deviceNo, serverTunnelId);
         userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, 1);
 
         // 发送消息通知设备秘钥

@@ -142,4 +142,14 @@ public interface DomainMapper extends BaseMapper<Domain> {
     boolean updateUserDueTime(@Param("userId") Long userId, @Param("bandwidth") Integer bandwidth, @Param("endTime") Date endTime);
 
     Domain selectByMappingId(Long mappingId);
+
+    /**
+     * 获取有效的用户可用的域名
+     *
+     * @param serverTunnelId
+     * @param userId         用户id
+     * @param type           类型
+     * @return
+     */
+    Domain selectAvailableDomainByUserId(@Param("serverTunnelId") Integer serverTunnelId, @Param("userId") Long userId, @Param("type") int type);
 }

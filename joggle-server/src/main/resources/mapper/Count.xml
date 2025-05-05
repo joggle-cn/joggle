@@ -142,6 +142,9 @@
             LIMIT 2) a
         left join data_metrics_hour dmh on dmh.create_date = a.create_date
          where a.create_date >= #{startDate} and  #{endDate} >= a.create_date
+         <if test="userId!= null">
+            and dmh.user_id = #{userId}
+         </if>
         ORDER BY a.create_date desc
     </select>
 </mapper>

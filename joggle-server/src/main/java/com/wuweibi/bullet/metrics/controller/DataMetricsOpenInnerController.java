@@ -43,6 +43,7 @@ public class DataMetricsOpenInnerController {
      * @param dataMetrics 实体对象
      * @return 新增结果
      */
+    @Deprecated
     @PostMapping("/up")
     public R insert(@RequestHeader String authorization,
                     @RequestBody @Valid DataMetricsDTO dataMetrics) {
@@ -60,7 +61,7 @@ public class DataMetricsOpenInnerController {
 
 
     /**
-     * 流量数据小时结算
+     * 流量数据小时结算[测试]
      * @param authorization
      * @param dataMetrics
      * @return

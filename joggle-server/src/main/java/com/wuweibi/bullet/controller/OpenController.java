@@ -362,12 +362,12 @@ public class OpenController {
      * 近24小时流量情况
      * @return
      */
-    @ApiOperation("近30日流量情况")
+    @ApiOperation("近24小时流量情况")
     @GetMapping("/all/flow/trend/hour")
     public R<List<DeviceDateItemHourVO>> getHourFlowTrend(
             @JwtUser Session session){
         int hour = 24;
-        List<DeviceDateItemHourVO> list = countService.getAllFlowTrendHour(hour);
+        List<DeviceDateItemHourVO> list = countService.getAllFlowTrendHour(null, hour);
         return R.success(list);
     }
 

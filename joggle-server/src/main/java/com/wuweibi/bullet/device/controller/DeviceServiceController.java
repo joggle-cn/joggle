@@ -6,29 +6,38 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.DeviceBiz;
+import com.wuweibi.bullet.business.DomainBiz;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.domain.dto.DeviceScanDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceServiceStatusDTO;
 import com.wuweibi.bullet.device.domain.param.DeviceServiceParam;
+import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceServiceVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.service.DeviceServiceService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
+import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
+import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgDeviceScan;
+import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -107,9 +117,14 @@ public class DeviceServiceController {
     @PostMapping( "/start_scan")
     public R<Page<DeviceServiceVO>> startScan(@JwtUser Session session, @RequestBody DeviceScanDTO dto  ){
         String deviceNo = dto.getDeviceNo();
+        Long userId = session.getUserId();
+
         Device device = deviceService.getByDeviceNo(deviceNo);
         if (Objects.isNull(device)) {
             return R.fail("设备不存在");
+        }
+        if (!userId.equals(device.getUserId())) {
+            return R.fail("设备不是您的");
         }
         Integer serverTunnelId = device.getServerTunnelId();
 
@@ -118,6 +133,126 @@ public class DeviceServiceController {
 
         MsgDeviceScan msgDeviceScan = new MsgDeviceScan();
         annotation.sendMessage(deviceNo, msgDeviceScan);
+
+        return R.success();
+    }
+
+    /**
+     * 关闭映射
+     * @param dto 参数
+     * @return
+     */
+    @ApiOperation("关闭映射")
+    @PostMapping( "/close_tunnel")
+    public R closeTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
+        Long mappingId = dto.getServiceId();
+        Long userId = session.getUserId();
+        DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
+        if (Objects.isNull(deviceMapping)) {
+            return R.fail("设备服务不存在");
+        }
+        Long deviceId = deviceMapping.getDeviceId();
+        Integer serverTunnelId = deviceMapping.getServerTunnelId();
+        DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
+        String deviceNo = deviceInfo.getDeviceNo();
+        // 判断映射是否绑定域名 如果绑定则开启映射。
+        if (deviceMapping.getDomainId() == null) {
+            return R.fail(SystemErrorType.DOMAIN_NOT_FOUND);
+        }
+        // 判断映射的域名是否过期，过期后不允许开启
+        if (!domainMapper.checkDoaminIdDue(userId, deviceMapping.getDomainId())) {
+            return R.fail(SystemErrorType.DOMAIN_IS_DUE);
+        }
+        deviceMapping.setStatus(0);
+        deviceMapping.setUpdateTime(new Date());
+        deviceMappingService.updateById(deviceMapping);
+
+        // 发送消息
+        Bullet3Annotation annotation = coonPool.getByTunnelId(serverTunnelId);
+
+        if (annotation == null) {// 设备不在线
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        }
+        DeviceMappingProtocol deviceMappingProtocol = deviceMappingService.getMapping4ProtocolByMappingId(deviceMapping.getId());
+        if (deviceMappingProtocol == null) {
+            return R.fail("映射信息不存在");
+        }
+
+        JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
+        Message msg = new MsgUnMapping(data.toJSONString());
+        annotation.sendMessage(deviceNo, msg);
+
+        return R.success();
+    }
+
+    @Resource
+    private DomainBiz domainBiz;
+    /**
+     * 开启映射
+     * @param dto 参数
+     * @return
+     */
+    @ApiOperation("开启映射")
+    @PostMapping( "/open_tunnel")
+    public R openTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
+        Long mappingId = dto.getServiceId();
+        Long userId = session.getUserId();
+        DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
+        if (Objects.isNull(deviceMapping)) {
+            return R.fail("设备服务不存在");
+        }
+        Long deviceId = deviceMapping.getDeviceId();
+        Integer serverTunnelId = deviceMapping.getServerTunnelId();
+        DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
+        String deviceNo = deviceInfo.getDeviceNo();
+        // 如果没有流量了，不能操作映射，会有一个缓冲过程
+        if(!userFlowService.hasFlow(userId)){
+            return R.fail(SystemErrorType.FLOW_IS_DUE);
+        }
+
+        // 判断映射是否绑定域名 如果绑定则开启映射。
+        if (deviceMapping.getDomainId() != null) {
+            // 判断映射的域名是否过期，过期后不允许开启
+            if(!domainMapper.checkDoaminIdDue(userId, deviceMapping.getDomainId())){
+                return R.fail(SystemErrorType.DOMAIN_IS_DUE);
+            }
+            deviceMapping.setStatus(1);
+            deviceMapping.setUpdateTime(new Date());
+        }else{
+            // 自动查询可用的资源 并绑定到DeviceMapping
+            Domain domain = domainService.getAvailableDomainByUserId(serverTunnelId, userId, deviceMapping.getPortProtocol());
+            if (domain == null) {
+                // 免费获取一个新域名
+                R<Domain> domainR = domainBiz.getAvailableDomainByDeviceMapping(deviceMapping);
+                if (domainR.isFail()) {
+                    log.warn("用户{}套餐问题：{}", userId, domainR.getMsg());
+                    return R.fail(SystemErrorType.DOMAIN_NOT_FOUND); // 引导用户去购买域名
+                }
+                domain = domainR.getData();
+            }
+            deviceMapping.setRemotePort(deviceMapping.getRemotePort());
+            deviceMapping.setDomain(domain.getDomain());
+            deviceMapping.setRemotePort(domain.getType()==1?Integer.parseInt(domain.getDomain()):null);
+            deviceMapping.setStatus(1);
+            deviceMapping.setDomainId(domain.getId());
+            deviceMapping.setUpdateTime(new Date());
+        }
+        deviceMappingService.updateById(deviceMapping);
+
+        // 发送消息
+        Bullet3Annotation annotation = coonPool.getByTunnelId(serverTunnelId);
+
+        if (annotation == null) {// 设备不在线
+            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
+        }
+        DeviceMappingProtocol deviceMappingProtocol = deviceMappingService.getMapping4ProtocolByMappingId(deviceMapping.getId());
+        if (deviceMappingProtocol == null) {
+            return R.fail("映射信息不存在");
+        }
+
+        JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
+        Message msg = new MsgMapping(data.toJSONString());
+        annotation.sendMessage(deviceNo, msg);
 
         return R.success();
     }
@@ -132,13 +267,17 @@ public class DeviceServiceController {
     public R<Page<DeviceServiceVO>> getDeviceServiceList(@JwtUser Session session, PageParam pageParams,DeviceServiceParam params){
         Long userId = session.getUserId();
         params.setUserId(userId);
+
         Page pageP = new Page<DeviceServiceVO>(pageParams.getCurrent(), pageParams.getSize());
         Page<DeviceServiceVO> page = deviceServiceService.getListPage(pageP, params);
+
         return R.success(page);
     }
 
     @Resource
     private DomainMapper domainMapper;
+    @Resource
+    private DomainService domainService;
     @Resource
     private UserFlowService userFlowService;
     @Resource

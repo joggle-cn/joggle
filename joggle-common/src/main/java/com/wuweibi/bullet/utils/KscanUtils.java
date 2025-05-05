@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class KscanUtils {
 
     static String[] TCP_ARRAY = new String[]{"ssh", "rdp", "redis", "mysql"};
-    static String[] KEYWORD_ARRAY = new String[]{"http", "https","dns","smb"};
+    static String[] KEYWORD_ARRAY = new String[]{"http", "https", "dns", "smb"};
     static String P_HTTP = "http";
     static String P_HTTPS = "https";
     static String P_UDP = "udp";

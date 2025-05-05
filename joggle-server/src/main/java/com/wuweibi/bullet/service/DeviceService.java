@@ -138,9 +138,11 @@ public interface DeviceService extends IService<Device> {
 
     /**
      * 用户绑定设备
-     * @param userId 用户id
-     * @param deviceNo 设备编号
+     *
+     * @param userId         用户id
+     * @param deviceNo       设备编号
+     * @param serverTunnelId
      * @return
      */
-    Device bindDevice(Long userId, String deviceNo);
+    Device bindDevice(Long userId, String deviceNo, Integer serverTunnelId);
 }

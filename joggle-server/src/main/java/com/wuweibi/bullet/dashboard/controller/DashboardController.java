@@ -2,10 +2,7 @@ package com.wuweibi.bullet.dashboard.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.wuweibi.bullet.annotation.JwtUser;
-import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
-import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
-import com.wuweibi.bullet.dashboard.domain.UserCountVO;
-import com.wuweibi.bullet.dashboard.domain.UserTodayFlowCountVO;
+import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.CountService;
@@ -84,6 +81,18 @@ public class DashboardController {
     }
 
 
+    /**
+     * 用户近24小时流量情况
+     * @return
+     */
+    @ApiOperation("用户近24小时流量情况")
+    @GetMapping("/user/flow/trend/hour")
+    public R<List<DeviceDateItemHourVO>> getHourFlowTrend(
+            @JwtUser Session session){
+        int hour = 24;
+        List<DeviceDateItemHourVO> list = countService.getAllFlowTrendHour(session.getUserId(), hour);
+        return R.success(list);
+    }
 
 
 
