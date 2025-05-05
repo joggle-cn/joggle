@@ -16,6 +16,7 @@ import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.protocol.*;
+import com.wuweibi.bullet.protocol.domain.KscanResult;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -124,6 +125,10 @@ public class Bullet3Annotation {
     }
 
 
+    /**
+     * ngrokd 发送的消息 处理
+     * @param bytes
+     */
     @OnMessage
     public void incoming(byte[] bytes) {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
@@ -197,6 +202,21 @@ public class Bullet3Annotation {
                     String deviceNo = msgDeviceDown.getDeviceNo();
                     deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
                     deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.OUTLINE.status);
+                    return;
+//
+                case Message.DEVICE_SCAN_RESP: // 设备扫描结果
+
+                    MsgDeviceScanResp msgDeviceScanResp = new MsgDeviceScanResp(head);
+                    msgDeviceScanResp.read(bis);
+                    String  scanDeviceNo = msgDeviceScanResp.getDeviceNo();
+                    KscanResult scanJson = msgDeviceScanResp.getResult();
+
+                    DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
+                    // 这里存在问题 就是不知设备id是多少，就不知需要更新那个设备下的映射信息。
+                    deviceMappingService.putScanResult(scanDeviceNo, scanJson);
+
+
+
                     return;
 //                case Message.LOG_MAPPING_LOG:// 日志消息
 //                    MsgCommandLog msgCommandLog = new MsgCommandLog(head);

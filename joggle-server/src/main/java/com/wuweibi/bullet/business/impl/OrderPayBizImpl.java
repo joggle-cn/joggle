@@ -19,10 +19,11 @@ import com.wuweibi.bullet.orders.enums.OrdersStatusEnum;
 import com.wuweibi.bullet.orders.enums.PayTypeEnum;
 import com.wuweibi.bullet.orders.enums.ResourceTypeEnum;
 import com.wuweibi.bullet.orders.service.OrdersService;
+import com.wuweibi.bullet.protocol.consts.ResourceType;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.domain.UserPackageRightsDTO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
-import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
@@ -382,7 +383,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
         }
         String orderNo = orders.getOrderNo();
 
-        UserPackageLimitEnum enumObj = transToPackageEnum(orders.getResourceType());
+        UserPackageLimitEnum enumObj = ResourceType.toPackageEnum(orders.getResourceType());
 
         // 校验资源不在套餐权益内
         if (!userPackageRightsService.checkResource(orders.getResourceType(), orders.getDomainId())) {
@@ -413,13 +414,4 @@ public class OrderPayBizImpl implements OrderPayBiz {
 
     }
 
-    private UserPackageLimitEnum transToPackageEnum(Integer resourceType) {
-        switch (resourceType) {
-            case 1:
-                return UserPackageLimitEnum.PortNum;
-            case 2:
-                return UserPackageLimitEnum.DomainNum;
-        }
-        return null;
-    }
 }

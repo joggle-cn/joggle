@@ -57,8 +57,9 @@ public interface CountService {
 
     /**
      * 全网近24小时流量
+     * @param userId 用户id 当用户id null 代表查询所有数据
      * @param hour
      * @return
      */
-    List<DeviceDateItemHourVO> getAllFlowTrendHour(int hour);
+    List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour);
 }

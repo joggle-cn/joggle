@@ -12,11 +12,14 @@ import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.domain.dto.DeviceMappingDto;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
+import com.wuweibi.bullet.protocol.domain.KscanResult;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
+import com.wuweibi.bullet.utils.KscanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -176,6 +179,41 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
             lqw.ne(DeviceMapping::getId, excludeMapId);
         }
         return this.baseMapper.selectCount(lqw) > 0;
+    }
+
+    @Override
+    public void putScanResult(String deviceNo, KscanResult kscanResult) {
+
+        // 转换为mapping
+        Device device = deviceService.getByDeviceNo(deviceNo);
+        Long deviceId = device.getId();
+        Long userId = device.getUserId();
+        Integer serverTunnelId = device.getServerTunnelId();
+
+        String portProtocol = kscanResult.getService();
+        String ip = kscanResult.getIP();
+        Integer port = Integer.parseInt(kscanResult.getPort());
+
+        // 查询是否存在映射
+        int count = this.baseMapper.selectByHostAndPort(deviceId, ip, port);
+        if(count == 0){
+            // 不存在则创建
+            DeviceMapping deviceMapping = new DeviceMapping();
+            deviceMapping.setDeviceId(deviceId);
+            deviceMapping.setUserId(userId);
+            deviceMapping.setServerTunnelId(serverTunnelId);
+            deviceMapping.setName(KscanUtils.toName(kscanResult));
+            deviceMapping.setStatus(0);
+            deviceMapping.setHost(ip);
+            deviceMapping.setPort(port);
+            deviceMapping.setPortProtocol(portProtocol);
+            deviceMapping.setProtocol(KscanUtils.toProtocol(portProtocol));
+            deviceMapping.setDescription("kscan扫描");
+            deviceMapping.setCreateTime(new Date());
+            deviceMapping.setUpdateTime(new Date());
+            this.baseMapper.insert(deviceMapping);
+        }
+
     }
 
 

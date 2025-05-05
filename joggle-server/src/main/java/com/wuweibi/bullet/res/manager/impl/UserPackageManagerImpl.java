@@ -7,7 +7,7 @@ import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
 import com.wuweibi.bullet.res.domain.UserPackageFowVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
-import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.mapper.UserPackageMapper;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
@@ -76,7 +76,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public R usePackageAdd(Long userId, UserPackageLimitEnum limitEnum, int num) {
+    public R<UserPackage> usePackageAdd(Long userId, UserPackageLimitEnum limitEnum, int num) {
         if (Objects.isNull(limitEnum)) {
             return R.fail("参数错误");
         }
@@ -98,10 +98,9 @@ public class UserPackageManagerImpl implements UserPackageManager {
         }
         userPackageService.updateById(userPackage);
 
-
         // 权益使用记录 TODO
 
-        return R.ok();
+        return R.ok(userPackage);
     }
 
     @Override

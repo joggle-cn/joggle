@@ -160,14 +160,14 @@ public class CountServiceImpl implements CountService {
 
 //    @Cacheable(cacheNames = CacheBlock.CACHE_HOME_TREND_HOUR, key = "#hour")
     @Override
-    public List<DeviceDateItemHourVO> getAllFlowTrendHour(int hour) {
+    public List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour) {
         LocalDateTime endLocalDate = LocalDateTime.now().plusHours(-1);
         String endDate = DateUtil.format(endLocalDate, "yyyy-MM-dd");
         LocalDateTime startLocalDate = endLocalDate.plusHours(-hour);
         String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
 
         // TODO  使用游标查询  改 流式查询
-       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(startDate, endDate).stream()
+       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, startDate, endDate).stream()
                 .flatMap(dataMetricsHour -> {
                     String date = DateUtil.format(dataMetricsHour.getCreateDate(), "yyyy-MM-dd");
                     LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());

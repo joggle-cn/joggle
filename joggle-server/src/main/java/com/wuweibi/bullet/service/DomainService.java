@@ -133,4 +133,16 @@ public interface DomainService extends IService<Domain> {
     Domain getByMappingId(Long mappingId);
 
     boolean exists(Long domainId);
+
+    /**
+     * 获取用户可用的域名
+     *
+     * @param serverTunnelId
+     * @param userId
+     * @param portProtocol
+     * @return
+     */
+    Domain getAvailableDomainByUserId(Integer serverTunnelId, Long userId, String portProtocol);
+
+
 }

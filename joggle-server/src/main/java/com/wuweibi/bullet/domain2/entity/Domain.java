@@ -39,7 +39,7 @@ public class Domain extends Model<Domain> {
 	private String domain;
 
 	/**
-	 *  类型： 1 端口 2 域名
+	 *  资源类型： 1 端口 2 域名
 	 */
 	private Integer type;
 

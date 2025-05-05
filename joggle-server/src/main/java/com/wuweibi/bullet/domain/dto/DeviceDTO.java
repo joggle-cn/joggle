@@ -3,6 +3,7 @@ package com.wuweibi.bullet.domain.dto;/**
  */
 
 import com.wuweibi.bullet.device.entity.Device;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,19 +15,24 @@ import java.util.Date;
  * @create 2017-12-10 下午1:32
  **/
 @Data
-public class DeviceDto extends Device {
+public class DeviceDTO extends Device {
 
     private int status;
 
     private String intranetIp;
     private String deviceId;
 
+    @ApiModelProperty("os操作系统")
+    private String os;
+    @ApiModelProperty("arch架构")
+    private String arch;
+
     /**
      * 状态更新时间
      */
     private Date onlineTime;
 
-    public DeviceDto(Device device) {
+    public DeviceDTO(Device device) {
         super();
         this.setName(device.getName());
         this.setCreateTime(device.getCreateTime());

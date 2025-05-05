@@ -14,7 +14,7 @@ import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
-import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;

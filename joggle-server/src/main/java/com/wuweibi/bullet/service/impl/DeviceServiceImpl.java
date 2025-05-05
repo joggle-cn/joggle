@@ -12,7 +12,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.mapper.DeviceMapper;
@@ -159,8 +159,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public List<DeviceDto> getWebListByUserId(Long userId) {
-        return this.baseMapper.selectWebListByUserId(userId);
+    public List<DeviceDTO> getWebListByUserId(Long userId) {
+        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId);
+
+        return list;
     }
 
     @Override
@@ -181,7 +183,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public Device bindDevice(Long userId, String deviceNo) {
+    public Device bindDevice(Long userId, String deviceNo, Integer serverTunnelId) {
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         // 获取设备信息
         Device device = deviceService.getByDeviceNo(deviceNo);
@@ -189,14 +191,13 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
             throw new RException(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
-        if (device == null) {
-            // 给当前用户存储最新的设备数据
-            device = new Device();
-            device.setDeviceNo(deviceNo);
-            device.setUserId(userId);
-            device.setCreateTime(new Date());
-            device.setName(deviceNo);
-        }
+        // 给当前用户存储最新的设备数据
+        device = new Device();
+        device.setDeviceNo(deviceNo);
+        device.setServerTunnelId(serverTunnelId);
+        device.setUserId(userId);
+        device.setCreateTime(new Date());
+        device.setName(deviceNo);
 
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceNo.getBytes(), null, "");

@@ -42,3 +42,5 @@ ALTER TABLE  `t_device_mapping`
 
 ALTER TABLE `t_device_mapping`
     ADD INDEX `idx_userId_domainId`(`userId`, `domain_id`);
+
+

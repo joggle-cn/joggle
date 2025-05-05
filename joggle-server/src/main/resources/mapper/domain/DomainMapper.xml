@@ -141,4 +141,14 @@
 		where cv.id = #{mappingId}
 	</select>
 
+<!--	获取有效的用户可用的域名-->
+    <select id="selectAvailableDomainByUserId" resultType="com.wuweibi.bullet.domain2.entity.Domain">
+		select a.*
+		from t_domain a
+	  left join t_device_mapping b on a.id = b.domain_id
+	  left join t_device c on b.device_id = c.id
+		where a.server_tunnel_id = #{serverTunnelId} and a.user_id = #{userId} and a.type = #{type} and a.due_time > SYSDATE() and b.id is null and a.`status` = 1
+		limit 1
+	</select>
+
 </mapper>

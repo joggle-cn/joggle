@@ -19,9 +19,9 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
-import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
@@ -29,6 +29,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.utils.CodeHelper;
+import com.wuweibi.bullet.utils.StringHttpUtils;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -304,5 +305,15 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
                 .eq(Domain::getId, domainId)) > 0;
     }
+
+    @Override
+    public Domain getAvailableDomainByUserId(Integer serverTunnelId, Long userId, String portProtocol) {
+        int type = DomainTypeEnum.PORT.getType();
+        if(StringHttpUtils.isHttp(portProtocol)){
+            type = DomainTypeEnum.DOMAIN.getType();
+        }
+        return this.baseMapper.selectAvailableDomainByUserId(serverTunnelId, userId, type);
+    }
+
 
 }

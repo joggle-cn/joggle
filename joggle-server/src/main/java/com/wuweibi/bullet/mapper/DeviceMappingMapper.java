@@ -1,8 +1,10 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.dashboard.domain.DeviceMappingInfoDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
+import com.wuweibi.bullet.device.domain.param.DeviceServiceParam;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -127,4 +129,16 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @param id
      */
     boolean recoveryId(@Param("id") Long id);
+
+    Page<DeviceMapping> selectServiceListPage(Page pageParams, @Param("params") DeviceServiceParam params);
+
+    /**
+     * 根据主机和端口查询是否存在
+     * @param deviceId 设备ID
+     * @param host 主机
+     * @param port 端口
+     * @return
+     */
+    @Select("select count(1) from t_device_mapping where id = (select device_id from t_device_mapping where device_id=#{deviceId} and host=#{host} and port=#{port} and is_del =0)")
+    int selectByHostAndPort(@Param("deviceId")Long deviceId,@Param("host") String host,@Param("port") Integer port);
 }
