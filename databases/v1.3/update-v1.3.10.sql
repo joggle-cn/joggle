@@ -13,3 +13,5 @@ update t_device_mapping set port_protocol = 'tcp' where protocol = 2 and port_pr
 update t_device_mapping set port_protocol = 'http' where protocol = 3 and port_protocol is null;
 update t_device_mapping set port_protocol = 'https' where protocol = 4 and port_protocol is null;
 update t_device_mapping set port_protocol = 'udp' where protocol = 5 and port_protocol is null;
+
+update t_device_mapping set name = description where name is null;
