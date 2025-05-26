@@ -103,6 +103,9 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             InitialDirContext dirContext = new InitialDirContext(env);
             Attributes attrs = dirContext.getAttributes(url, new String[]{"TXT"});
             Attribute txt = attrs.get("TXT");
+            if (txt == null) {
+                return false;
+            }
             log.info("DNS TXT {} result:{}", url, txt.get());
             if (Objects.equals(activeCode, txt.get())) {
                 return true;

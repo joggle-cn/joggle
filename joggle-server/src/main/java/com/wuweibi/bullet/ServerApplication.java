@@ -28,6 +28,8 @@ public class ServerApplication {
      * @throws Exception
      */
     public static void main(String[] args) {
+// 启动参数
+        System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         SpringApplication app = new SpringApplication(ServerApplication.class);
         app.addListeners(new CloseServerListener());
         app.run(args);

@@ -35,24 +35,33 @@ public class UserDomain {
 
     @ApiModelProperty("是否配置证书 1已配置 0未配置")
  	private Boolean isCert;
+    @ApiModelProperty("是否自动续期 1自动 0关闭")
+ 	private Boolean isAutoRenewal;
 
     /**
      * 证书私钥
      */
     @ApiModelProperty("证书私钥")
  	private String certKey;
+
+    @ApiModelProperty("域名私钥")
+ 	private String domainKey;
     
     /**
      * 证书pem
      */
     @ApiModelProperty("证书pem")
  	private String certPem;
-    
+
+
     /**
      * 证书颁发时间
      */
     @ApiModelProperty("证书颁发时间")
  	private Date applyTime;
+
+    @ApiModelProperty("证书颁发失败原因")
+    private String applyError;
     
     /**
      * 证书到期时间

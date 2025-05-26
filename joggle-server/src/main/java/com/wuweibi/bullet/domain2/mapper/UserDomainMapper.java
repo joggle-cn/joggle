@@ -34,4 +34,7 @@ public interface UserDomainMapper extends BaseMapper<UserDomain> {
      */
     List<UserDomainOptionVO> selectOptionByUserId(@Param("userId")Long userId);
 
+
+    List<UserDomain> selectProgressList(int limit);
+
 }

@@ -15,3 +15,14 @@ update t_device_mapping set port_protocol = 'https' where protocol = 4 and port_
 update t_device_mapping set port_protocol = 'udp' where protocol = 5 and port_protocol is null;
 
 update t_device_mapping set name = description where name is null;
+
+
+
+ALTER TABLE `user_domain`
+    ADD COLUMN `domain_key` text NULL COMMENT '域名私钥' AFTER `cert_key`;
+
+ALTER TABLE `user_domain`
+    ADD COLUMN `is_auto_renewal` tinyint(1) NULL  DEFAULT 0 COMMENT '是否自动续期 1自动 0关闭' AFTER `user_id`;
+
+ALTER TABLE `user_domain`
+    ADD COLUMN `apply_error` varchar(255) NULL COMMENT '颁发失败原因' AFTER `apply_time`;

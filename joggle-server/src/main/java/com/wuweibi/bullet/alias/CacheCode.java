@@ -52,8 +52,10 @@ public interface CacheCode {
 	 */
 	String DEVICE_MAPPING_STATISTICS_FLOW_HOUR_CURRENT = "device:flowHour:current";
 
-	
-	
+	/**
+	 * ACME_CHALLENGE_KEY
+	 */
+	String ACME_CHALLENGE_KEY = "acme_challenge:%s";
 	
 	
 	

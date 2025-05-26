@@ -4,6 +4,7 @@ package com.wuweibi.bullet.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.business.UserDomainCertBiz;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
@@ -18,6 +19,8 @@ import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.UserDomain;
+import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
@@ -399,5 +402,18 @@ public class OpenController {
         return R.success();
     }
 
+    @Resource
+    private UserDomainCertBiz userDomainBiz;
 
+    @Resource
+    private UserDomainMapper userDomainMapper;
+
+    @Profile({"dev" })
+    @RequestMapping(value = "/auto/cert/renew")
+    public R autoReNewCert(@RequestParam("id") Long id) throws Exception {
+        UserDomain userDomain = userDomainMapper.selectById(id);
+        userDomainBiz.reqDomainCert(userDomain);
+
+        return R.success();
+    }
 }
