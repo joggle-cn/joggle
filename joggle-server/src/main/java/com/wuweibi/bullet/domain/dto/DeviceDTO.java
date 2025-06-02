@@ -32,6 +32,9 @@ public class DeviceDTO extends Device {
      */
     private Date onlineTime;
 
+    public DeviceDTO(   ) {
+
+    }
     public DeviceDTO(Device device) {
         super();
         this.setName(device.getName());
