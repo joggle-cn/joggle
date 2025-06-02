@@ -28,7 +28,7 @@ steps:
         - release
 
   - name: build
-    image: nas.mrcms.cn:8082/maven:3.8.6-jdk-8-slim
+    image: nas.mrcms.cn:8082/maven:3.9.9-amazoncorretto-17-alpine
     pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
     volumes:
       - name: mavenRep
