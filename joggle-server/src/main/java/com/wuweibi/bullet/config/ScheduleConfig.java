@@ -111,7 +111,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
      * 域名证书续期 10分钟一次
      *
      */
-    @Scheduled(fixedRate = 1000 * 60 * 10)
+//    @Scheduled(fixedRate = 1000 * 60 *  1)
     public void domainCertReNewTask() {
         userDomainCertBiz.startCertReNewTask();
     }

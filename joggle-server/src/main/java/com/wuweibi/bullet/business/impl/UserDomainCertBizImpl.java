@@ -2,7 +2,6 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.alias.CacheCode;
 import com.wuweibi.bullet.business.UserDomainCertBiz;
-import com.wuweibi.bullet.common.lock.annotation.DLock;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
@@ -46,7 +45,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
-    @DLock
+//    @DLock
     public void startCertReNewTask( )   {
         log.debug("[域名证书处理] 开始");
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -123,10 +122,16 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Writer certificateWriter = new OutputStreamWriter(byteArrayOutputStream);
-        certificate.download();
-        certificate.writeCertificate( certificateWriter);
-        certificateWriter.flush();
-        certificateWriter.close();
+        try {
+
+            certificate.download();
+            certificate.writeCertificate( certificateWriter);
+        }catch (Exception e){
+            throw new AcmeException("下载证书失败", e);
+        } finally {
+            certificateWriter.flush();
+            certificateWriter.close();
+        }
         String certificateStr = byteArrayOutputStream.toString();
         // 证书到期时间
         userDomain.setDueTime(certificate.getCertificate().getNotAfter());
@@ -135,6 +140,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
         userDomain.setIsCert(true);
         // 保存证书
         userDomainService.updateById(userDomain);
+
 
         // 将证书推送到joggled 通知所有节点更新证书。
         MsgDomainCert msgDomainCert = new MsgDomainCert(userDomain.getDomain(), userDomain.getCertKey(), userDomain.getCertPem());
@@ -159,6 +165,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
             throw new RuntimeException(e);
         } finally {
             try {
+                writer.flush();
                 writer.close();
             }   catch (IOException e) {
                 throw e;
@@ -168,9 +175,20 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
 
     private KeyPair loadOrCreatePrivateKeyPair(String privateKeyText ) throws IOException {
         if (StringUtils.isNotBlank(privateKeyText)) { // 存在私钥
+
             ByteArrayInputStream bios = new ByteArrayInputStream(privateKeyText.getBytes(StandardCharsets.UTF_8));
             Reader reader = new InputStreamReader(bios, StandardCharsets.UTF_8);
-            return KeyPairUtils.readKeyPair(reader);
+            try {
+                return KeyPairUtils.readKeyPair(reader);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    reader.close();
+                }   catch (IOException e) {
+                    throw e;
+                }
+            }
         } else {
             KeyPair keyPair = KeyPairUtils.createKeyPair(2048);
             return keyPair;
@@ -208,7 +226,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
                     throw new AcmeException("挑战验证失败");
                 }
                 try {
-                    Thread.sleep(3000L);
+                    Thread.sleep(1000L);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
