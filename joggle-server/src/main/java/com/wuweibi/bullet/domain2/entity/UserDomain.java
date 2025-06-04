@@ -44,9 +44,12 @@ public class UserDomain {
     @ApiModelProperty("证书私钥")
  	private String certKey;
 
-    @ApiModelProperty("域名私钥")
- 	private String domainKey;
-    
+    /**
+     * 账号私钥
+     */
+    @ApiModelProperty("账号私钥")
+ 	private String accountKey;
+
     /**
      * 证书pem
      */

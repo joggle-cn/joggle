@@ -26,3 +26,6 @@ ALTER TABLE `user_domain`
 
 ALTER TABLE `user_domain`
     ADD COLUMN `apply_error` varchar(255) NULL COMMENT '颁发失败原因' AFTER `apply_time`;
+
+ALTER TABLE `user_domain`
+    CHANGE COLUMN `domain_key` `account_key` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '账户私钥' AFTER `cert_key`;

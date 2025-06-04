@@ -82,23 +82,23 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
         String domain = userDomain.getDomain();
         // 查询用户的信息
         String email = userService.getByUserId(userDomain.getUserId()).getEmail();
-
-        KeyPair privateKey = loadOrCreatePrivateKeyPair(userDomain.getCertKey());
-        String keyPairText = getKeyPairText(privateKey);
-        userDomain.setCertKey(keyPairText);
+        // 生成账号私钥key
+        KeyPair accountKey = loadOrCreatePrivateKeyPair(userDomain.getAccountKey());
+        String keyPairText = getKeyPairText(accountKey);
+        userDomain.setAccountKey(keyPairText);
 
         // 创建ACME客户端会话
         Session session = new Session(acmeServerUrl);
         Account account = new AccountBuilder()
                 .agreeToTermsOfService()
-                .useKeyPair(privateKey)
+                .useKeyPair(accountKey)
                 .addContact("mailto:" + email)
                 .create(session);
 
         // 加载或创建域名的私钥对
-        KeyPair domainKeyPair = loadOrCreatePrivateKeyPair(userDomain.getDomainKey());
-        String domainKeyPairText = getKeyPairText(domainKeyPair);
-        userDomain.setDomainKey(domainKeyPairText);
+        KeyPair certKeyPair = loadOrCreatePrivateKeyPair(userDomain.getCertKey());
+        String certKeyPairText = getKeyPairText(certKeyPair);
+        userDomain.setCertKey(certKeyPairText);
 
         // 下单新证书
         Order order = account.newOrder()
@@ -110,7 +110,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
         // 生成CSR
         CSRBuilder csrb = new CSRBuilder();
         csrb.addDomain(domain);
-        csrb.sign(domainKeyPair);
+        csrb.sign(certKeyPair); // 证书key
         // 执行证书签发
         order.execute(csrb.getEncoded());
 
