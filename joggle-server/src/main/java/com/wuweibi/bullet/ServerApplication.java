@@ -21,6 +21,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAdminServer
 public class ServerApplication {
 
+    static {
+        // 强制使用IPv4（解决双栈环境问题）
+        System.setProperty("java.net.preferIPv4Stack", "true");
+    }
 
     /**
      * 程序入口
@@ -28,6 +32,7 @@ public class ServerApplication {
      * @throws Exception
      */
     public static void main(String[] args) {
+
 // 启动参数
         System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         SpringApplication app = new SpringApplication(ServerApplication.class);
