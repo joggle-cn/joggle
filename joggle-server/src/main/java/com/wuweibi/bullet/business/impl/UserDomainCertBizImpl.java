@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
+import java.time.Duration;
 import java.util.*;
 
 @Slf4j
@@ -89,6 +90,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
 
         // 创建ACME客户端会话
         Session session = new Session(acmeServerUrl);
+        session.networkSettings().setTimeout(Duration.ofSeconds(30));
         Account account = new AccountBuilder()
                 .agreeToTermsOfService()
                 .useKeyPair(accountKey)
