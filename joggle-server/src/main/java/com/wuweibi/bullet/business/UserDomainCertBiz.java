@@ -6,7 +6,12 @@ import org.shredzone.acme4j.exception.AcmeException;
 import java.io.IOException;
 
 public interface UserDomainCertBiz {
-    void startCertReNewTask()        ;
+
+
+    /**
+     * 启动定时任务，定时检查证书是否过期，过期后自动续期
+     */
+    void startCertReNewTask() ;
 
 
     /**

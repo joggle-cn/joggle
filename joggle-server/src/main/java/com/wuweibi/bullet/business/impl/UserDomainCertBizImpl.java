@@ -2,6 +2,7 @@ package com.wuweibi.bullet.business.impl;
 
 import com.wuweibi.bullet.alias.CacheCode;
 import com.wuweibi.bullet.business.UserDomainCertBiz;
+import com.wuweibi.bullet.common.lock.annotation.DLock;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
@@ -27,7 +28,6 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import java.time.Instant;
 import java.util.*;
 
 @Slf4j
@@ -45,6 +45,7 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
+    @DLock
     public void startCertReNewTask( )   {
         log.debug("[域名证书处理] 开始");
         SqlSession sqlSession = sqlSessionFactory.openSession();
@@ -115,8 +116,8 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
 
         // 下载证书链
         Certificate certificate = order.getCertificate();
-        Optional<Instant>  optionalExpires = order.getExpires();
-        optionalExpires.ifPresent(instant -> userDomain.setDueTime(Date.from(instant)));
+//        Optional<Instant>  optionalExpires = order.getExpires();
+//        optionalExpires.ifPresent(instant -> userDomain.setDueTime(Date.from(instant)));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Writer certificateWriter = new OutputStreamWriter(byteArrayOutputStream);
@@ -125,7 +126,8 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
         certificateWriter.flush();
         certificateWriter.close();
         String certificateStr = byteArrayOutputStream.toString();
-        System.out.printf(certificateStr);
+        // 证书到期时间
+        userDomain.setDueTime(certificate.getCertificate().getNotAfter());
         userDomain.setCertPem(certificateStr);
         userDomain.setApplyTime(new Date());
         userDomain.setIsCert(true);

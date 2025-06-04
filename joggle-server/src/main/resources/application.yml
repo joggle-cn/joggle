@@ -163,6 +163,14 @@ spring:
       - /js/**
       - /lib/**
       - /resource/**
+  # 分布式锁配置
+  dlock:
+    host: ${JOGGLE_REDIS_HOST:192.168.1.6}
+    port: ${JOGGLE_REDIS_PORT:6379}
+    password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
+    database : 1
+    waitTime : 60 #获取锁最长阻塞时间（默认：60，单位：秒）
+    leaseTime: 60 #已获取锁后自动释放时间（默认：60，单位：秒）
 
   # 数据库配置
   datasource:
@@ -281,6 +289,5 @@ joggle:
 weixin:
   appId: wxc8e74d5165c333e6
   appSecret: a33692209929308c336b167ba226785a
-
 
 

@@ -33,7 +33,7 @@
         order by ud.id desc
     </select>
 
-
+<!--查询10天内要过期的域名-->
     <select id="selectProgressList" resultSetType="FORWARD_ONLY" resultType="com.wuweibi.bullet.domain2.entity.UserDomain">
         select * from user_domain where   DATE_ADD(sysdate(), INTERVAL 10 DAY)  >= due_time  and is_auto_renewal = 1
         limit #{limit}

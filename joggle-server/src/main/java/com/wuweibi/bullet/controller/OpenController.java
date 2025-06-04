@@ -42,6 +42,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -413,7 +414,13 @@ public class OpenController {
     public R autoReNewCert(@RequestParam("id") Long id) throws Exception {
         UserDomain userDomain = userDomainMapper.selectById(id);
         userDomainBiz.reqDomainCert(userDomain);
-
+        return R.success();
+    }
+    @Profile({"dev" })
+    @RequestMapping(value = "/auto/cert/renew/scan")
+    @Async
+    public R autoReNewCert( ) throws Exception {
+        userDomainBiz.startCertReNewTask( );
         return R.success();
     }
 }

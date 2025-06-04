@@ -85,6 +85,7 @@
         <module>joggle-common</module>
         <module>joggle-server</module>
         <module>joggle-common-alipay</module>
+        <module>joggle-common-lock</module>
     </modules>
 
     <dependencyManagement>

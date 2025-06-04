@@ -1,6 +1,7 @@
 package com.wuweibi.bullet.config;
 
 
+import com.wuweibi.bullet.business.UserDomainCertBiz;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.task.UserCertificationTaskService;
@@ -103,6 +104,16 @@ public class ScheduleConfig implements SchedulingConfigurer {
         userPackageManager.resetPackageFlow();
     }
 
+    @Resource
+    private UserDomainCertBiz userDomainCertBiz;
 
+    /**
+     * 域名证书续期 10分钟一次
+     *
+     */
+    @Scheduled(fixedRate = 1000 * 60 * 10)
+    public void domainCertReNewTask() {
+        userDomainCertBiz.startCertReNewTask();
+    }
 
 }
