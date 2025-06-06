@@ -51,24 +51,36 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(2);
         params.put("limit", 10);
-        Cursor<UserCertification> cursor = sqlSession.selectCursor(
-                UserDomainMapper.class.getName() + ".selectProgressList", params);
-        Iterator iter = cursor.iterator();
-        int count = 0;
-        while (iter.hasNext()) {
-            UserDomain userDomain = (UserDomain) iter.next();
-            try {
-                // todo 预校验域名是否指向joggled
-                log.info("正在申请域名：{} 证书", userDomain.getDomain());
-                reqDomainCert(userDomain); // 申请域名证书
-                log.info("正在申请域名：{} 完成", userDomain.getDomain());
+        Cursor<UserCertification> cursor = null;
+        try {
+            cursor = sqlSession.selectCursor(
+                    UserDomainMapper.class.getName() + ".selectProgressList", params);
+            Iterator iter = cursor.iterator();
+            int count = 0;
+            while (iter.hasNext()) {
+                UserDomain userDomain = (UserDomain) iter.next();
+                try {
+                    // todo 预校验域名是否指向joggled
+                    log.info("正在申请域名：{} 证书", userDomain.getDomain());
+                    reqDomainCert(userDomain); // 申请域名证书
+                    log.info("正在申请域名：{} 完成", userDomain.getDomain());
 
-                count++;
-            } catch (Exception e){
-                log.error("域名证书申请失败", e);
+                    count++;
+                } catch (Exception e){
+                    log.error("域名证书申请失败", e);
+                }
             }
+            log.debug("[域名证书处理] 结束");
+        } finally {
+            if (cursor != null) {
+                try {
+                    cursor.close();
+                }  catch (IOException e) {
+                    log.error("cursor.close() failed", e);
+                }
+            }
+            sqlSession.close();
         }
-        log.debug("[域名证书处理] 结束");
     }
 
 
@@ -165,7 +177,6 @@ public class UserDomainCertBizImpl implements UserDomainCertBiz {
             throw new RuntimeException(e);
         } finally {
             try {
-                writer.flush();
                 writer.close();
             }   catch (IOException e) {
                 throw e;

@@ -254,30 +254,35 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
         params.put("days", 2);
-        Cursor<DomainReleaseVO> cursor = sqlSession.selectCursor(DomainMapper.class.getName() + ".selectByDueDay", params);
-        Iterator<DomainReleaseVO> iter = cursor.iterator();
-        int count = 0;
-        while (iter.hasNext()) {
-            DomainReleaseVO domain = iter.next();
-            log.debug("user domain[{}] release", domain.getDomainFull());
-            Map<String, Object> param = new HashMap<>(3);
-            param.put("domain", domain.getDomainFull());
-            param.put("url", joggleProperties.getServerUrl());
-            param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s到期释放提醒", domain.getDomainFull());
-
-            this.releaseById(domain.getUserId(), resourcePackageLevel1, domain.getId());
-            mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
-        }
+        Cursor<DomainReleaseVO> cursor = null;
         try {
-            cursor.close();
-        } catch (IOException e) {
-            log.error("", e);
+            cursor = sqlSession.selectCursor(DomainMapper.class.getName() + ".selectByDueDay", params);
+            Iterator<DomainReleaseVO> iter = cursor.iterator();
+            int count = 0;
+            while (iter.hasNext()) {
+                DomainReleaseVO domain = iter.next();
+                log.debug("user domain[{}] release", domain.getDomainFull());
+                Map<String, Object> param = new HashMap<>(3);
+                param.put("domain", domain.getDomainFull());
+                param.put("url", joggleProperties.getServerUrl());
+                param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(), "yyyy-MM-dd HH:mm:ss"));
+                String subject = String.format("%s到期释放提醒", domain.getDomainFull());
+
+                this.releaseById(domain.getUserId(), resourcePackageLevel1, domain.getId());
+                mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
+            }
+            log.debug("[资源到期释放] 结束 处理数据量：{}", count);
         } finally {
+            if (cursor != null) {
+                try {
+                    cursor.close();
+                }  catch (IOException e) {
+                    log.error("cursor.close() failed", e);
+                }
+            }
             sqlSession.close();
         }
 
-        log.debug("[资源到期释放] 结束 处理数据量：{}", count);
         return true;
     }
 
