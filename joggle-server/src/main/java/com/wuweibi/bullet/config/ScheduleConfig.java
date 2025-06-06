@@ -39,7 +39,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
     @Bean
     public Executor taskExecutor() {
-        return Executors.newScheduledThreadPool(20);
+        return Executors.newScheduledThreadPool(2);
     }
 
     @Override
