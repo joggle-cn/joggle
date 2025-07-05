@@ -334,8 +334,8 @@ public class OpenController {
 
     @GetMapping(value = "/ws")
     public R ws(HttpServletRequest request) {
-        HashMap<String, String> data = new HashMap<>();
-        for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){
+        HashMap<Integer, String> data = new HashMap<>();
+        for(Map.Entry<Integer, List<Bullet3Annotation>> k :websocketPool.clientConnections.entrySet()){
             data.put(k.getKey(), k.getValue().toString());
         }
         return R.success(data);

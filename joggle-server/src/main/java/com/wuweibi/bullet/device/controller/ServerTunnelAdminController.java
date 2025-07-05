@@ -15,7 +15,6 @@ import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgCheckUpdate;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -149,12 +148,8 @@ public class ServerTunnelAdminController {
         }
 
         // 发送切换消息给设备
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(dto.getTunnelId());
-        if (annotation == null) {
-            return R.fail("通道不在线");
-        }
         MsgCheckUpdate msg = new MsgCheckUpdate();
-        annotation.sendMessageToServer(msg);
+        websocketPool.sendMessageToServer(dto.getTunnelId(), msg);
         return R.ok();
     }
 

@@ -61,9 +61,12 @@ public class Bullet3Annotation {
     private Session session;
 
     /**
-     * 设备ID
+     * joggled通道ID
      */
     private Integer tunnelId;
+
+
+    private int index;
 
     /**
      * 登录的ip地址
@@ -94,7 +97,7 @@ public class Bullet3Annotation {
 
         ServerTunnel serverTunnel = serverTunnelService.getById(tunnelId);
         if (serverTunnel == null) {
-            this.stop(CloseReason.CloseCodes.CANNOT_ACCEPT, "服务节点不存在");
+            this.stop(CloseReason.CloseCodes.CANNOT_ACCEPT, "server tunnel not found");
         }
 
         // 校验Token
@@ -117,10 +120,12 @@ public class Bullet3Annotation {
     public void end(CloseReason closeReason) {
         log.debug("websocket close [{}]", closeReason.toString());
         ServerTunnelService serverTunnelService = SpringUtils.getBean(ServerTunnelService.class);
+        WebsocketPool websocketPool = SpringUtils.getBean(WebsocketPool.class);
 
         if (closeReason.getCloseCode().getCode() == 1001) { // 应用停止时主动关闭
             return;
         }
+        websocketPool.removeConnection(this, "normal close");
         serverTunnelService.updateStatus(tunnelId, 0, null);
     }
 
@@ -242,6 +247,7 @@ public class Bullet3Annotation {
         // 获取设备的配置数据,并将映射配置发送到客户端
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
         DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
+        WebsocketPool websocketPool = SpringUtils.getBean(WebsocketPool.class);
         log.info("update device[{}] status=1", deviceNo);
         deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.ONLINE.status);
 
@@ -249,9 +255,8 @@ public class Bullet3Annotation {
         for (DeviceMappingProtocol entity : list) {
             if (!StringUtils.isBlank(deviceNo)) {
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
-                log.info("device[{}] {}", deviceNo, data);
                 MsgMapping msg = new MsgMapping(data.toJSONString());
-                this.sendMessage(deviceNo, msg);
+                websocketPool.sendMessage(entity.getServerTunnelId(), deviceNo, msg);
             }
         }
 
@@ -273,7 +278,7 @@ public class Bullet3Annotation {
             DeviceWhiteIps deviceWhiteIps = deviceWhiteIpsService.getByDeviceId(deviceDetail.getId());
             if (deviceWhiteIps != null) {
                 byte[] data = JSON.toJSONString(deviceWhiteIps.getIps().split(";")).getBytes();
-                this.sendMessageBytes(CONTROL_WHITE_IPS, deviceDetail.getDeviceNo(), data);
+                websocketPool.sendMessageBytes(CONTROL_WHITE_IPS, deviceDetail.getServerTunnelId(), deviceDetail.getDeviceNo(), data);
             }
 
         }
@@ -357,6 +362,7 @@ public class Bullet3Annotation {
      */
     @SneakyThrows
     public void sendMessage(String clientNo, Message msg) {
+        log.info("sendMessage tunnelId[{}][{}] device[{}] {}", this.tunnelId, this.index, clientNo, msg);
         sendMessage(CONTROL_CLIENT_WRAPPER, clientNo, msg);
     }
 
@@ -425,5 +431,9 @@ public class Bullet3Annotation {
 
     public Integer getTunnelId() {
         return this.tunnelId;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

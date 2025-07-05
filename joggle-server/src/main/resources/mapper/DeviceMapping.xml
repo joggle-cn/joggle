@@ -104,6 +104,7 @@
 			dm.remote_port,
 			dm.hostname,
 			dm.auth,
+			dm.server_tunnel_id,
 			td.bandwidth
 		from t_device_mapping dm
 		left join t_domain td on dm.domain_id = td.id
