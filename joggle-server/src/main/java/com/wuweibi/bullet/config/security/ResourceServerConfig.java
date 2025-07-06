@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.config.security;
 
-import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,11 +68,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
     /**
-     * springbootAdmin server 配置项
-     */
-    @Resource
-    private AdminServerProperties adminServerProperties;
-    /**
      * 资源的HttpSecurity 配置
      *
      * @param http
@@ -88,12 +82,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.csrf().disable();
 //        http.sessionManagement().disable().
         ;
-        String monitorContextPath = adminServerProperties.getContextPath();
 
         // @formatter:off
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
         successHandler.setTargetUrlParameter("redirectTo");
-        successHandler.setDefaultTargetUrl(monitorContextPath + "/");
+//        successHandler.setDefaultTargetUrl(monitorContextPath + "/");
 
 
         http.authorizeRequests()
@@ -108,8 +101,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/manager/**",
                         "/resource/**",
                         "/template/**",
-                        "/view/**",
-                          adminServerProperties.path("/**")
+                        "/view/**"
                 ).permitAll()
 
                 // 放过静态资源 【废弃】
@@ -117,11 +109,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
                 // 监控相关配置
                 .anyRequest().authenticated()
-                .and().formLogin()
-                    .loginPage(monitorContextPath + "/login")
-                    .successHandler(successHandler)
-                .and().logout()
-                    .logoutUrl(monitorContextPath + "/logout")
+//                .and().formLogin()
+//                    .loginPage(monitorContextPath + "/login")
+//                    .successHandler(successHandler)
+//                .and().logout()
+//                    .logoutUrl(monitorContextPath + "/logout")
                 .and();
 //                .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
 

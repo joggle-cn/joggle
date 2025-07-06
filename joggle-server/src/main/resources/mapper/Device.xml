@@ -52,7 +52,7 @@
 		from t_device d
 		 left join t_device_online do on d.deviceId = do.deviceNo
 		where d.userId = #{userId}
-		order by do.updateTime desc
+		order by do.updateTime desc,d.id desc
 	</select>
 
 <!--	获取设备详情-->

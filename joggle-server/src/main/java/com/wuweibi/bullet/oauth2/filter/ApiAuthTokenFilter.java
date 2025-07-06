@@ -3,12 +3,9 @@ package com.wuweibi.bullet.oauth2.filter;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.wuweibi.bullet.oauth2.consts.ClientScope;
-import com.wuweibi.bullet.utils.SpringUtils;
-import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -16,7 +13,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -88,42 +84,6 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
                 return;
             }
 
-        }
-        // 如果是匿名用户，且访问的monitor地址 ，校验session是否是有monitor标识
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            AdminServerProperties adminServerProperties = SpringUtils.getBean(AdminServerProperties.class);
-            if (request.getRequestURI().startsWith(adminServerProperties.getContextPath())) {
-                // 静态资源放行
-                if (request.getRequestURI().startsWith(adminServerProperties.path("/assets"))) {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                }
-                if (request.getRequestURI().startsWith(adminServerProperties.path("/login"))) {// 登录地址放行
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                }
-                // 内网无需登录 放行
-                if (isInnerIP(request) &&
-                        request.getMethod().equalsIgnoreCase("POST") && request.getRequestURI().startsWith(adminServerProperties.path("/instances"))
-                ) {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                }
-                // 判断是内网ip才能访问
-                if (isInnerIP(request) && request.getRequestURI().startsWith(adminServerProperties.path("/actuator"))) {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                }
-
-                HttpSession httpSession = request.getSession(false);
-                if (httpSession != null && "true".equals(httpSession.getAttribute("monitor"))) {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                } else {
-                    response.sendRedirect(adminServerProperties.path("/login"));
-                    return;
-                }
-            }
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

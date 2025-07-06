@@ -15,12 +15,14 @@ server:
 
 
 management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8000}
   health:
     mail:
       enabled: false
   endpoints:
     web:
-      basePath: ${spring.boot.admin.context-path}/actuator
+#      basePath: ${spring.boot.admin.context-path}/actuator
       exposure:
         include: "*"
         exclude: "mail"
@@ -56,31 +58,31 @@ spring:
     store-type: redis
     timeout: 86400
   ## spring-boot-admin 配置
-  boot:
-    admin:
-      ui:
-        title: 'Joggle监控'
-        brand: '<img src="assets/img/icon-spring-boot-admin.svg"><span>Joggle监控</span>'
-        resourceLocations:
-          - classpath*:META-INF/spring-boot-admin-server-ui/
-          - classpath:META-INF/spring-boot-admin-server-ui/
+#  boot:
+#    admin:
+#      ui:
+#        title: 'Joggle监控'
+#        brand: '<img src="assets/img/icon-spring-boot-admin.svg"><span>Joggle监控</span>'
+#        resourceLocations:
+#          - classpath*:META-INF/spring-boot-admin-server-ui/
+#          - classpath:META-INF/spring-boot-admin-server-ui/
 #        template-location: classpath:META-INF/spring-boot-admin-server-ui/
       #        publicUrl: https://admin.joggle.cn
       ## admin 服务端访问地址
-      context-path: /monitor
-      ## admin 客户端连接服务端
-      client:
-        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
-        instance:
-          prefer-ip: true
-        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
-#      instanceAuth:
-#        defaultUserName: client_manager
-#        defaultPassword: password
-      instanceProxy:
-        # 单体服务应用 确保能够传递jessionid
-        ignored-headers:
-          - "Set-Cookie"
+#      context-path: /monitor
+#      ## admin 客户端连接服务端
+#      client:
+#        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
+#        instance:
+#          prefer-ip: true
+#        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
+##      instanceAuth:
+##        defaultUserName: client_manager
+##        defaultPassword: password
+#      instanceProxy:
+#        # 单体服务应用 确保能够传递jessionid
+#        ignored-headers:
+#          - "Set-Cookie"
 #          - "Cookie"
 #          - "Authorization"
   profiles:

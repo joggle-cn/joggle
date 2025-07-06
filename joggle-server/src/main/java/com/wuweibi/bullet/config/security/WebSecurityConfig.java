@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.config.security;
 
-import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,11 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
 
-    /**
-     * springbootAdmin server 配置项
-     */
-    @Resource
-    private AdminServerProperties adminServerProperties;
 
 
 
