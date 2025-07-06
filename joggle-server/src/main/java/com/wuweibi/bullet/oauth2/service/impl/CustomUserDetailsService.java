@@ -11,8 +11,6 @@ import com.wuweibi.bullet.oauth2.exception.LoginException;
 import com.wuweibi.bullet.oauth2.security.UserDetail;
 import com.wuweibi.bullet.oauth2.service.Oauth2RoleService;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
-import com.wuweibi.bullet.ratelimiter.util.WebUtils;
-import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,12 +49,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Resource
     private ClientDetailsService clientDetailsService;
 
-    /**
-     * springbootAdmin server 配置项
-     */
-    @Resource
-    private AdminServerProperties adminServerProperties;
-
     private AntPathMatcher monitorAntPathMatcher = new AntPathMatcher();
 
     /**
@@ -76,13 +68,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new BaseException(AuthErrorType.ACCOUNT_PASSWORD_ERROR);
         }
         log.info("loadByUsername:{}", user.toString());
-
-        // 【monitor】 仅仅管理员可以登录
-        if (monitorAntPathMatcher.match(adminServerProperties.path("/**"),request.getRequestURI()) && 1 == user.getUserAdmin()){
-            request.getSession(true);// 第二次登录可使用到该session
-            WebUtils.setSessionAttribute(WebUtils.getRequest(), "monitor", "true");
-            return getUserDetail(user);
-        }
 
         // 【joggle】 登录的管理端
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

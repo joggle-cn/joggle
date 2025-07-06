@@ -3,7 +3,6 @@ package com.wuweibi.bullet; /**
  */
 
 import com.wuweibi.bullet.listener.CloseServerListener;
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @SpringBootApplication
-@EnableAdminServer
 public class ServerApplication {
 
     static {
