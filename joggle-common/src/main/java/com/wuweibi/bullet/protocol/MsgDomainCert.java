@@ -20,6 +20,7 @@ import java.util.Map;
  * @create 2023-09-26 下午1:13
  **/
 @Slf4j
+@MessageType(Message.DOMAIN_CERT)
 public class MsgDomainCert extends Message {
 
 

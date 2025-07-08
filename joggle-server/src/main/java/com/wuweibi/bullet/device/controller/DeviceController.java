@@ -41,7 +41,6 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -163,11 +162,9 @@ public class DeviceController {
         if (deviceOnline == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
-        Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-        if(bulletAnnotation != null){
-            MsgUnBind msg = new MsgUnBind();
-            bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
-        }
+
+        MsgUnBind msg = new MsgUnBind();
+        websocketPool.sendMessage(deviceOnline.getServerTunnelId(),device.getDeviceNo(), msg);
 
         deviceMappingService.deleteByDeviceId(deviceId); // 删除映射
         deviceService.removeUserIdByDeviceNo(device.getDeviceNo()); // 清理用户归属
@@ -209,10 +206,6 @@ public class DeviceController {
         }
 
         Integer serverTunnelId = deviceOnline.getServerTunnelId();
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(serverTunnelId);
-        if (annotation == null) {
-            return R.fail("ngrokd实例不在线, 请联系管理员");
-        }
 
         // 套餐设备数量限制校验
         if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
@@ -224,7 +217,7 @@ public class DeviceController {
         // 发送消息通知设备秘钥
         MsgDeviceSecret msg = new MsgDeviceSecret();
         msg.setSecret(device.getDeviceSecret());
-        annotation.sendMessage(deviceNo, msg);
+        websocketPool.sendMessage(serverTunnelId,deviceNo, msg);
 
         return R.success();
     }
@@ -404,18 +397,15 @@ public class DeviceController {
         }
 
         // 发送切换消息给设备
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-        if (annotation != null) {
-            MsgSwitchLine msg = new MsgSwitchLine();
-            msg.setDeviceNo(deviceNo);
+        MsgSwitchLine msg = new MsgSwitchLine();
+        msg.setDeviceNo(deviceNo);
 
-            String serverAddr = serverTunnel.getServerAddr();
-            if (!(serverAddr.indexOf(":") > 0)) {
-                serverAddr = serverAddr + ":8083";
-            }
-            msg.setServerAddr(serverAddr);
-            annotation.sendMessage(deviceNo,  msg);
+        String serverAddr = serverTunnel.getServerAddr();
+        if (!(serverAddr.indexOf(":") > 0)) {
+            serverAddr = serverAddr + ":8083";
         }
+        msg.setServerAddr(serverAddr);
+        websocketPool.sendMessage(deviceOnline.getServerTunnelId(),deviceNo, msg);
 
         return R.success();
     }
@@ -448,12 +438,8 @@ public class DeviceController {
         }
 
         // 发送切换消息给设备
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
-        if (annotation == null) {
-            return R.fail("通道不在线");
-        }
         MsgCheckUpdate msg = new MsgCheckUpdate();
-        annotation.sendMessage(deviceNo,  msg);
+        websocketPool.sendMessage(device.getServerTunnelId(),deviceNo, msg);
         return R.ok();
     }
 

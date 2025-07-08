@@ -30,7 +30,6 @@ import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.StringHttpUtils;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.ibatis.cursor.Cursor;
@@ -108,12 +107,11 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             String deviceNo = item.getString("deviceNo");
 
             DeviceMapping entity = deviceMappingService.getById(mappingId);
-            Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
-            if (annotation != null) { // 发送控制消息关闭映射
-                JSONObject data = (JSONObject) JSON.toJSON(entity);
-                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                annotation.sendMessage(deviceNo, msg);
-            }
+
+            JSONObject data = (JSONObject) JSON.toJSON(entity);
+            MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+            websocketPool.sendMessage(entity.getServerTunnelId(), deviceNo, msg);
+
             // 更新Mapping状态
             deviceMappingMapper.updateStatusById(mappingId, 0);
 

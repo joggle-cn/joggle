@@ -62,12 +62,10 @@ public class LogAnnotation {
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         DeviceDetail device = deviceService.getDetail(this.deviceId);
 
-        Bullet3Annotation annotation = pool.getByTunnelId(device.getServerTunnelId());
 
         // 开启日志
         MsgLogOpen msgLogOpen = new MsgLogOpen(this.deviceId, 1);
-        annotation.sendMessage(device.getDeviceNo(), msgLogOpen);
-
+        pool.sendMessage(device.getServerTunnelId(), device.getDeviceNo(), msgLogOpen);
 
 //        String message = String.format("* %s %s", nickname, "has joined.");
 //        broadcast(message);
@@ -78,20 +76,17 @@ public class LogAnnotation {
     public void end() {
         connections.remove(this);
 
-
-        WebsocketPool pool = SpringUtils.getBean(WebsocketPool.class);
+        WebsocketPool websocketPool = SpringUtils.getBean(WebsocketPool.class);
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         DeviceDetail device = deviceService.getDetail(this.deviceId);
 
-        Bullet3Annotation annotation = pool.getByTunnelId(device.getServerTunnelId());
-
-
         // 关闭日志
-        MsgLogOpen msgLogOpen = new MsgLogOpen();
-        msgLogOpen.setDeviceId(this.deviceId);
-        msgLogOpen.setOpen(0);
+        MsgLogOpen msg = new MsgLogOpen();
+        msg.setDeviceId(this.deviceId);
+        msg.setOpen(0);
 
-        annotation.sendMessage(device.getDeviceNo(), msgLogOpen);
+        websocketPool.sendMessage(device.getServerTunnelId(), device.getDeviceNo(), msg);
+
     }
 
 
