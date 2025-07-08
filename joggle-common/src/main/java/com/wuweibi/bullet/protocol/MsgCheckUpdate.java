@@ -14,6 +14,7 @@ import java.io.OutputStream;
  * @author marker
  * @create 2023-05-06 下午1:13
  **/
+@MessageType(Message.CHECK_UPDATE)
 public class MsgCheckUpdate extends Message {
 
 

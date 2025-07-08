@@ -16,6 +16,7 @@ import java.io.OutputStream;
  * @create 2021-07-31 下午11:13
  **/
 @Slf4j
+@MessageType(Message.UNBIND)
 public class MsgUnBind extends Message {
 
     /**

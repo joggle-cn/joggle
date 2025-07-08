@@ -13,10 +13,9 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
-import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
-import com.wuweibi.bullet.metrics.service.DataMetricsService;
-import com.wuweibi.bullet.protocol.*;
-import com.wuweibi.bullet.protocol.domain.KscanResult;
+import com.wuweibi.bullet.message.MessageHandlerContext;
+import com.wuweibi.bullet.protocol.Message;
+import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -32,12 +31,10 @@ import org.springframework.http.HttpHeaders;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.wuweibi.bullet.protocol.Message.*;
@@ -136,106 +133,8 @@ public class Bullet3Annotation {
      */
     @OnMessage
     public void incoming(byte[] bytes) {
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        MsgHead head = new MsgHead();
-        try {
-            head.read(bis);//读取消息头
-            switch (head.getCommand()) {
-                case Message.PROXY:// Bind响应命令
-                    MsgProxy msgProxy = new MsgProxy(head);
-                    msgProxy.read(bis);
-                    break;
-                case Message.DEVICE_METRICS:// 上报数据
-                    MsgDataMetrics msgDataMetrics = new MsgDataMetrics(head);
-                    msgDataMetrics.read(bis);
-                    DataMetricsService dataMetricsService = SpringUtils.getBean(DataMetricsService.class);
-                    dataMetricsService.uploadData(JSON.parseObject(msgDataMetrics.getData(), DataMetricsDTO.class));
-                    break;
-                case Message.AUTH_RESP:// 设备认证成功
-                    MsgAuthResp msgAuthResp = new MsgAuthResp(head);
-                    msgAuthResp.read(bis);
-                    String clientNo = msgAuthResp.getClientNo();
-                    this.sendMappingInfo(clientNo);
-                    break;
-                case Message.AUTH:// 认证（废弃）
-                    MsgAuth msgAuth = new MsgAuth(head);
-                    msgAuth.read(bis);
-                    break;
-                case Message.Heart:// 心跳消息
-                    MsgHeart msgHeart = new MsgHeart(head);
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    try {
-                        msgHeart.write(outputStream);
-                        // 包装了Bullet协议的
-                        byte[] resultBytes = outputStream.toByteArray();
-                        ByteBuffer buf = ByteBuffer.wrap(resultBytes);
-                        this.getSession().getBasicRemote().sendPong(buf);
-                    } catch (IOException e) {
-                        log.error("", e);
-                    } finally {
-                        IOUtils.closeQuietly(outputStream);
-                    }
-
-                    return;
-                case Message.NEW_BINDIP:// 绑定IP
-                    MsgBindIP msg2 = new MsgBindIP(head);
-                    msg2.read(bis);
-
-                    // 更新设备状态
-                    DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-//                    deviceOnlineService.saveOrUpdateOnline(this.deviceNo, msg2.getIp(), msg2.getMac(), msg2.getVersion());
-
-                    return;
-                case Message.GET_DEVICE_STATUS_RESP:// 获取设备状态响应所有设备状态
-                    MsgGetDeviceStatusResp msgGetDeviceStatusResp = new MsgGetDeviceStatusResp(head);
-                    msgGetDeviceStatusResp.read(bis);
-                    JSONObject jsonObject = msgGetDeviceStatusResp.getData();
-                    // 更新在线状态
-                    deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-                    List<String> deviceNoList = new ArrayList<>(jsonObject.size());
-                    jsonObject.forEach((item, v)->{
-                        deviceNoList.add(item);
-                    });
-
-                    deviceOnlineService.updateOutLineByTunnelId(this.tunnelId);
-                    deviceOnlineService.batchUpdateStatus(deviceNoList, DeviceOnlineStatus.ONLINE.status);
-
-                    return;
-                case Message.DEVICE_DOWN: // 设备下线
-                    MsgDeviceDown msgDeviceDown = new MsgDeviceDown(head);
-                    msgDeviceDown.read(bis);
-                    String deviceNo = msgDeviceDown.getDeviceNo();
-                    deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);
-                    deviceOnlineService.updateDeviceStatus(deviceNo, DeviceOnlineStatus.OUTLINE.status);
-                    return;
-//
-                case Message.DEVICE_SCAN_RESP: // 设备扫描结果
-
-                    MsgDeviceScanResp msgDeviceScanResp = new MsgDeviceScanResp(head);
-                    msgDeviceScanResp.read(bis);
-                    String  scanDeviceNo = msgDeviceScanResp.getDeviceNo();
-                    KscanResult scanJson = msgDeviceScanResp.getResult();
-
-                    DeviceMappingService deviceMappingService = SpringUtils.getBean(DeviceMappingService.class);
-                    // 这里存在问题 就是不知设备id是多少，就不知需要更新那个设备下的映射信息。
-                    deviceMappingService.putScanResult(scanDeviceNo, scanJson);
-
-
-
-                    return;
-//                case Message.LOG_MAPPING_LOG:// 日志消息
-//                    MsgCommandLog msgCommandLog = new MsgCommandLog(head);
-//                    msgCommandLog.read(bis);
-//                    // 转移消息到另外一个通道
-//
-//                    LogAnnotation.broadcast(this.deviceId, msgCommandLog.getLine());
-            }
-        } catch (IOException e) {
-            log.error("", e);
-        } finally {
-            IOUtils.closeQuietly(bis);
-        }
-
+        MessageHandlerContext messageHandlerContext = SpringUtils.getBean(MessageHandlerContext.class);
+        messageHandlerContext.handleMessage(bytes);
     }
 
 
@@ -243,6 +142,7 @@ public class Bullet3Annotation {
     /**
      * 发送映射信息
      */
+    @Deprecated
     public void sendMappingInfo(String deviceNo) {
         // 获取设备的配置数据,并将映射配置发送到客户端
         DeviceOnlineService deviceOnlineService = SpringUtils.getBean(DeviceOnlineService.class);

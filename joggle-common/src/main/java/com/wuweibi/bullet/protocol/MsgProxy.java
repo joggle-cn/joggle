@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
  * @author marker
  * @create 2017-12-07 下午1:13
  **/
+@MessageType(Message.PROXY)
 public class MsgProxy extends Message {
 
     // 请求内容(不计入协议长度)
