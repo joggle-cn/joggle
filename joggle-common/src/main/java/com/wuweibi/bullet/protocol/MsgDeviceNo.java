@@ -14,6 +14,7 @@ import java.io.OutputStream;
  * @author marker
  * @create 2017-12-07 下午1:13
  **/
+@MessageType(Message.DEVICE_NO)
 public class MsgDeviceNo extends Message {
 
 

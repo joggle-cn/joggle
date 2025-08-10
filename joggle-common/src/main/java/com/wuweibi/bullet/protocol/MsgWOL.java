@@ -18,6 +18,7 @@ import java.io.OutputStream;
  * @create 2021-02-12 下午6:32
  **/
 @Slf4j
+@MessageType(Message.NEW_WOLMAC)
 public class MsgWOL extends Message {
 
 

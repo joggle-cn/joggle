@@ -7,11 +7,11 @@ import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceDoorDTO;
 import com.wuweibi.bullet.device.domain.vo.DeviceDoorVO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.DeviceDoor;
 import com.wuweibi.bullet.device.service.DeviceDoorService;
 import com.wuweibi.bullet.domain2.controller.DomainController;
 import com.wuweibi.bullet.domain2.domain.DomainDetail;
-import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
@@ -20,7 +20,6 @@ import com.wuweibi.bullet.protocol.domain.DoorConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -56,7 +55,7 @@ public class DeviceDoorController {
     private DomainService domainService;
 
     @Resource
-    private WebsocketPool coonPool;
+    private WebsocketPool websocketPool;
 
     @Resource
     private DeviceMappingService deviceMappingService;
@@ -108,18 +107,15 @@ public class DeviceDoorController {
         boolean status = this.deviceDoorService.saveOrUpdate(deviceDoor);
 
         // 设备发送消息开启任意门
-        Bullet3Annotation annotation = coonPool.getByTunnelId(deviceDetail.getServerTunnelId());
-        if (annotation != null) {
-            DoorConfig doorConfig = new DoorConfig();
-            doorConfig.setDeviceId(deviceDetail.getId());
-            doorConfig.setLocalPath(deviceDoor.getLocalPath());
-            doorConfig.setServerPath(deviceDoor.getServerPath());
-            doorConfig.setEnable(deviceDoor.getEnable());
+        DoorConfig doorConfig = new DoorConfig();
+        doorConfig.setDeviceId(deviceDetail.getId());
+        doorConfig.setLocalPath(deviceDoor.getLocalPath());
+        doorConfig.setServerPath(deviceDoor.getServerPath());
+        doorConfig.setEnable(deviceDoor.getEnable());
 
-            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-            MsgDeviceDoor msg = new MsgDeviceDoor(data.toJSONString());
-            annotation.sendMessage(deviceNo, msg);
-        }
+        JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
+        MsgDeviceDoor msg = new MsgDeviceDoor(data.toJSONString());
+        websocketPool.sendMessage(deviceDetail.getServerTunnelId(), deviceDetail.getDeviceNo(), msg);
 
         // 调用绑定映射关系
         DomainDetail domainDetail = domainService.getDetail(domainId);

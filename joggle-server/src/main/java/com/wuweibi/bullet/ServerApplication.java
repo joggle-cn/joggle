@@ -31,13 +31,13 @@ public class ServerApplication {
      */
     public static void main(String[] args) {
 
-// 启动参数
+        // 启动参数
         System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         SpringApplication app = new SpringApplication(ServerApplication.class);
         app.addListeners(new CloseServerListener());
         app.run(args);
         System.out.println("======================================");
-        System.out.println("========  Bullet Server Started ==============");
+        System.out.println("========  Joggle Server Started ==============");
         System.out.println("======================================");
     }
 

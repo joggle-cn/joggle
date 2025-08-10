@@ -10,6 +10,7 @@ import java.io.OutputStream;
  *
  * @author marker
  **/
+@MessageType(Message.GET_DEVICE_STATUS)
 public class MsgGetDeviceStatus extends Message {
 
 

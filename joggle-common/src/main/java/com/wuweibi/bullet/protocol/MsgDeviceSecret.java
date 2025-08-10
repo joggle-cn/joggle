@@ -16,6 +16,7 @@ import java.io.OutputStream;
  * @author marker
  * @create 2020-06-27 下午1:13
  **/
+@MessageType(Message.DEVICE_SECRET)
 public class MsgDeviceSecret extends Message {
 
     private String secret;

@@ -17,6 +17,7 @@ import java.io.OutputStream;
  * @create 2025-04-18 下午 11:13
  **/
 @Slf4j
+@MessageType(Message.DEVICE_SCAN)
 public class MsgDeviceScan extends Message {
 
 

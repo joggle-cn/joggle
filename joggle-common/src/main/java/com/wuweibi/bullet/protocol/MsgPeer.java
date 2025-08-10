@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
  **/
 
 @Data
+@MessageType(Message.P2P_STUN)
 public class MsgPeer extends Message {
 
     /**
