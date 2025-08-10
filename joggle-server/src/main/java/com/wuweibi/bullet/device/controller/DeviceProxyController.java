@@ -16,7 +16,6 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgProxy;
 import com.wuweibi.bullet.protocol.domain.ProxyConfig;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -100,17 +99,14 @@ public class DeviceProxyController  {
 
         DeviceDetail device = this.deviceService.getDetail(dto.getDeviceId());
 
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(device.getServerTunnelId());
-        if (annotation != null) {
-            ProxyConfig config = new ProxyConfig();
-            config.setDeviceId(dto.getDeviceId());
-            config.setProxyHost("0.0.0.0");
-            config.setProxyPort(dto.getDeviceProxyPort());
-            config.setType(dto.getType());
-            config.setStatus(dto.getStatus());
-            MsgProxy msg = new MsgProxy(config);
-            annotation.sendMessage(device.getDeviceNo(), msg);
-        }
+        ProxyConfig config = new ProxyConfig();
+        config.setDeviceId(dto.getDeviceId());
+        config.setProxyHost("0.0.0.0");
+        config.setProxyPort(dto.getDeviceProxyPort());
+        config.setType(dto.getType());
+        config.setStatus(dto.getStatus());
+        MsgProxy msg = new MsgProxy(config);
+        websocketPool.sendMessage(device.getServerTunnelId(), device.getDeviceNo(), msg);
         // 自动映射处理
         DeviceMappingUpdateDTO deviceMappingUpdateDTO = new DeviceMappingUpdateDTO();
         

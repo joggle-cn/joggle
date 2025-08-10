@@ -19,7 +19,6 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.biz.NotifyBiz;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
@@ -165,15 +164,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         List<ServerTunnel> list = serverTunnelService.getListEnable();
         list.forEach(item -> {
             log.debug("[init] check server[{}] {}[{}]", item.getId(), item.getName(), item.getServerAddr());
-            Bullet3Annotation annotation = websocketPool.getByTunnelId(item.getId());
-            if (annotation == null) {
-                log.debug("[init] check server[{}] not online", item.getId());
-            }
-            if (annotation != null) {
-                MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
-                annotation.sendMessageToServer(msg);
-                log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
-            }
+            MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
+            websocketPool.sendMessageToServer(item.getId(), msg);
+            log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
         });
         return true;
     }

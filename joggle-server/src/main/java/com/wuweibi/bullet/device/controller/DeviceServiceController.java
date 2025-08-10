@@ -38,7 +38,6 @@ import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -93,12 +92,9 @@ public class DeviceServiceController {
                 return R.fail("设备不存在");
             }
             String deviceNo = deviceDetail.getDeviceNo();
-            Bullet3Annotation annotation = coonPool.getByTunnelId(deviceDetail.getServerTunnelId());
-            if (annotation != null) {
-                JSONObject data = (JSONObject) JSON.toJSON(entity);
-                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                annotation.sendMessage(deviceNo, msg);
-            }
+            JSONObject data = (JSONObject) JSON.toJSON(entity);
+            MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+            coonPool.sendMessage(deviceDetail.getServerTunnelId(), deviceNo, msg);
         }
         return MessageFactory.getOperationSuccess();
     }
@@ -129,10 +125,8 @@ public class DeviceServiceController {
         Integer serverTunnelId = device.getServerTunnelId();
 
         // 发送消息
-        Bullet3Annotation annotation = coonPool.getByTunnelId(serverTunnelId);
-
         MsgDeviceScan msgDeviceScan = new MsgDeviceScan();
-        annotation.sendMessage(deviceNo, msgDeviceScan);
+        coonPool.sendMessage(serverTunnelId, deviceNo, msgDeviceScan);
 
         return R.success();
     }
@@ -168,11 +162,6 @@ public class DeviceServiceController {
         deviceMappingService.updateById(deviceMapping);
 
         // 发送消息
-        Bullet3Annotation annotation = coonPool.getByTunnelId(serverTunnelId);
-
-        if (annotation == null) {// 设备不在线
-            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-        }
         DeviceMappingProtocol deviceMappingProtocol = deviceMappingService.getMapping4ProtocolByMappingId(deviceMapping.getId());
         if (deviceMappingProtocol == null) {
             return R.fail("映射信息不存在");
@@ -180,7 +169,7 @@ public class DeviceServiceController {
 
         JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
         Message msg = new MsgUnMapping(data.toJSONString());
-        annotation.sendMessage(deviceNo, msg);
+        coonPool.sendMessage(serverTunnelId, deviceNo, msg);
 
         return R.success();
     }
@@ -240,11 +229,6 @@ public class DeviceServiceController {
         deviceMappingService.updateById(deviceMapping);
 
         // 发送消息
-        Bullet3Annotation annotation = coonPool.getByTunnelId(serverTunnelId);
-
-        if (annotation == null) {// 设备不在线
-            return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
-        }
         DeviceMappingProtocol deviceMappingProtocol = deviceMappingService.getMapping4ProtocolByMappingId(deviceMapping.getId());
         if (deviceMappingProtocol == null) {
             return R.fail("映射信息不存在");
@@ -252,7 +236,7 @@ public class DeviceServiceController {
 
         JSONObject data = (JSONObject)JSON.toJSON(deviceMappingProtocol);
         Message msg = new MsgMapping(data.toJSONString());
-        annotation.sendMessage(deviceNo, msg);
+        coonPool.sendMessage(serverTunnelId, deviceNo, msg);
 
         return R.success();
     }

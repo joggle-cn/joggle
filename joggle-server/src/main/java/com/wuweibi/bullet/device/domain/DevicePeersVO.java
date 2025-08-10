@@ -35,12 +35,16 @@ public class DevicePeersVO {
      */
     @ApiModelProperty("服务侧设备id")
     private Long serverDeviceId;
+    @ApiModelProperty("服务侧设备名称")
+    private String serverDeviceNo;
 
     /**
      * 客户侧设备id
      */
-    @ApiModelProperty("客户侧设备id")
+    @ApiModelProperty("客户端侧设备id")
     private Long clientDeviceId;
+    @ApiModelProperty("客户端侧设备名称")
+    private String clientDeviceNo;
 
     /**
      * 服务侧本地端口

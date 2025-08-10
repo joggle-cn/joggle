@@ -11,7 +11,6 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -49,18 +48,15 @@ public class DeviceBizImpl implements DeviceBiz {
 
         for (DeviceMappingDTO entity : list) {
             entity.setStatus(0);
+            Integer serverTunnelId = entity.getServerTunnelId();
             String deviceNo = entity.getDeviceNo();
             if (!org.apache.commons.lang3.StringUtils.isBlank(deviceNo)) {
-                Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
-                if (annotation == null) {// 设备不在线
-                    continue;
-                }
                 JSONObject data = (JSONObject) JSON.toJSON(entity);
                 Message msg;
                 log.debug("设备 {} 停用 {} 映射", entity.getDeviceId(), entity.getId());
                 msg = new MsgUnMapping(data.toJSONString());
                 // 发送信息给设备
-                annotation.sendMessage(deviceNo, msg);
+                websocketPool.sendMessage(serverTunnelId, deviceNo, msg);
             }
         }
 

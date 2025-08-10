@@ -31,4 +31,10 @@ public interface DevicePeersMapper extends BaseMapper<DevicePeers> {
      */
     List<DevicePeersConfigDTO> selectListByDeviceNo(@Param("deviceNo") String deviceNo);
 
+    /**
+     * 根据服务端设备id查询端到端列表
+     * @param deviceId 设备id
+     * @return
+     */
+    List<DevicePeersVO> selectListByServerDeviceId(@Param("deviceId") Long deviceId);
 }
