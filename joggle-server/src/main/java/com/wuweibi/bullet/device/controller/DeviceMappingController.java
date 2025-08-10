@@ -119,6 +119,9 @@ public class DeviceMappingController {
     @Resource
     private UserDomainService userDomainService;
 
+
+
+
     /**
      * 保存或者更新数据
      * @param deviceMapping
