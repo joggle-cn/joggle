@@ -47,4 +47,11 @@ public interface DevicePeersService extends IService<DevicePeers> {
      * @return
      */
     boolean checkLocalPortDuplicate(Long clientDeviceId, Integer clientProxyPort, Long id);
+
+    /**
+     * 根据服务端设备id查询端到端列表
+     * @param deviceId 设备id
+     * @return
+     */
+    List<DevicePeersVO> getListByServerDeviceId(Long deviceId);
 }

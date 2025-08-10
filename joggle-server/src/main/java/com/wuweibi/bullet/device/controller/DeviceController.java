@@ -11,6 +11,7 @@ import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.core.builder.MapBuilder;
+import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
@@ -20,6 +21,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDTO;
@@ -313,20 +315,27 @@ public class DeviceController {
             item.setLink(linkNum == null ? 0 : linkNum);
         });
 
+        // 端到端
+        List<DevicePeersVO> p2plist = devicePeersService.getListByServerDeviceId(deviceId);
+
         mapBuilder
                 .setParam("deviceInfo", deviceInfo);
         mapBuilder.setParam("features", newMap(4)
                 .setParam("domainCount", domainList.size())
                 .setParam("portCount", portList.size())
+                .setParam("p2pCount", p2plist.size())
                 .build());
 
         // 端口
         mapBuilder.setParam("portList", portList);
         // 域名
         mapBuilder.setParam("domainList", domainList);
+        mapBuilder.setParam("p2pList", p2plist);
 
         return R.ok(mapBuilder.build());
     }
+    @Resource
+    private DevicePeersService devicePeersService;
 
 
     /**
@@ -442,6 +451,9 @@ public class DeviceController {
         websocketPool.sendMessage(device.getServerTunnelId(),deviceNo, msg);
         return R.ok();
     }
+
+
+
 
 
 

@@ -143,4 +143,13 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         }
         return this.baseMapper.selectCount(lmq) > 0;
     }
+
+    @Override
+    public List<DevicePeersVO> getListByServerDeviceId(Long deviceId) {
+        List<DevicePeersVO> list = this.baseMapper.selectListByServerDeviceId(deviceId);
+        list.stream().forEach(entity->{
+            entity.setStatusName(DevicePeerStatusEnum.toName(entity.getStatus()));
+        });
+        return list;
+    }
 }
