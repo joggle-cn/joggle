@@ -1,6 +1,10 @@
 package com.wuweibi.bullet.service.impl;
 
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.wuweibi.bullet.alias.CacheBlock;
 import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.vo.CountVO;
@@ -9,9 +13,9 @@ import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.CountService;
 import com.wuweibi.bullet.utils.BigDecimalUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -147,7 +152,110 @@ public class CountServiceImpl implements CountService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheBlock.CACHE_HOME_TREND, key = "#day")
     public List<DeviceDateItemVO> getAllFlowTrend(int day) {
         return countMapper.selectAllFlowTrend(day);
     }
+
+
+//    @Cacheable(cacheNames = CacheBlock.CACHE_HOME_TREND_HOUR, key = "#hour")
+    @Override
+    public List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour) {
+        LocalDateTime endLocalDate = LocalDateTime.now().plusHours(-1);
+        String endDate = DateUtil.format(endLocalDate, "yyyy-MM-dd");
+        LocalDateTime startLocalDate = endLocalDate.plusHours(-hour);
+        String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
+
+        // TODO  使用游标查询  改 流式查询
+       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, startDate, endDate).stream()
+                .flatMap(dataMetricsHour -> {
+                    String date = DateUtil.format(dataMetricsHour.getCreateDate(), "yyyy-MM-dd");
+                    LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());
+                    JSONObject data = (JSONObject) JSON.toJSON(dataMetricsHour);
+                    List<DataItem> list = new ArrayList<>(hour);
+                    for (int i = 0; i < 24; i++) {
+                        LocalDateTime indexLocalDateTime = dataLocalDateTime.withHour(i);
+                        // 判断时间点超过结束时间
+                        if (endLocalDate.compareTo(indexLocalDateTime) < 0) {
+                            continue;
+                        }
+                        // 判断时间点在开始时间后
+                        if (startLocalDate.compareTo(indexLocalDateTime) > 0) {
+                            continue;
+                        }
+
+                        String key = String.format("%02d", i);
+                        String val = data.getString(String.format("h%s", key));
+                        String time = String.format("%s %s", date, key);
+
+                        BigDecimal link = BigDecimal.ZERO;
+                        BigDecimal flowIn = BigDecimal.ZERO;
+                        BigDecimal flowOut = BigDecimal.ZERO;
+                        if (Objects.nonNull(val)) {
+                            JSONObject itemData = new JSONObject(parse(val));
+                            link = itemData.getBigDecimal("link");
+                            flowIn = itemData.getBigDecimal("in");
+                            flowOut = itemData.getBigDecimal("out");
+                        }
+                        DataItem dataItem = new DataItem(time, link, flowIn, flowOut);
+                        list.add(dataItem);
+                    }
+                    // 处理用户数据，例如转换或过滤
+                    return Stream.of(list.toArray(new DataItem[]{}));
+                }).collect(Collectors.groupingBy(DataItem::getTime,
+                       Collectors.reducing(CountServiceImpl::mergeFlow)
+               ));
+
+
+        return userList.values().stream().map(dataItemOptional->{
+            DataItem item = dataItemOptional.get();
+            DeviceDateItemHourVO deviceDateItemVO = new DeviceDateItemHourVO();
+            deviceDateItemVO.setTime(item.getTime());
+            deviceDateItemVO.setFlowIn(item.getFlowIn());
+            deviceDateItemVO.setFlowOut(item.getFlowOut());
+            deviceDateItemVO.setLink(item.getLink());
+            deviceDateItemVO.setFlow(item.getFlowIn().add(item.getFlowOut()));
+            return deviceDateItemVO;
+        }).sorted((o1,o2)->{
+            long a = DateUtil.parse(o1.getTime(), "yyyy-MM-dd HH").getTime();
+            long b = DateUtil.parse(o2.getTime(), "yyyy-MM-dd HH").getTime();
+            return CompareUtil.compare(a,b) ;
+        }).collect(Collectors.toList());
+    }
+
+    // 累加方法
+    private static DataItem mergeFlow(DataItem o, DataItem p) {
+        o.setTime(p.getTime());
+        o.setLink(o.getLink().add(p.getLink()));
+        o.setFlowOut(o.getFlowOut().add(p.getFlowOut()));
+        o.setFlowIn(o.getFlowIn().add(p.getFlowIn()));
+        return o;
+    }
+
+
+
+    public static Map<String, Object> parse(String input) {
+        Map<String, Object> result = new HashMap<>(3);
+        String[] pairs = input.split(",");
+        for (String pair : pairs) {
+            String[] keyValue = pair.split(":");
+            if (keyValue.length == 2) {
+                result.put(keyValue[0], keyValue[1]);
+            }
+        }
+        return result;
+    }
+
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Setter
+    @Getter
+    public static class DataItem{
+        private String time;
+        private BigDecimal link = BigDecimal.ZERO;
+        private BigDecimal flowIn = BigDecimal.ZERO;
+        private BigDecimal flowOut = BigDecimal.ZERO;
+    }
+
 }

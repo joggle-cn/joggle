@@ -1,9 +1,11 @@
 package com.wuweibi.bullet.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO;
 import com.wuweibi.bullet.domain.vo.CountVO;
+import com.wuweibi.bullet.metrics.entity.DataMetricsHour;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  * @author marker
  * @since 2017-12-09
  */
-public interface CountMapper {
+public interface CountMapper extends BaseMapper {
 
 
     /**
@@ -48,5 +50,21 @@ public interface CountMapper {
      */
     List<DeviceDateItemVO> selectUserDeviceTrend(@Param("userId")Long userId, @Param("deviceId")Long deviceId);
 
+
+    /**
+     * 获取最近day天的天级别数据
+     * @param day 天数
+     * @return
+     */
     List<DeviceDateItemVO> selectAllFlowTrend(@Param("day") int day);
+
+
+    /**
+     * 获取指定时间段的小时级别数据
+     * @param userId userId
+     * @param startDate 开始时间 yyyy-MM-dd
+     * @param endDate 结束时间 yyyy-MM-dd
+     * @return
+     */
+    List<DataMetricsHour> selectAllFlowTrendHourStream(@Param("userId") Long userId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

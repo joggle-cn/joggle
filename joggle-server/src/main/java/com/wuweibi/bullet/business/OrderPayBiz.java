@@ -1,12 +1,12 @@
 package com.wuweibi.bullet.business;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.business.domain.OrderPayInfo;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.orders.domain.OrdersDTO;
 import com.wuweibi.bullet.orders.entity.Orders;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  *
@@ -23,7 +23,7 @@ public interface OrderPayBiz {
      * @param params
      * @return
      */
-    boolean aliPayNotify(Map<String, Object> params);
+    boolean aliPayNotify(JSONObject params);
 
     /**
      * 计算价格

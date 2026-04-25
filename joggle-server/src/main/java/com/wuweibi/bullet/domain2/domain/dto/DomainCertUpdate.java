@@ -21,8 +21,11 @@ public class DomainCertUpdate {
     private String certKey;
 
     @ApiModelProperty("PEM证书")
-    @NotBlank(message = "PEM证书不能为空")
     @Length(message = "PEM证书不能超过个 {max} 字符", max = 4000)
     private String certPem;
+
+
+    @ApiModelProperty("是否自动续期 1自动 0关闭")
+    private Boolean isAutoRenewal;
 
 }

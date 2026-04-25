@@ -27,11 +27,20 @@
         select
             ud.id ,
             ud.domain,
-            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id) as bind
+            (select count(1) from t_device_mapping tdm where ud.id = tdm.user_domain_id and tdm.is_del = 0) as bind
         from user_domain ud
         where ud.user_id = #{userId}
         order by ud.id desc
     </select>
+
+<!--查询10天内要过期的域名-->
+    <select id="selectProgressList" resultSetType="FORWARD_ONLY" resultType="com.wuweibi.bullet.domain2.entity.UserDomain">
+        select * from user_domain where   DATE_ADD(sysdate(), INTERVAL 10 DAY)  >= due_time  and is_auto_renewal = 1
+        limit #{limit}
+    </select>
+
+
+
 
 </mapper>
 

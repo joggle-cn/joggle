@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.mapper.UserCertificationMapper;
@@ -58,58 +59,68 @@ public class UserCertificationTaskServiceImpl implements UserCertificationTaskSe
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(2);
         params.put("limit", 10);
-        Cursor<UserCertification> cursor = sqlSession.selectCursor(
-                UserCertificationMapper.class.getName() + ".selectProgressList", params);
-        Iterator iter = cursor.iterator();
-
-        int count = 0;
-        while (iter.hasNext()) {
-            UserCertification uc = (UserCertification) iter.next();
-            uc.setResult(2); // 默认拒绝
-            uc.setResultMsg("身份证校验不通过，请重新提交真实信息。");
-            Long userId = uc.getUserId();
-            User user = userService.getById(userId);
-
-            UserInfo userInfo = getIdCardInfo(uc);
-            if (userInfo != null) {
-                try {
-                    uc.setBirthday(DateUtils.parseDate(userInfo.getBirthday(), "yyyy-M-d"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                uc.setProvince(userInfo.getProvince());
-                uc.setCity(userInfo.getCity());
-                uc.setArea(userInfo.getArea());
-                uc.setDistrict(userInfo.getDistrict());
-                uc.setSex(userInfo.getSex());
-                uc.setResult(1);
-                uc.setResultMsg("认证通过");
-            }
-            uc.setExamineTime(new Date());
-            userCertificationMapper.updateById(uc);
-            userService.updateUserCertification(userId, uc.getResult());
-
-            // 发送通过邮件
-            log.debug("send email[{}] notification 实名认证结果: {}", user.getEmail(), uc.getResultMsg());
-            Map<String, Object> param = new HashMap<>(3);
-            param.put("result", uc.getResult());
-            param.put("resultMsg", uc.getResultMsg());
-            param.put("url", joggleProperties.getServerUrl() );
-            mailService.send(user.getEmail(), "Joggle实名认证结果", param, "certification_result.ftl");
-
-            count++;
-        }
+        Cursor<UserCertification> cursor = null;
         try {
-            cursor.close();
-        } catch (IOException e) {
-            log.error("", e);
+            cursor = sqlSession.selectCursor(
+                    UserCertificationMapper.class.getName() + ".selectProgressList", params);
+            Iterator iter = cursor.iterator();
+
+            int count = 0;
+            while (iter.hasNext()) {
+                UserCertification uc = (UserCertification) iter.next();
+                uc.setResult(2); // 默认拒绝
+                uc.setResultMsg("身份证校验不通过，请重新提交真实信息。");
+                Long userId = uc.getUserId();
+                User user = userService.getById(userId);
+
+                UserInfo userInfo = getIdCardInfo(uc);
+                if (userInfo != null) {
+                    try {
+                        uc.setBirthday(DateUtils.parseDate(userInfo.getBirthday(), "yyyy-M-d"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    uc.setProvince(userInfo.getProvince());
+                    uc.setCity(userInfo.getCity());
+                    uc.setArea(userInfo.getArea());
+                    uc.setDistrict(userInfo.getDistrict());
+                    uc.setSex(userInfo.getSex());
+                    uc.setResult(1);
+                    uc.setResultMsg("认证通过");
+                }
+                uc.setExamineTime(new Date());
+                userCertificationMapper.updateById(uc);
+                // 实名认证通过，更新用户的手机号
+                userService.updateUserCertification(userId, uc.getResult(), uc.getPhone());
+
+                // 发送通过通知
+                log.debug("send email[{}] notification 实名认证结果: {}", user.getEmail(), uc.getResultMsg());
+                Map<String, Object> param = new HashMap<>(3);
+                param.put("result", uc.getResult());
+                param.put("resultMsg", uc.getResultMsg());
+                param.put("url", joggleProperties.getServerUrl() );
+                notifyBiz.notification(userId, NotifyBiz.NotifyType.USER_CERTIFICATION_NOTICE, param);
+
+                count++;
+            }
+            log.debug("[实名认证处理] 结束 处理数据量：{}", count);
         } finally {
+            if (cursor != null) {
+                try {
+                    cursor.close();
+                }  catch (IOException e) {
+                    log.error("cursor.close() failed", e);
+                }
+            }
             sqlSession.close();
         }
 
-        log.debug("[实名认证处理] 结束 处理数据量：{}", count);
 
     }
+    @Resource
+    private NotifyBiz notifyBiz;
+
+
     @Resource
     private JoggleProperties joggleProperties;
 

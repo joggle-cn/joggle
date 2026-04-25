@@ -12,6 +12,7 @@ import com.wuweibi.bullet.system.service.SysConfigService;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
 import com.wuweibi.bullet.system.service.enums.SmsTypeEnum;
 import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,9 @@ public class ThirdMessageServiceImpl implements ThirdMessageService {
     @Override
     public R sendSms(SendSmsDTO sendSmsDTO) {
         String phone = sendSmsDTO.getPhone();
+        if (StringUtil.isBlank(phone)) {
+            return R.fail("手机号为空，不支持发送短信");
+        }
         SmsTypeEnum smsTypeEnum;
         try {
             smsTypeEnum = SmsTypeEnum.valueOf(sendSmsDTO.getType());

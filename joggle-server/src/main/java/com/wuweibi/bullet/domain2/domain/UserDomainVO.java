@@ -36,6 +36,10 @@ public class UserDomainVO {
     @ApiModelProperty("是否配置证书")
     private Boolean isCert;
 
+
+    @ApiModelProperty("是否自动续期 1自动 0关闭")
+    private Boolean isAutoRenewal;
+
     /**
      * 证书颁发时间
      */

@@ -33,8 +33,13 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	private Long deviceId;
 
 	private String domain;
+	private String name;
 
 	private Integer port;
+	/**
+	 * 协议 （rdp|http|tcp）
+	 */
+	private String portProtocol;
 
 
 	/**
@@ -79,6 +84,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
 	private Integer protocol;
 
+
 	/** 备注 */
 	private String description;
 
@@ -101,7 +107,19 @@ public class DeviceMapping extends Model<DeviceMapping> {
 	/**
 	 * 用户域名id
 	 */
-	@TableField(value = "user_domain_id",updateStrategy = FieldStrategy.IGNORED)
+	@TableField(value = "user_domain_id", updateStrategy = FieldStrategy.IGNORED)
 	private Long userDomainId;
+
+	/**
+	 * 是否删除 1删除 0 正常
+	 */
+	@TableLogic
+	@TableField(value = "is_del",updateStrategy = FieldStrategy.IGNORED)
+	private Boolean isDel;
+	/**
+	 * 更新时间
+	 */
+	@TableField("update_time")
+	private Date updateTime;
 
 }

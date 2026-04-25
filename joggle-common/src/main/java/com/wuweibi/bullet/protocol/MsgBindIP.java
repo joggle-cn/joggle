@@ -18,6 +18,7 @@ import java.io.OutputStream;
  * @create 2017-12-07 下午1:13
  **/
 @Slf4j
+@MessageType(Message.NEW_BINDIP)
 public class MsgBindIP extends Message {
 
 

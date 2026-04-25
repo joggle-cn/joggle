@@ -19,4 +19,8 @@ public class DeviceDateItemVO {
 
     @ApiModelProperty("出网流量MB")
     private BigDecimal flowOut = BigDecimal.ZERO;
+
+    @ApiModelProperty("链接数量")
+    private BigDecimal link = BigDecimal.ZERO;
+
 }

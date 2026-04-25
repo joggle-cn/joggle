@@ -20,6 +20,7 @@ import java.util.Arrays;
  **/
 
 @Data
+@MessageType(Message.SWITCH_LINE)
 public class MsgSwitchLine extends Message {
 
     /**

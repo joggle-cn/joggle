@@ -1,4 +1,4 @@
-FROM eclipse/alpine_jdk8
+FROM bellsoft/liberica-openjdk-alpine:17
 
 # 构建参数
 ENV JAVA_OPTS -Xms256m -Xmx512m

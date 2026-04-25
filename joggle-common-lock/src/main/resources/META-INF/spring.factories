@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.wuweibi.bullet.common.lock.DLockAutoConfiguration

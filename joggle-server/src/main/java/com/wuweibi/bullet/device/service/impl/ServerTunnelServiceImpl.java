@@ -11,12 +11,13 @@ import com.wuweibi.bullet.device.domain.vo.TunnelOption;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.mapper.ServerTunnelMapper;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import com.wuweibi.bullet.utils.DateTimeUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 通道(ServerTunnel)表服务实现类
@@ -26,6 +27,10 @@ import java.util.Objects;
  */
 @Service
 public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, ServerTunnel> implements ServerTunnelService {
+
+
+    @Resource
+    private NotifyBiz notifyBiz;
 
     @Override
     public List<TunnelOption> getOptionList() {
@@ -38,35 +43,55 @@ public class ServerTunnelServiceImpl extends ServiceImpl<ServerTunnelMapper, Ser
     }
 
     @Override
-    public boolean updateStatus(Integer tunnelId, int status) {
+    public boolean updateStatus(Integer tunnelId, int status, String version) {
+        ServerTunnel serverTunnel = this.baseMapper.selectById(tunnelId);
+        if (null == serverTunnel) {
+            return false;
+        }
         LambdaUpdateWrapper<ServerTunnel> wp = Wrappers.<ServerTunnel>lambdaUpdate()
                 .eq(ServerTunnel::getId, tunnelId)
                 .set(ServerTunnel::getStatus, status)
                 .set(ServerTunnel::getServerUpTime, new Date());
+
+        if (Objects.nonNull(version)) {
+            wp.set(ServerTunnel::getVersion, version);
+        }
         if (status == 0) {// 离线
             wp.set(ServerTunnel::getServerDownTime, new Date());
         }
-        return this.update(wp);
+        this.update(wp);
+
+        if (status == 0) {// 离线
+            // 发送短信通知
+            Map<String, Object> param = new HashMap<>(5);
+            param.put("deviceNo", serverTunnel.getId().toString());
+            param.put("deviceName", String.format("节点:%s:%s", serverTunnel.getName(), serverTunnel.getVersion()));
+            param.put("publicIp", "-");
+            param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            notifyBiz.notification(NotifyBiz.NotifyType.DEVICE_DOWN, param);
+
+        }
+        return true;
     }
 
     @Override
     public Page<ServerTunnelAdminVO> getAdminPage(Page pageInfo, ServerTunnelAdminParam params) {
         long nowTime = new Date().getTime();
         Page<ServerTunnelAdminVO> page = this.baseMapper.selectAdminPage(pageInfo, params);
-        page.getRecords().forEach(item->{
-            item.setName("["+item.getCountry()+"|"+item.getArea()+"] "+item.getName());
+        page.getRecords().forEach(item -> {
+            item.setName("[" + item.getCountry() + "|" + item.getArea() + "] " + item.getName());
 
-            if(item.getServerUpTime() == null){
+            if (item.getServerUpTime() == null) {
                 item.setOnlineTime("-");
                 return;
             }
-            Date time = item.getServerUpTime().compareTo(item.getServerDownTime()) >=0?item.getServerDownTime(): item.getServerUpTime();
+            Date time = item.getServerUpTime().compareTo(item.getServerDownTime()) >= 0 ? item.getServerDownTime() : item.getServerUpTime();
             if (time == null) {
                 time = new Date();
             }
             // 如果在线则计算在线时间
-            if (Objects.equals(1, item.getStatus())){
-                String subTime =  DateTimeUtil.diffDate(time.getTime(), nowTime);
+            if (Objects.equals(1, item.getStatus())) {
+                String subTime = DateTimeUtil.diffDate(time.getTime(), nowTime);
                 item.setOnlineTime(subTime);
             }
         });

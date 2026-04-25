@@ -1,8 +1,10 @@
 package com.wuweibi.bullet.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.dashboard.domain.DeviceMappingInfoDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
+import com.wuweibi.bullet.device.domain.param.DeviceServiceParam;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -57,7 +59,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @param domainId 域名ID
      * @return
      */
-    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId}")
+    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId} and is_del = 0")
     boolean existsDomainId(@Param("deviceId") Long deviceId, @Param("domainId") Long domainId);
 
 
@@ -70,7 +72,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
     void updateStatusById(@Param("id") Long mappingId, @Param("status") int status);
 
 
-    @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId})")
+    @Select("select deviceId from t_device where id = (select device_id from t_device_mapping where id=#{mappingId} and is_del =0)")
     String selectDeviceNoById(@Param("mappingId") Long mappingId);
 
 
@@ -78,7 +80,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
             "a.*,b.deviceId deviceNo\n" +
             "from t_device_mapping a \n" +
             "left join t_device b on a.device_id = b.id\n" +
-            "where a.userId = #{userId} and status = #{status}")
+            "where a.is_del = 0 and a.userId = #{userId} and status = #{status}")
     List<DeviceMappingDTO> selectAllByUserId(@Param("userId") Long userId, @Param("status") int status);
 
     /**
@@ -98,7 +100,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
 
     DeviceMappingProtocol selectMapping4ProtocolByMappingId(@Param("mappingId")Long mappingId);
 
-    boolean removeByDomainId(@Param("domainId")Long domainId);
+    boolean removeByDomainId(@Param("userId")Long userId, @Param("domainId")Long domainId);
 
     /**
      * 获取用户得映射Id
@@ -113,4 +115,30 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @return
      */
     List<DeviceMappingInfoDTO> getDeviceMappingIdByUserId(@Param("userId") Long userId);
+
+    /**
+     * 查询用户的域名id是否存在 （包含删除记录）
+     * @param userId 用户id
+     * @param domainId 域名id
+     * @return
+     */
+    DeviceMapping selectByUserAndDomainId(@Param("userId") Long userId,@Param("domainId")  Long domainId);
+
+    /**
+     * 恢复数据id
+     * @param id
+     */
+    boolean recoveryId(@Param("id") Long id);
+
+    Page<DeviceMapping> selectServiceListPage(Page pageParams, @Param("params") DeviceServiceParam params);
+
+    /**
+     * 根据主机和端口查询是否存在
+     * @param deviceId 设备ID
+     * @param host 主机
+     * @param port 端口
+     * @return
+     */
+    @Select("select count(1) from t_device_mapping where id = (select device_id from t_device_mapping where device_id=#{deviceId} and host=#{host} and port=#{port} and is_del =0)")
+    int selectByHostAndPort(@Param("deviceId")Long deviceId,@Param("host") String host,@Param("port") Integer port);
 }

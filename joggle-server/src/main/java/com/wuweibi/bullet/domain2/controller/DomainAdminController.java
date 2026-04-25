@@ -30,7 +30,6 @@ import com.wuweibi.bullet.protocol.domain.DomainConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -158,16 +157,14 @@ public class DomainAdminController {
         String deviceNo = deviceDetail.getDeviceNo();
 
         // 通知到对应的通道
-        Bullet3Annotation annotation = coonPool.getByTunnelId(domain.getServerTunnelId());
-        if (annotation != null) {
-            DomainConfig domainConfig = new DomainConfig();
-            domainConfig.setMapId(deviceMapping.getId());
-            domainConfig.setDeviceNo(deviceNo);
-            domainConfig.setConcurrentNum(domain.getConcurrentNum());
-            domainConfig.setBandwidth(domain.getBandwidth());
-            MsgTunnelConfig tunnelConfig = new MsgTunnelConfig((JSONObject) JSON.toJSON(domainConfig));
-            annotation.sendMessageToServer(tunnelConfig);
-        }
+        DomainConfig domainConfig = new DomainConfig();
+        domainConfig.setMapId(deviceMapping.getId());
+        domainConfig.setDeviceNo(deviceNo);
+        domainConfig.setConcurrentNum(domain.getConcurrentNum());
+        domainConfig.setBandwidth(domain.getBandwidth());
+        MsgTunnelConfig tunnelConfig = new MsgTunnelConfig((JSONObject) JSON.toJSON(domainConfig));
+        coonPool.sendMessageToServer(domain.getServerTunnelId(), tunnelConfig);
+        
         return R.success();
     }
 

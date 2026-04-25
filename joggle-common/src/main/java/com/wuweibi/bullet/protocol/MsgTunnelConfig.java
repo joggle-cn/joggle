@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
  * @create 2021-07-31 下午11:13
  **/
 @Slf4j
+@MessageType(Message.TUNNEL_CONFIG)
 public class MsgTunnelConfig extends Message {
 
 

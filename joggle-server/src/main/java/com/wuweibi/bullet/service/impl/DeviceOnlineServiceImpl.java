@@ -19,7 +19,6 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.biz.NotifyBiz;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
@@ -165,15 +164,9 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         List<ServerTunnel> list = serverTunnelService.getListEnable();
         list.forEach(item -> {
             log.debug("[init] check server[{}] {}[{}]", item.getId(), item.getName(), item.getServerAddr());
-            Bullet3Annotation annotation = websocketPool.getByTunnelId(item.getId());
-            if (annotation == null) {
-                log.debug("[init] check server[{}] not online", item.getId());
-            }
-            if (annotation != null) {
-                MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
-                annotation.sendMessageToServer(msg);
-                log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
-            }
+            MsgGetDeviceStatus msg = new MsgGetDeviceStatus();
+            websocketPool.sendMessageToServer(item.getId(), msg);
+            log.debug("[init] check server[{}] ok [GetDeviceStatus]", item.getId());
         });
         return true;
     }
@@ -192,6 +185,7 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
         DeviceOnlineLog deviceOnlineLog = new DeviceOnlineLog();
         deviceOnlineLog.setUserId(deviceDetail.getUserId());
         deviceOnlineLog.setDeviceId(deviceDetail.getId());
+        deviceOnlineLog.setDeviceName(deviceDetail.getName());
         deviceOnlineLog.setMacAddr(deviceDetail.getMacAddr());
         deviceOnlineLog.setIntranetIp(deviceDetail.getIntranetIp());
         deviceOnlineLog.setPublicIp(deviceDetail.getPublicIp());
@@ -211,11 +205,12 @@ public class DeviceOnlineServiceImpl extends ServiceImpl<DeviceOnlineMapper, Dev
             // 设备下线通知
             log.info("user[{}] device[{}] is down...", deviceDetail.getUserId(), deviceDetail.getDeviceNo());
 
-            Map<String, Object> param = new HashMap<>(7);
+            Map<String, Object> param = new HashMap<>(5);
             param.put("deviceNo", deviceDetail.getDeviceNo());
             param.put("deviceName", deviceDetail.getName());
             param.put("publicIp", deviceDetail.getPublicIp());
             param.put("downTimeStr", DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            param.put("subject", String.format("%s设备下线提醒", deviceDetail.getDeviceNo()));
             notifyBiz.notification(deviceDetail.getUserId(), NotifyBiz.NotifyType.DEVICE_DOWN, param);
         }
 

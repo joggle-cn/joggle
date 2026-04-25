@@ -32,7 +32,6 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.StringUtil;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -144,11 +143,9 @@ public class DeviceAdminController {
             if (deviceOnline == null) {
                 return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
             }
-            Bullet3Annotation bulletAnnotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-            if(bulletAnnotation != null){
-                MsgUnBind msg = new MsgUnBind();
-                bulletAnnotation.sendMessage(device.getDeviceNo(), msg);
-            }
+
+            MsgUnBind msg = new MsgUnBind();
+            websocketPool.sendMessage(deviceOnline.getServerTunnelId(),device.getDeviceNo(),  msg);
 
             // 删除映射
             deviceMappingService.deleteByDeviceId(deviceId);
@@ -284,18 +281,15 @@ public class DeviceAdminController {
         }
 
         // 发送切换消息给设备
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceOnline.getServerTunnelId());
-        if (annotation != null) {
-            MsgSwitchLine msg = new MsgSwitchLine();
-            msg.setDeviceNo(deviceNo);
+        MsgSwitchLine msg = new MsgSwitchLine();
+        msg.setDeviceNo(deviceNo);
 
-            String serverAddr = serverTunnel.getServerAddr();
-            if (!(serverAddr.indexOf(":") > 0)) {
-                serverAddr = serverAddr + ":8083";
-            }
-            msg.setServerAddr(serverAddr);
-            annotation.sendMessage(deviceNo,  msg);
+        String serverAddr = serverTunnel.getServerAddr();
+        if (!(serverAddr.indexOf(":") > 0)) {
+            serverAddr = serverAddr + ":8083";
         }
+        msg.setServerAddr(serverAddr);
+        websocketPool.sendMessage(deviceOnline.getServerTunnelId(),deviceNo,  msg);
 
         return R.success();
     }

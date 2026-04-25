@@ -25,6 +25,15 @@ public abstract class Message {
     public static final int GET_DEVICE_STATUS_RESP = 0x12;
     public static final int DEVICE_DOWN = 0x13;
 
+    /**
+     * 设备内网扫描
+     */
+    public static final int DEVICE_SCAN = 0x17;
+    /**
+     * 设备内网扫描结果
+     */
+    public static final int DEVICE_SCAN_RESP = 0x18;
+
     public static final int DEVICE_SECRET = 0x10000001;// 设备秘钥
     public static final int LOG_MAPPING_STATUS = 0x10000010; // 日志开关消息
     public static final int LOG_MAPPING_LOG = 0x10000011; // 日志 消息

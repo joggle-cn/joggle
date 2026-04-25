@@ -9,7 +9,7 @@ import java.util.Map;
 public interface NotifyBiz {
 
     /**
-     * 系统通知
+     * 用户系统通知
      * @param userId 用户id
      * @param notifyType 通知类型
      * @param param 参数
@@ -17,11 +17,22 @@ public interface NotifyBiz {
      */
     boolean notification(Long userId, NotifyType notifyType, Map<String, Object> param);
 
+    /**
+     * 系统通知
+     * @param notifyType 通知类型
+     * @param param 参数
+     * @return
+     */
+    boolean notification(NotifyType notifyType, Map<String, Object> param);
+
 
     @Getter
     enum NotifyType{
 
-        DEVICE_DOWN("DEVICE_DOWN", EmailTypeEnum.DEVICE_DOWN, SmsTypeEnum.DEVICE_DOWN)
+        DEVICE_DOWN("DEVICE_DOWN", EmailTypeEnum.DEVICE_DOWN, SmsTypeEnum.DEVICE_DOWN),
+        USER_CERTIFICATION_NOTICE("USER_CERTIFICATION_NOTICE", EmailTypeEnum.USER_CERTIFICATION_NOTICE, null),
+        VIP_EXPIRATION_NOTICE("VIP_EXPIRATION_NOTICE", EmailTypeEnum.VIP_EXPIRATION_NOTICE, SmsTypeEnum.VIP_EXPIRATION_NOTICE),
+        VIP_END_NOTICE("VIP_END_NOTICE", EmailTypeEnum.VIP_EXPIRATION_NOTICE, SmsTypeEnum.VIP_EXPIRATION_NOTICE),
 
 
 

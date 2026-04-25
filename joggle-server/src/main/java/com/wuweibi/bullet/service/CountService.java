@@ -1,9 +1,6 @@
 package com.wuweibi.bullet.service;
 
-import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
-import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
-import com.wuweibi.bullet.dashboard.domain.UserCountVO;
-import com.wuweibi.bullet.dashboard.domain.UserTodayFlowCountVO;
+import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.vo.CountVO;
 
 import java.util.List;
@@ -57,4 +54,12 @@ public interface CountService {
      * @return
      */
     UserTodayFlowCountVO getUserTodayFow(Long userId, Long deviceId);
+
+    /**
+     * 全网近24小时流量
+     * @param userId 用户id 当用户id null 代表查询所有数据
+     * @param hour
+     * @return
+     */
+    List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour);
 }

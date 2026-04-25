@@ -12,7 +12,7 @@ public class OrdersDTO {
     private Integer resourceType;
 
     @NotNull(message = "支付方式错误")
-    @ApiModelProperty( "支付方式 1余额 2支付宝 3VIP权益")
+    @ApiModelProperty( "支付方式 1余额 2支付宝 3VIP权益 4微信支付")
     private Integer payType;
 
     @ApiModelProperty("数量")

@@ -9,7 +9,6 @@ import com.wuweibi.bullet.device.entity.DeviceWhiteIps;
 import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceService;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -88,11 +87,10 @@ public class DeviceWhiteIpsController {
         }
 
         DeviceDetail deviceDetail = deviceService.getDetail(deviceId);
-        Bullet3Annotation annotation = websocketPool.getByTunnelId(deviceDetail.getServerTunnelId());
-        if (annotation != null) {
-            byte[] data = JSON.toJSONString(ips).getBytes();
-            annotation.sendMessageBytes(CONTROL_WHITE_IPS, deviceDetail.getDeviceNo(), data);
-        }
+
+        byte[] data = JSON.toJSONString(ips).getBytes();
+        websocketPool.sendMessageBytes(CONTROL_WHITE_IPS,deviceDetail.getServerTunnelId(), deviceDetail.getDeviceNo(), data);
+
         return R.ok();
     }
 

@@ -73,7 +73,14 @@ public interface UserMapper extends BaseMapper<User> {
     @Update("update t_sys_users set enabled=1 where id = #{userId}")
     boolean updateEnabled(@Param("userId") Long userId);
 
-    boolean updateUserCertification(@Param("userId") Long userId, @Param("state") Integer state);
+    /**
+     * 更新认证信息
+     * @param userId 用户id
+     * @param state 状态
+     * @param phone 手机号
+     * @return
+     */
+    boolean updateUserCertification(@Param("userId") Long userId, @Param("state") Integer state,@Param("phone") String phone);
 
     /**
      * 查询用户列表
@@ -93,4 +100,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     boolean updateSystemNotice(@Param("userId") Long userId, @Param("status") Integer status);
+
+    /**
+     * 更新用户的手机
+     * @param userId 用户id
+     * @param phone 手机号
+     * @return
+     */
+    boolean updatePhone(@Param("userId")Long userId,@Param("phone") String phone);
 }

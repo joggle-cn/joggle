@@ -7,13 +7,14 @@ import com.wuweibi.bullet.res.domain.UserPackageExpireVO;
 import com.wuweibi.bullet.res.domain.UserPackageFowVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
-import com.wuweibi.bullet.res.manager.UserPackageLimitEnum;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.res.mapper.UserPackageMapper;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.MailService;
+import com.wuweibi.bullet.system.biz.NotifyBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.ibatis.cursor.Cursor;
@@ -26,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
+
+import static com.wuweibi.bullet.system.biz.NotifyBiz.NotifyType.VIP_EXPIRATION_NOTICE;
+
 
 @Slf4j
 @Service
@@ -72,7 +76,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public R usePackageAdd(Long userId, UserPackageLimitEnum limitEnum, int num) {
+    public R<UserPackage> usePackageAdd(Long userId, UserPackageLimitEnum limitEnum, int num) {
         if (Objects.isNull(limitEnum)) {
             return R.fail("参数错误");
         }
@@ -94,10 +98,9 @@ public class UserPackageManagerImpl implements UserPackageManager {
         }
         userPackageService.updateById(userPackage);
 
-
         // 权益使用记录 TODO
 
-        return R.ok();
+        return R.ok(userPackage);
     }
 
     @Override
@@ -182,10 +185,10 @@ public class UserPackageManagerImpl implements UserPackageManager {
             param.put("packageName", userPackage.getName());
             param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s套餐到期释放提醒", userPackage.getName());
-            this.free(userPackage);
+            param.put("subject", String.format("%s套餐到期释放提醒", userPackage.getName()));
 
-            mailService.send(userPackage.getUserEmail(), subject, param, "package_release.htm");
+            this.free(userPackage);
+            notifyBiz.notification(userPackage.getUserId(), VIP_EXPIRATION_NOTICE, param);
         }
         try {
             cursor.close();
@@ -247,13 +250,13 @@ public class UserPackageManagerImpl implements UserPackageManager {
             UserPackageFowVO userPackage = iter.next();
             log.info("user[{}] package[{}] expiration... ", userPackage.getUserId(), userPackage.getResourcePackageId());
 
-            Map<String, Object> param = new HashMap<>(4);
+            Map<String, Object> param = new HashMap<>(5);
             param.put("packageName", userPackage.getName());
             param.put("packageFlow", userPackage.getResourcePackageFlow()); // kb
             param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("Joggle%s套餐即将到期提醒", userPackage.getName());
-            mailService.send(userPackage.getUserEmail(), subject, param, "package_expiration_notice.htm");
+            param.put("subject", String.format("%s套餐即将到期提醒", userPackage.getName()));
+            notifyBiz.notification(userPackage.getUserId(), VIP_EXPIRATION_NOTICE, param);
         }
         try {
             cursor.close();
@@ -264,6 +267,9 @@ public class UserPackageManagerImpl implements UserPackageManager {
         }
         log.info("[资源包到期前2日检查] 结束 处理数据量：{}", count);
     }
+
+    @Resource
+    private NotifyBiz notifyBiz;
 
 
     /**

@@ -18,7 +18,6 @@ import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.protocol.MsgPeer;
 import com.wuweibi.bullet.protocol.domain.PeerConfig;
 import com.wuweibi.bullet.utils.StringUtil;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.BeanUtils;
@@ -98,39 +97,35 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         String clientDeviceNo = dto.getClientDeviceNo();
         String serverDeviceNo = dto.getServerDeviceNo();
 
-        Bullet3Annotation annotation = coonPool.getByTunnelId(dto.getServerDeviceTunnelId());
-        if (annotation != null) {
-            PeerConfig doorConfig = new PeerConfig();
-            doorConfig.setAppName(dto.getAppName());
-            doorConfig.setPort(dto.getServerLocalPort());
-            doorConfig.setHost(dto.getServerLocalHost());
-            doorConfig.setType(PeerConfig.SERVER);
-            doorConfig.setEnable(dto.getStatus());
-            doorConfig.setMtu(dto.getServerMtu());
-            doorConfig.setCompress(dto.getConfigCompress());
-            doorConfig.setEncryption(dto.getConfigEncryption());
-            doorConfig.setInterval(dto.getConfigInterval());
-            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-            MsgPeer msg = new MsgPeer(data.toJSONString());
-            annotation.sendMessage(serverDeviceNo, msg);
-        }
+        // 服务器端
+        PeerConfig peerConfig = new PeerConfig();
+        peerConfig.setAppName(dto.getAppName());
+        peerConfig.setPort(dto.getServerLocalPort());
+        peerConfig.setHost(dto.getServerLocalHost());
+        peerConfig.setType(PeerConfig.SERVER);
+        peerConfig.setEnable(dto.getStatus());
+        peerConfig.setMtu(dto.getServerMtu());
+        peerConfig.setCompress(dto.getConfigCompress());
+        peerConfig.setEncryption(dto.getConfigEncryption());
+        peerConfig.setInterval(dto.getConfigInterval());
+        JSONObject data = (JSONObject) JSON.toJSON(peerConfig);
+        MsgPeer msg = new MsgPeer(data.toJSONString());
+        coonPool.sendMessage(dto.getServerDeviceTunnelId(), serverDeviceNo, msg);
 
-        annotation = coonPool.getByTunnelId(dto.getClientDeviceTunnelId());
-        if (annotation != null) {
-            PeerConfig doorConfig = new PeerConfig();
-            doorConfig.setAppName(dto.getAppName());
-            doorConfig.setPort(dto.getClientProxyPort());
-            doorConfig.setHost(dto.getClientProxyHost());
-            doorConfig.setType(PeerConfig.CLIENT);
-            doorConfig.setEnable(dto.getStatus());
-            doorConfig.setMtu(dto.getClientMtu());
-            doorConfig.setCompress(dto.getConfigCompress());
-            doorConfig.setEncryption(dto.getConfigEncryption());
-            doorConfig.setInterval(dto.getConfigInterval());
-            JSONObject data = (JSONObject) JSON.toJSON(doorConfig);
-            MsgPeer msg = new MsgPeer(data.toJSONString());
-            annotation.sendMessage(clientDeviceNo, msg);
-        }
+
+        PeerConfig clientPeerConfig = new PeerConfig();
+        clientPeerConfig.setAppName(dto.getAppName());
+        clientPeerConfig.setPort(dto.getClientProxyPort());
+        clientPeerConfig.setHost(dto.getClientProxyHost());
+        clientPeerConfig.setType(PeerConfig.CLIENT);
+        clientPeerConfig.setEnable(dto.getStatus());
+        clientPeerConfig.setMtu(dto.getClientMtu());
+        clientPeerConfig.setCompress(dto.getConfigCompress());
+        clientPeerConfig.setEncryption(dto.getConfigEncryption());
+        clientPeerConfig.setInterval(dto.getConfigInterval());
+        JSONObject clientData = (JSONObject) JSON.toJSON(clientPeerConfig);
+        MsgPeer clientMsgPeer = new MsgPeer(clientData.toJSONString());
+        coonPool.sendMessage(dto.getClientDeviceTunnelId(), clientDeviceNo, clientMsgPeer);
     }
 
     @Override
@@ -147,5 +142,14 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
             lmq.ne(DevicePeers::getId, id);
         }
         return this.baseMapper.selectCount(lmq) > 0;
+    }
+
+    @Override
+    public List<DevicePeersVO> getListByServerDeviceId(Long deviceId) {
+        List<DevicePeersVO> list = this.baseMapper.selectListByServerDeviceId(deviceId);
+        list.stream().forEach(entity->{
+            entity.setStatusName(DevicePeerStatusEnum.toName(entity.getStatus()));
+        });
+        return list;
     }
 }

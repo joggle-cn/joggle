@@ -107,6 +107,9 @@ public class R<T> {
     public static <T> R<T> success(T data) {
         return new R<T>(SUCCESSFUL_CODE, SUCCESSFUL_MESG, data);
     }
+    public static <T> R<T> ok(T data,String msg) {
+        return new R<T>(SUCCESSFUL_CODE, msg, data);
+    }
 
     /**
      * 快速创建成功结果

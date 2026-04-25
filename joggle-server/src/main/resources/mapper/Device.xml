@@ -44,15 +44,15 @@
 	</select>
 
 
-    <select id="selectWebListByUserId" resultType="com.wuweibi.bullet.domain.dto.DeviceDto">
+    <select id="selectWebListByUserId" resultType="com.wuweibi.bullet.domain.dto.DeviceDTO">
 		select
 			d.`id`, d.`name`, d.`deviceId` as deviceNo,
 		   do.`status`, do.`public_ip`, do.`intranet_ip`,do.mac_addr,
-		   do.updateTime onlineTime
+		   do.updateTime onlineTime, do.os, do.arch
 		from t_device d
 		 left join t_device_online do on d.deviceId = do.deviceNo
 		where d.userId = #{userId}
-		order by d.id desc
+		order by do.updateTime desc,d.id desc
 	</select>
 
 <!--	获取设备详情-->

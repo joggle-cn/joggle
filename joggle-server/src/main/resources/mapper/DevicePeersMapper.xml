@@ -59,6 +59,16 @@
         where dc.deviceId = #{deviceNo} or  ds.deviceId = #{deviceNo}
     </select>
 
+    <!-- 根据服务端设备id查询端到端列表 -->
+    <select id="selectListByServerDeviceId" resultType="com.wuweibi.bullet.device.domain.DevicePeersVO">
+        select
+        <include refid="peersConfigSql" />
+        from device_peers dp
+        left join t_device dc on dc.id = dp.client_device_id
+        left join t_device ds on ds.id = dp.server_device_id
+        where dp.server_device_id = #{deviceId}
+    </select>
+
 
 </mapper>
 

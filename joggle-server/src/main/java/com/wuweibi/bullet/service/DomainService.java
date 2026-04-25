@@ -59,7 +59,7 @@ public interface DomainService extends IService<Domain> {
      * @param domainId
      * @param dueTime
      */
-    void updateDueTime(Long domainId, Long dueTime);
+    void updateDueTime(Long domainId, Date dueTime);
 
     /**
      * 检查所有域名的状态
@@ -110,13 +110,13 @@ public interface DomainService extends IService<Domain> {
     boolean updateDueTimeById(Long id, Date time);
 
     /**
-     * 释放资源id
-     *
+     * 释放用户的域名id
+     * @param userId 用户id
      * @param resourcePackageLevel1
-     * @param id                    domainId
+     * @param domainId  域名id
      * @return
      */
-    boolean releaseById(ResourcePackage resourcePackageLevel1, Long id);
+    boolean releaseById(Long userId, ResourcePackage resourcePackageLevel1, Long domainId);
 
     boolean resourceDueTimeRelease();
 
@@ -133,4 +133,16 @@ public interface DomainService extends IService<Domain> {
     Domain getByMappingId(Long mappingId);
 
     boolean exists(Long domainId);
+
+    /**
+     * 获取用户可用的域名
+     *
+     * @param serverTunnelId
+     * @param userId
+     * @param portProtocol
+     * @return
+     */
+    Domain getAvailableDomainByUserId(Integer serverTunnelId, Long userId, String portProtocol);
+
+
 }

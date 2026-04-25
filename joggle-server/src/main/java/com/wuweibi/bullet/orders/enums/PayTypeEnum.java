@@ -36,6 +36,13 @@ public enum PayTypeEnum {
 
 
     /**
+     * 枚举数据map化处理，为便于获取枚举数据.
+     */
+    private static final Map<Integer, PayTypeEnum> MAP2 = EnumUtil
+            .toMap(PayTypeEnum.class, PayTypeEnum::getType, t-> t);
+
+
+    /**
      * 转换为Name
      *
      * @param status
@@ -43,5 +50,14 @@ public enum PayTypeEnum {
      */
     public static String toName(Integer status) {
         return MAP.get(status);
+    }
+
+    /**
+     * 转换枚举
+     * @param status
+     * @return
+     */
+    public static PayTypeEnum toEnum(Integer status) {
+        return MAP2.get(status);
     }
 }

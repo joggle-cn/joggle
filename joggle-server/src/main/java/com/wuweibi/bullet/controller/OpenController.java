@@ -4,12 +4,14 @@ package com.wuweibi.bullet.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
+import com.wuweibi.bullet.business.UserDomainCertBiz;
 import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.controller.validator.RegisterValidator;
+import com.wuweibi.bullet.dashboard.domain.DeviceDateItemHourVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.domain.domain.session.Session;
@@ -17,6 +19,8 @@ import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.domain.vo.ReleaseDetail;
 import com.wuweibi.bullet.domain.vo.ReleaseInfo;
 import com.wuweibi.bullet.domain2.entity.Domain;
+import com.wuweibi.bullet.domain2.entity.UserDomain;
+import com.wuweibi.bullet.domain2.mapper.UserDomainMapper;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.flow.entity.UserFlow;
@@ -38,6 +42,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -245,15 +250,20 @@ public class OpenController {
 
 
     /**
-     * 检查客户端更新
+     * 设备检查更新接口
      *
      * @return
      */
-    @ApiOperation("客户端检查更新接口")
+    @ApiOperation(value = "设备检查更新接口",notes = "支持多个类型检查更新 CLIENT SERVER")
     @PostMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
-
+        if ("xxx".equals(clientInfoDTO.getApp_id())){ // 兼容老版本的joggle客户端检查更新
+            clientInfoDTO.setApp_id("CLIENT");
+        }
         ClientVersion clientVersion = clientVersionService.getNewVersion(clientInfoDTO);
+        if (Objects.isNull(clientVersion)) {
+            return new ReleaseDetail();
+        }
 
         ReleaseDetail releaseDetail = new ReleaseDetail();
         ReleaseInfo releaseInfo = new ReleaseInfo();
@@ -324,8 +334,8 @@ public class OpenController {
 
     @GetMapping(value = "/ws")
     public R ws(HttpServletRequest request) {
-        HashMap<String, String> data = new HashMap<>();
-        for(Map.Entry<String, Bullet3Annotation> k :websocketPool.clientConnections.entrySet()){
+        HashMap<Integer, String> data = new HashMap<>();
+        for(Map.Entry<Integer, List<Bullet3Annotation>> k :websocketPool.clientConnections.entrySet()){
             data.put(k.getKey(), k.getValue().toString());
         }
         return R.success(data);
@@ -349,6 +359,19 @@ public class OpenController {
             @JwtUser Session session){
         int day = 30;
         List<DeviceDateItemVO> list = countService.getAllFlowTrend(day);
+        return R.success(list);
+    }
+
+    /**
+     * 近24小时流量情况
+     * @return
+     */
+    @ApiOperation("近24小时流量情况")
+    @GetMapping("/all/flow/trend/hour")
+    public R<List<DeviceDateItemHourVO>> getHourFlowTrend(
+            @JwtUser Session session){
+        int hour = 24;
+        List<DeviceDateItemHourVO> list = countService.getAllFlowTrendHour(null, hour);
         return R.success(list);
     }
 
@@ -380,5 +403,24 @@ public class OpenController {
         return R.success();
     }
 
+    @Resource
+    private UserDomainCertBiz userDomainBiz;
 
+    @Resource
+    private UserDomainMapper userDomainMapper;
+
+    @Profile({"dev" })
+    @RequestMapping(value = "/auto/cert/renew")
+    public R autoReNewCert(@RequestParam("id") Long id) throws Exception {
+        UserDomain userDomain = userDomainMapper.selectById(id);
+        userDomainBiz.reqDomainCert(userDomain);
+        return R.success();
+    }
+    @Profile({"dev" })
+    @RequestMapping(value = "/auto/cert/renew/scan")
+    @Async
+    public R autoReNewCert( ) throws Exception {
+        userDomainBiz.startCertReNewTask( );
+        return R.success();
+    }
 }

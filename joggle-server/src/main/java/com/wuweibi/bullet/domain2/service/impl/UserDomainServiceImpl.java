@@ -18,6 +18,7 @@ import com.wuweibi.bullet.protocol.MsgDomainCert;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.SpringUtils;
+import com.wuweibi.bullet.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -103,6 +104,9 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             InitialDirContext dirContext = new InitialDirContext(env);
             Attributes attrs = dirContext.getAttributes(url, new String[]{"TXT"});
             Attribute txt = attrs.get("TXT");
+            if (txt == null) {
+                return false;
+            }
             log.info("DNS TXT {} result:{}", url, txt.get());
             if (Objects.equals(activeCode, txt.get())) {
                 return true;
@@ -138,15 +142,19 @@ public class UserDomainServiceImpl extends ServiceImpl<UserDomainMapper, UserDom
             userDomain.setDueTime(endTime);
         } catch (Exception e) {
             log.warn("证书格式错误 domain={}", domain);
-            return R.fail("证书格式错误");
+            userDomain.setApplyTime(new Date());
+            userDomain.setDueTime(new Date());
         }
 
         userDomain.setIsCert(true);
         userDomain.setCertKey(domainCertUpdate.getCertKey());
         userDomain.setCertPem(domainCertUpdate.getCertPem());
+        userDomain.setIsAutoRenewal(domainCertUpdate.getIsAutoRenewal());
         userDomain.setUpdateTime(new Date());
         this.baseMapper.updateById(userDomain);
-
+        if (StringUtil.isBlank(certPem)) {
+            return R.ok();
+        }
         // 通知所有节点更新证书。
         MsgDomainCert msgDomainCert = new MsgDomainCert(userDomain.getDomain(), userDomain.getCertKey(), userDomain.getCertPem());
 

@@ -210,8 +210,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean updateUserCertification(Long userId, Integer state) {
-        return this.baseMapper.updateUserCertification(userId, state);
+    public boolean updateUserCertification(Long userId, Integer state, String phone) {
+        return this.baseMapper.updateUserCertification(userId, state, phone);
     }
 
     @Override
@@ -235,6 +235,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getByUserId(Long userId) {
         return this.baseMapper.selectById(userId);
+    }
+
+    @Override
+    public boolean updatePhone(Long userId, String phone) {
+        return this.baseMapper.updatePhone(userId, phone);
     }
 
 

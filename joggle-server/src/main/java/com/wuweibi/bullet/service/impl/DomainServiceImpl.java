@@ -19,9 +19,9 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainStatusEnum;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
+import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
-import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
@@ -29,7 +29,7 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.websocket.Bullet3Annotation;
+import com.wuweibi.bullet.utils.StringHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.ibatis.cursor.Cursor;
@@ -79,8 +79,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public void updateDueTime(Long domainId, Long dueTime) {
-        this.baseMapper.updateDueTime(domainId, new Date(dueTime));
+    public void updateDueTime(Long domainId, Date dueTime) {
+        this.baseMapper.updateDueTime(domainId, dueTime);
     }
 
     @Resource
@@ -107,12 +107,11 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             String deviceNo = item.getString("deviceNo");
 
             DeviceMapping entity = deviceMappingService.getById(mappingId);
-            Bullet3Annotation annotation = websocketPool.getByTunnelId(entity.getServerTunnelId());
-            if (annotation != null) { // 发送控制消息关闭映射
-                JSONObject data = (JSONObject) JSON.toJSON(entity);
-                MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
-                annotation.sendMessage(deviceNo, msg);
-            }
+
+            JSONObject data = (JSONObject) JSON.toJSON(entity);
+            MsgUnMapping msg = new MsgUnMapping(data.toJSONString());
+            websocketPool.sendMessage(entity.getServerTunnelId(), deviceNo, msg);
+
             // 更新Mapping状态
             deviceMappingMapper.updateStatusById(mappingId, 0);
 
@@ -132,7 +131,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public Page<DomainBuyListVO> getBuyList(Page pageParams, DomainSearchParam params) {
         Page<DomainBuyListVO> page = this.baseMapper.selectBuyList(pageParams, params);
-        page.getRecords().forEach(item->{
+        page.getRecords().forEach(item -> {
             item.setTypeName(DomainTypeEnum.toName(item.getType()));
         });
         return page;
@@ -214,9 +213,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public boolean releaseById(ResourcePackage resourcePackageLevel1, Long domainId) {
+    public boolean releaseById(Long userId, ResourcePackage resourcePackageLevel1, Long domainId) {
         // 存在映射释放映射
-        deviceMappingMapper.removeByDomainId(domainId);
+        deviceMappingMapper.removeByDomainId(userId, domainId);
 
         // 如果该域名是VIP权益的，扣除使用权益数量
         return this.update(Wrappers.<Domain>lambdaUpdate()
@@ -229,7 +228,6 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
                 .set(Domain::getStatus, DomainStatusEnum.BUY.getStatus())
         );
     }
-
 
 
     @Resource
@@ -254,37 +252,42 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         SqlSession sqlSession = sqlSessionFactory.openSession();
         Map<String, Object> params = new HashMap<>(1);
         params.put("days", 2);
-        Cursor<DomainReleaseVO> cursor = sqlSession.selectCursor(DomainMapper.class.getName() + ".selectByDueDay", params);
-        Iterator<DomainReleaseVO> iter = cursor.iterator();
-        int count = 0;
-        while (iter.hasNext()) {
-            DomainReleaseVO domain = iter.next();
-            log.debug("user domain[{}] release", domain.getDomainFull());
-            Map<String, Object> param = new HashMap<>(3);
-            param.put("domain", domain.getDomainFull());
-            param.put("url", joggleProperties.getServerUrl() );
-            param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(),"yyyy-MM-dd HH:mm:ss"));
-            String subject = String.format("%s到期释放提醒", domain.getDomainFull());
-
-            this.releaseById(resourcePackageLevel1, domain.getId());
-            mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
-        }
+        Cursor<DomainReleaseVO> cursor = null;
         try {
-            cursor.close();
-        } catch (IOException e) {
-            log.error("", e);
+            cursor = sqlSession.selectCursor(DomainMapper.class.getName() + ".selectByDueDay", params);
+            Iterator<DomainReleaseVO> iter = cursor.iterator();
+            int count = 0;
+            while (iter.hasNext()) {
+                DomainReleaseVO domain = iter.next();
+                log.debug("user domain[{}] release", domain.getDomainFull());
+                Map<String, Object> param = new HashMap<>(3);
+                param.put("domain", domain.getDomainFull());
+                param.put("url", joggleProperties.getServerUrl());
+                param.put("dueTimeStr", DateFormatUtils.format(domain.getDueTime(), "yyyy-MM-dd HH:mm:ss"));
+                String subject = String.format("%s到期释放提醒", domain.getDomainFull());
+
+                this.releaseById(domain.getUserId(), resourcePackageLevel1, domain.getId());
+                mailService.send(domain.getUserEmail(), subject, param, "domain_release.htm");
+            }
+            log.debug("[资源到期释放] 结束 处理数据量：{}", count);
         } finally {
+            if (cursor != null) {
+                try {
+                    cursor.close();
+                }  catch (IOException e) {
+                    log.error("cursor.close() failed", e);
+                }
+            }
             sqlSession.close();
         }
 
-        log.debug("[资源到期释放] 结束 处理数据量：{}", count);
         return true;
     }
 
     @Override
     public Page<DomainListVO> getAdminList(Page pageInfo, DomainAdminParam params) {
         Page<DomainListVO> page = this.baseMapper.selectAdminList(pageInfo, params);
-        page.getRecords().forEach(item->{
+        page.getRecords().forEach(item -> {
             item.setStatusName(DomainStatusEnum.toName(item.getStatus()));
         });
         return page;
@@ -305,5 +308,15 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         return this.baseMapper.selectCount(Wrappers.<Domain>lambdaQuery()
                 .eq(Domain::getId, domainId)) > 0;
     }
+
+    @Override
+    public Domain getAvailableDomainByUserId(Integer serverTunnelId, Long userId, String portProtocol) {
+        int type = DomainTypeEnum.PORT.getType();
+        if(StringHttpUtils.isHttp(portProtocol)){
+            type = DomainTypeEnum.DOMAIN.getType();
+        }
+        return this.baseMapper.selectAvailableDomainByUserId(serverTunnelId, userId, type);
+    }
+
 
 }

@@ -3,7 +3,6 @@ package com.wuweibi.bullet; /**
  */
 
 import com.wuweibi.bullet.listener.CloseServerListener;
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,9 +17,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @SpringBootApplication
-@EnableAdminServer
 public class ServerApplication {
 
+    static {
+        // 强制使用IPv4（解决双栈环境问题）
+        System.setProperty("java.net.preferIPv4Stack", "true");
+    }
 
     /**
      * 程序入口
@@ -28,11 +30,14 @@ public class ServerApplication {
      * @throws Exception
      */
     public static void main(String[] args) {
+
+        // 启动参数
+        System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
         SpringApplication app = new SpringApplication(ServerApplication.class);
         app.addListeners(new CloseServerListener());
         app.run(args);
         System.out.println("======================================");
-        System.out.println("========  Bullet Server Started ==============");
+        System.out.println("========  Joggle Server Started ==============");
         System.out.println("======================================");
     }
 

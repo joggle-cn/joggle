@@ -13,6 +13,7 @@ import java.io.OutputStream;
  *
  * @author marker
  **/
+@MessageType(Message.GET_DEVICE_STATUS_RESP)
 public class MsgGetDeviceStatusResp extends Message {
 
     private JSONObject data;

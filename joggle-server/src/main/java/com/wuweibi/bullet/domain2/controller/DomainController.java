@@ -11,17 +11,18 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
-import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.domain.DomainBuyListVO;
 import com.wuweibi.bullet.domain2.domain.DomainSearchParam;
 import com.wuweibi.bullet.domain2.domain.vo.DomainDetailVO;
 import com.wuweibi.bullet.domain2.domain.vo.DomainOptionVO;
+import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.domain2.enums.DomainTypeEnum;
 import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
@@ -37,6 +38,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 我的域名接口
@@ -140,7 +142,8 @@ public class DomainController {
 
     @Resource
     private DeviceService deviceService;
-
+    @Resource
+    private DeviceMappingMapper deviceMappingMapper;
 
     /**
      * 域名绑定设备
@@ -170,7 +173,15 @@ public class DomainController {
         // 执行绑定
         Domain domainInfo = domainService.getById(domainId);
 
-        DeviceMapping mapping = new DeviceMapping();
+        // 查询用户的域名id是否存在 （包含删除记录）
+        DeviceMapping mapping = deviceMappingMapper.selectByUserAndDomainId(userId, domainId);
+        if (Objects.isNull(mapping)) {
+            mapping = new DeviceMapping();
+        } else {
+            deviceMappingMapper.recoveryId(mapping.getId());
+            mapping.setIsDel(false);
+        }
+
         mapping.setDomain(domainInfo.getDomain());
         mapping.setUserId(userId);
         mapping.setDeviceId(deviceId);
@@ -188,7 +199,8 @@ public class DomainController {
             mapping.setHost("127.0.0.1");
             mapping.setPort(80);
         }
-        deviceMappingService.save(mapping);
+        deviceMappingService.saveOrUpdate(mapping);
+
         return R.success(mapping.getId());
     }
 

@@ -44,12 +44,19 @@ public class Orders extends Model<Orders> {
     private BigDecimal refundMoney;
     @ApiModelProperty("退款数量")
     private Long refundAmount;
-    //支付方式 1余额 2支付宝
+    //支付方式 1余额 2支付宝 3微信 4 VIP权益
     private Integer payType;
     //订单状态 0待支付 1已支付 2 取消 3退款中 4已退款
     private Integer status;
     //三方交易号
     private String tradeNo;
+
+    /**
+     * 三方交易类型，
+     * 微信枚举值：JSAPI：公众号支付NATIVE：扫码支付APP：APP支付MICROPAY：付款码支付MWEB：H5支付FACEPAY：刷脸支付
+     * 支付宝：
+     */
+    private String tradeType;
     //支付时间
     private Date payTime;
     //退款时间
@@ -60,6 +67,8 @@ public class Orders extends Model<Orders> {
     private Date createTime;
     //更新时间
     private Date updateTime;
+    // 用户下单ip
+    private String userIp;
 
 }
 

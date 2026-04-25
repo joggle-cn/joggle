@@ -2,9 +2,6 @@ package com.wuweibi.bullet.system.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.qq.connect.QQConnectException;
-import com.qq.connect.api.qzone.UserInfo;
-import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.conn.WebsocketPool;
@@ -124,21 +121,21 @@ public class UserController {
             String accessToken = (String) session.getAttribute("demo_access_token");
             String openID = (String) session.getAttribute("demo_openid");
             if ("qq".equals(from)) {
-                UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
-                UserInfoBean userInfoBean;
-                try {
-                    userInfoBean = qzoneUserInfo.getUserInfo();
-                    if (userInfoBean.getRet() == 0) {
-//						user.setName(userInfoBean.getNickname());
-
-//						user.setOpenId(openID);
-                        return new ResultMessage(true, user);
-                    } else {
-                        return new ResultMessage(false, "很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
-                    }
-                } catch (QQConnectException e) {
-                    e.printStackTrace();
-                }
+//                UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
+//                UserInfoBean userInfoBean;
+//                try {
+//                    userInfoBean = qzoneUserInfo.getUserInfo();
+//                    if (userInfoBean.getRet() == 0) {
+////						user.setName(userInfoBean.getNickname());
+//
+////						user.setOpenId(openID);
+//                        return new ResultMessage(true, user);
+//                    } else {
+//                        return new ResultMessage(false, "很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
+//                    }
+//                } catch (QQConnectException e) {
+//                    e.printStackTrace();
+//                }
             }
 
         } else {

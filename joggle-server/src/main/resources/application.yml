@@ -15,18 +15,24 @@ server:
 
 
 management:
+  server:
+    port: ${MANAGEMENT_SERVER_PORT:8000}
   health:
     mail:
       enabled: false
   endpoints:
     web:
-      basePath: ${spring.boot.admin.context-path}/actuator
+#      basePath: ${spring.boot.admin.context-path}/actuator
       exposure:
         include: "*"
         exclude: "mail"
   endpoint:
     health:
       show-details: ALWAYS
+
+  trace:
+    http:
+      enabled: ${HTTP_TRACE_ENABLE:true}
 #  server:
 #    port: 8080
 #
@@ -52,29 +58,31 @@ spring:
     store-type: redis
     timeout: 86400
   ## spring-boot-admin 配置
-  boot:
-    admin:
-      ui:
-        resourceLocations:
-          - classpath*:META-INF/spring-boot-admin-server-ui/
-          - classpath:META-INF/spring-boot-admin-server-ui/
+#  boot:
+#    admin:
+#      ui:
+#        title: 'Joggle监控'
+#        brand: '<img src="assets/img/icon-spring-boot-admin.svg"><span>Joggle监控</span>'
+#        resourceLocations:
+#          - classpath*:META-INF/spring-boot-admin-server-ui/
+#          - classpath:META-INF/spring-boot-admin-server-ui/
 #        template-location: classpath:META-INF/spring-boot-admin-server-ui/
       #        publicUrl: https://admin.joggle.cn
       ## admin 服务端访问地址
-      context-path: /monitor
-      ## admin 客户端连接服务端
-      client:
-        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
-        instance:
-          prefer-ip: true
-        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
-#      instanceAuth:
-#        defaultUserName: client_manager
-#        defaultPassword: password
-      instanceProxy:
-        # 单体服务应用 确保能够传递jessionid
-        ignored-headers:
-          - "Set-Cookie"
+#      context-path: /monitor
+#      ## admin 客户端连接服务端
+#      client:
+#        # 为了显示客户端的ip否则是以主机名显示的，这样需要添加hosts影射。
+#        instance:
+#          prefer-ip: true
+#        url: http://127.0.0.1:${server.port}/${spring.boot.admin.context-path}
+##      instanceAuth:
+##        defaultUserName: client_manager
+##        defaultPassword: password
+#      instanceProxy:
+#        # 单体服务应用 确保能够传递jessionid
+#        ignored-headers:
+#          - "Set-Cookie"
 #          - "Cookie"
 #          - "Authorization"
   profiles:
@@ -94,7 +102,7 @@ spring:
     oauth2:
       jwt:
         signingKey: ${JOGGLE_SIGNNING_KEY:123456}
-      ignoreUrls:   /api/orders/alipay,/monitor/**
+      ignoreUrls:   /api/orders/alipay,/api/open/**,/monitor/**
 
   messages:
     basename: i18n/messages #相对路径 开头请勿添加斜杠
@@ -157,6 +165,14 @@ spring:
       - /js/**
       - /lib/**
       - /resource/**
+  # 分布式锁配置
+  dlock:
+    host: ${JOGGLE_REDIS_HOST:192.168.1.6}
+    port: ${JOGGLE_REDIS_PORT:6379}
+    password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
+    database : 1
+    waitTime : 60 #获取锁最长阻塞时间（默认：60，单位：秒）
+    leaseTime: 60 #已获取锁后自动释放时间（默认：60，单位：秒）
 
   # 数据库配置
   datasource:
@@ -240,15 +256,26 @@ joggle:
   # ngrokd: ${JOGGLE_NGROKD_HOME:/opt/ngrok}
   # 前端访问地址
   serverUrl: ${JOGGLE_SERVER_URL:https://www.joggle.cn}
+  ## joggle运行模式 （standalone:单用户模式、sass:多用户模式）
+  serverMode: ${JOGGLE_SERVER_MODE:sass}
   # 调用接口的Token
   adminApiToken: ${JOGGLE_API_TOKEN:123456}
   aliAppcode: ${ALI_MARKET_APPCODE:xxxxx}
   alipay:
-    appId: ${ALIPAY_MERCHANT_APPID:2021000121630337}
+    appId: ${ALIPAY_MERCHANT_APPID:9021000141609472}
     privateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY}
     alipayPublicKey: ${ALIPAY_PUBLIC_KEY}
     notifyUrl: ${ALIPAY_NOTIFY_URL:https://pay.joggle.cn/api/open/orders/alipay/callback}
     returnUrl: ${joggle.serverUrl}${ALIPAY_RETURN_URL}
+  # 微信支付配置
+  wechatpay:
+    enable: ${WECHAT_PAY_ENABLE:false}
+    appId: ${WECHAT_PAY_APP_ID:xxx}
+    merchantId: ${WECHAT_PAY_MERCHANT_ID:xxx}
+    privateKey: ${WECHAT_PAY_PRIVATE_KEY:xxx}
+    merchantSerialNumber: ${WECHAT_PAY_MERCHANT_SN:xxx}
+    apiV3key: ${WECHAT_PAY_API3_KEY:xxx}
+    notifyUrl: ${WECHAT_PAY_NOTIFY_URL:https://xxx.xxx.cn/api/open/orders/wechatpay/callback}
   # oss 配置
   ali-oss:
     publicServerUrl: ${ALI_OSS_PUBLIC_URL:https://www.joggle.cn}
@@ -264,6 +291,5 @@ joggle:
 weixin:
   appId: wxc8e74d5165c333e6
   appSecret: a33692209929308c336b167ba226785a
-
 
 

@@ -1,4 +1,4 @@
-package com.wuweibi.bullet.res.manager;
+package com.wuweibi.bullet.protocol.consts;
 
 public enum UserPackageLimitEnum {
 

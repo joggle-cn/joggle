@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
  **/
 
 @Data
+@MessageType(Message.DEVICE_DOOR)
 public class MsgDeviceDoor extends Message {
 
     /**

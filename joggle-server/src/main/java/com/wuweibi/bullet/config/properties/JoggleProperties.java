@@ -3,6 +3,7 @@ package com.wuweibi.bullet.config.properties;
  * Created by marker on 2018/7/5.
  */
 
+import com.wuweibi.bullet.enums.ServerModeEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,11 @@ public class JoggleProperties {
     private String serverUrl;
 
     /**
+     * joggle运行模式 （standalone:单用户模式、sass:多用户模式）
+     */
+    private ServerModeEnum serverMode;
+
+    /**
      * 调用接口的Token
      */
     private String adminApiToken;
@@ -39,5 +45,6 @@ public class JoggleProperties {
      * 阿里云市场实名认证appcode
      */
     private String aliAppcode;
+
 
 }

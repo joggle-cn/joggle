@@ -8,7 +8,7 @@ import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.entity.Device;
-import com.wuweibi.bullet.domain.dto.DeviceDto;
+import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 
 import java.util.List;
@@ -114,7 +114,7 @@ public interface DeviceService extends IService<Device> {
      */
     Boolean removeUserIdByDeviceNo(String deviceNo);
 
-    List<DeviceDto> getWebListByUserId(Long userId);
+    List<DeviceDTO> getWebListByUserId(Long userId);
 
     /**
      * 设备详情
@@ -138,9 +138,11 @@ public interface DeviceService extends IService<Device> {
 
     /**
      * 用户绑定设备
-     * @param userId 用户id
-     * @param deviceNo 设备编号
+     *
+     * @param userId         用户id
+     * @param deviceNo       设备编号
+     * @param serverTunnelId
      * @return
      */
-    Device bindDevice(Long userId, String deviceNo);
+    Device bindDevice(Long userId, String deviceNo, Integer serverTunnelId);
 }

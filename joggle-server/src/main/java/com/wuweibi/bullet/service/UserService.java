@@ -101,11 +101,13 @@ public interface UserService extends IService<User> {
 
     /**
      * 更新认证 状态
+     *
      * @param userId 用户id
-     * @param state 状态
+     * @param state  状态
+     * @param phone
      * @return
      */
-    boolean updateUserCertification(Long userId, Integer state);
+    boolean updateUserCertification(Long userId, Integer state, String phone);
 
 
     /**
@@ -127,5 +129,21 @@ public interface UserService extends IService<User> {
      */
     boolean updateSystemNotice(Long userId, Integer status);
 
+
+    /**
+     * 根据用户id查询用户信息
+     * @param userId 用户id
+     * @return
+     */
     User getByUserId(Long userId);
+
+    /**
+     * 更新用户的手机
+     * @param userId 用户id
+     * @param phone 手机号
+     * @return
+     */
+    boolean updatePhone(Long userId, String phone);
+
+
 }
