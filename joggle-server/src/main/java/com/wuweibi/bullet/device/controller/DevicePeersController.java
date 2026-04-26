@@ -9,6 +9,7 @@ import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
+import com.wuweibi.bullet.device.domain.dto.DevicePeersStatusDTO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
@@ -206,6 +207,40 @@ public class DevicePeersController {
         devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
 
 
+        return R.ok();
+    }
+
+    /**
+     * P2P端到端设置状态
+     *
+     * @param dto 实体对象
+     * @return 修改结果
+     */
+    @ApiOperation("P2P端到端设置状态")
+    @PutMapping("/status")
+    @Transactional
+    public R<Boolean> updateStatus(@RequestBody @Valid DevicePeersStatusDTO dto) {
+        Long userId = SecurityUtils.getUserId();
+        if (dto.getId() == null) {
+            return R.fail("id不能为空");
+        }
+
+        DevicePeers entity = devicePeersService.getById(dto.getId());
+        if (entity == null) {
+            return R.fail("数据不存在");
+        }
+        if (!entity.getUserId().equals(userId)) {
+            return R.fail("数据不存在");
+        }
+        BeanUtils.copyProperties(dto, entity);
+        entity.setUserId(userId);
+        entity.setUpdateTime(new Date());
+        this.devicePeersService.updateById(entity);
+
+        DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
+
+        // 发送peer消息
+        devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
         return R.ok();
     }
 

@@ -10,7 +10,6 @@ import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
-import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
@@ -18,6 +17,7 @@ import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
 import com.wuweibi.bullet.device.domain.param.DeviceBindParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceInfoVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.entity.Device;
@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_FLOW_TODAY;
 import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_LINK_TODAY;
-import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
  * 设备：提供设备的管理功能，能够对设备绑定、查询、设备解绑、设备信息更新等功能。
@@ -250,13 +249,12 @@ public class DeviceController {
      * @return
      */
     @GetMapping(value = "/info")
-    public R deviceInfo(@RequestParam Long deviceId) {
+    public R<DeviceInfoVO> deviceInfo(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
         if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
 
-        MapBuilder mapBuilder = newMap(3);
         // 设备信息
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
         if (deviceInfo == null) {
@@ -319,21 +317,20 @@ public class DeviceController {
         // 端到端
         List<DevicePeersVO> p2plist = devicePeersService.getListByServerDeviceId(deviceId);
 
-        mapBuilder
-                .setParam("deviceInfo", deviceInfo);
-        mapBuilder.setParam("features", newMap(4)
-                .setParam("domainCount", domainList.size())
-                .setParam("portCount", portList.size())
-                .setParam("p2pCount", p2plist.size())
-                .build());
+        // 组装响应对象
+        DeviceInfoVO vo = new DeviceInfoVO();
+        vo.setDeviceInfo(deviceInfo);
+        vo.setPortList(portList);
+        vo.setDomainList(domainList);
+        vo.setP2pList(p2plist);
 
-        // 端口
-        mapBuilder.setParam("portList", portList);
-        // 域名
-        mapBuilder.setParam("domainList", domainList);
-        mapBuilder.setParam("p2pList", p2plist);
+        DeviceInfoVO.Features features = new DeviceInfoVO.Features();
+        features.setDomainCount(domainList.size());
+        features.setPortCount(portList.size());
+        features.setP2pCount(p2plist.size());
+        vo.setFeatures(features);
 
-        return R.ok(mapBuilder.build());
+        return R.ok(vo);
     }
     @Resource
     private DevicePeersService devicePeersService;
