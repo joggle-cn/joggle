@@ -186,18 +186,19 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public Device bindDevice(Long userId, String deviceNo, Integer serverTunnelId) {
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         // 获取设备信息
-        Device device = deviceService.getByDeviceNo(deviceNo);
-        if (device!= null && device.getUserId() != null) {
+        Device deviceOld = deviceService.getByDeviceNo(deviceNo);
+        if (deviceOld!= null && deviceOld.getUserId() != null) {
             throw new RException(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
         // 给当前用户存储最新的设备数据
-        device = new Device();
+        Device device = new Device();
+        device.setId(deviceOld.getId());
+        device.setName(deviceNo);
         device.setDeviceNo(deviceNo);
         device.setServerTunnelId(serverTunnelId);
         device.setUserId(userId);
         device.setCreateTime(new Date());
-        device.setName(deviceNo);
 
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceNo.getBytes(), null, "");

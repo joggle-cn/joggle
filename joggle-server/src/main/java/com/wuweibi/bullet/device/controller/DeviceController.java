@@ -16,6 +16,7 @@ import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.domain.param.DeviceBindParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
@@ -190,12 +191,12 @@ public class DeviceController {
      * @return
      */
     @ApiOperation("绑定设备")
-    @RequestMapping(value = "/validate", method = RequestMethod.GET)
+    @RequestMapping(value = "/validate", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public R validate(String deviceId, HttpServletRequest request) {
+    public R validate(@RequestBody DeviceBindParam param, HttpServletRequest request) {
         Long userId = SecurityUtils.getUserId();
-        String deviceNo = deviceId;
+        String deviceNo = param.getDeviceNo();
         // 没有输入设备ID
         if (StringUtil.isBlank(deviceNo)) {
             return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
