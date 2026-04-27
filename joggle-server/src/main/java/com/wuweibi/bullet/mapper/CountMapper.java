@@ -66,5 +66,5 @@ public interface CountMapper extends BaseMapper {
      * @param endDate 结束时间 yyyy-MM-dd
      * @return
      */
-    List<DataMetricsHour> selectAllFlowTrendHourStream(@Param("userId") Long userId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<DataMetricsHour> selectAllFlowTrendHourStream(@Param("userId") Long userId, @Param("deviceId") Long deviceId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

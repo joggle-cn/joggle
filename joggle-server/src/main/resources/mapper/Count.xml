@@ -145,6 +145,9 @@
          <if test="userId!= null">
             and dmh.user_id = #{userId}
          </if>
+         <if test="deviceId!= null">
+            and dmh.device_id = #{deviceId}
+         </if>
         ORDER BY a.create_date desc
     </select>
 </mapper>

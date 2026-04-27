@@ -62,4 +62,13 @@ public interface CountService {
      * @return
      */
     List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour);
+
+    /**
+     * 用户设备近24小时流量趋势
+     * @param userId 用户id
+     * @param deviceId 设备id
+     * @param hour 小时数
+     * @return
+     */
+    List<DeviceDateItemHourVO> getUserDeviceTrendHour(Long userId, Long deviceId, int hour);
 }

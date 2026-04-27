@@ -167,7 +167,7 @@ public class CountServiceImpl implements CountService {
         String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
 
         // TODO  使用游标查询  改 流式查询
-       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, startDate, endDate).stream()
+       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, null, startDate, endDate).stream()
                 .flatMap(dataMetricsHour -> {
                     String date = DateUtil.format(dataMetricsHour.getCreateDate(), "yyyy-MM-dd");
                     LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());
@@ -197,7 +197,7 @@ public class CountServiceImpl implements CountService {
                             flowIn = itemData.getBigDecimal("in");
                             flowOut = itemData.getBigDecimal("out");
                         }
-                        DataItem dataItem = new DataItem(time, link, flowIn, flowOut);
+                        DataItem dataItem = new DataItem(time, link, flowIn.divide(BigDecimal.valueOf(1024*1024)), flowOut.divide(BigDecimal.valueOf(1024*1024)));
                         list.add(dataItem);
                     }
                     // 处理用户数据，例如转换或过滤
@@ -219,6 +219,67 @@ public class CountServiceImpl implements CountService {
         }).sorted((o1,o2)->{
             long a = DateUtil.parse(o1.getTime(), "yyyy-MM-dd HH").getTime();
             long b = DateUtil.parse(o2.getTime(), "yyyy-MM-dd HH").getTime();
+            return CompareUtil.compare(a,b) ;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<DeviceDateItemHourVO> getUserDeviceTrendHour(Long userId, Long deviceId, int hour) {
+        LocalDateTime endLocalDate = LocalDateTime.now().plusHours(-1);
+        String endDate = DateUtil.format(endLocalDate, "yyyy-MM-dd");
+        LocalDateTime startLocalDate = endLocalDate.plusHours(-hour);
+        String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
+
+        Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, deviceId, startDate, endDate).stream()
+                .flatMap(dataMetricsHour -> {
+                    String date = DateUtil.format(dataMetricsHour.getCreateDate(), "MM-dd");
+                    LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());
+                    JSONObject data = (JSONObject) JSON.toJSON(dataMetricsHour);
+                    List<DataItem> list = new ArrayList<>(hour);
+                    for (int i = 0; i < 24; i++) {
+                        LocalDateTime indexLocalDateTime = dataLocalDateTime.withHour(i);
+                        if (endLocalDate.compareTo(indexLocalDateTime) < 0) {
+                            continue;
+                        }
+                        if (startLocalDate.compareTo(indexLocalDateTime) > 0) {
+                            continue;
+                        }
+
+                        String key = String.format("%02d", i);
+                        String val = data.getString(String.format("h%s", key));
+                        String time = String.format("%s %s", date, key);
+
+                        BigDecimal link = BigDecimal.ZERO;
+                        BigDecimal flowIn = BigDecimal.ZERO;
+                        BigDecimal flowOut = BigDecimal.ZERO;
+                        if (Objects.nonNull(val)) {
+                            JSONObject itemData = new JSONObject(parse(val));
+                            link = itemData.getBigDecimal("link");
+                            flowIn = itemData.getBigDecimal("in");
+                            flowOut = itemData.getBigDecimal("out");
+                        }
+                        DataItem dataItem = new DataItem(time, link, flowIn, flowOut);
+                        list.add(dataItem);
+                    }
+                    return Stream.of(list.toArray(new DataItem[]{}));
+                }).collect(Collectors.groupingBy(DataItem::getTime,
+                       Collectors.reducing(CountServiceImpl::mergeFlow)
+               ));
+
+
+        return userList.values().stream().map(dataItemOptional->{
+            DataItem item = dataItemOptional.get();
+            DeviceDateItemHourVO deviceDateItemVO = new DeviceDateItemHourVO();
+            deviceDateItemVO.setTime(item.getTime());
+            deviceDateItemVO.setFlowIn(item.getFlowIn());
+            deviceDateItemVO.setFlowOut(item.getFlowOut());
+            deviceDateItemVO.setLink(item.getLink());
+            deviceDateItemVO.setFlow(item.getFlowIn().add(item.getFlowOut()));
+            return deviceDateItemVO;
+        }).sorted((o1,o2)->{
+            long a = DateUtil.parse(o1.getTime(), "MM-dd HH").getTime();
+            long b = DateUtil.parse(o2.getTime(), "MM-dd HH").getTime();
             return CompareUtil.compare(a,b) ;
         }).collect(Collectors.toList());
     }

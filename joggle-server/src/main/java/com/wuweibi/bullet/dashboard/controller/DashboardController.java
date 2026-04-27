@@ -95,6 +95,21 @@ public class DashboardController {
     }
 
 
+    /**
+     * 用户设备近24小时流量趋势
+     * @return
+     */
+    @ApiOperation("用户设备近24小时流量趋势")
+    @GetMapping("/device/flow/trend/hour")
+    public R<List<DeviceDateItemHourVO>> getDeviceHourFlowTrend(
+            @RequestParam("deviceId") Long deviceId,
+            @JwtUser Session session){
+        int hour = 24;
+        List<DeviceDateItemHourVO> list = countService.getUserDeviceTrendHour(session.getUserId(), deviceId, hour);
+        return R.success(list);
+    }
+
+
 
 
 }
