@@ -193,7 +193,9 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
         // 给当前用户存储最新的设备数据
         Device device = new Device();
-        device.setId(deviceOld.getId());
+        if (deviceOld != null) {
+            device.setId(deviceOld.getId());
+        }
         device.setName(deviceNo);
         device.setDeviceNo(deviceNo);
         device.setServerTunnelId(serverTunnelId);
