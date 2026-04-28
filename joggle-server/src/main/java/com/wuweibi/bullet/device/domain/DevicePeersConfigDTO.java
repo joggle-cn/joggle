@@ -82,6 +82,9 @@ public class DevicePeersConfigDTO {
     private String clientProxyHost;
 
 
+    @ApiModelProperty("映射别名")
+    private String name;
+
     @ApiModelProperty("备注")
     private String remark;
 

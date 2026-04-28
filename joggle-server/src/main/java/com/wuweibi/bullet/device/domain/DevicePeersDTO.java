@@ -57,6 +57,9 @@ public class DevicePeersDTO {
     @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
  	private String clientProxyHost = "127.0.0.1";
 
+    @ApiModelProperty("映射别名")
+    private String name;
+
     @ApiModelProperty("备注")
     private String remark;
 

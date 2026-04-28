@@ -32,7 +32,10 @@ public class DevicePeers {
  	private Long userId;
 
     @ApiModelProperty("p2p应用名称")
- 	private String appName;
+  	private String appName;
+
+    @ApiModelProperty("映射别名")
+    private String name;
     
     /**
      * 服务侧设备id
