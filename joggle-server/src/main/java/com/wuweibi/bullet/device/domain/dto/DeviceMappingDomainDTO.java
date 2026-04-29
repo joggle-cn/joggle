@@ -1,0 +1,32 @@
+package com.wuweibi.bullet.device.domain.dto;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ *  设备域名映射
+ * @author marker
+ * @date 2022/11/21 16:45
+ */
+@Data
+public class DeviceMappingDomainDTO {
+
+    private Long id;
+    /** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
+    @ApiModelProperty(value = "协议 1 HTTP 3HTTPS 4 HTTP/HTTPS")
+    private Integer protocol;
+
+    @ApiModelProperty(value = "域名")
+    private String hostname;
+    @ApiModelProperty(value = "端口")
+    private Integer port;
+
+    private Long userDomainId;
+    private Long domainId;
+
+    private Integer status;
+    /** 备注 */
+    @ApiModelProperty(value = "备注")
+    private String description;
+
+}

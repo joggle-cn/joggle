@@ -9,10 +9,11 @@ import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingDomainDTO;
+import com.wuweibi.bullet.device.domain.dto.DeviceMappingPortDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingProtocol;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
-import com.wuweibi.bullet.domain.message.MessageFactory;
 import com.wuweibi.bullet.domain2.entity.UserDomain;
 import com.wuweibi.bullet.domain2.mapper.DomainMapper;
 import com.wuweibi.bullet.domain2.service.UserDomainService;
@@ -69,7 +70,7 @@ public class DeviceMappingController {
      */
     @ApiOperation("删除映射")
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public Object delete(@RequestBody @Valid DeviceMappingDelDTO dto){
+    public R delete(@RequestBody @Valid DeviceMappingDelDTO dto){
         Long userId = SecurityUtils.getUserId();
         Long dmId = dto.getId();
         // 验证设备映射是自己的
@@ -89,7 +90,7 @@ public class DeviceMappingController {
             coonPool.sendMessage(serverTunnelId, deviceNo, msg);
 
         }
-        return MessageFactory.getOperationSuccess();
+        return R.success();
     }
 
     /**
@@ -128,6 +129,7 @@ public class DeviceMappingController {
      * @return
      */
     @ApiOperation("更新映射信息")
+    @Deprecated
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public R save(DeviceMapping deviceMapping ){
         Long userId = SecurityUtils.getUserId();
@@ -157,6 +159,51 @@ public class DeviceMappingController {
         entity.setStatus(deviceMapping.getStatus());
         entity.setUserDomainId(deviceMapping.getUserDomainId());
 
+        return saveOrUpdateMapping(userId, entity);
+    }
+
+    @ApiOperation("保存并更新域名映射")
+    @RequestMapping(value = "/domain", method = RequestMethod.POST)
+    public R saveDomain(@RequestBody @Valid DeviceMappingDomainDTO dto){
+        Long userId = SecurityUtils.getUserId();
+
+        DeviceMapping entity = deviceMappingService.getById(dto.getId());
+        if (Objects.isNull(entity)) {
+            return R.fail("映射不存在");
+        }
+
+        entity.setProtocol(dto.getProtocol());
+        entity.setPort(dto.getPort());
+        entity.setHostname(dto.getHostname());
+        entity.setUserDomainId(dto.getUserDomainId());
+        entity.setDomainId(dto.getDomainId());
+        entity.setStatus(dto.getStatus());
+        entity.setDescription(dto.getDescription());
+
+        return saveOrUpdateMapping(userId, entity);
+    }
+
+    @ApiOperation("保存并更新端口映射")
+    @RequestMapping(value = "/port", method = RequestMethod.POST)
+    public R savePort(@RequestBody @Valid DeviceMappingPortDTO dto){
+        Long userId = SecurityUtils.getUserId();
+
+        DeviceMapping entity = deviceMappingService.getById(dto.getId());
+        if (Objects.isNull(entity)) {
+            return R.fail("映射不存在");
+        }
+
+        entity.setProtocol(dto.getProtocol());
+        entity.setHostname(dto.getHost());
+        entity.setPort(dto.getPort());
+//        entity.setRemotePort(dto.getRemotePort()); 不能修改
+        entity.setStatus(dto.getStatus());
+        entity.setDescription(dto.getDescription());
+
+        return saveOrUpdateMapping(userId, entity);
+    }
+
+    private R saveOrUpdateMapping(Long userId, DeviceMapping entity) {
         // 验证设备映射是自己的
         if(!deviceMappingService.exists(userId, entity.getId())){
             return R.fail(SystemErrorType.DOMAIN_IS_OTHER_BIND);

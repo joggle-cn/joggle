@@ -72,7 +72,7 @@ public class DevicePeersController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @ApiOperation("端到端映射详情")
     @GetMapping("/detail")
     public R<DevicePeers> detail(@RequestParam Serializable id) {
         DevicePeers entity = this.devicePeersService.getById(id);
