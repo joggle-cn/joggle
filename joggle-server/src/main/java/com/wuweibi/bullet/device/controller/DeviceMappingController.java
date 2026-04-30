@@ -174,11 +174,12 @@ public class DeviceMappingController {
 
         entity.setProtocol(dto.getProtocol());
         entity.setPort(dto.getPort());
-        entity.setHostname(dto.getHostname());
+        entity.setHost(dto.getHost());
         entity.setUserDomainId(dto.getUserDomainId());
         entity.setDomainId(dto.getDomainId());
         entity.setStatus(dto.getStatus());
         entity.setDescription(dto.getDescription());
+        entity.setName(dto.getName());
 
         return saveOrUpdateMapping(userId, entity);
     }
@@ -194,11 +195,12 @@ public class DeviceMappingController {
         }
 
         entity.setProtocol(dto.getProtocol());
-        entity.setHostname(dto.getHost());
+        entity.setHost(dto.getHost());
         entity.setPort(dto.getPort());
 //        entity.setRemotePort(dto.getRemotePort()); 不能修改
         entity.setStatus(dto.getStatus());
         entity.setDescription(dto.getDescription());
+        entity.setName(dto.getName());
 
         return saveOrUpdateMapping(userId, entity);
     }

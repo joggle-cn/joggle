@@ -85,6 +85,9 @@ public class UserDetailVO extends Model<UserDetailVO> {
 	@ApiModelProperty("套餐剩余流量")
 	private Long userPackageFlow;
 
+	@ApiModelProperty("套餐总流量")
+	private Long userPackageFlowTotal;
+
 
 	@ApiModelProperty("套餐结束时间")
 	private Date packageEndTime;

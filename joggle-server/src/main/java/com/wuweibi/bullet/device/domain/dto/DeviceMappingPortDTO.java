@@ -11,10 +11,13 @@ public class DeviceMappingPortDTO {
     @ApiModelProperty(value = "协议 2 TCP 5 UDP")
     private Integer protocol;
 
-    @ApiModelProperty(value = "主机HOST")
+    @ApiModelProperty(value = "映射名称")
+    private String name;
+
+    @ApiModelProperty(value = "目标地址IP")
     private String host;
 
-    @ApiModelProperty(value = "端口")
+    @ApiModelProperty(value = "目标地址端口")
     private Integer port;
 
     private Integer status;

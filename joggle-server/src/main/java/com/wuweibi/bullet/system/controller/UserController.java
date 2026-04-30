@@ -98,6 +98,7 @@ public class UserController {
         result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
         result.put("userFlow", userFlow.getFlow()/1024); //MB
         result.put("userPackageFlow", user.getUserPackageFlow()/1024); //MB
+        result.put("userPackageFlowTotal", user.getUserPackageFlow()/1024); //MB
         result.put("userCertification", user.getUserCertification());
         result.put("systemNotice", user.getSystemNotice());
 

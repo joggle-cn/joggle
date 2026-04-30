@@ -16,12 +16,17 @@ public class DeviceMappingDomainDTO {
     @ApiModelProperty(value = "协议 1 HTTP 3HTTPS 4 HTTP/HTTPS")
     private Integer protocol;
 
-    @ApiModelProperty(value = "域名")
-    private String hostname;
-    @ApiModelProperty(value = "端口")
+    @ApiModelProperty(value = "目标地址IP")
+    private String host;
+
+    @ApiModelProperty(value = "映射名称")
+    private String name;
+
+    @ApiModelProperty(value = "目标地址端口")
     private Integer port;
 
     private Long userDomainId;
+
     private Long domainId;
 
     private Integer status;
