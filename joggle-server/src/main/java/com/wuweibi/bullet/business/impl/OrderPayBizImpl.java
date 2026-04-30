@@ -317,7 +317,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 break;
             case 3: // 流量
                 long flow = orders.getAmount() * 1024 * 1024;
-                userFlowService.updateFLow(orders.getUserId(), flow);
+                userFlowService.purchaseFlow(orders.getUserId(), flow);
                 break;
 
             case 5: // 套餐

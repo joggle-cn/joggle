@@ -26,6 +26,7 @@ public class UserFlowServiceImpl extends ServiceImpl<UserFlowMapper, UserFlow> i
                 entity =  new UserFlow();
                 entity.setUserId(userId);
                 entity.setFlow(0L);
+                entity.setFlowTotal(0L);
                 entity.setUpdatedTime(new Date());
                 this.baseMapper.insert(entity);
             }
@@ -40,6 +41,22 @@ public class UserFlowServiceImpl extends ServiceImpl<UserFlowMapper, UserFlow> i
             status = this.baseMapper.updateFlow(userId, bytes);
         }
         return status;
+    }
+
+    @Override
+    public boolean purchaseFlow(Long userId, Long bytes) {
+        synchronized (userId) {
+            UserFlow userFlow = this.baseMapper.selectById(userId);
+            if (userFlow == null) {
+                userFlow = new UserFlow();
+                userFlow.setUserId(userId);
+                userFlow.setFlow(0L);
+                userFlow.setFlowTotal(0L);
+                userFlow.setUpdatedTime(new Date());
+                this.baseMapper.insert(userFlow);
+            }
+            return this.baseMapper.updateFlowTotal(userId, bytes);
+        }
     }
 
     @Override

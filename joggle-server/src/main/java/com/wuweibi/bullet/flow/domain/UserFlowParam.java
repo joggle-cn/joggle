@@ -26,6 +26,12 @@ public class UserFlowParam {
  	private Long flow;
 
     /**
+     * 累计充值流量 kb
+     */
+    @ApiModelProperty("累计充值流量 kb")
+ 	private Long flowTotal;
+
+    /**
      * 更新时间
      */
     @ApiModelProperty("更新时间")

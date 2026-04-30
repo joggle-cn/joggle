@@ -28,6 +28,14 @@ public interface UserFlowService extends IService<UserFlow> {
     boolean updateFLow(Long userId, Long bytes);
 
     /**
+     * 购买流量，根据当前flow值决定flow_total的累加或重置
+     * @param userId 用户Id
+     * @param bytes 购买的流量 kb
+     * @return
+     */
+    boolean purchaseFlow(Long userId, Long bytes);
+
+    /**
      * 判断是否有流量
      * @param userId 用户Id
      * @return
