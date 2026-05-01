@@ -259,7 +259,7 @@ public class CountServiceImpl implements CountService {
                             flowIn = itemData.getBigDecimal("in");
                             flowOut = itemData.getBigDecimal("out");
                         }
-                        DataItem dataItem = new DataItem(time, link, flowIn, flowOut);
+                        DataItem dataItem = new DataItem(time, link, flowIn.divide(BigDecimal.valueOf(1024)), flowOut.divide(BigDecimal.valueOf(1024)));
                         list.add(dataItem);
                     }
                     return Stream.of(list.toArray(new DataItem[]{}));
