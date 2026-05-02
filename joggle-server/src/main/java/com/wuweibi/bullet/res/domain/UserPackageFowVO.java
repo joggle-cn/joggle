@@ -9,7 +9,10 @@ import java.util.Date;
 public class UserPackageFowVO {
 
     private Long userId;
+    @ApiModelProperty("套餐剩余流量KB")
     private String flow;
+    @ApiModelProperty("套餐总流量KB")
+    private Long flowTotal;
     private String name;
     private String userEmail;
     private Integer resourcePackageId;

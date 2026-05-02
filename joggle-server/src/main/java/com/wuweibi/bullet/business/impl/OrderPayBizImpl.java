@@ -216,10 +216,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (userPackage != null && userPackage.getLevel() > resourcePackage.getLevel()) {
                     return R.fail("请重新选择套餐，原因不支持降级。");
                 }
-                if (resourcePackage.getId() != userPackage.getResourcePackageId() && userPackage.getLevel() != 0) {
+                if (userPackage != null && resourcePackage.getId() != userPackage.getResourcePackageId() && userPackage.getLevel() != 0) {
                     return R.fail("暂不支持切换购买套餐,敬请期待！");
                 }
-                if (userPackage.getEndTime() == null) {
+                if (userPackage != null && userPackage.getEndTime() == null) {
                     userPackage.setEndTime(new Date());
                 }
 

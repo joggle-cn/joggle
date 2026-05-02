@@ -82,10 +82,10 @@ public class UserDetailVO extends Model<UserDetailVO> {
 	@ApiModelProperty("套餐等级")
 	private Integer resourcePackageLevel;
 
-	@ApiModelProperty("套餐剩余流量")
+	@ApiModelProperty("套餐剩余流量KB")
 	private Long userPackageFlow;
 
-	@ApiModelProperty("套餐总流量")
+	@ApiModelProperty("套餐总流量KB")
 	private Long userPackageFlowTotal;
 
 

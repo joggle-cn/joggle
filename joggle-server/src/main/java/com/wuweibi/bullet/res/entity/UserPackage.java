@@ -79,7 +79,12 @@ public class UserPackage {
      */
     @ApiModelProperty("kb 流量")
  	private Long flowUse;
+
+    @ApiModelProperty("套餐剩余流量KB")
  	private Long flow;
+
+    @ApiModelProperty("套餐总流量KB")
+ 	private Long flowTotal;
 
     /**
      * 设备数量

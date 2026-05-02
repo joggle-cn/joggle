@@ -109,7 +109,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
 
         UserPackage userPackage = userPackageService.getByUserId(userId);
         boolean isInsert = false;
-        if (userPackage == null) {
+        if (userPackage == null) {// 用户没有开通过套餐（注册后首次用）
             userPackage = new UserPackage();
             userPackage.setUserId(userId);
             userPackage.setLevel(resourcePackage.getLevel());
@@ -119,11 +119,13 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setBroadbandRate(resourcePackage.getBroadbandRate());
             userPackage.setWolEnable(resourcePackage.getWolEnable());
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
+            userPackage.setCreateTime(new Date());
             userPackage.setStartTime(new Date());
             isInsert = true;
 
             ResourcePackage resourcePackageLevel0 = resourcePackageService.getByLevel(0);
             userPackage.setFlow(resourcePackageLevel0.getFlowNum());
+            userPackage.setFlowTotal(resourcePackageLevel0.getFlowNum());
         } else {
             if (userPackage.getLevel() > resourcePackage.getLevel()) {
                 return R.fail("套餐升级失败，原因不支持降级。");
@@ -138,6 +140,8 @@ public class UserPackageManagerImpl implements UserPackageManager {
             userPackage.setBroadbandRate(resourcePackage.getBroadbandRate());
             userPackage.setWolEnable(resourcePackage.getWolEnable());
             userPackage.setProxyEnable(resourcePackage.getProxyEnable());
+            userPackage.setFlowTotal(resourcePackage.getFlowNum());
+            userPackage.setFlow(resourcePackage.getFlowNum());
         }
 
         if (userPackage.getEndTime() == null) {
@@ -181,7 +185,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
         while (iter.hasNext()) {
             UserPackageExpireVO userPackage = iter.next();
             log.info("user[{}] package[{}] expireFree", userPackage.getUserId(), userPackage.getResourcePackageId());
-            Map<String, Object> param = new HashMap<>(3);
+            Map<String, Object> param = new HashMap<>(4);
             param.put("packageName", userPackage.getName());
             param.put("url", joggleProperties.getServerUrl());
             param.put("dueTimeStr", DateFormatUtils.format(userPackage.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -215,7 +219,7 @@ public class UserPackageManagerImpl implements UserPackageManager {
             UserPackageFowVO userPackage = iter.next();
             log.info("user[{}] package[{}] reset flow", userPackage.getUserId(), userPackage.getResourcePackageId());
 
-            this.userPackageService.updateRestFLow(userPackage.getUserId(), userPackage.getResourcePackageFlow());
+            this.userPackageService.updateRestFLow(userPackage.getUserId(), userPackage.getFlowTotal());
 
             Map<String, Object> param = new HashMap<>(4);
             param.put("packageName", userPackage.getName());
