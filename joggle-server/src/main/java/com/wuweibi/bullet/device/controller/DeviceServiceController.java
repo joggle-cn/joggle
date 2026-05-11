@@ -35,6 +35,9 @@ import com.wuweibi.bullet.protocol.Message;
 import com.wuweibi.bullet.protocol.MsgDeviceScan;
 import com.wuweibi.bullet.protocol.MsgMapping;
 import com.wuweibi.bullet.protocol.MsgUnMapping;
+import com.wuweibi.bullet.protocol.consts.ProtocolType;
+import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
@@ -242,6 +245,59 @@ public class DeviceServiceController {
     }
 
     /**
+     * 解除绑定公网域名（仅映射关闭状态下可执行）
+     */
+    @ApiOperation("解除绑定公网域名")
+    @PostMapping("/unbind_domain")
+    public R unbindDomain(@JwtUser Session session, @RequestBody @Valid DeviceServiceStatusDTO dto) {
+        Long mappingId = dto.getServiceId();
+        Long userId = session.getUserId();
+        DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
+        if (Objects.isNull(deviceMapping)) {
+            return R.fail("设备服务不存在");
+        }
+        if (!userId.equals(deviceMapping.getUserId())) {
+            return R.fail("设备服务不属于您");
+        }
+        if (deviceMapping.getStatus() != 0) {
+            return R.fail("请先关闭映射再解除域名绑定");
+        }
+        if (deviceMapping.getDomainId() == null) {
+            return R.fail("该映射未绑定公网域名");
+        }
+
+        // 释放套餐使用次数
+        UserPackageLimitEnum limitEnum = ProtocolType.toPackageEnum(deviceMapping.getProtocol());
+        if (limitEnum != null) {
+            userPackageManager.usePackageAdd(userId, limitEnum, -1);
+        }
+
+        // 清除域名绑定
+        deviceMappingService.lambdaUpdate()
+                .eq(DeviceMapping::getId, mappingId)
+                .set(DeviceMapping::getDomainId, null)
+                .set(DeviceMapping::getDomain, null)
+                .set(DeviceMapping::getRemotePort, null)
+                .set(DeviceMapping::getUpdateTime, new Date())
+                .update();
+
+        // 发送取消映射消息
+        Integer serverTunnelId = deviceMapping.getServerTunnelId();
+        DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceMapping.getDeviceId());
+        if (deviceInfo != null) {
+            String deviceNo = deviceInfo.getDeviceNo();
+            DeviceMappingProtocol protocol = deviceMappingService.getMapping4ProtocolByMappingId(mappingId);
+            if (protocol != null) {
+                JSONObject data = (JSONObject) JSON.toJSON(protocol);
+                Message msg = new MsgUnMapping(data.toJSONString());
+                coonPool.sendMessage(serverTunnelId, deviceNo, msg);
+            }
+        }
+
+        return R.success();
+    }
+
+    /**
      * 获取设备服务清单
      * @param params
      * @return
@@ -266,6 +322,8 @@ public class DeviceServiceController {
     private UserFlowService userFlowService;
     @Resource
     private ServerTunnelService serverTunnelService;
+    @Resource
+    private UserPackageManager userPackageManager;
 
 
     @Resource
