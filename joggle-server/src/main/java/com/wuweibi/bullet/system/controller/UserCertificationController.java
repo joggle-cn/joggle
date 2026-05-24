@@ -2,6 +2,7 @@ package com.wuweibi.bullet.system.controller;
 
 
 import cn.hutool.core.util.IdcardUtil;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.system.domain.UserCertificationDTO;
@@ -30,6 +31,7 @@ import java.util.Date;
  * @since 2022-09-14 13:54:43
  */
 @Slf4j
+@WebApi
 @RestController
 @Api(value = "用户实名认证", tags = "用户实名认证")
 @RequestMapping("/api/user/certification")

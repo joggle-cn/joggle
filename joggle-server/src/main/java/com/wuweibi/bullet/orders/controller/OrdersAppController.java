@@ -67,8 +67,9 @@ public class OrdersAppController {
      *
      * @return
      */
+    @ApiOperation("获取订单列表")
     @GetMapping(value = "/list")
-    public Object list(Page pageParams, OrdersParam params) {
+    public R<Page<OrdersListVO>> list(Page pageParams, OrdersParam params) {
         params.setUserId(SecurityUtils.getUserId());
         Page<OrdersListVO> page = ordersService.getListPage(pageParams, params);
         return R.success(page);
