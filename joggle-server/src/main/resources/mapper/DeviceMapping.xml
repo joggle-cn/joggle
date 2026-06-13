@@ -65,6 +65,7 @@
 			dm.id,
 			dm.device_id,
 			dm.domain,
+			dm.name,
 			dm.port,
 			dm.host,
 			dm.createTime,

@@ -8,6 +8,7 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.CountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -48,6 +49,7 @@ public class DashboardController {
     @GetMapping("/device/rank")
     @ResponseBody
     public R<List<DeviceCountInfoVO>> getUserDeviceRank(
+            @ApiParam(value = "类型：")
             @RequestParam("type") Integer type,
             @JwtUser Session session){
         Long userId = session.getUserId();

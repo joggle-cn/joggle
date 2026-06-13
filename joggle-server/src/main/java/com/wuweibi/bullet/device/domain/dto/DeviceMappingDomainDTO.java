@@ -4,7 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- *  设备域名映射
+ * 设备域名映射
+ *
  * @author marker
  * @date 2022/11/21 16:45
  */
@@ -12,11 +13,12 @@ import lombok.Data;
 public class DeviceMappingDomainDTO {
 
     private Long id;
-    /** 协议 1 HTTP 2 TCP 3HTTPS 4 HTTP/HTTPS */
-    @ApiModelProperty(value = "协议 1 HTTP 3HTTPS 4 HTTP/HTTPS")
+
+    /** 协议 1 HTTP 3 HTTPS 4 HTTP/HTTPS */
+    @ApiModelProperty(value = "协议 1 HTTP 3 HTTPS 4 HTTP/HTTPS")
     private Integer protocol;
 
-    @ApiModelProperty(value = "目标地址IP")
+    @ApiModelProperty(value = "目标地址 IP")
     private String host;
 
     @ApiModelProperty(value = "映射名称")
@@ -30,8 +32,10 @@ public class DeviceMappingDomainDTO {
     private Long domainId;
 
     private Integer status;
-    /** 备注 */
+
     @ApiModelProperty(value = "备注")
     private String description;
 
+    @ApiModelProperty(value = "设备 id")
+    private Long deviceId;
 }

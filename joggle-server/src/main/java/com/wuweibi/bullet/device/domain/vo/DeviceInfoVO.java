@@ -23,10 +23,10 @@ public class DeviceInfoVO {
     private Features features;
 
     @ApiModelProperty("端口映射列表")
-    private List<MappingDeviceVO> portList;
+    private List<DeviceMappingClientVO> portList;
 
     @ApiModelProperty("域名映射列表")
-    private List<MappingDeviceVO> domainList;
+    private List<DeviceMappingClientVO> domainList;
 
     @ApiModelProperty("P2P端到端列表")
     private List<DevicePeersVO> p2pList;

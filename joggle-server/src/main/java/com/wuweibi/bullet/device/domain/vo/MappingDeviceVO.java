@@ -25,6 +25,9 @@ public class MappingDeviceVO {
 	@ApiModelProperty("购买的域名前缀")
 	private String domain;
 
+	@ApiModelProperty("映射名称")
+	private String name;
+
 	@ApiModelProperty("格式化的访问URL")
 	private String url;
 

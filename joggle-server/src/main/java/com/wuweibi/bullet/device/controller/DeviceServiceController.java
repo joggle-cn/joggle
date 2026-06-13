@@ -17,9 +17,11 @@ import com.wuweibi.bullet.device.domain.dto.DeviceScanDTO;
 import com.wuweibi.bullet.device.domain.dto.DeviceServiceStatusDTO;
 import com.wuweibi.bullet.device.domain.param.DeviceServiceParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceMappingClientVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceServiceVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.service.DeviceServiceService;
+import com.wuweibi.bullet.device.service.DeviceMappingViewService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.message.MessageFactory;
@@ -141,7 +143,7 @@ public class DeviceServiceController {
      */
     @ApiOperation("关闭映射")
     @PostMapping( "/close_tunnel")
-    public R closeTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
+    public R<DeviceMappingClientVO> closeTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
         Long mappingId = dto.getServiceId();
         Long userId = session.getUserId();
         DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
@@ -149,8 +151,8 @@ public class DeviceServiceController {
             return R.fail("设备服务不存在");
         }
         Long deviceId = deviceMapping.getDeviceId();
-        Integer serverTunnelId = deviceMapping.getServerTunnelId();
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
+        Integer serverTunnelId = deviceInfo.getServerTunnelId();
         String deviceNo = deviceInfo.getDeviceNo();
         // 判断映射是否绑定域名 如果绑定则开启映射。
         if (deviceMapping.getDomainId() == null) {
@@ -174,7 +176,7 @@ public class DeviceServiceController {
         Message msg = new MsgUnMapping(data.toJSONString());
         coonPool.sendMessage(serverTunnelId, deviceNo, msg);
 
-        return R.success();
+        return R.success(deviceMappingViewService.getClientMapping(deviceMapping, deviceInfo));
     }
 
     @Resource
@@ -186,7 +188,7 @@ public class DeviceServiceController {
      */
     @ApiOperation("开启映射")
     @PostMapping( "/open_tunnel")
-    public R openTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
+    public R<DeviceMappingClientVO> openTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
         Long mappingId = dto.getServiceId();
         Long userId = session.getUserId();
         DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
@@ -194,8 +196,8 @@ public class DeviceServiceController {
             return R.fail("设备服务不存在");
         }
         Long deviceId = deviceMapping.getDeviceId();
-        Integer serverTunnelId = deviceMapping.getServerTunnelId();
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
+        Integer serverTunnelId = deviceInfo.getServerTunnelId();
         String deviceNo = deviceInfo.getDeviceNo();
         // 如果没有流量了，不能操作映射，会有一个缓冲过程
         if(!userFlowService.hasFlow(userId)){
@@ -241,7 +243,7 @@ public class DeviceServiceController {
         Message msg = new MsgMapping(data.toJSONString());
         coonPool.sendMessage(serverTunnelId, deviceNo, msg);
 
-        return R.success();
+        return R.success(deviceMappingViewService.getClientMapping(deviceMapping, deviceInfo));
     }
 
     /**
@@ -330,6 +332,8 @@ public class DeviceServiceController {
     private DeviceBiz deviceBiz;
     @Resource
     private UserDomainService userDomainService;
+    @Resource
+    private DeviceMappingViewService deviceMappingViewService;
 
 
     @Resource

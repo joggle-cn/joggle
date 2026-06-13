@@ -16,7 +16,6 @@ import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.utils.StringHttpUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +59,9 @@ public class DomainBizImpl implements DomainBiz {
         //生成域名
         Domain domain = new Domain();
         domain.setUserId(userId);
-        String portProtocol = deviceMapping.getPortProtocol();
         Integer serverTunnelId = deviceMapping.getServerTunnelId();
         int type = DomainTypeEnum.PORT.getType();
-        if(StringHttpUtils.isHttp(portProtocol)){
+        if(UserPackageLimitEnum.DomainNum.equals(enumObj)){
             type = DomainTypeEnum.DOMAIN.getType();
             domain.setType(type);
             domain.setCreateTime(new Date());
