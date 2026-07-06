@@ -58,7 +58,11 @@ public class DomainBizImpl implements DomainBiz {
 
         //生成域名
         Domain domain = new Domain();
+        domain.setCreateTime(new Date());
+        domain.setBuyTime(new Date());
+        domain.setDueTime(userPackage.getEndTime());
         domain.setUserId(userId);
+        domain.setStatus(1);
         Integer serverTunnelId = deviceMapping.getServerTunnelId();
         int type = DomainTypeEnum.PORT.getType();
         if(UserPackageLimitEnum.DomainNum.equals(enumObj)){
@@ -71,6 +75,7 @@ public class DomainBizImpl implements DomainBiz {
             domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(serverTunnelId);// 默认通道
             domain.setBandwidth(userPackage.getBroadbandRate());// 宽带
+            domain.setConcurrentNum(userPackage.getConcurrentNum());// 并发
         }else{
             type = DomainTypeEnum.PORT.getType();
             domain.setType(type);
@@ -86,6 +91,7 @@ public class DomainBizImpl implements DomainBiz {
             domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(serverTunnelId);// 默认通道
             domain.setBandwidth(userPackage.getBroadbandRate());// 宽带
+            domain.setConcurrentNum(userPackage.getConcurrentNum());// 并发
         }
         domainService.save(domain);
 
