@@ -24,6 +24,7 @@ import org.apache.commons.codec.digest.Md5Crypt;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,6 +51,9 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Resource
     private RedisCacheManager redisCacheManager;
+
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
 
     @Override
@@ -102,7 +106,14 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Override
     public DeviceDetailVO getDeviceInfoById(Long deviceId) {
-        return this.baseMapper.selectDeviceInfoById(deviceId);
+        DeviceDetailVO vo = this.baseMapper.selectDeviceInfoById(deviceId);
+        if (vo != null) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + vo.getDeviceNo());
+            if (latencyStr != null) {
+                vo.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
+        return vo;
     }
 
     @Override

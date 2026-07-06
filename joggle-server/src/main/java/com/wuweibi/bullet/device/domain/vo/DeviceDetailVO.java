@@ -71,6 +71,9 @@ public class DeviceDetailVO {
 	@ApiModelProperty("设备并发连接数")
 	private Integer concurrentNum;
 
+	@ApiModelProperty("延迟(毫秒)")
+	private Long latencyMs;
+
 	@Override
 	public String toString() {
 		return "Device{" +
