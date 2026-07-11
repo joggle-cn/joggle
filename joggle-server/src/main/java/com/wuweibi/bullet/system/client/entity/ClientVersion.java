@@ -37,6 +37,7 @@ public class ClientVersion implements Serializable {
      * 类型 ：
      * CLIENT  客户端程序
      * SERVER  服务端程序
+     * JOGGLE_CLIENT  桌面客户端程序
      */
     private String type;
 
@@ -83,6 +84,12 @@ public class ClientVersion implements Serializable {
      */
     @TableField("checksum")
     private String checksum;
+
+    /**
+     * Tauri 签名
+     */
+    @TableField("signature")
+    private String signature;
 
     /**
      * 状态 1上架 0下架

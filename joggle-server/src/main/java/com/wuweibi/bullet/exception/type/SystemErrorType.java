@@ -55,6 +55,10 @@ public enum SystemErrorType implements ErrorType {
     PAY_MONEY_BALANCE_NOT_ENOUGH("100201", "支付余额不足"),
 
 
+    /**
+     * E 客户端版本相关
+     */
+    CLIENT_VERSION_NOT_FOUND("E0001", "未找到匹配的版本"),
 
 
     ;

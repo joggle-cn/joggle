@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -46,12 +47,7 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
     private AliOssProperties aliOssProperties;
 
     @Override
-    public int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum) {
-        String type = "CLIENT";
-        if (binFilePath.contains("ngrokd")) {
-            type = "SERVER";
-        }
-
+    public int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum, String type, String signature) {
         ClientVersion clientVersion = this.baseMapper.selectOne(Wrappers.<ClientVersion>lambdaQuery()
                 .eq(ClientVersion::getOs, os)
                 .eq(ClientVersion::getArch, arch)
@@ -60,13 +56,21 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
         );
         if (clientVersion == null) return 0;
 
-        // 生产环境才做URL更新
-        String downloadURL = String.format("%s/client/%s/%s", aliOssProperties.getPublicServerUrl(), version, binFilePath);
+        // 生成下载URL
+        String baseUrl = aliOssProperties.getPublicServerUrl();
         if (!SpringUtils.isProduction()) {
-            downloadURL = String.format("%s/client/%s/%s", "http://192.168.1.6:80", version, binFilePath);
+            baseUrl = "http://192.168.1.6";
+        }
+        String downloadURL;
+        if ("JOGGLE_CLIENT".equals(type)) {
+            String filename = binFilePath.substring(binFilePath.lastIndexOf("/") + 1);
+            downloadURL = String.format("%s/joggle-client/%s", baseUrl, filename);
+        } else {
+            downloadURL = String.format("%s/client/%s/%s", baseUrl, version, binFilePath);
         }
         clientVersion.setDownloadUrl(downloadURL);
         clientVersion.setChecksum(checksum);
+        clientVersion.setSignature(signature);
         clientVersion.setTitle(String.format("joggle-%s-%s", type.toLowerCase(), version));
         clientVersion.setVersion(version);
         clientVersion.setStatus(true);
@@ -89,5 +93,25 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
     @Override
     public Page<ClientVersionAdminListVO> getAdminList(Page pageInfo, ClientVersionParam params) {
         return this.baseMapper.selectAdminList(pageInfo, params);
+    }
+
+    @Override
+    public ClientVersion getLatestVersion(String os, String arch) {
+        return this.baseMapper.selectOne(Wrappers.<ClientVersion>lambdaQuery()
+                .eq(ClientVersion::getType, "JOGGLE_CLIENT")
+                .eq(ClientVersion::getOs, os)
+                .eq(ClientVersion::getArch, arch)
+                .eq(ClientVersion::getStatus, 1)
+                .orderByDesc(ClientVersion::getCreateTime)
+                .last("limit 1")
+        );
+    }
+
+    @Override
+    public List<ClientVersion> getUpdateManifestList() {
+        return this.baseMapper.selectList(Wrappers.<ClientVersion>lambdaQuery()
+                .eq(ClientVersion::getType, "JOGGLE_CLIENT")
+                .eq(ClientVersion::getStatus, 1)
+        );
     }
 }
