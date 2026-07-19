@@ -54,13 +54,15 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
                 .eq(ClientVersion::getOs, os)
                 .eq(ClientVersion::getArch, arch)
                 .eq(ClientVersion::getType, type)
-                .eq(ClientVersion::getStatus, 1)
+                .last("limit 1")
         );
         if (clientVersion == null) return 0;
 
         clientVersion.setDownloadUrl(downloadUrl);
         clientVersion.setChecksum(checksum);
-        clientVersion.setSignature(getSignature(downloadUrl));
+        if ("JOGGLE_CLIENT".equals(type)) {
+            clientVersion.setSignature(getSignature(downloadUrl));
+        }
         clientVersion.setTitle(String.format("joggle-%s-%s", type.toLowerCase(), version));
         clientVersion.setVersion(version);
         clientVersion.setStatus(true);
