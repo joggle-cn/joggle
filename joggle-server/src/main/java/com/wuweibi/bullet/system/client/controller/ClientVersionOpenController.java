@@ -48,6 +48,7 @@ public class ClientVersionOpenController {
         if (clientVersion == null) {
             return R.fail(SystemErrorType.CLIENT_VERSION_NOT_FOUND);
         }
+
         ClientVersionLatestVO vo = new ClientVersionLatestVO();
         vo.setVersion(clientVersion.getVersion());
         vo.setTitle(clientVersion.getTitle());

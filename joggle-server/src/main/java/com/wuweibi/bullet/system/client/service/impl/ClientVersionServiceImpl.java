@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.CacheBlock;
-import com.wuweibi.bullet.config.properties.AliOssProperties;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
 import com.wuweibi.bullet.system.client.domain.NgrokVersionVO;
@@ -12,11 +11,16 @@ import com.wuweibi.bullet.system.client.entity.ClientVersion;
 import com.wuweibi.bullet.system.client.mapper.ClientVersionMapper;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
-import com.wuweibi.bullet.utils.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import java.util.List;
  * @author marker
  * @since 2021-08-12
  */
+@Slf4j
 @Service
 public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, ClientVersion> implements ClientVersionService {
 
@@ -43,11 +48,8 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
         );
     }
 
-    @Resource
-    private AliOssProperties aliOssProperties;
-
     @Override
-    public int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum, String type, String signature) {
+    public int updateChecksumByOsArch(String version, String os, String arch, String downloadUrl, String checksum, String type) {
         ClientVersion clientVersion = this.baseMapper.selectOne(Wrappers.<ClientVersion>lambdaQuery()
                 .eq(ClientVersion::getOs, os)
                 .eq(ClientVersion::getArch, arch)
@@ -56,21 +58,9 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
         );
         if (clientVersion == null) return 0;
 
-        // 生成下载URL
-        String baseUrl = aliOssProperties.getPublicServerUrl();
-        if (!SpringUtils.isProduction()) {
-            baseUrl = "http://192.168.1.6";
-        }
-        String downloadURL;
-        if ("JOGGLE_CLIENT".equals(type)) {
-            String filename = binFilePath.substring(binFilePath.lastIndexOf("/") + 1);
-            downloadURL = String.format("%s/joggle-client/%s", baseUrl, filename);
-        } else {
-            downloadURL = String.format("%s/client/%s/%s", baseUrl, version, binFilePath);
-        }
-        clientVersion.setDownloadUrl(downloadURL);
+        clientVersion.setDownloadUrl(downloadUrl);
         clientVersion.setChecksum(checksum);
-        clientVersion.setSignature(signature);
+        clientVersion.setSignature(getSignature(downloadUrl));
         clientVersion.setTitle(String.format("joggle-%s-%s", type.toLowerCase(), version));
         clientVersion.setVersion(version);
         clientVersion.setStatus(true);
@@ -113,5 +103,35 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
                 .eq(ClientVersion::getType, "JOGGLE_CLIENT")
                 .eq(ClientVersion::getStatus, 1)
         );
+    }
+
+    private String getSignature(String downloadUrl) {
+        String signatureUrl = appendSuffix(downloadUrl, "sig");
+        log.info("获取客户端签名: {}", signatureUrl);
+        try {
+            URLConnection connection = new URL(signatureUrl).openConnection();
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line);
+                }
+                String signature = content.toString();
+                log.info("获取客户端签名成功: {}, length={}", signatureUrl, signature.length());
+                return signature;
+            }
+        } catch (IOException e) {
+            log.error("获取客户端签名失败: {}", signatureUrl, e);
+            throw new RuntimeException(String.format("获取签名失败: %s", signatureUrl), e);
+        }
+    }
+
+    private String appendSuffix(String url, String suffix) {
+        int queryIndex = url.indexOf('?');
+        String path = queryIndex >= 0 ? url.substring(0, queryIndex) : url;
+        String query = queryIndex >= 0 ? url.substring(queryIndex) : "";
+        return path + "." + suffix + query;
     }
 }

@@ -63,19 +63,18 @@ public class VersionAdminController {
      * 客户端摘要更新
      * @return
      */
+    @ApiOperation("客户端摘要更新")
     @PostMapping(value = "/update")
     public R update(@RequestBody ClientVersionUpdateDTO dto) {
-        String expression = dto.getExpression();
         String type = dto.getType();
-        String[] strings = expression.split(":");
-        String[] binPath = strings[0].split("/");
-        String[] oss = binPath[0].split("_");
-        String os = oss[0];
-        String arch = oss[1];
-        String checksum = strings[1];
-        String version = strings[2].trim();
-        String binFilePath = strings[0];
-        clientVersionService.updateChecksumByOsArch(version, os, arch, binFilePath, checksum, type, checksum);
+        for (ClientVersionUpdateDTO.Item item : dto.getItems()) {
+            String os = item.getOs();
+            String arch = item.getArch();
+            String checksum = item.getChecksum();
+            String version = item.getVersion();
+            String downloadUrl = item.getDownloadUrl();
+            clientVersionService.updateChecksumByOsArch(version, os, arch, downloadUrl, checksum, type);
+        }
         return R.success();
     }
 

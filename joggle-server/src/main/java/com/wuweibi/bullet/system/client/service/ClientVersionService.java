@@ -33,13 +33,12 @@ public interface ClientVersionService extends IService<ClientVersion> {
      * @param version
      * @param os
      * @param arch
-     * @param binFilePath 二进制文件路径
+     * @param downloadUrl 下载URL地址
      * @param checksum
      * @param type 类型
-     * @param signature Tauri 签名
      * @return
      */
-    int updateChecksumByOsArch(String version, String os, String arch, String binFilePath, String checksum, String type, String signature);
+    int updateChecksumByOsArch(String version, String os, String arch, String downloadUrl, String checksum, String type);
 
     /**
      * 获取最大版本
