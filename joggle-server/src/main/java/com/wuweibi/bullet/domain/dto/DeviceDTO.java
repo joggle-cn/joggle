@@ -32,6 +32,9 @@ public class DeviceDTO extends Device {
      */
     private Date onlineTime;
 
+    @ApiModelProperty("延迟(毫秒)")
+    private Long latencyMs;
+
     public DeviceDTO(   ) {
 
     }

@@ -27,7 +27,7 @@ import static com.wuweibi.bullet.protocol.Message.CONTROL_WHITE_IPS;
  */
 @Slf4j
 @RestController
-@Api(value = "", tags = "")
+@Api(value = "", tags = "设备ip白名单")
 @RequestMapping("/api/device/white-ips")
 public class DeviceWhiteIpsController {
     /**

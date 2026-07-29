@@ -172,7 +172,12 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     public List<DeviceDTO> getWebListByUserId(Long userId) {
         List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId);
-
+        for (DeviceDTO dto : list) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + dto.getDeviceNo());
+            if (latencyStr != null) {
+                dto.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
         return list;
     }
 
