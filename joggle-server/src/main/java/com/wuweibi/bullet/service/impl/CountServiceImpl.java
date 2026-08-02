@@ -8,16 +8,21 @@ import com.wuweibi.bullet.alias.CacheBlock;
 import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.vo.CountVO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.mapper.CountMapper;
+import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.CountService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuweibi.bullet.utils.BigDecimalUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -40,9 +45,14 @@ public class CountServiceImpl implements CountService {
     private CountMapper countMapper;
     @Resource
     private DeviceMappingMapper deviceMappingMapper;
+    @Resource
+    private DeviceMapper deviceMapper;
 
     @Resource(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public CountVO getCountInfo() {
@@ -65,7 +75,47 @@ public class CountServiceImpl implements CountService {
         userCountVO.setTodayFlowOn(BigDecimalUtils
                 .getChainRatio(userTodayFlowCountVO.getTodayFlow(), userFlowCountDTO.getTodayFlow2()));
 
+        // 计算在线设备数量与在线率
+        UserDeviceCountDTO deviceCountInfo = SpringUtils.getBean(CountService.class)
+                .getUserDeviceCountInfo(userId);
+        if (deviceCountInfo != null && deviceCountInfo.getDeviceCount() != null
+                && deviceCountInfo.getDeviceCount() > 0) {
+            userCountVO.setDeviceCount(deviceCountInfo.getDeviceCount());
+            userCountVO.setOnlineDeviceCount(deviceCountInfo.getOnlineDeviceCount());
+            userCountVO.setOnlineRate(BigDecimal.valueOf(deviceCountInfo.getOnlineDeviceCount())
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(BigDecimal.valueOf(deviceCountInfo.getDeviceCount()), 2, RoundingMode.HALF_UP));
+
+            // 计算在线设备平均延迟：仅需设备编号字段
+            List<Device> deviceList = deviceMapper.selectList(
+                    Wrappers.<Device>lambdaQuery()
+                            .select(Device::getDeviceNo)
+                            .eq(Device::getUserId, userId));
+            List<Long> latencyList = new ArrayList<>();
+            for (Device device : deviceList) {
+                String latencyStr = stringRedisTemplate.opsForValue()
+                        .get("device:latency:" + device.getDeviceNo());
+                if (latencyStr != null) {
+                    latencyList.add(Long.parseLong(latencyStr));
+                }
+            }
+            if (!latencyList.isEmpty()) {
+                long total = latencyList.stream().mapToLong(Long::longValue).sum();
+                userCountVO.setAvgLatencyMs(total / latencyList.size());
+            }
+        }
+
         return userCountVO;
+    }
+
+    /**
+     * 统计用户设备总数与在线设备数量（30分钟缓存）
+     * @param userId 用户ID
+     * @return 设备统计信息
+     */
+    @Cacheable(cacheNames = CacheBlock.CACHE_USER_DEVICE_COUNT, key = "#userId")
+    public UserDeviceCountDTO getUserDeviceCountInfo(Long userId) {
+        return countMapper.selectUserDeviceCountInfo(userId);
     }
 
 

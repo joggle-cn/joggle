@@ -81,7 +81,6 @@ public class DeviceMappingManagerServiceImpl implements DeviceMappingManagerServ
         entity.setPort(dto.getPort());
         entity.setHost(dto.getHost());
         entity.setUserDomainId(dto.getUserDomainId());
-        entity.setDomainId(dto.getDomainId());
         entity.setStatus(dto.getStatus());
         entity.setDescription(dto.getDescription());
         entity.setName(dto.getName());

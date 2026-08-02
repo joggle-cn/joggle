@@ -9,10 +9,7 @@ import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
-import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.domain.dto.*;
 import com.wuweibi.bullet.device.domain.param.DeviceBindParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceInfoVO;
@@ -45,15 +42,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -106,14 +95,28 @@ public class DeviceController {
 
     /**
      * 设备列表
+     * 支持下拉刷新（响应不缓存），支持按状态、os 筛选，按名称/延迟排序
      *
      * @return
      */
     @ApiOperation("用户的设备列表")
     @GetMapping
-    public R<List<DeviceDTO>> device() {
+    public R<List<DeviceDTO>> device(DeviceWebQueryParam param) {
         Long userId = SecurityUtils.getUserId();
-        List<DeviceDTO> list = deviceService.getWebListByUserId(userId);
+        List<DeviceDTO> list = deviceService.getWebListByUserId(userId, param);
+        return R.ok(list);
+    }
+
+    /**
+     * 最近设备列表（首页展示，按设备在线时间倒序）
+     *
+     * @return
+     */
+    @ApiOperation("首页最近设备")
+    @GetMapping("/recent")
+    public R<List<DeviceDTO>> recentDevice() {
+        Long userId = SecurityUtils.getUserId();
+        List<DeviceDTO> list = deviceService.getRecentWebListByUserId(userId, 2);
         return R.ok(list);
     }
 
@@ -237,6 +240,7 @@ public class DeviceController {
      * @param deviceId 设备 id
      * @return 设备详情
      */
+    @ApiOperation("获取设备信息")
     @GetMapping(value = "/info")
     public R<DeviceInfoVO> deviceInfo(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();

@@ -8,6 +8,7 @@ import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
+import com.wuweibi.bullet.device.domain.dto.DeviceWebQueryParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
@@ -170,8 +171,36 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public List<DeviceDTO> getWebListByUserId(Long userId) {
-        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId);
+    public List<DeviceDTO> getWebListByUserId(Long userId, DeviceWebQueryParam params) {
+        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId, params);
+        for (DeviceDTO dto : list) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + dto.getDeviceNo());
+            if (latencyStr != null) {
+                dto.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
+        if (params != null && "latency".equalsIgnoreCase(params.getSort())) {
+            boolean asc = "asc".equalsIgnoreCase(params.getOrder());
+            list.sort((a, b) -> {
+                if (a.getLatencyMs() == null && b.getLatencyMs() == null) {
+                    return 0;
+                }
+                if (a.getLatencyMs() == null) {
+                    return 1;
+                }
+                if (b.getLatencyMs() == null) {
+                    return -1;
+                }
+                int cmp = Long.compare(a.getLatencyMs(), b.getLatencyMs());
+                return asc ? cmp : -cmp;
+            });
+        }
+        return list;
+    }
+
+    @Override
+    public List<DeviceDTO> getRecentWebListByUserId(Long userId, Integer limit) {
+        List<DeviceDTO> list = this.baseMapper.selectRecentWebListByUserId(userId, limit);
         for (DeviceDTO dto : list) {
             String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + dto.getDeviceNo());
             if (latencyStr != null) {

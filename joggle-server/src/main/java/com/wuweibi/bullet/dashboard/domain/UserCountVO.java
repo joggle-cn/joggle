@@ -20,4 +20,16 @@ public class UserCountVO {
     private Long monthLink = 0l;
     private BigDecimal monthLinkOn = BigDecimal.ZERO; // 同比
 
+    @ApiModelProperty("设备总数")
+    private Integer deviceCount = 0;
+
+    @ApiModelProperty("在线设备数量")
+    private Integer onlineDeviceCount = 0;
+
+    @ApiModelProperty("在线率(%)")
+    private BigDecimal onlineRate = BigDecimal.ZERO;
+
+    @ApiModelProperty("在线设备平均延迟(毫秒)")
+    private Long avgLatencyMs;
+
 }

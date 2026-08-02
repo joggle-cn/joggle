@@ -9,8 +9,10 @@ import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
+import com.wuweibi.bullet.device.domain.DevicePeersDetailVO;
 import com.wuweibi.bullet.device.domain.dto.DevicePeersStatusDTO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
@@ -74,12 +76,24 @@ public class DevicePeersController {
      */
     @ApiOperation("端到端映射详情")
     @GetMapping("/detail")
-    public R<DevicePeers> detail(@RequestParam Serializable id) {
+    public R<DevicePeersDetailVO> detail(@RequestParam Serializable id) {
         DevicePeers entity = this.devicePeersService.getById(id);
         if (entity == null) {
             return R.fail(SystemErrorType.DATA_NOT_FOUND);
         }
-        return R.ok(entity);
+        DevicePeersDetailVO vo = new DevicePeersDetailVO();
+        BeanUtils.copyProperties(entity, vo);
+        Device clientDevice = deviceService.getById(entity.getClientDeviceId());
+        if (clientDevice != null) {
+            vo.setClientDeviceNo(clientDevice.getDeviceNo());
+            vo.setClientDeviceName(clientDevice.getName());
+        }
+        Device serverDevice = deviceService.getById(entity.getServerDeviceId());
+        if (serverDevice != null) {
+            vo.setServerDeviceNo(serverDevice.getDeviceNo());
+            vo.setServerDeviceName(serverDevice.getName());
+        }
+        return R.ok(vo);
     }
 
     @Resource

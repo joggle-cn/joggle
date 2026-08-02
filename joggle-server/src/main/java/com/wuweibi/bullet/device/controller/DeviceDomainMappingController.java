@@ -4,14 +4,18 @@ import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDomainDTO;
 import com.wuweibi.bullet.device.domain.vo.DeviceMappingClientVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceMappingDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.service.DeviceMappingManagerService;
 import com.wuweibi.bullet.device.service.DeviceMappingViewService;
 import com.wuweibi.bullet.domain.domain.session.Session;
+import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
+import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +39,8 @@ public class DeviceDomainMappingController {
     private DeviceMappingViewService deviceMappingViewService;
     @Resource
     private DeviceService deviceService;
+    @Resource
+    private DeviceMappingService deviceMappingService;
 
     @ApiOperation("保存或更新域名映射")
     @PostMapping("")
@@ -56,5 +62,22 @@ public class DeviceDomainMappingController {
             return R.fail("用户设备不存在");
         }
         return R.success(deviceMappingViewService.getDomainMappings(deviceId, deviceInfo));
+    }
+
+    @ApiOperation("映射详情")
+    @GetMapping("/detail")
+    public R<DeviceMappingDetailVO> mappingDomainDetail(@JwtUser Session session, @RequestParam Long mappingId) {
+        Long userId = session.getUserId();
+        if (!deviceMappingService.exists(userId, mappingId)) {
+            return R.fail("映射不存在");
+        }
+        DeviceMapping mapping = deviceMappingService.getById(mappingId);
+        DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(mapping.getDeviceId());
+        if (deviceInfo == null) {
+            return R.fail("设备不存在");
+        }
+        DeviceMappingDetailVO vo = new DeviceMappingDetailVO();
+        BeanUtils.copyProperties(deviceMappingViewService.getClientMapping(mapping, deviceInfo), vo);
+        return R.success(vo);
     }
 }

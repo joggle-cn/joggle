@@ -48,6 +48,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         resourceServerSecurityConfigurer
                 .authenticationEntryPoint(oAuth2AuthenticationEntryPoint)
                 .tokenStore(tokenStore)
+                .tokenExtractor(new McpTokenExtractor())
                 .resourceId("WEBS");
     }
 
@@ -91,7 +92,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         http.authorizeRequests()
                 // 特殊接口
-                .antMatchers("/", "/api/open/**", "/inner/open/**", "/logout", "/tunnel/**", "/_ws/log/**",
+                .antMatchers("/", "/api/open/mcp/**", "/api/open/**", "/inner/open/**", "/logout", "/tunnel/**", "/_ws/log/**",
                         "/swagger-resources", "/webjars/**", "/v3/api-docs", "/doc.html",
                         "/index.html",
                         "/html/**",

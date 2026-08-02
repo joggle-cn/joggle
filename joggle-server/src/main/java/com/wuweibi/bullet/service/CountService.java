@@ -29,6 +29,13 @@ public interface CountService {
     UserCountVO getUserCountInfo(Long userId);
 
     /**
+     * 统计用户设备总数与在线设备数量（30分钟缓存）
+     * @param userId 用户ID
+     * @return 设备统计信息
+     */
+    UserDeviceCountDTO getUserDeviceCountInfo(Long userId);
+
+    /**
      * 统计设备流量排行
      * @param userId 用户ID
      * @param type

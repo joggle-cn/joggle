@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
+import com.wuweibi.bullet.device.domain.dto.DeviceWebQueryParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
@@ -114,7 +115,15 @@ public interface DeviceService extends IService<Device> {
      */
     Boolean removeUserIdByDeviceNo(String deviceNo);
 
-    List<DeviceDTO> getWebListByUserId(Long userId);
+    List<DeviceDTO> getWebListByUserId(Long userId, DeviceWebQueryParam params);
+
+    /**
+     * 获取用户最近设备列表（按设备在线时间倒序）
+     * @param userId 用户id
+     * @param limit 条数
+     * @return
+     */
+    List<DeviceDTO> getRecentWebListByUserId(Long userId, Integer limit);
 
     /**
      * 设备详情

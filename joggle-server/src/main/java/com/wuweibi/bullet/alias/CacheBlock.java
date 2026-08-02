@@ -31,6 +31,11 @@ public interface CacheBlock {
 	String  CACHE_HOME_TREND_HOUR = "cacheHomeTrendHour";
 	String  CACHE_HOME_TREND = "cacheHomeTrend";
 
+	/**
+	 * 用户设备数量统计缓存（30分钟）
+	 */
+	String  CACHE_USER_DEVICE_COUNT = "cacheUserDeviceCount";
+
 	
 	
 }

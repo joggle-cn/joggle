@@ -27,10 +27,10 @@ public class DeviceMappingDomainDTO {
     @ApiModelProperty(value = "目标地址端口")
     private Integer port;
 
+    @ApiModelProperty(value = "用户自定义域名")
     private Long userDomainId;
 
-    private Long domainId;
-
+    @ApiModelProperty(value = "映射状态")
     private Integer status;
 
     @ApiModelProperty(value = "备注")
