@@ -17,3 +17,18 @@ ALTER TABLE `client_version`
     ADD COLUMN `signature` varchar(1024) DEFAULT NULL COMMENT 'Tauri 签名' AFTER `checksum`;
 ALTER TABLE `client_version`
     MODIFY COLUMN `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型  CLIENT SERVER' AFTER `id`;
+
+-- API Key 用户个人管理表
+CREATE TABLE IF NOT EXISTS `t_user_api_key` (
+                                                `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                                `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+                                                `api_key` varchar(64) NOT NULL COMMENT 'API Key (jgl_前缀)',
+                                                `name` varchar(64) DEFAULT NULL COMMENT '名称标识',
+                                                `enabled` tinyint(1) DEFAULT 1 COMMENT '启用状态 1启用 0禁用',
+                                                `last_used_at` datetime DEFAULT NULL COMMENT '最后使用时间',
+                                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                                `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                                PRIMARY KEY (`id`) USING BTREE,
+                                                UNIQUE KEY `uk_api_key` (`api_key`) USING BTREE,
+                                                KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户API Key表';
