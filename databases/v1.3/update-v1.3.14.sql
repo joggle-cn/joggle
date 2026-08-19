@@ -37,3 +37,7 @@ CREATE TABLE IF NOT EXISTS `t_user_api_key` (
 ALTER TABLE  `device_peers`
     ADD COLUMN `bandwidth` int(10) NULL DEFAULT 1 COMMENT '宽带限制 Mbps' AFTER `network_speed`,
     ADD COLUMN `strategy` varchar(30) NULL DEFAULT "p2p" COMMENT '策略 p2p、wss、auto' AFTER `bandwidth`;
+
+
+ALTER TABLE `resource_package`
+    ADD COLUMN `relay_mode` int(1) NULL DEFAULT 0 COMMENT '中继模式' AFTER `broadband_rate`;

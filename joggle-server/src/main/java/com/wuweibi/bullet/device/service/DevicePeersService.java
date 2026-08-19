@@ -29,7 +29,7 @@ public interface DevicePeersService extends IService<DevicePeers> {
 
 
 
-    DevicePeers savePeers(Long userId, DevicePeersDTO dto);
+    DevicePeers savePeers(Long userId, DevicePeersDTO dto, Integer bandwidth);
 
     DevicePeersConfigDTO getPeersConfig(Long id);
 

@@ -93,7 +93,7 @@ public class UserPackage {
  	private Integer deviceUse;
     
     /**
-     * 宽带速率
+     * 宽带速率 mbps
      */
     @ApiModelProperty("宽带速率")
  	private Integer broadbandRate;

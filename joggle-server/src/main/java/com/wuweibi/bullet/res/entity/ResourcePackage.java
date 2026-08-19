@@ -125,4 +125,7 @@ public class ResourcePackage {
 
     @ApiModelProperty("宽带速度 mbps")
     private Integer broadbandRate;
+
+    @ApiModelProperty("Relay mode: 1 enabled, 0 disabled")
+    private Integer relayMode;
 }

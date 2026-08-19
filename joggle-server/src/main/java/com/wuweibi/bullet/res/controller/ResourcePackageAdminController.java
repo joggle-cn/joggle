@@ -4,6 +4,7 @@ package com.wuweibi.bullet.res.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
+import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.PackageOptionVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageAdminParam;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@AdminApi
 @Api(value = "", tags = "套餐管理")
 @RequestMapping("/admin/resource/package")
 public class ResourcePackageAdminController {

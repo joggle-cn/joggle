@@ -3,6 +3,7 @@ package com.wuweibi.bullet.res.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.PageParam;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.ResourcePackageListVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageParam;
@@ -27,6 +28,7 @@ import java.io.Serializable;
  */
 @Slf4j
 @RestController
+@WebApi
 @Api(value = "", tags = "用户套餐列表")
 @RequestMapping("/api/resource/package")
 public class ResourcePackageController {

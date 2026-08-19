@@ -18,7 +18,11 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
+import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
 import io.swagger.annotations.Api;
@@ -101,6 +105,12 @@ public class DevicePeersController {
 
     @Resource
     private UserPackageManager userPackageManager;
+
+    @Resource
+    private UserPackageService userPackageService;
+
+    @Resource
+    private ResourcePackageService resourcePackageService;
     /**
      * 新增数据
      *
@@ -113,6 +123,7 @@ public class DevicePeersController {
     public R<Boolean> save(@RequestBody @Valid DevicePeersDTO dto) {
         dto.setId(null);
         Long userId = SecurityUtils.getUserId();
+        UserPackage userPackage = applyPackageConfig(userId, dto);
         if (dto.getServerDeviceId().equals(dto.getClientDeviceId())) {
             return R.fail("请选择不同设备");
         }
@@ -143,7 +154,8 @@ public class DevicePeersController {
             return R.fail("代理端口存在冲突，请更换");
         }
 
-        DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
+        DevicePeers peers = this.devicePeersService.savePeers(userId, dto,
+                userPackage == null ? null : userPackage.getBroadbandRate());
         R<Boolean> r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
         if (r1.isFail()) {
             return r1;
@@ -172,6 +184,7 @@ public class DevicePeersController {
     @Transactional
     public R<Boolean> update(@RequestBody @Valid DevicePeersDTO dto) {
         Long userId = SecurityUtils.getUserId();
+        UserPackage userPackage = applyPackageConfig(userId, dto);
         if (dto.getId() == null) {
             return R.fail("id不能为空");
         }
@@ -214,7 +227,7 @@ public class DevicePeersController {
         entity.setServerMtu(dto.getClientMtu());
         entity.setConfigCompress(dto.getConfigCompress());
         entity.setStrategy(dto.getStrategy());
-        entity.setBandwidth(dto.getBandwidth());
+        entity.setBandwidth(userPackage == null ? null : userPackage.getBroadbandRate());
         this.devicePeersService.updateById(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
@@ -224,6 +237,34 @@ public class DevicePeersController {
 
 
         return R.ok();
+    }
+
+    private UserPackage applyPackageConfig(Long userId, DevicePeersDTO dto) {
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        dto.setStrategy(resolveStrategy(userPackage, dto.getStrategy()));
+        return userPackage;
+    }
+
+    private void applyPackageConfig(Long userId, DevicePeers entity) {
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        entity.setBandwidth(userPackage == null ? null : userPackage.getBroadbandRate());
+        entity.setStrategy(resolveStrategy(userPackage, entity.getStrategy()));
+    }
+
+    private String resolveStrategy(UserPackage userPackage, String strategy) {
+        if (!"wss".equalsIgnoreCase(strategy) && !"auto".equalsIgnoreCase(strategy)) {
+            return "p2p";
+        }
+
+        if (userPackage == null || userPackage.getResourcePackageId() == null) {
+            return "p2p";
+        }
+
+        ResourcePackage resourcePackage = resourcePackageService.getById(userPackage.getResourcePackageId());
+        if (resourcePackage == null || !Integer.valueOf(1).equals(resourcePackage.getRelayMode())) {
+            return "p2p";
+        }
+        return strategy.toLowerCase();
     }
 
     /**
@@ -251,6 +292,7 @@ public class DevicePeersController {
         BeanUtils.copyProperties(dto, entity);
         entity.setUserId(userId);
         entity.setUpdateTime(new Date());
+        applyPackageConfig(userId, entity);
         this.devicePeersService.updateById(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());

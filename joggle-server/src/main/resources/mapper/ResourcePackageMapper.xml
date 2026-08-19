@@ -20,6 +20,7 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="days" column="days" jdbcType="INTEGER"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="relayMode" column="relay_mode" jdbcType="INTEGER"/>
     </resultMap>
 
 
@@ -27,7 +28,7 @@
         select
             rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
             rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
-            ,rp.broadband_rate
+            ,rp.broadband_rate, rp.relay_mode
         from resource_package rp
         <where>
             <if test="params.name != null and params.name != ''">
@@ -49,7 +50,7 @@
         select
         rp.id, rp.name, rp.level, rp.price, rp.domain_num, rp.port_num, rp.flow_num, rp.device_num, rp.p2p_num,
         rp.wol_enable, rp.proxy_enable, rp.status, rp.create_time, rp.update_time, rp.days, rp.concurrent_num, rp.sence
-        ,rp.broadband_rate
+        ,rp.broadband_rate, rp.relay_mode
         from resource_package rp
         <where>
             <if test="params.name != null and params.name != ''">

@@ -55,7 +55,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
     @Override
     @Transactional
-    public DevicePeers savePeers(Long userId, DevicePeersDTO dto) {
+    public DevicePeers savePeers(Long userId, DevicePeersDTO dto, Integer bandwidth) {
         DevicePeers entity = new DevicePeers();
         BeanUtils.copyProperties(dto, entity);
         entity.setUserId(userId);
@@ -68,7 +68,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         entity.setConfigEncryption(dto.getConfigEncryption());// 传输加密方式
         entity.setConfigInterval(dto.getConfigInterval());// 配置循环周期ms
         entity.setStrategy(dto.getStrategy());
-        entity.setBandwidth(dto.getBandwidth());
+        entity.setBandwidth(bandwidth);
 
         String appName = DigestUtils.md5Hex(String.valueOf(new Date().getTime()));
         entity.setAppName(appName);
