@@ -67,6 +67,8 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         entity.setConfigCompress(dto.getConfigCompress());//传输压缩
         entity.setConfigEncryption(dto.getConfigEncryption());// 传输加密方式
         entity.setConfigInterval(dto.getConfigInterval());// 配置循环周期ms
+        entity.setStrategy(dto.getStrategy());
+        entity.setBandwidth(dto.getBandwidth());
 
         String appName = DigestUtils.md5Hex(String.valueOf(new Date().getTime()));
         entity.setAppName(appName);
@@ -83,6 +85,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
     @Resource
     private WebsocketPool coonPool;
+
 
 
     public void sendMsgPeerConfig(DevicePeersConfigDTO dto) {
@@ -109,6 +112,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         peerConfig.setCompress(dto.getConfigCompress());
         peerConfig.setEncryption(dto.getConfigEncryption());
         peerConfig.setInterval(dto.getConfigInterval());
+        applyTransportConfig(peerConfig, dto);
         JSONObject data = (JSONObject) JSON.toJSON(peerConfig);
         MsgPeer msg = new MsgPeer(data.toJSONString());
         coonPool.sendMessage(dto.getServerDeviceTunnelId(), serverDeviceNo, msg);
@@ -125,9 +129,15 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
         clientPeerConfig.setCompress(dto.getConfigCompress());
         clientPeerConfig.setEncryption(dto.getConfigEncryption());
         clientPeerConfig.setInterval(dto.getConfigInterval());
+        applyTransportConfig(clientPeerConfig, dto);
         JSONObject clientData = (JSONObject) JSON.toJSON(clientPeerConfig);
         MsgPeer clientMsgPeer = new MsgPeer(clientData.toJSONString());
         coonPool.sendMessage(dto.getClientDeviceTunnelId(), clientDeviceNo, clientMsgPeer);
+    }
+
+    private void applyTransportConfig(PeerConfig peerConfig, DevicePeersConfigDTO dto) {
+        peerConfig.setBandwidth(dto.getBandwidth());
+        peerConfig.setStrategy(dto.getStrategy());
     }
 
     @Override

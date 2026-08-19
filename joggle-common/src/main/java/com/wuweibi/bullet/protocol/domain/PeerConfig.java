@@ -27,4 +27,13 @@ public class PeerConfig {
 
     // 循环周期(单位：ms) 10 20 30 40
     private Integer interval;
+
+    // P2P/WSS aggregate bandwidth limit (Mbps); null or 0 means unlimited.
+    private Integer bandwidth;
+
+    // Transport strategy: p2p, wss, or auto.
+    private String strategy;
+
+    // Token used to authenticate with the WSS relay.
+    private String wssToken;
 }

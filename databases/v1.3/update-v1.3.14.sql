@@ -32,3 +32,8 @@ CREATE TABLE IF NOT EXISTS `t_user_api_key` (
                                                 UNIQUE KEY `uk_api_key` (`api_key`) USING BTREE,
                                                 KEY `idx_user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户API Key表';
+
+
+ALTER TABLE  `device_peers`
+    ADD COLUMN `bandwidth` int(10) NULL DEFAULT 1 COMMENT '宽带限制 Mbps' AFTER `network_speed`,
+    ADD COLUMN `strategy` varchar(30) NULL DEFAULT "p2p" COMMENT '策略 p2p、wss、auto' AFTER `bandwidth`;

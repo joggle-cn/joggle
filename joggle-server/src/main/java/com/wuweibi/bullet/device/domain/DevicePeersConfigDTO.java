@@ -61,6 +61,12 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
     private Integer configInterval;
 
+    @ApiModelProperty("P2P/WSS bandwidth limit in Mbps; 0 means unlimited")
+    private Integer bandwidth;
+
+    @ApiModelProperty("P2P transport strategy: p2p, wss, or auto")
+    private String strategy;
+
     /**
      * 服务侧本地端口
      */

@@ -86,6 +86,12 @@ public class DevicePeersDTO {
     @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
     private Integer configInterval;
 
+    @ApiModelProperty("P2P传输策略：p2p、wss、auto")
+    private String strategy;
+
+    @ApiModelProperty("P2P/WSS带宽限制Mbps，0表示不限速")
+    private Integer bandwidth;
+
 
 
 }

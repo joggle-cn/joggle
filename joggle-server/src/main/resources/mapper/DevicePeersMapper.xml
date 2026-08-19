@@ -34,6 +34,7 @@
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
                dp.`client_mtu`, dp.`server_mtu`, dp.`server_mtu` as mtu, dp.config_compress, dp.config_encryption, dp.config_interval,
+               dp.strategy, dp.bandwidth,
                dc.deviceId clientDeviceNo,
                (select intranet_ip from t_device_online do where do.deviceNo = dc.deviceId) clientDeviceIp,
                ds.deviceId serverDeviceNo,

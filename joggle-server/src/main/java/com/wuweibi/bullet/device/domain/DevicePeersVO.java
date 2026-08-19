@@ -102,4 +102,10 @@ public class DevicePeersVO {
     @ApiModelProperty("通信MTU 默认：1350")
     private Integer mtu = 1350;
 
+    @ApiModelProperty("P2P传输策略：p2p、wss、auto")
+    private String strategy;
+
+    @ApiModelProperty("P2P/WSS带宽限制Mbps，0表示不限速")
+    private Integer bandwidth;
+
 }
