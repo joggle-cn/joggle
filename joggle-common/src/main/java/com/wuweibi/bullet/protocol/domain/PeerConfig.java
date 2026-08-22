@@ -7,6 +7,11 @@ public class PeerConfig {
     public static final String CLIENT="client_client_type";
     public static final String SERVER="client_server_type";
 
+    /**
+     * 设备映射ID
+     */
+    private Long mappingId;
+
     private String type;
     private String appName;
     private String name;

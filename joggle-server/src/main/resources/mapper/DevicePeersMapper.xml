@@ -29,7 +29,7 @@
     </select>
 
     <sql id="peersConfigSql">
-        distinct dp.`id`, dp.`user_id`, dp.`name`, dp.`app_name`, dp.`server_device_id`, dp.`client_device_id`,
+        distinct dp.`id`, dp.`id` as mappingId, dp.`user_id`, dp.`name`, dp.`app_name`, dp.`server_device_id`, dp.`client_device_id`,
                dp.`server_local_port`, dp.`server_local_host`, dp.`client_proxy_port`,
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,

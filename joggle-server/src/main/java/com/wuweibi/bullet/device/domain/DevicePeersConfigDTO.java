@@ -21,6 +21,9 @@ public class DevicePeersConfigDTO {
     @ApiModelProperty("id")
     private Long id;
 
+    @ApiModelProperty("设备映射ID")
+    private Long mappingId;
+
     /**
      * 用户id
      */

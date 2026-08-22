@@ -142,6 +142,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
         // 服务器端
         PeerConfig peerConfig = new PeerConfig();
+        peerConfig.setMappingId(dto.getMappingId());
         peerConfig.setAppName(dto.getAppName());
         peerConfig.setName(dto.getName());
         peerConfig.setPort(dto.getServerLocalPort());
@@ -159,6 +160,7 @@ public class DevicePeersServiceImpl extends ServiceImpl<DevicePeersMapper, Devic
 
 
         PeerConfig clientPeerConfig = new PeerConfig();
+        clientPeerConfig.setMappingId(dto.getMappingId());
         clientPeerConfig.setAppName(dto.getAppName());
         clientPeerConfig.setName(dto.getName());
         clientPeerConfig.setPort(dto.getClientProxyPort());
