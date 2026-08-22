@@ -147,7 +147,9 @@ public class DeviceServiceController {
         Long mappingId = dto.getServiceId();
         Long userId = session.getUserId();
         DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
-        if (Objects.isNull(deviceMapping)) {
+        if (Objects.isNull(deviceMapping)
+                || !userId.equals(deviceMapping.getUserId())
+                || Objects.equals(deviceMapping.getProtocol(), DeviceMapping.PROTOCOL_KCP)) {
             return R.fail("设备服务不存在");
         }
         Long deviceId = deviceMapping.getDeviceId();
@@ -192,7 +194,9 @@ public class DeviceServiceController {
         Long mappingId = dto.getServiceId();
         Long userId = session.getUserId();
         DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
-        if (Objects.isNull(deviceMapping)) {
+        if (Objects.isNull(deviceMapping)
+                || !userId.equals(deviceMapping.getUserId())
+                || Objects.equals(deviceMapping.getProtocol(), DeviceMapping.PROTOCOL_KCP)) {
             return R.fail("设备服务不存在");
         }
         Long deviceId = deviceMapping.getDeviceId();
@@ -255,7 +259,9 @@ public class DeviceServiceController {
         Long mappingId = dto.getServiceId();
         Long userId = session.getUserId();
         DeviceMapping deviceMapping = deviceMappingService.getById(mappingId);
-        if (Objects.isNull(deviceMapping)) {
+        if (Objects.isNull(deviceMapping)
+                || !userId.equals(deviceMapping.getUserId())
+                || Objects.equals(deviceMapping.getProtocol(), DeviceMapping.PROTOCOL_KCP)) {
             return R.fail("设备服务不存在");
         }
         if (!userId.equals(deviceMapping.getUserId())) {

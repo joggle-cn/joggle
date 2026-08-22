@@ -8,6 +8,7 @@ import com.wuweibi.bullet.device.domain.param.DeviceServiceParam;
 import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.domain.DeviceMappingDTO;
 import com.wuweibi.bullet.entity.DeviceMapping;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -59,7 +60,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @param domainId 域名ID
      * @return
      */
-    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId} and is_del = 0")
+    @Select("select count(1) from t_device_mapping where domain_id =#{domainId} and device_id=#{deviceId} and is_del = 0 and ifnull(protocol,0) <> 6")
     boolean existsDomainId(@Param("deviceId") Long deviceId, @Param("domainId") Long domainId);
 
 
@@ -80,7 +81,7 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
             "a.*,b.deviceId deviceNo\n" +
             "from t_device_mapping a \n" +
             "left join t_device b on a.device_id = b.id\n" +
-            "where a.is_del = 0 and a.userId = #{userId} and status = #{status}")
+            "where a.is_del = 0 and ifnull(a.protocol,0) <> 6 and a.userId = #{userId} and status = #{status}")
     List<DeviceMappingDTO> selectAllByUserId(@Param("userId") Long userId, @Param("status") int status);
 
     /**
@@ -139,6 +140,13 @@ public interface DeviceMappingMapper extends BaseMapper<DeviceMapping> {
      * @param port 端口
      * @return
      */
-    @Select("select count(1) from t_device_mapping where id = (select device_id from t_device_mapping where device_id=#{deviceId} and host=#{host} and port=#{port} and is_del =0)")
+    @Select("select count(1) from t_device_mapping where device_id=#{deviceId} and host=#{host} and port=#{port} and is_del =0 and ifnull(protocol,0) <> 6")
     int selectByHostAndPort(@Param("deviceId")Long deviceId,@Param("host") String host,@Param("port") Integer port);
+
+    @Insert("insert into t_device_mapping (" +
+            "id, name, device_id, port, port_protocol, userId, host, protocol, description, status, createTime, server_tunnel_id, is_del, update_time" +
+            ") values (" +
+            "#{id}, #{name}, #{deviceId}, #{port}, #{portProtocol}, #{userId}, #{host}, #{protocol}, #{description}, #{status}, #{createTime}, #{serverTunnelId}, #{isDel}, #{updateTime}" +
+            ")")
+    int insertPeerMapping(DeviceMapping mapping);
 }

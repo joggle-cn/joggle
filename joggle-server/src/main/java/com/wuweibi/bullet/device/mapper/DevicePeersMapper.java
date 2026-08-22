@@ -6,6 +6,7 @@ import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
 import com.wuweibi.bullet.device.entity.DevicePeers;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -18,7 +19,16 @@ import java.util.List;
  */
 public interface DevicePeersMapper extends BaseMapper<DevicePeers> {
 
-
+    @Insert("insert into device_peers (" +
+            "id, user_id, app_name, name, server_device_id, client_device_id, server_local_port, server_mtu, " +
+            "client_proxy_port, server_local_host, client_proxy_host, client_mtu, remark, status, create_time, update_time, " +
+            "config_compress, config_encryption, config_interval, strategy, bandwidth" +
+            ") values (" +
+            "#{id}, #{userId}, #{appName}, #{name}, #{serverDeviceId}, #{clientDeviceId}, #{serverLocalPort}, #{serverMtu}, " +
+            "#{clientProxyPort}, #{serverLocalHost}, #{clientProxyHost}, #{clientMtu}, #{remark}, #{status}, #{createTime}, #{updateTime}, " +
+            "#{configCompress}, #{configEncryption}, #{configInterval}, #{strategy}, #{bandwidth}" +
+            ")")
+    int insertWithId(DevicePeers entity);
 
     Page<DevicePeersVO> selectListPage(Page pageInfo, @Param("params") DevicePeersParam params);
 

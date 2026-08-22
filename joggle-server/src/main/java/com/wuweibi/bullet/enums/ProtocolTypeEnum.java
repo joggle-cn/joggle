@@ -18,6 +18,7 @@ public enum ProtocolTypeEnum {
     HTTPS(3, "https"),
     HTTPS_HTTP(4, "https"),
     UDP(5, "udp"),
+    KCP(6, "kcp"),
 
     ;
     private Integer type;

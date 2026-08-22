@@ -7,6 +7,7 @@ import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceMappingDelDTO;
+import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.service.DeviceMappingManagerService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.DeviceMapping;
@@ -19,19 +20,12 @@ import com.wuweibi.bullet.utils.IpAddrUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-
-import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
 
 /**
  * <p>
@@ -81,12 +75,12 @@ public class DeviceMappingController {
     }
 
     @GetMapping("/")
-    public R<List<DeviceMapping>> device(@JwtUser Session session, @RequestParam Long deviceId) {
-        Long userId = session.getUserId();
-        return R.success(deviceMappingService.listByMap(newMap(2)
-                .setParam("userId", userId)
-                .setParam("device_id", deviceId)
-                .build()));
+    public R<List<MappingDeviceVO>> device(@JwtUser Session session, @RequestParam Long deviceId) {
+        DeviceDetail deviceDetail = deviceService.getDetail(deviceId);
+        if (deviceDetail == null || !session.getUserId().equals(deviceDetail.getUserId())) {
+            return R.fail("设备不存在");
+        }
+        return R.success(deviceMappingService.getByDeviceId(deviceId));
     }
 
     @ApiOperation("更新映射信息")
@@ -103,7 +97,7 @@ public class DeviceMappingController {
         }
 
         DeviceMapping entity = deviceMappingService.getById(deviceMapping.getId());
-        if (Objects.isNull(entity)) {
+        if (Objects.isNull(entity) || Objects.equals(entity.getProtocol(), DeviceMapping.PROTOCOL_KCP)) {
             return R.fail("映射不存在");
         }
 

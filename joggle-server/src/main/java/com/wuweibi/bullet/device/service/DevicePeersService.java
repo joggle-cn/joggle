@@ -31,6 +31,10 @@ public interface DevicePeersService extends IService<DevicePeers> {
 
     DevicePeers savePeers(Long userId, DevicePeersDTO dto, Integer bandwidth);
 
+    boolean updatePeer(DevicePeers entity);
+
+    boolean removePeerById(Long id);
+
     DevicePeersConfigDTO getPeersConfig(Long id);
 
 
@@ -54,4 +58,6 @@ public interface DevicePeersService extends IService<DevicePeers> {
      * @return
      */
     List<DevicePeersVO> getListByServerDeviceId(Long deviceId);
+
+    void closeRelayPeersByUserId(Long userId);
 }

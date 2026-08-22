@@ -212,12 +212,14 @@ public class DeviceMappingManagerServiceImpl implements DeviceMappingManagerServ
             return new DeviceMapping();
         }
         DeviceMapping entity = deviceMappingService.getById(id);
-        return entity == null ? new DeviceMapping() : entity;
+        return entity == null || Objects.equals(entity.getProtocol(), DeviceMapping.PROTOCOL_KCP)
+                ? new DeviceMapping() : entity;
     }
 
     private boolean existsOtherMappingByDomain(DeviceMapping entity) {
         return deviceMappingService.count(Wrappers.<DeviceMapping>lambdaQuery()
                 .eq(DeviceMapping::getDomain, entity.getDomain())
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP)
                 .ne(entity.getId() != null, DeviceMapping::getId, entity.getId())) > 0;
     }
 

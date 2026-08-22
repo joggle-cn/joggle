@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.provider.client.JdbcClientDetailsServ
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -168,7 +169,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public TokenStore tokenStore() {
         Assert.state(dataSource != null, "DataSource must be provided");
-        return new JdbcTokenStore(dataSource);
+        JdbcTokenStore tokenStore = new JdbcTokenStore(dataSource);
+        tokenStore.setAuthenticationKeyGenerator(authenticationKeyGenerator());
+        return tokenStore;
+    }
+
+    @Bean
+    public AuthenticationKeyGenerator authenticationKeyGenerator() {
+        return new MultiTerminalAuthenticationKeyGenerator();
     }
 
     /**

@@ -16,6 +16,7 @@ public class ProtocolType {
     public static final int PROTOCOL_HTTPS = 3;
     public static final int PROTOCOL_HTTP_HTTPS = 4;
     public static final int PROTOCOL_UDP   = 5;
+    public static final int PROTOCOL_KCP   = 6;
 
 
     public static boolean isPort(Integer protocol) {

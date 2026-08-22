@@ -7,15 +7,16 @@ import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
+import com.wuweibi.bullet.device.domain.DevicePeersDetailVO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
-import com.wuweibi.bullet.device.domain.DevicePeersDetailVO;
 import com.wuweibi.bullet.device.domain.dto.DevicePeersStatusDTO;
-import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.entity.Device;
+import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
@@ -36,6 +37,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * (DevicePeers)表控制层
@@ -111,6 +113,10 @@ public class DevicePeersController {
 
     @Resource
     private ResourcePackageService resourcePackageService;
+
+    @Resource
+    private UserFlowService userFlowService;
+
     /**
      * 新增数据
      *
@@ -124,6 +130,10 @@ public class DevicePeersController {
         dto.setId(null);
         Long userId = SecurityUtils.getUserId();
         UserPackage userPackage = applyPackageConfig(userId, dto);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, dto.getStatus(), dto.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
         if (dto.getServerDeviceId().equals(dto.getClientDeviceId())) {
             return R.fail("请选择不同设备");
         }
@@ -185,6 +195,10 @@ public class DevicePeersController {
     public R<Boolean> update(@RequestBody @Valid DevicePeersDTO dto) {
         Long userId = SecurityUtils.getUserId();
         UserPackage userPackage = applyPackageConfig(userId, dto);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, dto.getStatus(), dto.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
         if (dto.getId() == null) {
             return R.fail("id不能为空");
         }
@@ -228,7 +242,7 @@ public class DevicePeersController {
         entity.setConfigCompress(dto.getConfigCompress());
         entity.setStrategy(dto.getStrategy());
         entity.setBandwidth(userPackage == null ? null : userPackage.getBroadbandRate());
-        this.devicePeersService.updateById(entity);
+        this.devicePeersService.updatePeer(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
 
@@ -267,6 +281,19 @@ public class DevicePeersController {
         return strategy.toLowerCase();
     }
 
+    private R<Boolean> checkRelayFlow(Long userId, Integer status, String strategy) {
+        if (!Objects.equals(status, 1)) {
+            return null;
+        }
+        if (!"wss".equalsIgnoreCase(strategy) && !"auto".equalsIgnoreCase(strategy)) {
+            return null;
+        }
+        if (userFlowService.hasFlow(userId)) {
+            return null;
+        }
+        return R.fail(SystemErrorType.FLOW_IS_DUE);
+    }
+
     /**
      * P2P端到端设置状态
      *
@@ -293,7 +320,11 @@ public class DevicePeersController {
         entity.setUserId(userId);
         entity.setUpdateTime(new Date());
         applyPackageConfig(userId, entity);
-        this.devicePeersService.updateById(entity);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, entity.getStatus(), entity.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
+        this.devicePeersService.updatePeer(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
 
@@ -323,7 +354,7 @@ public class DevicePeersController {
         if (devicePeers.getUserId().compareTo(userId) != 0) {
             return R.fail("用户数据不存在");
         }
-        this.devicePeersService.removeById(idDTO.getId());
+        this.devicePeersService.removePeerById(idDTO.getId().longValue());
         R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, -1);
         if (r1.isFail()) {
             return r1;

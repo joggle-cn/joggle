@@ -110,7 +110,8 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     @Override
     public boolean existsDomainId( Long domainId) {
         return this.baseMapper.selectCount(Wrappers.<DeviceMapping>lambdaQuery()
-                .eq(DeviceMapping::getDomainId, domainId))>0;
+                .eq(DeviceMapping::getDomainId, domainId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP))>0;
     }
 
     @Override
@@ -122,6 +123,7 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public boolean hasOkMapping(Long userId) {
         return this.baseMapper.selectCount(Wrappers.<DeviceMapping>lambdaQuery()
                 .eq(DeviceMapping::getUserId, userId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP)
                 .eq(DeviceMapping::getStatus, 1)
         ) > 0;
     }
@@ -135,6 +137,7 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public boolean updateDownByUserId(Long userId) {
         return update(Wrappers.<DeviceMapping>lambdaUpdate()
                 .eq(DeviceMapping::getUserId, userId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP)
                 .set(DeviceMapping::getStatus, 0)
         );
     }
@@ -143,6 +146,7 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     public Long countByDeviceId(Long deviceId) {
         return count(Wrappers.<DeviceMapping>lambdaQuery()
                 .eq(DeviceMapping::getDeviceId, deviceId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP)
         );
     }
 
@@ -154,7 +158,8 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     @Override
     public DeviceMapping getByDomainId(Long deviceId, Long domainId) {
         LambdaQueryWrapper<DeviceMapping> lqw = Wrappers.<DeviceMapping>lambdaQuery()
-                .eq(DeviceMapping::getDomainId, domainId);
+                .eq(DeviceMapping::getDomainId, domainId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP);
         if (Objects.nonNull(deviceId)) {
             lqw.eq(DeviceMapping::getDeviceId, deviceId);
         }
@@ -174,7 +179,8 @@ public class DeviceMappingServiceImpl extends ServiceImpl<DeviceMappingMapper, D
     @Override
     public boolean checkUserDomain(Long excludeMapId, Long userDomainId) {
         LambdaQueryWrapper<DeviceMapping> lqw = Wrappers.lambdaQuery();
-        lqw.eq(DeviceMapping::getUserDomainId, userDomainId);
+        lqw.eq(DeviceMapping::getUserDomainId, userDomainId)
+                .ne(DeviceMapping::getProtocol, DeviceMapping.PROTOCOL_KCP);
         if (Objects.nonNull(excludeMapId)) {
             lqw.ne(DeviceMapping::getId, excludeMapId);
         }
