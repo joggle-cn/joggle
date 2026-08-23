@@ -6,6 +6,7 @@ import com.wuweibi.bullet.alias.State;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.business.UserDomainCertBiz;
 import com.wuweibi.bullet.common.exception.RException;
+import com.wuweibi.bullet.config.properties.AliOssProperties;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
@@ -34,6 +35,7 @@ import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
 import io.swagger.annotations.Api;
@@ -93,6 +95,9 @@ public class OpenController {
 
     @Resource
     private JoggleProperties joggleProperties;
+
+    @Resource
+    private AliOssProperties aliOssProperties;
 
 
     @InitBinder
@@ -274,12 +279,22 @@ public class OpenController {
         releaseInfo.setCreateDate(createTime);
         releaseDetail.setRelease(releaseInfo);
 
-        releaseDetail.setDownload_url(clientVersion.getDownloadUrl());
+        releaseDetail.setDownload_url(resolveDownloadUrl(clientVersion.getDownloadUrl()));
         releaseDetail.setChecksum(clientVersion.getChecksum());
 //        releaseDetail.setSignature(null);
         releaseDetail.setPatch_type(null);
         releaseDetail.setAvailable(true);
         return releaseDetail;
+    }
+
+    private String resolveDownloadUrl(String downloadUrl) {
+        if (downloadUrl == null) return null;
+        String baseUrl = aliOssProperties.getPublicServerUrl();
+        if (!SpringUtils.isProduction()) {
+            baseUrl = "http://192.168.1.6";
+        }
+        String path = downloadUrl.replaceFirst("^https?://[^/]+", "");
+        return baseUrl + path;
     }
 
 

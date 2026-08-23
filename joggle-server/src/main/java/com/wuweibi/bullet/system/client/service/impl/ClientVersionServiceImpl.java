@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuweibi.bullet.alias.CacheBlock;
+import com.wuweibi.bullet.config.properties.AliOssProperties;
 import com.wuweibi.bullet.domain.dto.ClientInfoDTO;
 import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
 import com.wuweibi.bullet.system.client.domain.NgrokVersionVO;
@@ -11,10 +12,12 @@ import com.wuweibi.bullet.system.client.entity.ClientVersion;
 import com.wuweibi.bullet.system.client.mapper.ClientVersionMapper;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
+import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +38,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, ClientVersion> implements ClientVersionService {
+
+    @Resource
+    private AliOssProperties aliOssProperties;
 
     @Override
     public ClientVersion getNewVersion(ClientInfoDTO clientInfoDTO) {
@@ -57,6 +63,16 @@ public class ClientVersionServiceImpl extends ServiceImpl<ClientVersionMapper, C
                 .last("limit 1")
         );
         if (clientVersion == null) return 0;
+
+        String baseUrl = aliOssProperties.getPublicServerUrl();
+        boolean dev = !SpringUtils.isProduction();
+        if (dev) {
+            baseUrl = "http://192.168.1.6";
+        }
+        downloadUrl = baseUrl + downloadUrl.replaceFirst("^https?://[^/]+", "");
+        if (dev) {
+            downloadUrl = downloadUrl.replaceFirst("^(https?://[^/]+/[^/]+)/(\\d+\\.\\d+(\\.\\d+)?)/", "$1/");
+        }
 
         clientVersion.setDownloadUrl(downloadUrl);
         clientVersion.setChecksum(checksum);
