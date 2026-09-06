@@ -12,10 +12,12 @@ MAINTAINER docker_user admin@wuweibi.com
 
 ENV JVM_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/logs/oom/heapdump.hprof -XX:OnOutOfMemoryError='/app/script/heapDump.sh'
 ENV JAVA_OPTS -Xms256m -Xmx512m -XX:MaxMetaspaceSize=300m
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
 # 时区处理
 ENV TZ Asia/Shanghai
 # 中文乱码处理
 ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
 
 
@@ -38,6 +40,6 @@ ENTRYPOINT ["/sbin/tini","--"]
 # 启动命令
 CMD exec $JAVA_HOME/bin/java $SKYWALKING_OPTS ${SENTINEL_OPTS} -Dspring.output.ansi.enabled=ALWAYS \
     -Dsecurerandom.source=file:/dev/urandom -Drocketmq.client.logUseSlf4j=true \
-    -server -jar $JVM_OPTS $JAVA_OPTS $JAVA_JMX_OPTS /app/app.jar \
+    -server $JVM_OPTS $JAVA_OPTS $JAVA_JMX_OPTS -jar /app/app.jar \
     --spring.profiles.active=$APP_ENV $JAVA_PARAMS
 

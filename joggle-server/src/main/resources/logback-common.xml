@@ -23,6 +23,7 @@
 	<!-- Console log output -->
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
+			<charset>UTF-8</charset>
 			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
 		</encoder>
 	</appender>
@@ -36,6 +37,7 @@
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
+			<charset>UTF-8</charset>
 			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
