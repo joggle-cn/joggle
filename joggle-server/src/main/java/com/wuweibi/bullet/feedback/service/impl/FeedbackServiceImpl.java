@@ -9,7 +9,7 @@ import com.wuweibi.bullet.feedback.mapper.FeedbackMapper;
 import com.wuweibi.bullet.feedback.service.FeedbackService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

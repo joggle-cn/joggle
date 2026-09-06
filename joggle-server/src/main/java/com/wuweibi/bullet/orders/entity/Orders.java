@@ -4,11 +4,11 @@ package com.wuweibi.bullet.orders.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (Orders)表实体类
@@ -40,9 +40,9 @@ public class Orders extends Model<Orders> {
     private BigDecimal discountAmount;
     //支付价格
     private BigDecimal payAmount;
-    @ApiModelProperty("退款金额")
+    @Schema(description = "退款金额")
     private BigDecimal refundMoney;
-    @ApiModelProperty("退款数量")
+    @Schema(description = "退款数量")
     private Long refundAmount;
     //支付方式 1余额 2支付宝 3微信 4 VIP权益
     private Integer payType;

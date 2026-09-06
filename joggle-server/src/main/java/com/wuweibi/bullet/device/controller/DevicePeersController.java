@@ -1,34 +1,42 @@
 package com.wuweibi.bullet.device.controller;
 
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.device.domain.DevicePeersConfigDTO;
 import com.wuweibi.bullet.device.domain.DevicePeersDTO;
+import com.wuweibi.bullet.device.domain.DevicePeersDetailVO;
 import com.wuweibi.bullet.device.domain.DevicePeersParam;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
+import com.wuweibi.bullet.device.domain.dto.DevicePeersStatusDTO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.DevicePeers;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
+import com.wuweibi.bullet.flow.service.UserFlowService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.protocol.consts.UserPackageLimitEnum;
+import com.wuweibi.bullet.res.entity.ResourcePackage;
+import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
+import com.wuweibi.bullet.res.service.ResourcePackageService;
+import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (DevicePeers)表控制层
@@ -40,7 +48,7 @@ import java.util.Date;
 @Slf4j
 @AdminApi
 @RestController
-@Api(value = "p2p映射", tags = "p2p映射")
+@Tag(name = "p2p映射")
 @RequestMapping("/api/device/peers")
 public class DevicePeersController {
     /**
@@ -56,7 +64,7 @@ public class DevicePeersController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<DevicePeersVO>> getPageList(PageParam page, DevicePeersParam params) {
         Long userId = SecurityUtils.getUserId();
@@ -71,14 +79,26 @@ public class DevicePeersController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "端到端映射详情")
     @GetMapping("/detail")
-    public R<DevicePeers> detail(@RequestParam Serializable id) {
+    public R<DevicePeersDetailVO> detail(@RequestParam Serializable id) {
         DevicePeers entity = this.devicePeersService.getById(id);
         if (entity == null) {
             return R.fail(SystemErrorType.DATA_NOT_FOUND);
         }
-        return R.ok(entity);
+        DevicePeersDetailVO vo = new DevicePeersDetailVO();
+        BeanUtils.copyProperties(entity, vo);
+        Device clientDevice = deviceService.getById(entity.getClientDeviceId());
+        if (clientDevice != null) {
+            vo.setClientDeviceNo(clientDevice.getDeviceNo());
+            vo.setClientDeviceName(clientDevice.getName());
+        }
+        Device serverDevice = deviceService.getById(entity.getServerDeviceId());
+        if (serverDevice != null) {
+            vo.setServerDeviceNo(serverDevice.getDeviceNo());
+            vo.setServerDeviceName(serverDevice.getName());
+        }
+        return R.ok(vo);
     }
 
     @Resource
@@ -86,18 +106,33 @@ public class DevicePeersController {
 
     @Resource
     private UserPackageManager userPackageManager;
+
+    @Resource
+    private UserPackageService userPackageService;
+
+    @Resource
+    private ResourcePackageService resourcePackageService;
+
+    @Resource
+    private UserFlowService userFlowService;
+
     /**
      * 新增数据
      *
      * @param dto 实体对象
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PostMapping
     @Transactional
     public R<Boolean> save(@RequestBody @Valid DevicePeersDTO dto) {
         dto.setId(null);
         Long userId = SecurityUtils.getUserId();
+        UserPackage userPackage = applyPackageConfig(userId, dto);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, dto.getStatus(), dto.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
         if (dto.getServerDeviceId().equals(dto.getClientDeviceId())) {
             return R.fail("请选择不同设备");
         }
@@ -128,7 +163,8 @@ public class DevicePeersController {
             return R.fail("代理端口存在冲突，请更换");
         }
 
-        DevicePeers peers = this.devicePeersService.savePeers(userId, dto);
+        DevicePeers peers = this.devicePeersService.savePeers(userId, dto,
+                userPackage == null ? null : userPackage.getBroadbandRate());
         R<Boolean> r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, 1);
         if (r1.isFail()) {
             return r1;
@@ -144,19 +180,22 @@ public class DevicePeersController {
         return R.ok();
     }
 
-
-
     /**
      * 修改数据
      *
      * @param dto 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     @Transactional
     public R<Boolean> update(@RequestBody @Valid DevicePeersDTO dto) {
         Long userId = SecurityUtils.getUserId();
+        UserPackage userPackage = applyPackageConfig(userId, dto);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, dto.getStatus(), dto.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
         if (dto.getId() == null) {
             return R.fail("id不能为空");
         }
@@ -198,18 +237,97 @@ public class DevicePeersController {
         entity.setClientMtu(dto.getClientMtu());
         entity.setServerMtu(dto.getClientMtu());
         entity.setConfigCompress(dto.getConfigCompress());
-        this.devicePeersService.updateById(entity);
+        entity.setStrategy(dto.getStrategy());
+        entity.setBandwidth(userPackage == null ? null : userPackage.getBroadbandRate());
+        this.devicePeersService.updatePeer(entity);
 
         DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
 
         // 发送peer消息
         devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
 
-
         return R.ok();
     }
 
+    private UserPackage applyPackageConfig(Long userId, DevicePeersDTO dto) {
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        dto.setStrategy(resolveStrategy(userPackage, dto.getStrategy()));
+        return userPackage;
+    }
 
+    private void applyPackageConfig(Long userId, DevicePeers entity) {
+        UserPackage userPackage = userPackageService.getByUserId(userId);
+        entity.setBandwidth(userPackage == null ? null : userPackage.getBroadbandRate());
+        entity.setStrategy(resolveStrategy(userPackage, entity.getStrategy()));
+    }
+
+    private String resolveStrategy(UserPackage userPackage, String strategy) {
+        if (!"wss".equalsIgnoreCase(strategy) && !"auto".equalsIgnoreCase(strategy)) {
+            return "p2p";
+        }
+
+        if (userPackage == null || userPackage.getResourcePackageId() == null) {
+            return "p2p";
+        }
+
+        ResourcePackage resourcePackage = resourcePackageService.getById(userPackage.getResourcePackageId());
+        if (resourcePackage == null || !Integer.valueOf(1).equals(resourcePackage.getRelayMode())) {
+            return "p2p";
+        }
+        return strategy.toLowerCase();
+    }
+
+    private R<Boolean> checkRelayFlow(Long userId, Integer status, String strategy) {
+        if (!Objects.equals(status, 1)) {
+            return null;
+        }
+        if (!"wss".equalsIgnoreCase(strategy) && !"auto".equalsIgnoreCase(strategy)) {
+            return null;
+        }
+        if (userFlowService.hasFlow(userId)) {
+            return null;
+        }
+        return R.fail(SystemErrorType.FLOW_IS_DUE);
+    }
+
+    /**
+     * P2P端到端设置状态
+     *
+     * @param dto 实体对象
+     * @return 修改结果
+     */
+    @Operation(summary = "P2P端到端设置状态")
+    @PutMapping("/status")
+    @Transactional
+    public R<Boolean> updateStatus(@RequestBody @Valid DevicePeersStatusDTO dto) {
+        Long userId = SecurityUtils.getUserId();
+        if (dto.getId() == null) {
+            return R.fail("id不能为空");
+        }
+
+        DevicePeers entity = devicePeersService.getById(dto.getId());
+        if (entity == null) {
+            return R.fail("数据不存在");
+        }
+        if (!entity.getUserId().equals(userId)) {
+            return R.fail("数据不存在");
+        }
+        BeanUtils.copyProperties(dto, entity);
+        entity.setUserId(userId);
+        entity.setUpdateTime(new Date());
+        applyPackageConfig(userId, entity);
+        R<Boolean> flowCheckResult = checkRelayFlow(userId, entity.getStatus(), entity.getStrategy());
+        if (flowCheckResult != null) {
+            return flowCheckResult;
+        }
+        this.devicePeersService.updatePeer(entity);
+
+        DevicePeersConfigDTO devicePeersConfigDTO = this.devicePeersService.getPeersConfig(entity.getId());
+
+        // 发送peer消息
+        devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
+        return R.ok();
+    }
 
     /**
      * 删除数据
@@ -217,7 +335,7 @@ public class DevicePeersController {
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除数据")
+    @Operation(summary = "删除数据")
     @DeleteMapping()
     @Transactional
     public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
@@ -230,7 +348,7 @@ public class DevicePeersController {
         if (devicePeers.getUserId().compareTo(userId) != 0) {
             return R.fail("用户数据不存在");
         }
-        this.devicePeersService.removeById(idDTO.getId());
+        this.devicePeersService.removePeerById(idDTO.getId().longValue());
         R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.PeerNum, -1);
         if (r1.isFail()) {
             return r1;

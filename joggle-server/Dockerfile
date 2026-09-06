@@ -2,10 +2,12 @@ FROM bellsoft/liberica-openjdk-alpine:17
 
 # 构建参数
 ENV JAVA_OPTS -Xms256m -Xmx512m
+ENV JAVA_TOOL_OPTIONS -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
 ENV TZ Asia/Shanghai
 ENV APP_ENV dev
 ENV SERVER_PORT 80
 ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
 # 构建参数
 ARG JAR
@@ -30,5 +32,5 @@ ADD ./target/bullet-server.jar /app/app.jar
 
 
 # 启动命令
-CMD exec $JAVA_HOME/bin/java -jar $JAVA_OPTS /app/app.jar --spring.profiles.active=$APP_ENV
+CMD exec $JAVA_HOME/bin/java $JAVA_OPTS -jar /app/app.jar --spring.profiles.active=$APP_ENV
 

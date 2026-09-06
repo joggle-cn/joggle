@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.ClassUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author kl
@@ -48,7 +48,7 @@ public class DLockAutoConfiguration {
             config.useClusterServers().setPassword(lockConfig.getPassword())
                     .addNodeAddress(lockConfig.getClusterServer().getNodeAddresses());
         } else {
-            String address = lockConfig.getHost() + ":" + lockConfig.getPort();
+            String address = "redis://"+lockConfig.getHost() + ":" + lockConfig.getPort();
             config.useSingleServer().setAddress(address)
                     .setDatabase(lockConfig.getDatabase())
                     .setPassword(lockConfig.getPassword())

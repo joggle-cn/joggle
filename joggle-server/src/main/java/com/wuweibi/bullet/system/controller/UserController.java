@@ -1,7 +1,5 @@
 package com.wuweibi.bullet.system.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.annotation.ResponseMessage;
 import com.wuweibi.bullet.conn.WebsocketPool;
@@ -19,24 +17,28 @@ import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.domain.dto.NoticeSwitchParam;
 import com.wuweibi.bullet.system.domain.vo.UserDetailVO;
+import com.wuweibi.bullet.system.domain.vo.UserLoginInfoVO;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -74,42 +76,39 @@ public class UserController {
     /**
      * 获取登录的用户信息
      */
-    @ApiOperation("获取登录的用户信息")
+    @Operation(summary = "获取登录的用户信息")
     @GetMapping("/login/info")
-    public R loginInfo() {
+    public R<UserLoginInfoVO> loginInfo() {
         if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
 
         Long userId = SecurityUtils.getUserId();
 
-        // 验证邮箱正确性
         UserDetailVO user = userService.getDetailById(userId);
         UserFlow userFlow = userFlowService.getUserFlow(userId);
-        user.setPassword(null);
 
-        JSONObject result = (JSONObject) JSON.toJSON(user);
-
-        result.put("connNums", websocketPool.count());
+        UserLoginInfoVO vo = new UserLoginInfoVO();
+        BeanUtils.copyProperties(user, vo);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        result.put("loginTime", sdf.format(user.getLoginTime()));
-        result.put("balance", StringUtil.roundHalfUp(user.getBalance()));
-        result.put("userFlow", userFlow.getFlow()/1024); //MB
-        result.put("userPackageFlow", user.getUserPackageFlow()/1024); //MB
-        result.put("userCertification", user.getUserCertification());
-        result.put("systemNotice", user.getSystemNotice());
+        vo.setLoginTime(sdf.format(user.getLoginTime()));
+        vo.setBalance(StringUtil.roundHalfUp(user.getBalance()));
+        vo.setConnNums(websocketPool.count());
+        vo.setUserFlow(userFlow.getFlow() / 1024);
+        vo.setUserFlowTotal(userFlow.getFlowTotal() / 1024);
+        vo.setUserPackageFlow(user.getUserPackageFlow() / 1024);
+        vo.setUserPackageFlowTotal(user.getUserPackageFlowTotal() / 1024);
 
         if (user.getUserCertification() != 1) {
             UserCertification userCertification = userCertificationService.getLastResult(userId);
             if (userCertification != null) {
-                result.put("ucResultMsg", userCertification.getResultMsg());
-                result.put("ucExamineTime", userCertification.getExamineTime());
+                vo.setUcResultMsg(userCertification.getResultMsg());
+                vo.setUcExamineTime(userCertification.getExamineTime());
             }
         }
 
-        return R.success(result);
+        return R.success(vo);
     }
 
 
@@ -147,19 +146,21 @@ public class UserController {
     }
 
 
-    @Resource()
-    ConsumerTokenServices consumerTokenServices;
+    @Resource
+    private OAuth2AuthorizationService authorizationService;
 
 
     /**
      * 注销登录操作
      */
-    @ApiOperation("注销登录操作")
+    @Operation(summary = "注销登录操作")
     @PostMapping(value = "/loginout")
     public R loginOut(HttpServletRequest request) {
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenValue = StringUtils.substring(authentication, AuthenticationService.BEARER_BEGIN_INDEX);
-        if (consumerTokenServices.revokeToken(tokenValue)) {
+        OAuth2Authorization authorization = authorizationService.findByToken(tokenValue, OAuth2TokenType.ACCESS_TOKEN);
+        if (authorization != null) {
+            authorizationService.remove(authorization);
             return R.success();
         } else {
             return R.fail(AuthErrorType.INVALID_REQUEST);
@@ -200,7 +201,7 @@ public class UserController {
     /**
      * 系统通知开关
      */
-    @ApiOperation("系统通知开关")
+    @Operation(summary = "系统通知开关")
     @ResponseMessage
     @PostMapping(value = "/notice/switch")
     public R<Boolean> noticeSwitch(@RequestBody @Valid NoticeSwitchParam dto, @JwtUser Session session) {

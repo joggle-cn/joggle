@@ -12,7 +12,6 @@ import com.wuweibi.bullet.entity.Role;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.RoleService;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -21,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 /**
@@ -38,7 +38,7 @@ import java.util.Date;
 
 @Slf4j
 @AdminApi
-@Api(tags = "角色管理")
+@Tag(name = "角色管理")
 @RestController
 @RequestMapping("/admin/role")
 public class RoleController {

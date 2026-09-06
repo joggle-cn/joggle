@@ -14,16 +14,16 @@ import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 数据收集(DataMetrics)表控制层
@@ -33,7 +33,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @WebApi
-@Api(tags = "设备认证")
+@Tag(name = "设备认证")
 @RestController
 @RequestMapping("/inner/open/device")
 public class DeviceOpenInnerController {
@@ -42,7 +42,7 @@ public class DeviceOpenInnerController {
     private DeviceService deviceService;
 
 
-    @ApiOperation("设备秘钥校验【服务端调用校验】")
+    @Operation(summary = "设备秘钥校验【服务端调用校验】")
     @PostMapping(value = "/auth")
     public R<DeviceAuthVO> deviceSecret(@RequestBody @Valid DeviceAuthDTO deviceAuthDTO) {
         String deviceNo = deviceAuthDTO.getDeviceNo();
@@ -89,7 +89,7 @@ public class DeviceOpenInnerController {
     @Resource
     private DomainService  domainService;
 
-    @ApiOperation("获取映射扩展配置")
+    @Operation(summary = "获取映射扩展配置")
     @PostMapping(value = "/mapping/ext")
     public R<DomainConfigVO> deviceSecret(@RequestBody @Valid DeviceMappingConfigParam param) {
         Long mappingId = param.getMappingId();

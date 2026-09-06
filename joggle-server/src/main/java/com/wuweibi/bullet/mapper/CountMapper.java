@@ -3,6 +3,7 @@ package com.wuweibi.bullet.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuweibi.bullet.dashboard.domain.DeviceCountInfoVO;
 import com.wuweibi.bullet.dashboard.domain.DeviceDateItemVO;
+import com.wuweibi.bullet.dashboard.domain.UserDeviceCountDTO;
 import com.wuweibi.bullet.dashboard.domain.UserFlowCountDTO;
 import com.wuweibi.bullet.domain.vo.CountVO;
 import com.wuweibi.bullet.metrics.entity.DataMetricsHour;
@@ -33,6 +34,13 @@ public interface CountMapper extends BaseMapper {
      * @return
      */
     UserFlowCountDTO selectUserCountInfo(@Param("userId") Long userId);
+
+    /**
+     * 统计用户设备总数与在线设备数量
+     * @param userId 用户ID
+     * @return
+     */
+    UserDeviceCountDTO selectUserDeviceCountInfo(@Param("userId") Long userId);
 
     /**
      * 统计设备流量排行
@@ -66,5 +74,5 @@ public interface CountMapper extends BaseMapper {
      * @param endDate 结束时间 yyyy-MM-dd
      * @return
      */
-    List<DataMetricsHour> selectAllFlowTrendHourStream(@Param("userId") Long userId, @Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<DataMetricsHour> selectAllFlowTrendHourStream(@Param("userId") Long userId, @Param("deviceId") Long deviceId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

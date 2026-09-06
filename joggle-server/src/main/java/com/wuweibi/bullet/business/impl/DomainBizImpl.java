@@ -16,11 +16,10 @@ import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageRightsService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import com.wuweibi.bullet.utils.StringHttpUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,11 +58,14 @@ public class DomainBizImpl implements DomainBiz {
 
         //生成域名
         Domain domain = new Domain();
+        domain.setCreateTime(new Date());
+        domain.setBuyTime(new Date());
+        domain.setDueTime(userPackage.getEndTime());
         domain.setUserId(userId);
-        String portProtocol = deviceMapping.getPortProtocol();
+        domain.setStatus(1);
         Integer serverTunnelId = deviceMapping.getServerTunnelId();
         int type = DomainTypeEnum.PORT.getType();
-        if(StringHttpUtils.isHttp(portProtocol)){
+        if(UserPackageLimitEnum.DomainNum.equals(enumObj)){
             type = DomainTypeEnum.DOMAIN.getType();
             domain.setType(type);
             domain.setCreateTime(new Date());
@@ -73,6 +75,7 @@ public class DomainBizImpl implements DomainBiz {
             domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(serverTunnelId);// 默认通道
             domain.setBandwidth(userPackage.getBroadbandRate());// 宽带
+            domain.setConcurrentNum(userPackage.getConcurrentNum());// 并发
         }else{
             type = DomainTypeEnum.PORT.getType();
             domain.setType(type);
@@ -88,6 +91,7 @@ public class DomainBizImpl implements DomainBiz {
             domain.setStatus(DomainStatusEnum.BUY.getStatus());
             domain.setServerTunnelId(serverTunnelId);// 默认通道
             domain.setBandwidth(userPackage.getBroadbandRate());// 宽带
+            domain.setConcurrentNum(userPackage.getConcurrentNum());// 并发
         }
         domainService.save(domain);
 

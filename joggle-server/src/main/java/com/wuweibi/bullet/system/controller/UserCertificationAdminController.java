@@ -7,15 +7,15 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.domain.dto.UserCertAdminParam;
 import com.wuweibi.bullet.system.domain.vo.UserCertificationAdminListVO;
 import com.wuweibi.bullet.system.service.UserCertificationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 用户实名认证(UserCertification)表控制层
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
-@Api(value = "用户实名认证", tags = "用户实名认证")
+@Tag(name = "用户实名认证")
 @RequestMapping("/admin/user/certification")
 public class UserCertificationAdminController {
     /**
@@ -38,7 +38,7 @@ public class UserCertificationAdminController {
     private RedisTemplate redisTemplate;
 
 
-    @ApiOperation("用户实名认证分页查询")
+    @Operation(summary = "用户实名认证分页查询")
     @GetMapping("/list")
     public R<Page<UserCertificationAdminListVO>> getPageList(PageParam page, UserCertAdminParam params) {
         return R.ok(this.userCertificationService.getAdminList(page.toMybatisPlusPage(), params));

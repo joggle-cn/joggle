@@ -3,31 +3,26 @@ package com.wuweibi.bullet.device.controller;
  * Created by marker on 2017/12/6.
  */
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.annotation.JwtUser;
 import com.wuweibi.bullet.common.exception.RException;
-import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.conn.WebsocketPool;
-import com.wuweibi.bullet.core.builder.MapBuilder;
 import com.wuweibi.bullet.device.domain.DevicePeersVO;
-import com.wuweibi.bullet.device.domain.dto.DeviceCheckUpdateDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceDelDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceSwitchLineDTO;
-import com.wuweibi.bullet.device.domain.dto.DeviceUpdateDTO;
+import com.wuweibi.bullet.device.domain.dto.*;
+import com.wuweibi.bullet.device.domain.param.DeviceBindParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
+import com.wuweibi.bullet.device.domain.vo.DeviceInfoVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
-import com.wuweibi.bullet.device.domain.vo.MappingDeviceVO;
 import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.device.entity.ServerTunnel;
+import com.wuweibi.bullet.device.service.DeviceMappingViewService;
 import com.wuweibi.bullet.device.service.DevicePeersService;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.domain.dto.DeviceDTO;
 import com.wuweibi.bullet.entity.DeviceOnline;
 import com.wuweibi.bullet.entity.api.R;
-import com.wuweibi.bullet.enums.ProtocolTypeEnum;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
@@ -43,25 +38,19 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.data.redis.core.BoundHashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_FLOW_TODAY;
-import static com.wuweibi.bullet.alias.CacheCode.DEVICE_MAPPING_STATISTICS_LINK_TODAY;
-import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 设备：提供设备的管理功能，能够对设备绑定、查询、设备解绑、设备信息更新等功能。
@@ -71,7 +60,7 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
  **/
 @Slf4j
 @WebApi
-@Api(tags = "设备管理")
+@Tag(name = "设备管理")
 @RestController
 @RequestMapping("/api/user/device")
 public class DeviceController {
@@ -96,7 +85,7 @@ public class DeviceController {
      *
      * @return
      */
-    @ApiOperation("设备下拉列表")
+    @Operation(summary = "设备下拉列表")
     @GetMapping("/options")
     public R<List<DeviceOption>> deviceOptions() {
         Long userId = SecurityUtils.getUserId();
@@ -106,31 +95,43 @@ public class DeviceController {
 
     /**
      * 设备列表
+     * 支持下拉刷新（响应不缓存），支持按状态、os 筛选，按名称/延迟排序
      *
      * @return
      */
-    @ApiOperation("用户的设备列表")
+    @Operation(summary = "用户的设备列表")
     @GetMapping
-    public R<List<DeviceDTO>> device() {
+    public R<List<DeviceDTO>> device(DeviceWebQueryParam param) {
         Long userId = SecurityUtils.getUserId();
-        List<DeviceDTO> list = deviceService.getWebListByUserId(userId);
+        List<DeviceDTO> list = deviceService.getWebListByUserId(userId, param);
         return R.ok(list);
     }
 
+    /**
+     * 最近设备列表（首页展示，按设备在线时间倒序）
+     *
+     * @return
+     */
+    @Operation(summary = "首页最近设备")
+    @GetMapping("/recent")
+    public R<List<DeviceDTO>> recentDevice() {
+        Long userId = SecurityUtils.getUserId();
+        List<DeviceDTO> list = deviceService.getRecentWebListByUserId(userId, 2);
+        return R.ok(list);
+    }
 
     /**
      * 更新设备基本信息
      *
      * @return
      */
-    @ApiOperation("更新设备信息")
+    @Operation(summary = "更新设备信息")
     @PostMapping()
     public R save(@RequestBody @Valid DeviceUpdateDTO dto) {
         Long userId = SecurityUtils.getUserId();
         Long deviceId = dto.getId();
         String name = dto.getName();
 
-        // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
         if (status) {
             deviceService.updateName(deviceId, name);
@@ -138,25 +139,25 @@ public class DeviceController {
         return R.success();
     }
 
-
     /**
-     * 删除设备 解绑
+     * 删除设备解绑
+     *
      * @return
      */
-    @ApiOperation("删除设备")
+    @Operation(summary = "删除设备")
     @DeleteMapping(value = "")
     @Transactional
     public R<Boolean> delete(@JwtUser Session session,
-                         @RequestBody @Valid DeviceDelDTO dto,
-                         HttpServletRequest request) {
+                             @RequestBody @Valid DeviceDelDTO dto,
+                             HttpServletRequest request) {
         Long userId = session.getUserId();
         Long deviceId = dto.getId();
 
         Device device = deviceService.getById(deviceId);
-        if (Objects.isNull(device)) { // 验证是否存在
+        if (Objects.isNull(device)) {
             return R.fail("设备不存在");
         }
-        if (!userId.equals(device.getUserId())) { // 校验设备是否是他的
+        if (!userId.equals(device.getUserId())) {
             return R.fail("您没有该设备权限");
         }
 
@@ -166,18 +167,18 @@ public class DeviceController {
         }
 
         MsgUnBind msg = new MsgUnBind();
-        websocketPool.sendMessage(deviceOnline.getServerTunnelId(),device.getDeviceNo(), msg);
+        websocketPool.sendMessage(deviceOnline.getServerTunnelId(), device.getDeviceNo(), msg);
 
-        deviceMappingService.deleteByDeviceId(deviceId); // 删除映射
-        deviceService.removeUserIdByDeviceNo(device.getDeviceNo()); // 清理用户归属
+        deviceMappingService.deleteByDeviceId(deviceId);
+        deviceService.removeUserIdByDeviceNo(device.getDeviceNo());
 
-        // 设备移除，权益移除
         R r1 = userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, -1);
         if (r1.isFail()) {
             throw new RException(r1);
         }
         return R.ok();
     }
+
     @Resource
     private UserPackageRightsService userPackageRightsService;
 
@@ -185,45 +186,40 @@ public class DeviceController {
     private UserPackageManager userPackageManager;
 
     /**
-     * 设备校验(绑定)
+     * 设备校验（绑定）
      *
      * @return
      */
-    @ApiOperation("绑定设备")
-    @RequestMapping(value = "/validate", method = RequestMethod.GET)
+    @Operation(summary = "绑定设备")
+    @RequestMapping(value = "/validate", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
-    public R validate(String deviceId, HttpServletRequest request) {
+    public R validate(@RequestBody DeviceBindParam param, HttpServletRequest request) {
         Long userId = SecurityUtils.getUserId();
-        String deviceNo = deviceId;
-        // 没有输入设备ID
+        String deviceNo = param.getDeviceNo();
         if (StringUtil.isBlank(deviceNo)) {
             return R.fail(SystemErrorType.DEVICE_INPUT_NUMBER);
         }
 
-        // 验证是否存在
         DeviceOnline deviceOnline = deviceOnlineService.getByDeviceNo(deviceNo);
         if (deviceOnline == null) {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
 
         Integer serverTunnelId = deviceOnline.getServerTunnelId();
-
-        // 套餐设备数量限制校验
         if (!userPackageManager.checkLimit(userId, UserPackageLimitEnum.DeviceNum, 1)) {
             return R.fail(SystemErrorType.DEVICE_BIND_LIMIT_ERROR);
         }
+
         Device device = deviceService.bindDevice(userId, deviceNo, serverTunnelId);
         userPackageManager.usePackageAdd(userId, UserPackageLimitEnum.DeviceNum, 1);
 
-        // 发送消息通知设备秘钥
         MsgDeviceSecret msg = new MsgDeviceSecret();
         msg.setSecret(device.getDeviceSecret());
-        websocketPool.sendMessage(serverTunnelId,deviceNo, msg);
+        websocketPool.sendMessage(serverTunnelId, deviceNo, msg);
 
         return R.success();
     }
-
 
     @Deprecated
     @RequestMapping(value = "/uuid", method = RequestMethod.GET)
@@ -235,28 +231,20 @@ public class DeviceController {
         return result;
     }
 
-
-
-    @Resource(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
-    private RedisTemplate<String, Object> redisTemplate;
-
-
-
     /**
      * 获取设备信息
      *
-     * @param deviceId
-     * @return
+     * @param deviceId 设备 id
+     * @return 设备详情
      */
+    @Operation(summary = "获取设备信息")
     @GetMapping(value = "/info")
-    public R deviceInfo(@RequestParam Long deviceId) {
+    public R<DeviceInfoVO> deviceInfo(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
         if (SecurityUtils.isNotLogin()) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
 
-        MapBuilder mapBuilder = newMap(3);
-        // 设备信息
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
         if (deviceInfo == null) {
             return R.fail("设备不存在");
@@ -265,81 +253,31 @@ public class DeviceController {
             return R.fail("用户设备不存在");
         }
 
-        List<MappingDeviceVO> mappingList = deviceMappingService.getByDeviceId(deviceId);
+        DeviceMappingViewService.MappingGroup mappingGroup = deviceMappingViewService.getMappingGroup(deviceId, deviceInfo);
+        List<DevicePeersVO> p2pList = devicePeersService.getListByServerDeviceId(deviceId);
 
-        List<MappingDeviceVO> portList = mappingList.stream()
-                .filter(item-> ArrayUtils.contains(new Integer[]{2, 5},item.getProtocol()))
-                .collect(Collectors.toList());
-        List<MappingDeviceVO> domainList = mappingList.stream()
-                .filter(item-> ArrayUtils.contains(new Integer[]{1, 3, 4},item.getProtocol()))
-                .collect(Collectors.toList());
+        DeviceInfoVO vo = new DeviceInfoVO();
+        vo.setDeviceInfo(deviceInfo);
+        vo.setPortList(mappingGroup.getPortList());
+        vo.setDomainList(mappingGroup.getDomainList());
+        vo.setP2pList(p2pList);
 
+        DeviceInfoVO.Features features = new DeviceInfoVO.Features();
+        features.setDomainCount(mappingGroup.getDomainList().size());
+        features.setPortCount(mappingGroup.getPortList().size());
+        features.setP2pCount(p2pList.size());
+        vo.setFeatures(features);
 
-        String date = DateUtil.format(new Date(), "yyyyMMdd");
-        String keyBytes = String.format(DEVICE_MAPPING_STATISTICS_FLOW_TODAY, date);
-        String keyLink = String.format(DEVICE_MAPPING_STATISTICS_LINK_TODAY, date);
-        BoundHashOperations<String, Object, Object> keyBytesMap = redisTemplate.boundHashOps(keyBytes);
-        BoundHashOperations<String, Object, Object> keyLinkMap = redisTemplate.boundHashOps(keyLink);
-
-
-        // 端口
-        portList.forEach(item->{
-            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
-            item.setDomain(deviceInfo.getServerAddr() + ":" + item.getRemotePort());
-            String domain = item.getDomain();
-            if (StringUtil.isNotBlank(item.getHostname())) {
-                domain = item.getHostname();
-            }
-            item.setUrl(String.format("%s://%s", protocol, domain));
-            // 今日流量 & 链接数
-            Integer flowKb = (Integer) keyBytesMap.get(item.getId().toString());
-            Integer linkNum = (Integer) keyLinkMap.get(item.getId().toString());
-            item.setTodayFlow(new BigDecimal(flowKb == null ? 0 : flowKb).divide(BigDecimal.valueOf(1024)));
-            item.setLink(linkNum == null ? 0 : linkNum);
-
-        });
-
-        // 域名
-        domainList.forEach(item -> {
-            String protocol = ProtocolTypeEnum.getProtocol(item.getProtocol());
-            item.setDomain(item.getDomain() + "." + deviceInfo.getServerAddr());
-            String domain = item.getDomain();
-            if (StringUtil.isNotBlank(item.getHostname())) {
-                domain = item.getHostname();
-            }
-            item.setUrl(String.format("%s://%s", protocol, domain));
-            // 今日流量 & 链接数
-            Integer flowKb = (Integer) keyBytesMap.get(item.getId().toString());
-            Integer linkNum = (Integer) keyLinkMap.get(item.getId().toString());
-            item.setTodayFlow(new BigDecimal(flowKb == null? 0: flowKb).divide(BigDecimal.valueOf(1024)));
-            item.setLink(linkNum == null ? 0 : linkNum);
-        });
-
-        // 端到端
-        List<DevicePeersVO> p2plist = devicePeersService.getListByServerDeviceId(deviceId);
-
-        mapBuilder
-                .setParam("deviceInfo", deviceInfo);
-        mapBuilder.setParam("features", newMap(4)
-                .setParam("domainCount", domainList.size())
-                .setParam("portCount", portList.size())
-                .setParam("p2pCount", p2plist.size())
-                .build());
-
-        // 端口
-        mapBuilder.setParam("portList", portList);
-        // 域名
-        mapBuilder.setParam("domainList", domainList);
-        mapBuilder.setParam("p2pList", p2plist);
-
-        return R.ok(mapBuilder.build());
+        return R.ok(vo);
     }
+
     @Resource
     private DevicePeersService devicePeersService;
-
+    @Resource
+    private DeviceMappingViewService deviceMappingViewService;
 
     /**
-     * 通过mac地址网络唤醒设备
+     * 通过 mac 地址网络唤醒设备
      *
      * @return
      */
@@ -350,24 +288,20 @@ public class DeviceController {
         return R.success();
     }
 
-
     /**
      * 设备发现接口
      *
      * @return
      */
-    @GetMapping(value = "/discovery" )
+    @GetMapping(value = "/discovery")
     public R discovery(HttpServletRequest request) {
         String ip = HttpUtils.getRemoteIP(request);
         List<DeviceOnline> list = deviceService.getDiscoveryDevice(ip);
         return R.success(list);
     }
 
-
-
     @Resource
     private ServerTunnelService serverTunnelService;
-
 
     /**
      * 设备切换线路
@@ -376,11 +310,10 @@ public class DeviceController {
      */
     @PostMapping("/switch-line")
     public R<Boolean> switchLine(@JwtUser Session session,
-                  @RequestBody @Valid DeviceSwitchLineDTO dto) {
+                                 @RequestBody @Valid DeviceSwitchLineDTO dto) {
         Long userId = session.getUserId();
         Long deviceId = dto.getDeviceId();
 
-        // 校验设备是否是他的
         boolean status = deviceService.exists(userId, deviceId);
         if (!status) {
             return R.fail("设备不存在");
@@ -391,7 +324,6 @@ public class DeviceController {
             return R.fail("通道不存在");
         }
 
-        // 检查设备是否有映射
         if (deviceMappingService.countByDeviceId(deviceId) > 0) {
             return R.fail("存在映射，不支持切换通道");
         }
@@ -405,7 +337,6 @@ public class DeviceController {
             return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
         }
 
-        // 发送切换消息给设备
         MsgSwitchLine msg = new MsgSwitchLine();
         msg.setDeviceNo(deviceNo);
 
@@ -414,47 +345,36 @@ public class DeviceController {
             serverAddr = serverAddr + ":8083";
         }
         msg.setServerAddr(serverAddr);
-        websocketPool.sendMessage(deviceOnline.getServerTunnelId(),deviceNo, msg);
+        websocketPool.sendMessage(deviceOnline.getServerTunnelId(), deviceNo, msg);
 
         return R.success();
     }
-
-
 
     /**
      * 检查更新接口
      *
      * @return
      */
-    @ApiOperation("触发设备检查更新")
+    @Operation(summary = "触发设备检查更新")
     @PostMapping("/check-update")
     public R<Boolean> checkUpdate(@JwtUser Session session,
-                                 @RequestBody @Valid DeviceCheckUpdateDTO dto) {
+                                  @RequestBody @Valid DeviceCheckUpdateDTO dto) {
         Long userId = session.getUserId();
         Long deviceId = dto.getDeviceId();
 
-
-        // 校验设备是否是他的
         Device device = deviceService.getById(deviceId);
-        if (!Objects.equals(userId, device.getUserId())){
+        if (!Objects.equals(userId, device.getUserId())) {
             return R.fail("设备不存在");
         }
         String deviceNo = device.getDeviceNo();
 
         ServerTunnel serverTunnel = serverTunnelService.getById(device.getServerTunnelId());
-        if (serverTunnel == null){
+        if (serverTunnel == null) {
             return R.fail("通道不存在");
         }
 
-        // 发送切换消息给设备
         MsgCheckUpdate msg = new MsgCheckUpdate();
-        websocketPool.sendMessage(device.getServerTunnelId(),deviceNo, msg);
+        websocketPool.sendMessage(device.getServerTunnelId(), deviceNo, msg);
         return R.ok();
     }
-
-
-
-
-
-
 }

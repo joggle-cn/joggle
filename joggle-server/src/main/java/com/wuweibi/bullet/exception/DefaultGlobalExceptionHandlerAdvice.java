@@ -6,7 +6,7 @@ import com.wuweibi.bullet.exception.domain.FieldMsg;
 import com.wuweibi.bullet.exception.type.SystemErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -40,8 +40,8 @@ public class DefaultGlobalExceptionHandlerAdvice {
 //        log.error("upload file size limit:{}", ex.getMessage());
 //        return Result.fail(SystemErrorType.UPLOAD_FILE_SIZE_LIMIT);
 //    }
-    @ExceptionHandler(value = {OAuth2Exception.class})
-    public R OAuth2Exception(OAuth2Exception ex) {
+    @ExceptionHandler(value = {OAuth2AuthenticationException.class})
+    public R OAuth2Exception(OAuth2AuthenticationException ex) {
         log.error("upload file size limit:{}", ex.getMessage());
         return R.fail(SystemErrorType.DEVICE_NOT_ONLINE);
     }

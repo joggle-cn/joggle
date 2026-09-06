@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.device.domain.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -16,11 +16,11 @@ import lombok.Data;
 public class DomainConfigVO {
 
 
-	@ApiModelProperty("宽带mbps")
+	@Schema(description = "宽带mbps")
 	@TableField(value = "bandwidth")
 	private Integer bandwidth;
 
-	@ApiModelProperty("并发连接数")
+	@Schema(description = "并发连接数")
 	private Integer concurrentNum;
 
 }

@@ -26,17 +26,17 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
 import com.wuweibi.bullet.utils.HttpUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (Orders)表控制层
@@ -46,7 +46,7 @@ import java.util.Date;
  */
 @Slf4j
 @WebApi
-@Api(tags = "订单管理")
+@Tag(name = "订单管理")
 @RestController
 @RequestMapping("/api/orders")
 public class OrdersAppController {
@@ -67,8 +67,9 @@ public class OrdersAppController {
      *
      * @return
      */
+    @Operation(summary = "获取订单列表")
     @GetMapping(value = "/list")
-    public Object list(Page pageParams, OrdersParam params) {
+    public R<Page<OrdersListVO>> list(Page pageParams, OrdersParam params) {
         params.setUserId(SecurityUtils.getUserId());
         Page<OrdersListVO> page = ordersService.getListPage(pageParams, params);
         return R.success(page);
@@ -78,7 +79,7 @@ public class OrdersAppController {
      * 计算价格
      * @return
      */
-    @ApiOperation("订单计算价格")
+    @Operation(summary = "订单计算价格")
     @PostMapping(value = "/calculate")
     public Object calculate( @RequestBody @Valid OrdersDTO ordersDTO) {
         Long userId = SecurityUtils.getUserId();
@@ -93,7 +94,7 @@ public class OrdersAppController {
      * @param session
      * @return
      */
-    @ApiOperation("下单接口")
+    @Operation(summary = "下单接口")
     @PostMapping(value = "/create")
     @Transactional
     public R createOrder(@JwtUser Session session, HttpServletRequest request, @RequestBody @Valid OrdersDTO ordersDTO) throws Exception {

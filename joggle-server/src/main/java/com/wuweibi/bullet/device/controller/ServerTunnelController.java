@@ -10,16 +10,16 @@ import com.wuweibi.bullet.device.entity.ServerTunnel;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 通道(ServerTunnel)表控制层
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @since 2022-04-28 21:27:30
  */
 @WebApi
-@Api(tags = "通道管理")
+@Tag(name = "通道管理")
 @RestController
 @RequestMapping("/api/server/tunnel")
 public class ServerTunnelController {
@@ -44,7 +44,7 @@ public class ServerTunnelController {
      *
      * @return
      */
-    @ApiOperation("通道区域下拉列表")
+    @Operation(summary = "通道区域下拉列表")
     @GetMapping("/options")
     public R<List<TunnelOption>> deviceOptions() {
         List<TunnelOption> list = serverTunnelService.getOptionList();

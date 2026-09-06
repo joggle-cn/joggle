@@ -5,7 +5,7 @@ import com.wuweibi.bullet.business.UserDomainCertBiz;
 import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.task.UserCertificationTaskService;
-import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import io.swagger.v3.oas.annotations.Operation;
 
+@Slf4j
 @EnableScheduling
 @RestController
 @RequestMapping("/inner/open/schedule")
@@ -49,11 +51,15 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
 
     /**
-     * 每10秒点执行检查域名是否过期，过期域名，自动关闭映射
+     * 每60秒执行检查域名是否过期，过期域名，自动关闭映射
      */
-    @Scheduled(fixedRate = 1000*10)
+    @Scheduled(fixedRate = 1000 * 60)
     public void checkStatus() {
-        domainService.checkStatus();
+        try {
+            domainService.checkStatus();
+        } catch (Exception e) {
+            log.error("[定时任务] 域名过期检查异常", e);
+        }
     }
 
 
@@ -62,7 +68,11 @@ public class ScheduleConfig implements SchedulingConfigurer {
      */
     @Scheduled(fixedRate = 1000 * 60)
     public void work4UserCertificationProgress() {
-        userCertificationTaskService.progress();
+        try {
+            userCertificationTaskService.progress();
+        } catch (Exception e) {
+            log.error("[定时任务] 用户认证审核异常", e);
+        }
     }
 
 
@@ -71,7 +81,11 @@ public class ScheduleConfig implements SchedulingConfigurer {
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void resourceDueTimeRelease() {
-        domainService.resourceDueTimeRelease();
+        try {
+            domainService.resourceDueTimeRelease();
+        } catch (Exception e) {
+            log.error("[定时任务] 资源到期释放异常", e);
+        }
     }
 
 
@@ -81,17 +95,25 @@ public class ScheduleConfig implements SchedulingConfigurer {
      */
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void userPackageRelease() {
-        userPackageManager.expireFree();
+        try {
+            userPackageManager.expireFree();
+        } catch (Exception e) {
+            log.error("[定时任务] 用户资源包到期释放异常", e);
+        }
     }
 
     /**
      * VIP用户资源包到期前2天提醒，每日9点执行一次
      */
-    @ApiOperation("VIP用户资源包到期前2天提醒")
+    @Operation(summary = "VIP用户资源包到期前2天提醒")
     @PostMapping("/package/expiration/reminder")
     @Scheduled(cron = "0 0 9 * * ? ")
     public void userPackageExpirationReminder() {
-        userPackageManager.taskUserPackageExpirationReminder();
+        try {
+            userPackageManager.taskUserPackageExpirationReminder();
+        } catch (Exception e) {
+            log.error("[定时任务] 资源包到期提醒异常", e);
+        }
     }
 
 
@@ -101,7 +123,11 @@ public class ScheduleConfig implements SchedulingConfigurer {
      */
     @Scheduled(cron = "0 0 0 1 * ?")
     public void resetFlow() {
-        userPackageManager.resetPackageFlow();
+        try {
+            userPackageManager.resetPackageFlow();
+        } catch (Exception e) {
+            log.error("[定时任务] 发放套餐流量异常", e);
+        }
     }
 
     @Resource
@@ -113,7 +139,11 @@ public class ScheduleConfig implements SchedulingConfigurer {
      */
     @Scheduled(fixedRate = 1000 * 60 *  10)
     public void domainCertReNewTask() {
-        userDomainCertBiz.startCertReNewTask();
+        try {
+            userDomainCertBiz.startCertReNewTask();
+        } catch (Exception e) {
+            log.error("[定时任务] 域名证书续期异常", e);
+        }
     }
 
 }

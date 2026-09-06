@@ -25,12 +25,10 @@ public class LoginException extends MyAuth2Exception {
 		super(R.fail(msg) );
 	}
 
-	@Override
 	public String getOAuth2ErrorCode() {
 		return "loginfaild_exception";
 	}
 
-	@Override
 	public int getHttpErrorCode() {
 		return 200;
 	}

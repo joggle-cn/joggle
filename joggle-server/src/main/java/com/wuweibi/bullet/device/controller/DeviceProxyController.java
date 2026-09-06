@@ -16,16 +16,16 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgProxy;
 import com.wuweibi.bullet.protocol.domain.ProxyConfig;
 import com.wuweibi.bullet.service.DeviceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 设备代理(DeviceProxy)表控制层
@@ -35,7 +35,7 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@Api(value = "设备代理", tags = "设备代理")
+@Tag(name = "设备代理")
 @RequestMapping("/api/device/proxy")
 public class DeviceProxyController  {
     /**
@@ -51,7 +51,7 @@ public class DeviceProxyController  {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<DeviceProxyVO>> getPageList(PageParam page, DeviceProxyParam params) {
         return R.ok(this.deviceProxyService.getPage(page.toMybatisPlusPage(), params));
@@ -63,7 +63,7 @@ public class DeviceProxyController  {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<DeviceProxy> detail(@RequestParam Serializable id) {
         return R.ok(this.deviceProxyService.getById(id));
@@ -82,7 +82,7 @@ public class DeviceProxyController  {
      * @param  dto 实体对象
      * @return 新增结果
      */
-    @ApiOperation("配置设备代理")
+    @Operation(summary = "配置设备代理")
     @PutMapping("/proxy-config")
     public R<Boolean> saveOrUpdate(@RequestBody @Valid DeviceProxyDTO dto) {
 

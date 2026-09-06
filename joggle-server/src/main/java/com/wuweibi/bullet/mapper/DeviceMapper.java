@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
+import com.wuweibi.bullet.device.domain.dto.DeviceWebQueryParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
@@ -62,7 +63,15 @@ public interface DeviceMapper extends BaseMapper<Device> {
      */
     List<DeviceOption> selectOptionListByUserId(@Param("userId") Long userId);
 
-    List<DeviceDTO> selectWebListByUserId(@Param("userId")Long userId);
+    List<DeviceDTO> selectWebListByUserId(@Param("userId") Long userId, @Param("params") DeviceWebQueryParam params);
+
+    /**
+     * 获取用户最近设备列表
+     * @param userId 用户id
+     * @param limit 条数
+     * @return
+     */
+    List<DeviceDTO> selectRecentWebListByUserId(@Param("userId") Long userId, @Param("limit") Integer limit);
 
     /**
      * 获取设备详情

@@ -29,6 +29,13 @@ public interface CountService {
     UserCountVO getUserCountInfo(Long userId);
 
     /**
+     * 统计用户设备总数与在线设备数量（30分钟缓存）
+     * @param userId 用户ID
+     * @return 设备统计信息
+     */
+    UserDeviceCountDTO getUserDeviceCountInfo(Long userId);
+
+    /**
      * 统计设备流量排行
      * @param userId 用户ID
      * @param type
@@ -62,4 +69,13 @@ public interface CountService {
      * @return
      */
     List<DeviceDateItemHourVO> getAllFlowTrendHour(Long userId, int hour);
+
+    /**
+     * 用户设备近24小时流量趋势
+     * @param userId 用户id
+     * @param deviceId 设备id
+     * @param hour 小时数
+     * @return
+     */
+    List<DeviceDateItemHourVO> getUserDeviceTrendHour(Long userId, Long deviceId, int hour);
 }

@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.business.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class OrderPayInfo {
@@ -15,7 +15,7 @@ public class OrderPayInfo {
     // 原价
     private BigDecimal priceAmount;
 
-    @ApiModelProperty("单价")
+    @Schema(description = "单价")
     private BigDecimal price;
 
     /**
@@ -29,7 +29,7 @@ public class OrderPayInfo {
      */
     private Long realAmount;
 
-    @ApiModelProperty("购买后的实效时间")
+    @Schema(description = "购买后的实效时间")
     private Long dueTime;
 
     private String name;
@@ -38,6 +38,6 @@ public class OrderPayInfo {
     private Integer resourceType;
 
 
-    @ApiModelProperty("通道服务器到期时间")
+    @Schema(description = "通道服务器到期时间")
     private Date serverEndTime;
 }

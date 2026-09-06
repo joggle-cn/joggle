@@ -1,26 +1,25 @@
 package com.wuweibi.bullet.device.domain.vo;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel("设备任意门")
+@Schema(description = "设备任意门")
 @Data
 public class DeviceDoorVO {
 
-    @ApiModelProperty("设备id")
+    @Schema(description = "设备id")
     private Long deviceId;
 
-    @ApiModelProperty("域名id")
+    @Schema(description = "域名id")
     private Long domainId;
 
-    @ApiModelProperty("域名")
+    @Schema(description = "域名")
     private String domain;
 
-    @ApiModelProperty("本地路径")
+    @Schema(description = "本地路径")
     private String localPath;
 
-    @ApiModelProperty("启用状态")
+    @Schema(description = "启用状态")
     private Integer enable;
 }

@@ -9,15 +9,15 @@ import com.wuweibi.bullet.device.entity.DeviceWhiteIps;
 import com.wuweibi.bullet.device.service.DeviceWhiteIpsService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 
 import static com.wuweibi.bullet.protocol.Message.CONTROL_WHITE_IPS;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (DeviceWhiteIps)表控制层
@@ -27,7 +27,7 @@ import static com.wuweibi.bullet.protocol.Message.CONTROL_WHITE_IPS;
  */
 @Slf4j
 @RestController
-@Api(value = "", tags = "")
+@Tag(name = "设备ip白名单")
 @RequestMapping("/api/device/white-ips")
 public class DeviceWhiteIpsController {
     /**
@@ -42,7 +42,7 @@ public class DeviceWhiteIpsController {
      *
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<DeviceWhiteIps> detail(@RequestParam Long deviceId) {
         DeviceWhiteIps entity = this.deviceWhiteIpsService.getByDeviceId(deviceId);
@@ -63,7 +63,7 @@ public class DeviceWhiteIpsController {
      *
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PutMapping
     public R<Boolean> save(@RequestBody @Valid DeviceWhiteIpsDTO dto) {
         Long deviceId = dto.getDeviceId();

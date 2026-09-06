@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.jwt.Jwt;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -22,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
@@ -58,8 +57,7 @@ public class JwtUserHandlerMethodArgumentResolver implements HandlerMethodArgume
         AuthenticationService authenticationService =  SpringUtils.getBean(AuthenticationService.class);
         String claims = null;
         if(StringUtil.isNotBlank(authentication)) {
-            Jwt jwt = authenticationService.getJwt(authentication);
-            claims = jwt.getClaims();
+            claims = authenticationService.getClaims(authentication);
         }
         // 获取如果为空设置默认值
         String sessionJsonStr =  StringUtils.defaultIfBlank(claims, "{}");

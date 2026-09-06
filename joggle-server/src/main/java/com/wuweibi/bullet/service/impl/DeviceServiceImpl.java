@@ -8,6 +8,7 @@ import com.wuweibi.bullet.common.exception.RException;
 import com.wuweibi.bullet.conn.WebsocketPool;
 import com.wuweibi.bullet.device.domain.DeviceDetail;
 import com.wuweibi.bullet.device.domain.dto.DeviceAdminParam;
+import com.wuweibi.bullet.device.domain.dto.DeviceWebQueryParam;
 import com.wuweibi.bullet.device.domain.vo.DeviceDetailVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceListVO;
 import com.wuweibi.bullet.device.domain.vo.DeviceOption;
@@ -24,10 +25,11 @@ import org.apache.commons.codec.digest.Md5Crypt;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +52,9 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Resource
     private RedisCacheManager redisCacheManager;
+
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
 
     @Override
@@ -102,7 +107,14 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Override
     public DeviceDetailVO getDeviceInfoById(Long deviceId) {
-        return this.baseMapper.selectDeviceInfoById(deviceId);
+        DeviceDetailVO vo = this.baseMapper.selectDeviceInfoById(deviceId);
+        if (vo != null) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + vo.getDeviceNo());
+            if (latencyStr != null) {
+                vo.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
+        return vo;
     }
 
     @Override
@@ -159,9 +171,42 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     }
 
     @Override
-    public List<DeviceDTO> getWebListByUserId(Long userId) {
-        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId);
+    public List<DeviceDTO> getWebListByUserId(Long userId, DeviceWebQueryParam params) {
+        List<DeviceDTO> list = this.baseMapper.selectWebListByUserId(userId, params);
+        for (DeviceDTO dto : list) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + dto.getDeviceNo());
+            if (latencyStr != null) {
+                dto.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
+        if (params != null && "latency".equalsIgnoreCase(params.getSort())) {
+            boolean asc = "asc".equalsIgnoreCase(params.getOrder());
+            list.sort((a, b) -> {
+                if (a.getLatencyMs() == null && b.getLatencyMs() == null) {
+                    return 0;
+                }
+                if (a.getLatencyMs() == null) {
+                    return 1;
+                }
+                if (b.getLatencyMs() == null) {
+                    return -1;
+                }
+                int cmp = Long.compare(a.getLatencyMs(), b.getLatencyMs());
+                return asc ? cmp : -cmp;
+            });
+        }
+        return list;
+    }
 
+    @Override
+    public List<DeviceDTO> getRecentWebListByUserId(Long userId, Integer limit) {
+        List<DeviceDTO> list = this.baseMapper.selectRecentWebListByUserId(userId, limit);
+        for (DeviceDTO dto : list) {
+            String latencyStr = stringRedisTemplate.opsForValue().get("device:latency:" + dto.getDeviceNo());
+            if (latencyStr != null) {
+                dto.setLatencyMs(Long.parseLong(latencyStr));
+            }
+        }
         return list;
     }
 
@@ -186,18 +231,21 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public Device bindDevice(Long userId, String deviceNo, Integer serverTunnelId) {
         DeviceService deviceService = SpringUtils.getBean(DeviceService.class);
         // 获取设备信息
-        Device device = deviceService.getByDeviceNo(deviceNo);
-        if (device!= null && device.getUserId() != null) {
+        Device deviceOld = deviceService.getByDeviceNo(deviceNo);
+        if (deviceOld!= null && deviceOld.getUserId() != null) {
             throw new RException(SystemErrorType.DEVICE_OTHER_BIND);
         }
 
         // 给当前用户存储最新的设备数据
-        device = new Device();
+        Device device = new Device();
+        if (deviceOld != null) {
+            device.setId(deviceOld.getId());
+        }
+        device.setName(deviceNo);
         device.setDeviceNo(deviceNo);
         device.setServerTunnelId(serverTunnelId);
         device.setUserId(userId);
         device.setCreateTime(new Date());
-        device.setName(deviceNo);
 
         // 生成设备秘钥
         String deviceSecret = Md5Crypt.md5Crypt(deviceNo.getBytes(), null, "");

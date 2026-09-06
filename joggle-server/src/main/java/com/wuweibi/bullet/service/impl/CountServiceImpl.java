@@ -8,20 +8,25 @@ import com.wuweibi.bullet.alias.CacheBlock;
 import com.wuweibi.bullet.config.cache.RedisTemplateConfig;
 import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.vo.CountVO;
+import com.wuweibi.bullet.device.entity.Device;
 import com.wuweibi.bullet.mapper.CountMapper;
+import com.wuweibi.bullet.mapper.DeviceMapper;
 import com.wuweibi.bullet.mapper.DeviceMappingMapper;
 import com.wuweibi.bullet.service.CountService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuweibi.bullet.utils.BigDecimalUtils;
+import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -40,9 +45,14 @@ public class CountServiceImpl implements CountService {
     private CountMapper countMapper;
     @Resource
     private DeviceMappingMapper deviceMappingMapper;
+    @Resource
+    private DeviceMapper deviceMapper;
 
     @Resource(name = RedisTemplateConfig.BEAN_REDIS_TEMPLATE)
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public CountVO getCountInfo() {
@@ -65,7 +75,47 @@ public class CountServiceImpl implements CountService {
         userCountVO.setTodayFlowOn(BigDecimalUtils
                 .getChainRatio(userTodayFlowCountVO.getTodayFlow(), userFlowCountDTO.getTodayFlow2()));
 
+        // 计算在线设备数量与在线率
+        UserDeviceCountDTO deviceCountInfo = SpringUtils.getBean(CountService.class)
+                .getUserDeviceCountInfo(userId);
+        if (deviceCountInfo != null && deviceCountInfo.getDeviceCount() != null
+                && deviceCountInfo.getDeviceCount() > 0) {
+            userCountVO.setDeviceCount(deviceCountInfo.getDeviceCount());
+            userCountVO.setOnlineDeviceCount(deviceCountInfo.getOnlineDeviceCount());
+            userCountVO.setOnlineRate(BigDecimal.valueOf(deviceCountInfo.getOnlineDeviceCount())
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(BigDecimal.valueOf(deviceCountInfo.getDeviceCount()), 2, RoundingMode.HALF_UP));
+
+            // 计算在线设备平均延迟：仅需设备编号字段
+            List<Device> deviceList = deviceMapper.selectList(
+                    Wrappers.<Device>lambdaQuery()
+                            .select(Device::getDeviceNo)
+                            .eq(Device::getUserId, userId));
+            List<Long> latencyList = new ArrayList<>();
+            for (Device device : deviceList) {
+                String latencyStr = stringRedisTemplate.opsForValue()
+                        .get("device:latency:" + device.getDeviceNo());
+                if (latencyStr != null) {
+                    latencyList.add(Long.parseLong(latencyStr));
+                }
+            }
+            if (!latencyList.isEmpty()) {
+                long total = latencyList.stream().mapToLong(Long::longValue).sum();
+                userCountVO.setAvgLatencyMs(total / latencyList.size());
+            }
+        }
+
         return userCountVO;
+    }
+
+    /**
+     * 统计用户设备总数与在线设备数量（30分钟缓存）
+     * @param userId 用户ID
+     * @return 设备统计信息
+     */
+    @Cacheable(cacheNames = CacheBlock.CACHE_USER_DEVICE_COUNT, key = "#userId")
+    public UserDeviceCountDTO getUserDeviceCountInfo(Long userId) {
+        return countMapper.selectUserDeviceCountInfo(userId);
     }
 
 
@@ -167,7 +217,7 @@ public class CountServiceImpl implements CountService {
         String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
 
         // TODO  使用游标查询  改 流式查询
-       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, startDate, endDate).stream()
+       Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, null, startDate, endDate).stream()
                 .flatMap(dataMetricsHour -> {
                     String date = DateUtil.format(dataMetricsHour.getCreateDate(), "yyyy-MM-dd");
                     LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());
@@ -197,7 +247,7 @@ public class CountServiceImpl implements CountService {
                             flowIn = itemData.getBigDecimal("in");
                             flowOut = itemData.getBigDecimal("out");
                         }
-                        DataItem dataItem = new DataItem(time, link, flowIn, flowOut);
+                        DataItem dataItem = new DataItem(time, link, flowIn.divide(BigDecimal.valueOf(1024*1024)), flowOut.divide(BigDecimal.valueOf(1024*1024)));
                         list.add(dataItem);
                     }
                     // 处理用户数据，例如转换或过滤
@@ -219,6 +269,67 @@ public class CountServiceImpl implements CountService {
         }).sorted((o1,o2)->{
             long a = DateUtil.parse(o1.getTime(), "yyyy-MM-dd HH").getTime();
             long b = DateUtil.parse(o2.getTime(), "yyyy-MM-dd HH").getTime();
+            return CompareUtil.compare(a,b) ;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<DeviceDateItemHourVO> getUserDeviceTrendHour(Long userId, Long deviceId, int hour) {
+        LocalDateTime endLocalDate = LocalDateTime.now().plusHours(-1);
+        String endDate = DateUtil.format(endLocalDate, "yyyy-MM-dd");
+        LocalDateTime startLocalDate = endLocalDate.plusHours(-hour);
+        String startDate = DateUtil.format(startLocalDate, "yyyy-MM-dd");
+
+        Map<String,Optional<DataItem>>  userList = countMapper.selectAllFlowTrendHourStream(userId, deviceId, startDate, endDate).stream()
+                .flatMap(dataMetricsHour -> {
+                    String date = DateUtil.format(dataMetricsHour.getCreateDate(), "MM-dd");
+                    LocalDateTime dataLocalDateTime = DateUtil.toLocalDateTime(dataMetricsHour.getCreateDate());
+                    JSONObject data = (JSONObject) JSON.toJSON(dataMetricsHour);
+                    List<DataItem> list = new ArrayList<>(hour);
+                    for (int i = 0; i < 24; i++) {
+                        LocalDateTime indexLocalDateTime = dataLocalDateTime.withHour(i);
+                        if (endLocalDate.compareTo(indexLocalDateTime) < 0) {
+                            continue;
+                        }
+                        if (startLocalDate.compareTo(indexLocalDateTime) > 0) {
+                            continue;
+                        }
+
+                        String key = String.format("%02d", i);
+                        String val = data.getString(String.format("h%s", key));
+                        String time = String.format("%s %s", date, key);
+
+                        BigDecimal link = BigDecimal.ZERO;
+                        BigDecimal flowIn = BigDecimal.ZERO;
+                        BigDecimal flowOut = BigDecimal.ZERO;
+                        if (Objects.nonNull(val)) {
+                            JSONObject itemData = new JSONObject(parse(val));
+                            link = itemData.getBigDecimal("link");
+                            flowIn = itemData.getBigDecimal("in");
+                            flowOut = itemData.getBigDecimal("out");
+                        }
+                        DataItem dataItem = new DataItem(time, link, flowIn.divide(BigDecimal.valueOf(1024)), flowOut.divide(BigDecimal.valueOf(1024)));
+                        list.add(dataItem);
+                    }
+                    return Stream.of(list.toArray(new DataItem[]{}));
+                }).collect(Collectors.groupingBy(DataItem::getTime,
+                       Collectors.reducing(CountServiceImpl::mergeFlow)
+               ));
+
+
+        return userList.values().stream().map(dataItemOptional->{
+            DataItem item = dataItemOptional.get();
+            DeviceDateItemHourVO deviceDateItemVO = new DeviceDateItemHourVO();
+            deviceDateItemVO.setTime(item.getTime());
+            deviceDateItemVO.setFlowIn(item.getFlowIn());
+            deviceDateItemVO.setFlowOut(item.getFlowOut());
+            deviceDateItemVO.setLink(item.getLink());
+            deviceDateItemVO.setFlow(item.getFlowIn().add(item.getFlowOut()));
+            return deviceDateItemVO;
+        }).sorted((o1,o2)->{
+            long a = DateUtil.parse(o1.getTime(), "MM-dd HH").getTime();
+            long b = DateUtil.parse(o2.getTime(), "MM-dd HH").getTime();
             return CompareUtil.compare(a,b) ;
         }).collect(Collectors.toList());
     }

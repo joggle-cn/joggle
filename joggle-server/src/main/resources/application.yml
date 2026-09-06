@@ -39,13 +39,6 @@ management:
 # Spring 配置
 #
 
-springfox:
-  documentation:
-    enabled: ${SWAGGER_DOC_ENABLE:true}
-    swagger-ui:
-      enabled: ${SWAGGER_DOC_ENABLE:true}
-#      base-url: /api/v2/api-docs
-
 knife4j:
   enable: ${SWAGGER_DOC_ENABLE:true}
   setting:
@@ -89,6 +82,20 @@ spring:
     active: dev
   application:
     name: joggle-server
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: joggle-mcp-server
+        version: 1.0.0
+        type: SYNC
+        protocol: STREAMABLE
+        stdio: false
+        streamable-http:
+          mcp-endpoint: /api/open/mcp/message
+          disallow-delete: true
+        annotation-scanner:
+          enabled: true
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #swagger3 需配置，不然展示不了列表
@@ -100,8 +107,8 @@ spring:
 #      name: admin     #
 #      password: 123456 #
     oauth2:
-      jwt:
-        signingKey: ${JOGGLE_SIGNNING_KEY:123456}
+      default-client-id: ${JOGGLE_OAUTH2_DEFAULT_CLIENT_ID:client_manager}
+      default-client-secret: ${JOGGLE_OAUTH2_DEFAULT_CLIENT_SECRET:password}
       ignoreUrls:   /api/orders/alipay,/api/open/**,/monitor/**
 
   messages:
@@ -109,9 +116,19 @@ spring:
 
 #  thymeleaf:
 #    cache: false
-  http:
-    encoding:
-      force: on
+  data:
+    redis:
+      host: ${JOGGLE_REDIS_HOST:192.168.1.6}
+      port: ${JOGGLE_REDIS_PORT:6379}
+      password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
+      lettuce:
+        pool:
+          max-active: 100
+          max-wait: 100000ms
+          max-idle: 10
+  servlet:
+    multipart:
+      enabled: true
   devtools:
     restart:
       enabled: false
@@ -143,16 +160,7 @@ spring:
       mail.smtp.connectiontimeout: 30000
       mail.smtp.writetimeout: 30000
       mail.smtp.ssl.socketFactory.class: com.wuweibi.bullet.mail.MailSSLSocketFactory
-  # redis 配置
-  redis:
-    host: ${JOGGLE_REDIS_HOST:192.168.1.6}
-    port: ${JOGGLE_REDIS_PORT:6379}
-    password: ${JOGGLE_REDIS_PASSWORD:masterPass123.}
-    lettuce:
-      pool:
-        maxTotal: 100
-        maxWaitMillis : 100000
-        max-idle: 10
+  # redis 配置见 spring.data.redis
   # 限流器配置
   rate-limiter:
     enabled: ${RATE_LIMITER_ENABLED:true}

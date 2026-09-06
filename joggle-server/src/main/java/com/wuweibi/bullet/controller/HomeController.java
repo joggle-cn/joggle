@@ -8,8 +8,6 @@ import com.wuweibi.bullet.oauth2.manager.ResourceManager;
 import com.wuweibi.bullet.service.CountService;
 import com.wuweibi.bullet.system.client.domain.NgrokVersionVO;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
@@ -92,7 +92,7 @@ public class HomeController {
 	 * OAuth登录
 	 * @return
 	 */
-	@ApiOperation("OAuth登录")
+	@Operation(summary = "OAuth登录")
 	@PostMapping("/oauth/token1")
 	public R<Boolean> login(@RequestHeader("Authorization") String authorization, LoginForm loginForm){
 		return null;
@@ -101,13 +101,13 @@ public class HomeController {
 
 	@Data
 	public static class LoginForm {
-		@ApiModelProperty(value = "账号")
+		@Schema(description = "账号")
 		private String username;
 
-		@ApiModelProperty(value = "密码")
+		@Schema(description = "密码")
 		private String password;
 
-		@ApiModelProperty(value = "授权类型", example="password" )
+		@Schema(description = "授权类型", example = "password")
 		private String grant_type = "password";
 	}
 

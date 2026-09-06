@@ -6,6 +6,7 @@
         <!--@Table -->
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="serverDeviceId" column="server_device_id" jdbcType="INTEGER"/>
         <result property="clientDeviceId" column="client_device_id" jdbcType="INTEGER"/>
         <result property="serverLocalPort" column="server_local_port" jdbcType="INTEGER"/>
@@ -28,11 +29,12 @@
     </select>
 
     <sql id="peersConfigSql">
-        distinct dp.`id`, dp.`user_id`, dp.`app_name`, dp.`server_device_id`, dp.`client_device_id`,
+        distinct dp.`id`, dp.`id` as mappingId, dp.`user_id`, dp.`name`, dp.`app_name`, dp.`server_device_id`, dp.`client_device_id`,
                dp.`server_local_port`, dp.`server_local_host`, dp.`client_proxy_port`,
                dp.`client_proxy_host`, dp.`remark`, dp.`status`, dp.`create_time`,
                dp.`update_time`,
                dp.`client_mtu`, dp.`server_mtu`, dp.`server_mtu` as mtu, dp.config_compress, dp.config_encryption, dp.config_interval,
+               dp.strategy, dp.bandwidth,
                dc.deviceId clientDeviceNo,
                (select intranet_ip from t_device_online do where do.deviceNo = dc.deviceId) clientDeviceIp,
                ds.deviceId serverDeviceNo,

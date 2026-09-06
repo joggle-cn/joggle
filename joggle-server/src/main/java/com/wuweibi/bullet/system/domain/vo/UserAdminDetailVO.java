@@ -1,11 +1,11 @@
 package com.wuweibi.bullet.system.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -36,10 +36,10 @@ public class UserAdminDetailVO {
 	/**
 	 * 登录时间
 	 */
-	@ApiModelProperty("注册时间")
+	@Schema(description = "注册时间")
 	private Date loginTime;
 
-	@ApiModelProperty("注册时间")
+	@Schema(description = "注册时间")
 	private Date createdTime;
 
 	/**
@@ -62,11 +62,11 @@ public class UserAdminDetailVO {
 	private String activateCode;
 
 
-	@ApiModelProperty("用户认证状态")
+	@Schema(description = "用户认证状态")
 	private Integer userCertification;
 
 
-	@ApiModelProperty("用户套餐名称")
+	@Schema(description = "用户套餐名称")
 	private String userPackageName;
 
 

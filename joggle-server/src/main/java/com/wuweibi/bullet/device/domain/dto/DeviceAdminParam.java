@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.device.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -14,17 +14,17 @@ import lombok.Data;
 @Data
 public class DeviceAdminParam {
 
-	@ApiModelProperty("设备编号")
+	@Schema(description = "设备编号")
 	private String deviceNo;
 
-	@ApiModelProperty("通道id")
+	@Schema(description = "通道id")
 	private Integer serverTunnelId;
 
 
-	@ApiModelProperty("设备状态 1在线 ")
+	@Schema(description = "设备状态 1在线 ")
 	private Integer status;
 
-	@ApiModelProperty("用户id")
+	@Schema(description = "用户id")
 	private Long userId;
 
 }

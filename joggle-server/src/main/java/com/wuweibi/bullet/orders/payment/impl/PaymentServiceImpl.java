@@ -18,7 +18,7 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 
 @Slf4j
@@ -50,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
                 params.put("trade_no", result.getTradeNo());
                 params.put("trade_status", "SUCCESS"); // 交易状态
                 params.put("trade_type", "NATIVE"); //扫码支付
-                params.put("amount", result.getPayAmount()); // 订单金额。本次交易支付订单金额，单位为人民币（元），精确到小数点后 2 位
+                params.put("amount", result.getTotalAmount()); // 订单金额。本次交易支付订单金额，单位为人民币（元），精确到小数点后 2 位
             }
         } else {
             log.error("调用失败，原因：" + result.getBody());

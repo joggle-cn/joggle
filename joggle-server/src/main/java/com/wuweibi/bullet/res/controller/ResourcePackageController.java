@@ -3,21 +3,22 @@ package com.wuweibi.bullet.res.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.PageParam;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.ResourcePackageListVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageParam;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.Serializable;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (ResourcePackage)表控制层
@@ -27,7 +28,8 @@ import java.io.Serializable;
  */
 @Slf4j
 @RestController
-@Api(value = "", tags = "用户套餐列表")
+@WebApi
+@Tag(name = "用户套餐列表")
 @RequestMapping("/api/resource/package")
 public class ResourcePackageController {
     /**
@@ -43,7 +45,7 @@ public class ResourcePackageController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<ResourcePackageListVO>> getPageList(PageParam page, ResourcePackageParam params) {
         return R.ok(this.resourcePackageService.getList(page.toMybatisPlusPage(), params));
@@ -55,7 +57,7 @@ public class ResourcePackageController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<ResourcePackage> detail(@RequestParam Serializable id) {
         return R.ok(this.resourcePackageService.getById(id));

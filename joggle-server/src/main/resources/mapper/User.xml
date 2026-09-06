@@ -66,7 +66,8 @@
 		su.`updated_by`, su.`activate_code`, su.`user_admin`, su.`user_certification`, su.system_notice,
 		up.end_time packageEndTime,
 		up.resource_package_id, up.name as resourcePackageName,
-		up.level as resourcePackageLevel, ifnull(up.flow, 0) as userPackageFlow
+		up.level as resourcePackageLevel, ifnull(up.flow, 0) as userPackageFlow,
+		 ifnull(up.flow_total, 0) as userPackageFlowTotal
 		from `t_sys_users` su
 		left join user_package up on su.id = up.user_id
 	    where  su.id = #{userId}

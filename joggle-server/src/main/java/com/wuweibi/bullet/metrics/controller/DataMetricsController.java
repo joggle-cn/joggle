@@ -12,14 +12,14 @@ import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 数据收集(DataMetrics)表控制层
@@ -29,7 +29,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @WebApi
-@Api(tags = "数据收集")
+@Tag(name = "数据收集")
 @RestController
 @RequestMapping("/api/data/metrics")
 public class DataMetricsController {
@@ -52,7 +52,7 @@ public class DataMetricsController {
      * @param pageParam 分页对象
      * @return 所有数据
      */
-    @ApiOperation("流量明细分页查询")
+    @Operation(summary = "流量明细分页查询")
     @GetMapping("/list")
     public R<Page<DataMetricsListVO>> getPage(PageParam<DataMetrics> pageParam, DataMetricsParam params) {
         Long userId = SecurityUtils.getUserId();

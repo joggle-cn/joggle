@@ -13,6 +13,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="downloadUrl" column="download_url" jdbcType="VARCHAR"/>
         <result property="checksum" column="checksum" jdbcType="VARCHAR"/>
+        <result property="signature" column="signature" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>

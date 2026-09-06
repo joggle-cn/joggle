@@ -6,12 +6,21 @@
         <!--@Table -->
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="flow" column="flow" jdbcType="INTEGER"/>
+        <result property="flowTotal" column="flow_total" jdbcType="INTEGER"/>
         <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
 <!--    更新流量-->
     <update id="updateFlow">
         update user_flow set flow = flow + #{flow}, updated_time = now()
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateFlowTotal">
+        update user_flow
+        set flow_total = case when flow > 0 then ifnull(flow_total, 0) + #{flow} else #{flow} end,
+            flow = flow + #{flow},
+            updated_time = now()
         where user_id = #{userId}
     </update>
 

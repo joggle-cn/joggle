@@ -1,22 +1,22 @@
 package com.wuweibi.bullet.dashboard.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class DeviceMappingInfoDTO {
 
-    @ApiModelProperty("设备ID")
+    @Schema(description = "设备ID")
     private Integer deviceId;
 
-    @ApiModelProperty("设备名称")
+    @Schema(description = "设备名称")
     private String deviceName;
 
-    @ApiModelProperty("设备下的映射Id集合")
+    @Schema(description = "设备下的映射Id集合")
     private String mappingIds;
 
-    @ApiModelProperty("设备流量MB")
+    @Schema(description = "设备流量MB")
     private BigDecimal flow = BigDecimal.ZERO;
 }

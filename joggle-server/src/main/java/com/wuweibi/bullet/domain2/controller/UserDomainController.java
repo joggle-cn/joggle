@@ -15,15 +15,15 @@ import com.wuweibi.bullet.domain2.service.UserDomainService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceMappingService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 用户域名(UserDomain)表控制层
@@ -34,7 +34,7 @@ import java.util.List;
 @Slf4j
 @WebApi
 @RestController
-@Api(value = "用户域名", tags = "用户域名")
+@Tag(name = "用户域名")
 @RequestMapping("/api/user/domain")
 public class UserDomainController {
     /**
@@ -50,7 +50,7 @@ public class UserDomainController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("用户域名分页查询")
+    @Operation(summary = "用户域名分页查询")
     @GetMapping("/list")
     public R<Page<UserDomainVO>> getPageList(PageParam page, UserDomainParam params) {
         params.setUserId(SecurityUtils.getUserId());
@@ -63,7 +63,7 @@ public class UserDomainController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<UserDomain> detail(@RequestParam Serializable id) {
         return R.ok(this.userDomainService.getById(id));
@@ -75,7 +75,7 @@ public class UserDomainController {
      * @param addDTO 实体对象
      * @return 新增结果
      */
-    @ApiOperation("用户域名新增")
+    @Operation(summary = "用户域名新增")
     @PostMapping
     public R<Boolean> saveUserDomain(@RequestBody @Valid UserDomainAddDTO addDTO) {
         addDTO.setUserId(SecurityUtils.getUserId());
@@ -91,7 +91,7 @@ public class UserDomainController {
      * @param domainCertUpdate 实体对象
      * @return 修改结果
      */
-    @ApiOperation("用户域名更新证书")
+    @Operation(summary = "用户域名更新证书")
     @PutMapping("/cert")
     public R<Boolean> updateDomainCert(@RequestBody @Valid DomainCertUpdate domainCertUpdate) {
         return this.userDomainService.updateDomainCert(domainCertUpdate);
@@ -104,7 +104,7 @@ public class UserDomainController {
      * @param userDomain 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     public R<Boolean> update(@RequestBody UserDomain userDomain) {
         return R.ok(this.userDomainService.updateById(userDomain));
@@ -119,7 +119,7 @@ public class UserDomainController {
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除用户域名")
+    @Operation(summary = "删除用户域名")
     @DeleteMapping("/")
     public R<Boolean> deleteById(@RequestBody @Valid IdLongDTO idDTO) {
         Long userId = SecurityUtils.getUserId();
@@ -140,7 +140,7 @@ public class UserDomainController {
      *
      * @return
      */
-    @ApiOperation("用户域名下拉")
+    @Operation(summary = "用户域名下拉")
     @GetMapping("/options")
     public R<List<UserDomainOptionVO>> deviceOptions() {
         Long userId = SecurityUtils.getUserId();

@@ -15,13 +15,13 @@ import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.protocol.MsgCheckUpdate;
 import com.wuweibi.bullet.service.DomainService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 通道(TServerTunnel)表控制层
@@ -49,7 +49,7 @@ public class ServerTunnelAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("通道分页查询")
+    @Operation(summary = "通道分页查询")
     @GetMapping("/list")
     public R<Page<ServerTunnelAdminVO>> getPageList(PageParam page, ServerTunnelAdminParam params) {
         return R.ok(this.serverTunnelService.getAdminPage(page.toMybatisPlusPage(), params));
@@ -60,7 +60,7 @@ public class ServerTunnelAdminController {
      *
      * @return
      */
-    @ApiOperation("通道详情")
+    @Operation(summary = "通道详情")
     @GetMapping(value = "/detail")
     public R<ServerTunnel> detail(IdDTO dto) {
         ServerTunnel serverTunnel = serverTunnelService.getById(dto.getId());
@@ -72,7 +72,7 @@ public class ServerTunnelAdminController {
      *
      * @return
      */
-    @ApiOperation("新建通道")
+    @Operation(summary = "新建通道")
     @PostMapping(value = "")
     public R create(@RequestBody @Valid ServerTunnelAdminDTO dto) {
         ServerTunnel serverTunnel = new ServerTunnel();
@@ -90,7 +90,7 @@ public class ServerTunnelAdminController {
      *
      * @return
      */
-    @ApiOperation("新建通道")
+    @Operation(summary = "新建通道")
     @PutMapping(value = "")
     public R update(@RequestBody @Valid ServerTunnelAdminDTO dto) {
         if (dto.getId() == null) {
@@ -108,7 +108,7 @@ public class ServerTunnelAdminController {
      * 删除通道
      * @return
      */
-    @ApiOperation("删除通道")
+    @Operation(summary = "删除通道")
     @DeleteMapping(value = "")
     public R delete(@RequestBody @Valid IdDTO dto) {
         Integer id = dto.getId();
@@ -137,7 +137,7 @@ public class ServerTunnelAdminController {
      *
      * @return
      */
-    @ApiOperation("触发通道检查更新")
+    @Operation(summary = "触发通道检查更新")
     @PostMapping("/trigger-update")
     public R<Boolean> triggerUpdate(@JwtUser Session session,
                                   @RequestBody @Valid TunnelCheckUpdateDTO dto) {

@@ -44,6 +44,7 @@ public abstract class Message {
     public static final int DEVICE_METRICS = 0x10000015; // 统计数据
 
     public static final int CHECK_UPDATE = 0x10000016; // 检查更新
+    public static final int DEVICE_LATENCY = 0x10000017; // 设备延迟报告
 
 
     public static final int NEW_MAPPING = 0x6;

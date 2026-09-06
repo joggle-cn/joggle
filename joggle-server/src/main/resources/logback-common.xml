@@ -23,6 +23,7 @@
 	<!-- Console log output -->
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
+			<charset>UTF-8</charset>
 			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
 		</encoder>
 	</appender>
@@ -36,6 +37,7 @@
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>
+			<charset>UTF-8</charset>
 			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -61,7 +63,7 @@
 	<logger name="java.sql.PreparedStatement" level="INFO"/>
 	<logger name="com.baomidou.mybatisplus" level="INFO"/>
 
-	<logger name="springfox.documentation" level="INFO"/>
+	<logger name="org.springdoc" level="INFO"/>
 	<logger name="org.springframework.beans" level="INFO"/>
 	<logger name="org.springframework.data" level="INFO"/>
 	<logger name="org.springframework.security" level="INFO"/>

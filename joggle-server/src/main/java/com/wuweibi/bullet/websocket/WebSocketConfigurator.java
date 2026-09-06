@@ -2,9 +2,9 @@ package com.wuweibi.bullet.websocket;
 
 import org.springframework.http.HttpHeaders;
 
-import javax.websocket.HandshakeResponse;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.HandshakeResponse;
+import jakarta.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.List;
 import java.util.Map;
 

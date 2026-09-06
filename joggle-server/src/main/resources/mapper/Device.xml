@@ -51,8 +51,40 @@
 		   do.updateTime onlineTime, do.os, do.arch
 		from t_device d
 		 left join t_device_online do on d.deviceId = do.deviceNo
+		<where>
+			d.userId = #{userId}
+			<if test="params.status != null">
+				and do.status = #{params.status}
+			</if>
+			<if test="params.os != null and params.os != ''">
+				and do.os like concat('%', #{params.os}, '%')
+			</if>
+		</where>
+		<choose>
+			<when test="params.sort == 'name'">
+				order by d.name
+				<choose>
+					<when test="params.order == 'asc'">asc</when>
+					<otherwise>desc</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				order by do.updateTime desc,d.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+<!--	获取用户最近设备列表-->
+    <select id="selectRecentWebListByUserId" resultType="com.wuweibi.bullet.domain.dto.DeviceDTO">
+		select
+			d.`id`, d.`name`, d.`deviceId` as deviceNo,
+		   do.`status`, do.`public_ip`, do.`intranet_ip`,do.mac_addr,
+		   do.updateTime onlineTime, do.os, do.arch
+		from t_device d
+		 left join t_device_online do on d.deviceId = do.deviceNo
 		where d.userId = #{userId}
 		order by do.updateTime desc,d.id desc
+		limit #{limit}
 	</select>
 
 <!--	获取设备详情-->

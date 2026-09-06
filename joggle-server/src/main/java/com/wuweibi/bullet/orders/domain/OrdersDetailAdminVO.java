@@ -1,11 +1,11 @@
 package com.wuweibi.bullet.orders.domain;
 
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (Orders)表实体类
@@ -23,10 +23,10 @@ public class OrdersDetailAdminVO {
     private String orderNo;
 
     //资源类型 1域名 2端口 3流量 4 充值
-    @ApiModelProperty("资源类型")
+    @Schema(description = "资源类型")
     private Integer resourceType;
 
-    @ApiModelProperty("资源类型")
+    @Schema(description = "资源类型")
     private String resourceTypeName;
     //资源id
     private Long domainId;
@@ -44,41 +44,41 @@ public class OrdersDetailAdminVO {
     private Integer payType;
     private String payTypeName;
 
-    @ApiModelProperty("订单状态 0待支付 1已支付 2 取消 3退款中 4已退款")
+    @Schema(description = "订单状态 0待支付 1已支付 2 取消 3退款中 4已退款")
     private Integer status;
 
-    @ApiModelProperty("订单状态名称")
+    @Schema(description = "订单状态名称")
     private String statusName;
 
     //
-    @ApiModelProperty("三方交易号")
+    @Schema(description = "三方交易号")
     private String tradeNo;
     //
-    @ApiModelProperty("支付时间")
+    @Schema(description = "支付时间")
     private Date payTime;
     //
-    @ApiModelProperty("退款时间")
+    @Schema(description = "退款时间")
     private Date refundTime;
     //
-    @ApiModelProperty("取消时间")
+    @Schema(description = "取消时间")
     private Date cancelTime;
 
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
     private Date updateTime;
 
     /**
      * 购买用户昵称
      */
-    @ApiModelProperty("购买用户昵称")
+    @Schema(description = "购买用户昵称")
     private String buyerNickname;
 
-    @ApiModelProperty("购买用户Email")
+    @Schema(description = "购买用户Email")
     private String buyerEmail;
 
-    @ApiModelProperty("用户下单ip")
+    @Schema(description = "用户下单ip")
     private String userIP;
 
 }

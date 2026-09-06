@@ -6,17 +6,17 @@ import com.wuweibi.bullet.common.domain.PageParam;
 import com.wuweibi.bullet.controller.validator.LoginParamValidator;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
+import com.wuweibi.bullet.system.client.domain.ClientVersionUpdateDTO;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -51,7 +51,7 @@ public class VersionAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("客户端分页查询")
+    @Operation(summary = "客户端分页查询")
     @GetMapping("/list")
     public R<Page<ClientVersionAdminListVO>> getPageList(PageParam page, ClientVersionParam params) {
         return R.ok(this.clientVersionService.getAdminList(page.toMybatisPlusPage(), params));
@@ -63,19 +63,17 @@ public class VersionAdminController {
      * 客户端摘要更新
      * @return
      */
+    @Operation(summary = "客户端摘要更新")
     @PostMapping(value = "/update")
-    public R update(@RequestBody String text, HttpServletRequest request) {
-        String[] lines = text.split("\n");
-        for(String line: lines){
-            String[] strings = line.split(":");
-            String[] binPath = strings[0].split("/");
-            String[] oss = binPath[0].split("_");
-            String os = oss[0];
-            String arch = oss[1];
-            String checksum = strings[1];
-            String version = strings[2].trim();
-            String binFilePath = strings[0];
-            clientVersionService.updateChecksumByOsArch(version, os, arch,binFilePath, checksum);
+    public R update(@RequestBody ClientVersionUpdateDTO dto) {
+        String type = dto.getType();
+        for (ClientVersionUpdateDTO.Item item : dto.getItems()) {
+            String os = item.getOs();
+            String arch = item.getArch();
+            String checksum = item.getChecksum();
+            String version = item.getVersion();
+            String downloadUrl = item.getDownloadUrl();
+            clientVersionService.updateChecksumByOsArch(version, os, arch, downloadUrl, checksum, type);
         }
         return R.success();
     }

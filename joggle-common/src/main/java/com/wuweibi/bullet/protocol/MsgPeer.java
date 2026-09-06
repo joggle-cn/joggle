@@ -34,7 +34,7 @@ public class MsgPeer extends Message {
     public MsgPeer(String content) {
         super(Message.P2P_STUN);
         this.content = content;
-        int len = this.content.length();
+        int len = this.content.getBytes(StandardCharsets.UTF_8).length;
         getHead().setLength(super.getLength() + len);
     }
 

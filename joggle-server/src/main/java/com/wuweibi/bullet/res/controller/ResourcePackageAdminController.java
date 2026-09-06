@@ -4,6 +4,7 @@ package com.wuweibi.bullet.res.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
+import com.wuweibi.bullet.config.swagger.annotation.AdminApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.res.domain.PackageOptionVO;
 import com.wuweibi.bullet.res.domain.ResourcePackageAdminParam;
@@ -12,17 +13,17 @@ import com.wuweibi.bullet.res.domain.ResourcePackageVO;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (ResourcePackage)表控制层
@@ -32,7 +33,8 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Api(value = "", tags = "套餐管理")
+@AdminApi
+@Tag(name = "套餐管理")
 @RequestMapping("/admin/resource/package")
 public class ResourcePackageAdminController {
     /**
@@ -48,13 +50,13 @@ public class ResourcePackageAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("套餐分页查询")
+    @Operation(summary = "套餐分页查询")
     @GetMapping("/list")
     public R<Page<ResourcePackageVO>> getPageList(PageParam page, ResourcePackageAdminParam params) {
         return R.ok(this.resourcePackageService.getAdminList(page.toMybatisPlusPage(), params));
     }
 
-    @ApiOperation("套餐下拉选项")
+    @Operation(summary = "套餐下拉选项")
     @GetMapping("/options")
     public R<List<PackageOptionVO>> getOptionList( ) {
         return R.ok(this.resourcePackageService.getOptionList());
@@ -66,7 +68,7 @@ public class ResourcePackageAdminController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<ResourcePackage> detail(@RequestParam Serializable id) {
         return R.ok(this.resourcePackageService.getById(id));
@@ -77,7 +79,7 @@ public class ResourcePackageAdminController {
      * @param dto 实体对象
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PostMapping
     public R<Boolean> save(@RequestBody @Valid ResourcePackageDTO dto) {
         ResourcePackage entity = new ResourcePackage();
@@ -92,7 +94,7 @@ public class ResourcePackageAdminController {
      * @param dto 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     public R<Boolean> update(@RequestBody @Valid ResourcePackageDTO dto) {
         if(dto.getId() == null){
@@ -115,7 +117,7 @@ public class ResourcePackageAdminController {
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除套餐")
+    @Operation(summary = "删除套餐")
     @DeleteMapping()
     public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
         Integer packageId = idDTO.getId();

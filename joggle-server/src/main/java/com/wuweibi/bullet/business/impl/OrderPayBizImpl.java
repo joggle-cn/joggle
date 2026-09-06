@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -216,10 +216,10 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 if (userPackage != null && userPackage.getLevel() > resourcePackage.getLevel()) {
                     return R.fail("请重新选择套餐，原因不支持降级。");
                 }
-                if (resourcePackage.getId() != userPackage.getResourcePackageId() && userPackage.getLevel() != 0) {
+                if (userPackage != null && resourcePackage.getId() != userPackage.getResourcePackageId() && userPackage.getLevel() != 0) {
                     return R.fail("暂不支持切换购买套餐,敬请期待！");
                 }
-                if (userPackage.getEndTime() == null) {
+                if (userPackage != null && userPackage.getEndTime() == null) {
                     userPackage.setEndTime(new Date());
                 }
 
@@ -317,7 +317,7 @@ public class OrderPayBizImpl implements OrderPayBiz {
                 break;
             case 3: // 流量
                 long flow = orders.getAmount() * 1024 * 1024;
-                userFlowService.updateFLow(orders.getUserId(), flow);
+                userFlowService.purchaseFlow(orders.getUserId(), flow);
                 break;
 
             case 5: // 套餐

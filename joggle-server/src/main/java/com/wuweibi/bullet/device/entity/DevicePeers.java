@@ -2,11 +2,11 @@ package com.wuweibi.bullet.device.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (DevicePeers)表实体类
@@ -22,86 +22,94 @@ public class DevicePeers {
      * id
      */
     @TableId(type = IdType.AUTO)
-    @ApiModelProperty("id")
+    @Schema(description = "id")
   	private Long id;
     
     /**
      * 用户id
      */
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
  	private Long userId;
 
-    @ApiModelProperty("p2p应用名称")
- 	private String appName;
+    @Schema(description = "p2p应用名称")
+  	private String appName;
+
+    @Schema(description = "映射别名")
+    private String name;
     
     /**
      * 服务侧设备id
      */
-    @ApiModelProperty("服务侧设备id")
+    @Schema(description = "服务侧设备id")
  	private Long serverDeviceId;
     
     /**
      * 客户侧设备id
      */
-    @ApiModelProperty("客户侧设备id")
+    @Schema(description = "客户侧设备id")
  	private Long clientDeviceId;
     
     /**
      * 服务侧本地端口
      */
-    @ApiModelProperty("服务侧本地端口")
+    @Schema(description = "服务侧本地端口")
  	private Integer serverLocalPort;
 
-    @ApiModelProperty("服务侧MTU")
+    @Schema(description = "服务侧MTU")
  	private Integer serverMtu;
 
     /**
      * 客户侧代理端口
      */
-    @ApiModelProperty("客户侧代理端口")
+    @Schema(description = "客户侧代理端口")
  	private Integer clientProxyPort;
 
 
-    @ApiModelProperty("服务侧本地Host 默认: 0.0.0.0")
+    @Schema(description = "服务侧本地Host 默认: 0.0.0.0")
     private String serverLocalHost;
 
 
-    @ApiModelProperty("客户侧代理Host 默认: 127.0.0.1")
+    @Schema(description = "客户侧代理Host 默认: 127.0.0.1")
     private String clientProxyHost;
 
-    @ApiModelProperty("客户侧MTU")
+    @Schema(description = "客户侧MTU")
     private Integer clientMtu;
 
 
-    @ApiModelProperty("备注")
+    @Schema(description = "备注")
     private String remark;
 
     /**
      * 状态 1启用 0禁用
      */
-    @ApiModelProperty("状态 1启用 0禁用")
+    @Schema(description = "状态 1启用 0禁用")
  	private Integer status;
     
     /**
      * 创建时间
      */
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
  	private Date createTime;
     
     /**
      * 更新时间
      */
-    @ApiModelProperty("更新时间")
+    @Schema(description = "更新时间")
  	private Date updateTime;
 
-    @ApiModelProperty("传输压缩 1启用 0禁用")
+    @Schema(description = "传输压缩 1启用 0禁用")
     private Integer configCompress;
 
-    @ApiModelProperty("传输加密方式 none aes aes-128")
+    @Schema(description = "传输加密方式 none aes aes-128")
     private String configEncryption;
 
-    @ApiModelProperty("循环周期(单位：ms) 10 20 30 40")
+    @Schema(description = "循环周期(单位：ms) 10 20 30 40")
     private Integer configInterval;
 
+    @Schema(description = "P2P传输策略：p2p、wss、auto")
+    private String strategy;
+
+    @Schema(description = "P2P/WSS带宽限制Mbps，0表示不限速")
+    private Integer bandwidth;
 
 }

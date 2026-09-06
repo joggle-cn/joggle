@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.device.domain.dto;
 
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class DeviceOnlineInfoDTO {
@@ -15,7 +15,7 @@ public class DeviceOnlineInfoDTO {
     /**
      * 公网IP地址
      */
-    @ApiModelProperty("公网IP地址")
+    @Schema(description = "公网IP地址")
     private String publicIp;
 
     private String intranetIp;
@@ -24,13 +24,13 @@ public class DeviceOnlineInfoDTO {
 
     private String macAddr;
 
-    @ApiModelProperty("操作系统")
+    @Schema(description = "操作系统")
     private String os;
 
-    @ApiModelProperty("cpu架构")
+    @Schema(description = "cpu架构")
     private String arch;
 
-    @ApiModelProperty("通道id")
+    @Schema(description = "通道id")
     private Integer serverTunnelId;
 
 }

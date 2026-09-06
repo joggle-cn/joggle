@@ -1,9 +1,9 @@
 package com.wuweibi.bullet.device.domain.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  *
@@ -15,39 +15,39 @@ public class DeviceListVO  {
 
 	private Long id;
 
-	@ApiModelProperty("设备名称")
+	@Schema(description = "设备名称")
 	private String name;
 
-	@ApiModelProperty("用户名")
+	@Schema(description = "用户名")
 	private String username;
 
-	@ApiModelProperty("设备编号")
+	@Schema(description = "设备编号")
 	private String deviceNo;
 
-	@ApiModelProperty("创建时间")
+	@Schema(description = "创建时间")
 	private Date createTime;
 
 	private Long userId;
 
-	@ApiModelProperty("设备并发连接数")
+	@Schema(description = "设备并发连接数")
 	private Integer concurrentNum;
 
-	@ApiModelProperty("操作系统")
+	@Schema(description = "操作系统")
 	private String os;
-	@ApiModelProperty("CPU平台")
+	@Schema(description = "CPU平台")
 	private String arch;
 
-	@ApiModelProperty("公网IP")
+	@Schema(description = "公网IP")
 	private String publicIp;
-	@ApiModelProperty("内网IP")
+	@Schema(description = "内网IP")
 	private String intranetIp;
-	@ApiModelProperty("mac地址")
+	@Schema(description = "mac地址")
 	private String macAddr;
-	@ApiModelProperty("状态")
+	@Schema(description = "状态")
 	private Integer status;
-	@ApiModelProperty("通道id")
+	@Schema(description = "通道id")
 	private Integer serverTunnelId;
-	@ApiModelProperty("通道名称")
+	@Schema(description = "通道名称")
 	private String serverTunnelName;
 
 

@@ -90,6 +90,7 @@
             rp.name,
             up.`level`,
             up.`flow`,
+            up.`flow_total`,
             up.`name`,
             up.end_time,
             rp.flow_num as resourcePackageFlow,

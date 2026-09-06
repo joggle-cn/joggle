@@ -1,13 +1,13 @@
 package com.wuweibi.bullet.domain2.domain.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -51,13 +51,13 @@ public class DomainUpdateDTO {
 	private Integer status;
 
 
-	@ApiModelProperty("宽带mbps")
+	@Schema(description = "宽带mbps")
 	@TableField(value = "bandwidth")
 	@Min(value = 1,message = "宽带必须大于等于1") @Max(1000)
 	private Integer bandwidth;
 
 	@Min(value = 1,message = "并发连接数必须大于等于1") @Max(10000)
-	@ApiModelProperty("并发连接数 每秒")
+	@Schema(description = "并发连接数 每秒")
 	private Integer concurrentNum;
 
 

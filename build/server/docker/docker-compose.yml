@@ -44,6 +44,9 @@ services:
     image: 'wuweiit/springboot:0.0.1'
     environment:
       APP_ENV: 'prod'
+      LANG: 'C.UTF-8'
+      LC_ALL: 'C.UTF-8'
+      JAVA_TOOL_OPTIONS: '-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8'
       BULLET_MYSQL_HOST: mysql
       BULLET_MYSQL_PASSWORD: 'rcnk5mRRPkHZVsbQ'
       BULLET_MAIL_HOST: smtp.qiye.aliyun.com

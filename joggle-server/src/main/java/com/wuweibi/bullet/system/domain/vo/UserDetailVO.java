@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -70,23 +70,26 @@ public class UserDetailVO extends Model<UserDetailVO> {
 
 	private Integer userCertification;
 
-	@ApiModelProperty("系统通知 1打开 0关闭")
+	@Schema(description = "系统通知 1打开 0关闭")
 	private Integer systemNotice;
 
-	@ApiModelProperty("套餐id")
+	@Schema(description = "套餐id")
 	private Integer resourcePackageId;
 
-	@ApiModelProperty("套餐名称")
+	@Schema(description = "套餐名称")
 	private String resourcePackageName;
 
-	@ApiModelProperty("套餐等级")
+	@Schema(description = "套餐等级")
 	private Integer resourcePackageLevel;
 
-	@ApiModelProperty("套餐剩余流量")
+	@Schema(description = "套餐剩余流量KB")
 	private Long userPackageFlow;
 
+	@Schema(description = "套餐总流量KB")
+	private Long userPackageFlowTotal;
 
-	@ApiModelProperty("套餐结束时间")
+
+	@Schema(description = "套餐结束时间")
 	private Date packageEndTime;
 
 

@@ -6,7 +6,7 @@ import com.wuweibi.bullet.protocol.strategy.MessageHandlerStrategy;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 
 /**

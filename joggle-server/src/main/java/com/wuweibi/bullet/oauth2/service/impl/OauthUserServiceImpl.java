@@ -6,7 +6,7 @@ import com.wuweibi.bullet.oauth2.domain.OauthUser;
 import com.wuweibi.bullet.oauth2.service.OauthUserService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * <p>

@@ -1,16 +1,16 @@
 package com.wuweibi.bullet.orders.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class OrdersConfirmDTO {
 
 
-    @ApiModelProperty("订单id")
+    @Schema(description = "订单id")
     private Long orderId;
 
-    @ApiModelProperty("订单编号")
+    @Schema(description = "订单编号")
     private String orderNo;
 
 

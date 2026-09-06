@@ -9,8 +9,8 @@ import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Deprecated
 @Slf4j

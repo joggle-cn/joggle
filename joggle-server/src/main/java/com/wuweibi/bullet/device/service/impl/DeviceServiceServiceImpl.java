@@ -13,7 +13,7 @@ import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.stream.Collectors;
 
 

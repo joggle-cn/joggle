@@ -23,16 +23,16 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (Orders)表控制层
@@ -43,7 +43,7 @@ import java.io.Serializable;
 @Slf4j
 @RestController
 @AdminApi
-@Api(value = "", tags = "订单管理")
+@Tag(name = "订单管理")
 @RequestMapping("/admin/orders")
 public class OrdersAdminController {
     /**
@@ -59,7 +59,7 @@ public class OrdersAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("订单分页查询")
+    @Operation(summary = "订单分页查询")
     @GetMapping("/list")
     public R<Page<OrdersListAdminVO>> getPageList(PageParam page, OrdersAdminParam params) {
         return R.ok(this.ordersService.getAdminPage(page.toMybatisPlusPage(), params));
@@ -77,7 +77,7 @@ public class OrdersAdminController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<OrdersDetailAdminVO> detail(@RequestParam Serializable id) {
         Orders entity = this.ordersService.getById(id);
@@ -112,7 +112,7 @@ public class OrdersAdminController {
      *
      * @return 修改结果
      */
-    @ApiOperation("取消订单")
+    @Operation(summary = "取消订单")
     @PutMapping("/cancel")
     @Transactional
     public R<Boolean> cancel(@RequestBody @Valid IdLongDTO dto) throws Exception {

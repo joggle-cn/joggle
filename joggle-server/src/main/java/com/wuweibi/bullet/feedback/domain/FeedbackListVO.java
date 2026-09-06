@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.feedback.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 意见反馈(Feedback)实体类
@@ -25,7 +25,7 @@ public class FeedbackListVO implements Serializable {
      */
     private Long userId;
 
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String username;
 
     /**

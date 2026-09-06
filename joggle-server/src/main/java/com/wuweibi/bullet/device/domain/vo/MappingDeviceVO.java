@@ -1,11 +1,11 @@
 package com.wuweibi.bullet.device.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -22,13 +22,16 @@ public class MappingDeviceVO {
 	@TableField("device_id")
 	private Long deviceId;
 
-	@ApiModelProperty("购买的域名前缀")
+	@Schema(description = "购买的域名前缀")
 	private String domain;
 
-	@ApiModelProperty("格式化的访问URL")
+	@Schema(description = "映射名称")
+	private String name;
+
+	@Schema(description = "格式化的访问URL")
 	private String url;
 
-	@ApiModelProperty("端口")
+	@Schema(description = "端口")
 	private Integer port;
 
 
@@ -48,7 +51,7 @@ public class MappingDeviceVO {
 	 */
 	private String hostname;
 
-	@ApiModelProperty("用户域名id")
+	@Schema(description = "用户域名id")
 	private Long userDomainId;
 
 	/**
@@ -90,16 +93,16 @@ public class MappingDeviceVO {
 	private Integer serverTunnelId;
 
 
-	@ApiModelProperty("今日流量")
+	@Schema(description = "今日流量")
 	private BigDecimal todayFlow;
 
-	@ApiModelProperty("链接数")
+	@Schema(description = "链接数")
 	private Integer link;
 
-	@ApiModelProperty("宽带mbps")
+	@Schema(description = "宽带mbps")
 	private Integer bandwidth;
 
-	@ApiModelProperty("最大并发连接数")
+	@Schema(description = "最大并发连接数")
 	private Integer concurrentNum;
 
 

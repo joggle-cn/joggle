@@ -5,12 +5,12 @@ import com.wuweibi.bullet.alias.CacheCode;
 import com.wuweibi.bullet.config.properties.JoggleProperties;
 import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  *  acme验证接口
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @WebApi
-@Api(tags = "acme验证接口")
+@Tag(name = "acme验证接口")
 @RestController
 @RequestMapping("/inner/open/.well-known/acme-challenge")
 public class AcmeOpenInnerController {

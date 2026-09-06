@@ -2,6 +2,7 @@ package com.wuweibi.bullet.system.controller;
 
 
 import cn.hutool.core.util.IdcardUtil;
+import com.wuweibi.bullet.config.swagger.annotation.WebApi;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.system.domain.UserCertificationDTO;
@@ -9,8 +10,6 @@ import com.wuweibi.bullet.system.entity.UserCertification;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
 import com.wuweibi.bullet.system.service.UserCertificationService;
 import com.wuweibi.bullet.system.service.enums.SmsTypeEnum;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 用户实名认证(UserCertification)表控制层
@@ -30,8 +31,9 @@ import java.util.Date;
  * @since 2022-09-14 13:54:43
  */
 @Slf4j
+@WebApi
 @RestController
-@Api(value = "用户实名认证", tags = "用户实名认证")
+@Tag(name = "用户实名认证")
 @RequestMapping("/api/user/certification")
 public class UserCertificationController {
     /**
@@ -48,7 +50,7 @@ public class UserCertificationController {
      *
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PostMapping("/submit")
     public R<Boolean> save(@RequestBody @Valid UserCertificationDTO dto) {
         Long userId = SecurityUtils.getUserId();

@@ -1,11 +1,11 @@
 package com.wuweibi.bullet.system.client.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -21,11 +21,11 @@ import java.io.Serializable;
 public class NgrokVersionVO implements Serializable {
 
 
-    @ApiModelProperty("ngrok客户端版本 v1.3.9")
+    @Schema(description = "ngrok客户端版本 v1.3.9")
     private String clientVersion;
 
 
-    @ApiModelProperty("ngrok服务端版本 v1.3.9")
+    @Schema(description = "ngrok服务端版本 v1.3.9")
     private String serverVersion;
 
 

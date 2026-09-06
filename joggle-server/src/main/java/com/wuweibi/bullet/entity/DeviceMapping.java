@@ -25,6 +25,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
     public static final int PROTOCOL_HTTPS = 3;
     public static final int PROTOCOL_HTTP_HTTPS = 4;
 	public static final int PROTOCOL_UDP   = 5;
+    public static final int PROTOCOL_KCP   = 6;
 
 
 	@TableId(value="id", type= IdType.AUTO)
@@ -92,6 +93,7 @@ public class DeviceMapping extends Model<DeviceMapping> {
      * 映射状态 （1、启用；0、停用)
      * */
     private Integer status;
+
     /**
      * 创建时间
      */

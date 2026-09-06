@@ -2,10 +2,10 @@ package com.wuweibi.bullet.metrics.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 数据收集(DataMetrics)表实体类
@@ -74,7 +74,7 @@ public class DataMetricsListVO {
      */
     private Integer createYear;
 
-    @ApiModelProperty("链接数量")
+    @Schema(description = "链接数量")
     private Long link;
 
 

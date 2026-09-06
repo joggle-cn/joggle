@@ -20,17 +20,17 @@ import com.wuweibi.bullet.protocol.domain.DoorConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * 设备任意门(DeviceDoor)表控制层
@@ -40,7 +40,7 @@ import java.util.Objects;
  */
 @Slf4j
 @RestController
-@Api(value = "设备任意门", tags = "设备任意门")
+@Tag(name = "设备任意门")
 @RequestMapping("/api/device/door")
 public class DeviceDoorController {
     /**
@@ -66,7 +66,7 @@ public class DeviceDoorController {
      * @param dto 实体对象
      * @return 新增结果
      */
-    @ApiOperation("配置任意门")
+    @Operation(summary = "配置任意门")
     @PostMapping("/config/one")
     @Transactional
     public R<Boolean> save(@RequestBody @Valid DeviceDoorDTO dto) {
@@ -151,10 +151,10 @@ public class DeviceDoorController {
      * 获取配置任意门
      * @return 新增结果
      */
-    @ApiOperation("获取配置任意门")
+    @Operation(summary = "获取配置任意门")
     @GetMapping("/config/one")
     public R<DeviceDoorVO> detail(
-            @ApiParam("设备id")
+            @Parameter(description = "设备id")
             @RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
         Device device = deviceService.getById(deviceId);

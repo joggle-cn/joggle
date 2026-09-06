@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.domain2.domain.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 用户域名(UserDomain)分页对象
@@ -15,13 +15,13 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserDomainOptionVO {
 
-    @ApiModelProperty("id")
+    @Schema(description = "id")
     private Long id;
 
-    @ApiModelProperty("自定义域名")
+    @Schema(description = "自定义域名")
     private String name;
 
-    @ApiModelProperty("已经绑定 true 未绑定 false")
+    @Schema(description = "已经绑定 true 未绑定 false")
     private Boolean bind;
 
 }

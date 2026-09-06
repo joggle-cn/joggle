@@ -14,17 +14,17 @@ import com.wuweibi.bullet.feedback.service.FeedbackService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
 import com.wuweibi.bullet.system.entity.User;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 意见反馈(Feedback)表控制层
@@ -33,7 +33,7 @@ import java.util.Map;
  * @since 2022-04-01 17:32:37
  */
 @WebApi
-@Api(tags = "意见反馈")
+@Tag(name = "意见反馈")
 @RestController
 @RequestMapping("/admin/feedback")
 public class FeedbackAdminController {
@@ -59,7 +59,7 @@ public class FeedbackAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("意见反馈分页查询")
+    @Operation(summary = "意见反馈分页查询")
     @GetMapping("/list")
     public R<Page<FeedbackListVO>> getPageList(PageParam page, FeedbackParam params) {
         return R.ok(this.feedbackService.getAdminList(page.toMybatisPlusPage(), params));
@@ -72,7 +72,7 @@ public class FeedbackAdminController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<Feedback> detail(@RequestParam Integer id) {
         return R.ok(this.feedbackService.queryById(id));
@@ -83,7 +83,7 @@ public class FeedbackAdminController {
      * 删除反馈
      * @return
      */
-    @ApiOperation("删除反馈")
+    @Operation(summary = "删除反馈")
     @DeleteMapping(value = "")
     public R delete(@RequestBody @Valid IdDTO dto) {
         Integer id = dto.getId();

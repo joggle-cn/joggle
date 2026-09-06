@@ -27,6 +27,11 @@ public class ClientVersionAdminListVO implements Serializable {
     private Integer id;
 
     /**
+     * 类型 CLIENT / SERVER
+     */
+    private String type;
+
+    /**
      * 版本号
      */
     private String version;

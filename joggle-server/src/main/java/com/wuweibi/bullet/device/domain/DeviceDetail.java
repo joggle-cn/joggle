@@ -2,10 +2,10 @@ package com.wuweibi.bullet.device.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -30,12 +30,12 @@ public class DeviceDetail extends Model<DeviceDetail> {
     @TableField(value = "userId")
 	private Long userId;
 
-	@ApiModelProperty("设备秘钥")
+	@Schema(description = "设备秘钥")
 	@TableField("device_secret")
 	private String deviceSecret;
 
 
-	@ApiModelProperty("在线状态 -1离线  1在线")
+	@Schema(description = "在线状态 -1离线  1在线")
 	private Integer status;
 
 	/**
@@ -49,16 +49,16 @@ public class DeviceDetail extends Model<DeviceDetail> {
 	@TableField()
 	private String publicIp;
 
-	@ApiModelProperty("客户端版本")
+	@Schema(description = "客户端版本")
 	private String clientVersion;
 
-	@ApiModelProperty("通道id")
+	@Schema(description = "通道id")
 	private Integer serverTunnelId;
 
-	@ApiModelProperty("操作系统")
+	@Schema(description = "操作系统")
 	private String os;
 
-	@ApiModelProperty("CPU架构")
+	@Schema(description = "CPU架构")
 	private String arch;
 	private String macAddr;
 

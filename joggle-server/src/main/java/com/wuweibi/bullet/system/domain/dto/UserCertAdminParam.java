@@ -1,15 +1,15 @@
 package com.wuweibi.bullet.system.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class UserCertAdminParam {
 
 
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     private Long userId;
-    @ApiModelProperty("姓名")
+    @Schema(description = "姓名")
     private String realName;
 
 

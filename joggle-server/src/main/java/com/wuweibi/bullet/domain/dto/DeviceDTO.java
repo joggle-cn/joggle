@@ -3,10 +3,10 @@ package com.wuweibi.bullet.domain.dto;/**
  */
 
 import com.wuweibi.bullet.device.entity.Device;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  *
@@ -22,15 +22,18 @@ public class DeviceDTO extends Device {
     private String intranetIp;
     private String deviceId;
 
-    @ApiModelProperty("os操作系统")
+    @Schema(description = "os操作系统")
     private String os;
-    @ApiModelProperty("arch架构")
+    @Schema(description = "arch架构")
     private String arch;
 
     /**
      * 状态更新时间
      */
     private Date onlineTime;
+
+    @Schema(description = "延迟(毫秒)")
+    private Long latencyMs;
 
     public DeviceDTO(   ) {
 

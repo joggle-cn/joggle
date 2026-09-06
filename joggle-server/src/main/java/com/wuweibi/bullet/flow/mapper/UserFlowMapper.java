@@ -22,5 +22,13 @@ public interface UserFlowMapper extends BaseMapper<UserFlow> {
      */
     boolean updateFlow(@Param("userId") Long userId, @Param("flow") Long flow);
 
+    /**
+     * 购买流量，更新flow和flow_total
+     * @param userId 用户ID
+     * @param flow 购买的流量 kb
+     * @return
+     */
+    boolean updateFlowTotal(@Param("userId") Long userId, @Param("flow") Long flow);
+
     UserFlow selectUserFlowAndPackageFlow(@Param("userId") Long userId);
 }

@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.orders.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class OrdersParam {
@@ -12,7 +12,7 @@ public class OrdersParam {
     //支付方式 1余额 2支付宝
     private Integer payType;
 
-    @ApiModelProperty("数量")
+    @Schema(description = "数量")
     private Long amount;
 
     // 资源id
