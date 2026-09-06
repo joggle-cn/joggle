@@ -12,13 +12,13 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.ISysMenuService;
 import com.wuweibi.bullet.system.domain.SysMenuDTO;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import java.util.List;
  * @since 2020-03-16
  */
 @AdminApi
-@Api(tags = "菜单管理")
+@Tag(name = "菜单管理")
 @RestController
 @RequestMapping("/admin/menu")
 public class SysMenuController {

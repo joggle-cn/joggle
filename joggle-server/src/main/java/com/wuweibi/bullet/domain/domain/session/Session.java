@@ -3,8 +3,8 @@ package com.wuweibi.bullet.domain.domain.session;
  * Created by marker on 2019/8/21.
  */
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.Serializable;
 
@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @author marker
  * @create 2019-08-21 09:29
  **/
-@ApiIgnore
+@Hidden
 @Data
 public class Session implements Serializable {
 

@@ -1,6 +1,5 @@
 package com.wuweibi.bullet.device.controller;
 
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuweibi.bullet.common.domain.IdDTO;
 import com.wuweibi.bullet.common.domain.PageParam;
@@ -26,18 +25,18 @@ import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (DevicePeers)表控制层
@@ -49,7 +48,7 @@ import java.util.Objects;
 @Slf4j
 @AdminApi
 @RestController
-@Api(value = "p2p映射", tags = "p2p映射")
+@Tag(name = "p2p映射")
 @RequestMapping("/api/device/peers")
 public class DevicePeersController {
     /**
@@ -65,7 +64,7 @@ public class DevicePeersController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<DevicePeersVO>> getPageList(PageParam page, DevicePeersParam params) {
         Long userId = SecurityUtils.getUserId();
@@ -80,7 +79,7 @@ public class DevicePeersController {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("端到端映射详情")
+    @Operation(summary = "端到端映射详情")
     @GetMapping("/detail")
     public R<DevicePeersDetailVO> detail(@RequestParam Serializable id) {
         DevicePeers entity = this.devicePeersService.getById(id);
@@ -123,7 +122,7 @@ public class DevicePeersController {
      * @param dto 实体对象
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PostMapping
     @Transactional
     public R<Boolean> save(@RequestBody @Valid DevicePeersDTO dto) {
@@ -181,15 +180,13 @@ public class DevicePeersController {
         return R.ok();
     }
 
-
-
     /**
      * 修改数据
      *
      * @param dto 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     @Transactional
     public R<Boolean> update(@RequestBody @Valid DevicePeersDTO dto) {
@@ -249,7 +246,6 @@ public class DevicePeersController {
         // 发送peer消息
         devicePeersService.sendMsgPeerConfig(devicePeersConfigDTO);
 
-
         return R.ok();
     }
 
@@ -300,7 +296,7 @@ public class DevicePeersController {
      * @param dto 实体对象
      * @return 修改结果
      */
-    @ApiOperation("P2P端到端设置状态")
+    @Operation(summary = "P2P端到端设置状态")
     @PutMapping("/status")
     @Transactional
     public R<Boolean> updateStatus(@RequestBody @Valid DevicePeersStatusDTO dto) {
@@ -333,15 +329,13 @@ public class DevicePeersController {
         return R.ok();
     }
 
-
-
     /**
      * 删除数据
      *
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除数据")
+    @Operation(summary = "删除数据")
     @DeleteMapping()
     @Transactional
     public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {

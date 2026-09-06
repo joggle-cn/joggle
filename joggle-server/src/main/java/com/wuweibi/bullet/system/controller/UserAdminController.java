@@ -31,22 +31,24 @@ import com.wuweibi.bullet.system.entity.User;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -87,7 +89,7 @@ public class UserAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("用户分页查询")
+    @Operation(summary = "用户分页查询")
     @GetMapping("/list")
     public R<Page<UserListVO>> getPageList(PageParam page, UserAdminParam params) {
         return R.ok(this.userService.getList(page.toMybatisPlusPage(), params));
@@ -147,8 +149,8 @@ public class UserAdminController {
     }
 
 
-    @Resource()
-    ConsumerTokenServices consumerTokenServices;
+    @Resource
+    private OAuth2AuthorizationService authorizationService;
 
 
     /**
@@ -158,7 +160,9 @@ public class UserAdminController {
     public R loginout(HttpServletRequest request) {
         String authentication = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenValue = StringUtils.substring(authentication, AuthenticationService.BEARER_BEGIN_INDEX);
-        if (consumerTokenServices.revokeToken(tokenValue)) {
+        OAuth2Authorization authorization = authorizationService.findByToken(tokenValue, OAuth2TokenType.ACCESS_TOKEN);
+        if (authorization != null) {
+            authorizationService.remove(authorization);
             return R.success();
         } else {
             return R.fail(AuthErrorType.INVALID_REQUEST);
@@ -195,7 +199,7 @@ public class UserAdminController {
      *
      * @return
      */
-    @ApiOperation(value = "重置密码", notes = "重置密码将收到修改密码的邮件")
+    @Operation(summary = "重置密码", description = "重置密码将收到修改密码的邮件")
     @PostMapping(value = "/password/reset")
     public R forget(@RequestBody UserPassForgetApplyDTO dto,
                     HttpServletRequest request) {

@@ -1,9 +1,9 @@
 package com.wuweibi.bullet.oauth2.service;
 
 import com.wuweibi.bullet.entity.api.R;
-import org.springframework.security.jwt.Jwt;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 
 /**
@@ -30,11 +30,19 @@ public interface AuthenticationService {
 
 
     /**
-     * 获取Jwt对象
+     * 获取 access token 属性。
      * @param authentication
      * @return
      */
-    Jwt getJwt(String authentication);
+    Map<String, Object> getTokenAttributes(String authentication);
+
+    /**
+     * 获取 access token claims JSON。
+     *
+     * @param authentication Authorization请求头
+     * @return claims JSON
+     */
+    String getClaims(String authentication);
 
 
     /**

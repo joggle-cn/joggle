@@ -38,19 +38,19 @@ import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 设备：提供设备的管理功能，能够对设备绑定、查询、设备解绑、设备信息更新等功能。
@@ -60,7 +60,7 @@ import java.util.UUID;
  **/
 @Slf4j
 @WebApi
-@Api(tags = "设备管理")
+@Tag(name = "设备管理")
 @RestController
 @RequestMapping("/api/user/device")
 public class DeviceController {
@@ -85,7 +85,7 @@ public class DeviceController {
      *
      * @return
      */
-    @ApiOperation("设备下拉列表")
+    @Operation(summary = "设备下拉列表")
     @GetMapping("/options")
     public R<List<DeviceOption>> deviceOptions() {
         Long userId = SecurityUtils.getUserId();
@@ -99,7 +99,7 @@ public class DeviceController {
      *
      * @return
      */
-    @ApiOperation("用户的设备列表")
+    @Operation(summary = "用户的设备列表")
     @GetMapping
     public R<List<DeviceDTO>> device(DeviceWebQueryParam param) {
         Long userId = SecurityUtils.getUserId();
@@ -112,7 +112,7 @@ public class DeviceController {
      *
      * @return
      */
-    @ApiOperation("首页最近设备")
+    @Operation(summary = "首页最近设备")
     @GetMapping("/recent")
     public R<List<DeviceDTO>> recentDevice() {
         Long userId = SecurityUtils.getUserId();
@@ -120,13 +120,12 @@ public class DeviceController {
         return R.ok(list);
     }
 
-
     /**
      * 更新设备基本信息
      *
      * @return
      */
-    @ApiOperation("更新设备信息")
+    @Operation(summary = "更新设备信息")
     @PostMapping()
     public R save(@RequestBody @Valid DeviceUpdateDTO dto) {
         Long userId = SecurityUtils.getUserId();
@@ -140,13 +139,12 @@ public class DeviceController {
         return R.success();
     }
 
-
     /**
      * 删除设备解绑
      *
      * @return
      */
-    @ApiOperation("删除设备")
+    @Operation(summary = "删除设备")
     @DeleteMapping(value = "")
     @Transactional
     public R<Boolean> delete(@JwtUser Session session,
@@ -192,7 +190,7 @@ public class DeviceController {
      *
      * @return
      */
-    @ApiOperation("绑定设备")
+    @Operation(summary = "绑定设备")
     @RequestMapping(value = "/validate", method = RequestMethod.POST)
     @ResponseBody
     @Transactional
@@ -223,7 +221,6 @@ public class DeviceController {
         return R.success();
     }
 
-
     @Deprecated
     @RequestMapping(value = "/uuid", method = RequestMethod.GET)
     @ResponseBody
@@ -240,7 +237,7 @@ public class DeviceController {
      * @param deviceId 设备 id
      * @return 设备详情
      */
-    @ApiOperation("获取设备信息")
+    @Operation(summary = "获取设备信息")
     @GetMapping(value = "/info")
     public R<DeviceInfoVO> deviceInfo(@RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
@@ -279,7 +276,6 @@ public class DeviceController {
     @Resource
     private DeviceMappingViewService deviceMappingViewService;
 
-
     /**
      * 通过 mac 地址网络唤醒设备
      *
@@ -291,7 +287,6 @@ public class DeviceController {
         deviceService.wakeUp(session.getUserId(), mac);
         return R.success();
     }
-
 
     /**
      * 设备发现接口
@@ -305,10 +300,8 @@ public class DeviceController {
         return R.success(list);
     }
 
-
     @Resource
     private ServerTunnelService serverTunnelService;
-
 
     /**
      * 设备切换线路
@@ -357,13 +350,12 @@ public class DeviceController {
         return R.success();
     }
 
-
     /**
      * 检查更新接口
      *
      * @return
      */
-    @ApiOperation("触发设备检查更新")
+    @Operation(summary = "触发设备检查更新")
     @PostMapping("/check-update")
     public R<Boolean> checkUpdate(@JwtUser Session session,
                                   @RequestBody @Valid DeviceCheckUpdateDTO dto) {

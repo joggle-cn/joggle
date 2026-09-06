@@ -1,8 +1,8 @@
 package com.wuweibi.bullet.device.domain.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -72,7 +72,7 @@ public class DeviceMappingProtocol {
      * */
     private Integer status;
 
-	@ApiModelProperty("宽带mbps")
+	@Schema(description = "宽带mbps")
     private Integer bandwidth;
 	
 

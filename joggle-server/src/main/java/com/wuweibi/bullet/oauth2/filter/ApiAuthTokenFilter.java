@@ -7,12 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -20,6 +21,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -57,11 +59,8 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof OAuth2Authentication) {
-            OAuth2Authentication auth2Authentication = (OAuth2Authentication) authentication;
-            boolean isAdminToken = auth2Authentication.getOAuth2Request().getScope().contains(ClientScope.SCOPE_ADMIN);
-
-
+        if (authentication instanceof AbstractOAuth2TokenAuthenticationToken<?>) {
+            boolean isAdminToken = hasAdminScope(authentication);
             String uri = request.getRequestURI();
             if (uri.startsWith("/error")) { // 当请求出现404时转发到这个路径的
                 return;
@@ -87,6 +86,27 @@ public class ApiAuthTokenFilter implements Filter, InitializingBean {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean hasAdminScope(Authentication authentication) {
+        if (authentication instanceof AbstractOAuth2TokenAuthenticationToken<?> tokenAuthentication) {
+            Object scopeClaim = tokenAuthentication.getTokenAttributes().get("scope");
+            if (scopeClaim instanceof Iterable<?> scopes) {
+                for (Object scope : scopes) {
+                    if (ClientScope.SCOPE_ADMIN.equals(String.valueOf(scope))) {
+                        return true;
+                    }
+                }
+            } else if (scopeClaim instanceof String scopes
+                    && List.of(scopes.split("\\s+")).contains(ClientScope.SCOPE_ADMIN)) {
+                return true;
+            }
+        }
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(Objects::nonNull)
+                .anyMatch(authority -> authority.equals(ClientScope.SCOPE_ADMIN)
+                        || authority.equals("SCOPE_" + ClientScope.SCOPE_ADMIN));
     }
 
 

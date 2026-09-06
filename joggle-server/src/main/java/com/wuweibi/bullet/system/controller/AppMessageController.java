@@ -5,15 +5,15 @@ import cn.hutool.core.util.PhoneUtil;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.system.domain.SmsDTO;
 import com.wuweibi.bullet.system.service.ThirdMessageService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * (消息服务)表控制层
@@ -22,7 +22,7 @@ import javax.validation.Valid;
  * @since 2021-05-19 15:31:21
  */
 @RestController
-@Api(value = "param", tags = "短信服务")
+@Tag(name = "短信服务", description = "param")
 @RequestMapping("/api/open/message")
 public class AppMessageController {
     /**
@@ -36,7 +36,7 @@ public class AppMessageController {
      *
      * @return 所有数据
      */
-    @ApiOperation(value = "获取短信验证码", notes = "短信类型  登录 LOGIN  实名认证AUTH")
+    @Operation(summary = "获取短信验证码", description = "短信类型  登录 LOGIN  实名认证AUTH")
     @PostMapping("/sms")
     public R sms(@RequestBody @Valid SmsDTO smsDTO) {
 //        // 注册验证码

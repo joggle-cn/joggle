@@ -19,9 +19,20 @@ public class NewMvcRequestMatcher extends MvcRequestMatcher {
 
     public NewMvcRequestMatcher(HandlerMappingIntrospector introspector, String pattern, String method) {
         super(introspector, pattern);
-        this.setMethod(HttpMethod.resolve(method));
+        this.setMethod(resolveHttpMethod(method));
         this.pattern = pattern;
         this.method = method;
+    }
+
+    private HttpMethod resolveHttpMethod(String method) {
+        if (method == null) {
+            return null;
+        }
+        try {
+            return HttpMethod.valueOf(method);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Override

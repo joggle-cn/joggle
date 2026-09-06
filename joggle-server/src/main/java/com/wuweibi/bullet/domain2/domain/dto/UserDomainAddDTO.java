@@ -1,10 +1,10 @@
 
 package com.wuweibi.bullet.domain2.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 用户域名(UserDomain)分页对象
@@ -19,13 +19,13 @@ public class UserDomainAddDTO {
     /**
      * 用户id
      */
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     private Long userId;
 
     /**
      * 域名
      */
-    @ApiModelProperty("域名")
+    @Schema(description = "域名")
     @NotBlank(message = "域名不能为空")
     private String domain;
 

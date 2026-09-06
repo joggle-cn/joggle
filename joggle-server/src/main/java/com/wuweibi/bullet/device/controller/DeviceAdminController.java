@@ -32,19 +32,19 @@ import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceOnlineService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 设备：提供设备的管理功能，能够对设备绑定、查询、设备解绑、设备信息更新等功能。
@@ -54,7 +54,7 @@ import static com.wuweibi.bullet.core.builder.MapBuilder.newMap;
  **/
 @Slf4j
 @WebApi
-@Api(tags = "设备管理")
+@Tag(name = "设备管理")
 @RestController
 @RequestMapping("/admin/device")
 public class DeviceAdminController {
@@ -79,7 +79,7 @@ public class DeviceAdminController {
      *
      * @return
      */
-    @ApiOperation("设备下拉列表")
+    @Operation(summary = "设备下拉列表")
     @GetMapping("/options")
     public R<List<DeviceOption>> deviceOptions() {
         Long userId = SecurityUtils.getUserId();
@@ -93,7 +93,7 @@ public class DeviceAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("设备分页查询")
+    @Operation(summary = "设备分页查询")
     @GetMapping("/list")
     public R<Page<DeviceListVO>> getAdminList(PageParam page, DeviceAdminParam params) {
         return R.ok(this.deviceService.getAdminList(page.toMybatisPlusPage(), params));
@@ -106,7 +106,7 @@ public class DeviceAdminController {
      *
      * @return
      */
-    @ApiOperation("更新设备信息")
+    @Operation(summary = "更新设备信息")
     @PutMapping("/update")
     public R save(@RequestBody @Valid DeviceUpdateDTO dto) {
         Long userId = SecurityUtils.getUserId();
@@ -126,7 +126,7 @@ public class DeviceAdminController {
      * 删除设备 解绑
      * @return
      */
-    @ApiOperation("删除设备")
+    @Operation(summary = "删除设备")
     @DeleteMapping(value = "")
     public R<Boolean> delete(@JwtUser Session session,
                          @RequestBody @Valid DeviceDelDTO dto,

@@ -16,7 +16,7 @@ import com.wuweibi.bullet.utils.DateTimeUtil;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.*;
 
 /**

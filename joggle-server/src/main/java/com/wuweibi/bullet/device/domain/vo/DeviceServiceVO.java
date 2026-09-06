@@ -1,24 +1,24 @@
 
 package com.wuweibi.bullet.device.domain.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class DeviceServiceVO {
 
-    @ApiModelProperty("服务id")
+    @Schema(description = "服务id")
     private Long id;
-    @ApiModelProperty("设备id")
+    @Schema(description = "设备id")
     private Long deviceId;
-    @ApiModelProperty("服务名称")
+    @Schema(description = "服务名称")
     private String name;
-    @ApiModelProperty("图标")
+    @Schema(description = "图标")
     private String icon;
-    @ApiModelProperty("状态")
+    @Schema(description = "状态")
     private Integer status;
-    @ApiModelProperty("uri地址")
+    @Schema(description = "uri地址")
     private String uri;
-    @ApiModelProperty("类型 决定图标样式 打开方式")
+    @Schema(description = "类型 决定图标样式 打开方式")
     private String type;
 }

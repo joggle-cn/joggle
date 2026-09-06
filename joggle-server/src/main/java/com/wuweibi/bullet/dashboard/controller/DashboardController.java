@@ -6,21 +6,21 @@ import com.wuweibi.bullet.dashboard.domain.*;
 import com.wuweibi.bullet.domain.domain.session.Session;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.CountService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * 仪表盘接口
  * @author marker
  **/
-@Api(tags = "仪表盘")
+@Tag(name = "仪表盘")
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -45,11 +45,11 @@ public class DashboardController {
      * 统计设备流量排行
      * @return
      */
-    @ApiOperation("统计设备流量排行")
+    @Operation(summary = "统计设备流量排行")
     @GetMapping("/device/rank")
     @ResponseBody
     public R<List<DeviceCountInfoVO>> getUserDeviceRank(
-            @ApiParam(value = "类型：")
+            @Parameter(description = "类型：")
             @RequestParam("type") Integer type,
             @JwtUser Session session){
         Long userId = session.getUserId();
@@ -63,7 +63,7 @@ public class DashboardController {
      * 统计设备流量排行
      * @return
      */
-    @ApiOperation("统计设备流量走势")
+    @Operation(summary = "统计设备流量走势")
     @GetMapping("/device/trend")
     @ResponseBody
     public R<List<DeviceDateItemVO>> getUserDeviceTrend(
@@ -87,7 +87,7 @@ public class DashboardController {
      * 用户近24小时流量情况
      * @return
      */
-    @ApiOperation("用户近24小时流量情况")
+    @Operation(summary = "用户近24小时流量情况")
     @GetMapping("/user/flow/trend/hour")
     public R<List<DeviceDateItemHourVO>> getHourFlowTrend(
             @JwtUser Session session){
@@ -101,7 +101,7 @@ public class DashboardController {
      * 用户设备近24小时流量趋势
      * @return
      */
-    @ApiOperation("用户设备近24小时流量趋势")
+    @Operation(summary = "用户设备近24小时流量趋势")
     @GetMapping("/device/flow/trend/hour")
     public R<List<DeviceDateItemHourVO>> getDeviceHourFlowTrend(
             @RequestParam("deviceId") Long deviceId,

@@ -8,8 +8,6 @@ import com.wuweibi.bullet.system.api_key.domain.dto.ApiKeyCreateDTO;
 import com.wuweibi.bullet.system.api_key.domain.dto.ApiKeyVO;
 import com.wuweibi.bullet.system.api_key.entity.UserApiKey;
 import com.wuweibi.bullet.system.api_key.service.UserApiKeyService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
-@Api(tags = "API Key 管理")
+@Tag(name = "API Key 管理")
 @WebApi
 @RestController
 @RequestMapping("/api/user/api-key")
@@ -34,7 +34,7 @@ public class ApiKeyController {
 
     private static final int MAX_API_KEY_COUNT = 100;
 
-    @ApiOperation("创建 API Key")
+    @Operation(summary = "创建 API Key")
     @PostMapping
     public R<ApiKeyVO> create(@JwtUser Session session, @RequestBody @Valid ApiKeyCreateDTO dto) {
         long count = userApiKeyService.lambdaQuery()
@@ -49,7 +49,7 @@ public class ApiKeyController {
         return R.ok(vo);
     }
 
-    @ApiOperation("我的 API Key 列表")
+    @Operation(summary = "我的 API Key 列表")
     @GetMapping
     public R<List<ApiKeyVO>> list(@JwtUser Session session) {
         List<UserApiKey> list = userApiKeyService.lambdaQuery()
@@ -60,7 +60,7 @@ public class ApiKeyController {
         return R.ok(voList);
     }
 
-    @ApiOperation("删除 API Key")
+    @Operation(summary = "删除 API Key")
     @DeleteMapping("/{id}")
     public R<Void> delete(@JwtUser Session session, @PathVariable Long id) {
         UserApiKey key = userApiKeyService.getById(id);

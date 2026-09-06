@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.feedback.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
 import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 意见反馈(Feedback)实体类
@@ -37,7 +37,7 @@ public class Feedback implements Serializable {
     */
     private String content;
 
-    @ApiModelProperty("回复内容")
+    @Schema(description = "回复内容")
     private String reply;
 
 
@@ -47,7 +47,7 @@ public class Feedback implements Serializable {
     private Date createTime;
 
 
-    @ApiModelProperty("回复时间")
+    @Schema(description = "回复时间")
     private Date replyTime;
 
 

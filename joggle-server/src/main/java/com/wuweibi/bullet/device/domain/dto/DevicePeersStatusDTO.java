@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.device.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (DevicePeers)分页对象
@@ -16,13 +16,13 @@ public class DevicePeersStatusDTO {
     /**
      * id
      */
-    @ApiModelProperty("id")
+    @Schema(description = "id")
   	private Long id;    
 
     /**
      * 状态 1启用 0禁用
      */        
-    @ApiModelProperty("状态 1启用 0禁用")
+    @Schema(description = "状态 1启用 0禁用")
  	private Integer status;
 
 

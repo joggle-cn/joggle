@@ -43,15 +43,15 @@ import com.wuweibi.bullet.res.manager.UserPackageManager;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ import java.util.Objects;
  * @since 2017-12-09
  */
 @Slf4j
-@Api(tags = "设备服务")
+@Tag(name = "设备服务")
 @WebApi
 @RestController
 @RequestMapping("/api/user/device/service")
@@ -81,7 +81,7 @@ public class DeviceServiceController {
      * 删除映射关系
      * @return
      */
-    @ApiOperation("删除映射")
+    @Operation(summary = "删除映射")
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public Object delete(@RequestBody @Valid DeviceMappingDelDTO dto){
         Long userId = SecurityUtils.getUserId();
@@ -114,7 +114,7 @@ public class DeviceServiceController {
      * @param dto 参数
      * @return
      */
-    @ApiOperation("开始内网扫描")
+    @Operation(summary = "开始内网扫描")
     @PostMapping( "/start_scan")
     public R<Page<DeviceServiceVO>> startScan(@JwtUser Session session, @RequestBody DeviceScanDTO dto  ){
         String deviceNo = dto.getDeviceNo();
@@ -141,7 +141,7 @@ public class DeviceServiceController {
      * @param dto 参数
      * @return
      */
-    @ApiOperation("关闭映射")
+    @Operation(summary = "关闭映射")
     @PostMapping( "/close_tunnel")
     public R<DeviceMappingClientVO> closeTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
         Long mappingId = dto.getServiceId();
@@ -188,7 +188,7 @@ public class DeviceServiceController {
      * @param dto 参数
      * @return
      */
-    @ApiOperation("开启映射")
+    @Operation(summary = "开启映射")
     @PostMapping( "/open_tunnel")
     public R<DeviceMappingClientVO> openTunnel(@JwtUser Session session, @RequestBody DeviceServiceStatusDTO dto){
         Long mappingId = dto.getServiceId();
@@ -253,7 +253,7 @@ public class DeviceServiceController {
     /**
      * 解除绑定公网域名（仅映射关闭状态下可执行）
      */
-    @ApiOperation("解除绑定公网域名")
+    @Operation(summary = "解除绑定公网域名")
     @PostMapping("/unbind_domain")
     public R unbindDomain(@JwtUser Session session, @RequestBody @Valid DeviceServiceStatusDTO dto) {
         Long mappingId = dto.getServiceId();
@@ -310,7 +310,7 @@ public class DeviceServiceController {
      * @param params
      * @return
      */
-    @ApiOperation("获取设备服务清单")
+    @Operation(summary = "获取设备服务清单")
     @GetMapping( "/list")
     public R<Page<DeviceServiceVO>> getDeviceServiceList(@JwtUser Session session, PageParam pageParams,DeviceServiceParam params){
         Long userId = session.getUserId();
@@ -340,7 +340,6 @@ public class DeviceServiceController {
     private UserDomainService userDomainService;
     @Resource
     private DeviceMappingViewService deviceMappingViewService;
-
 
     @Resource
     private DeviceService deviceService;

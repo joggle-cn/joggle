@@ -2,7 +2,6 @@ package com.wuweibi.bullet.oauth2.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.exception.BaseException;
 import com.wuweibi.bullet.exception.type.AuthErrorType;
@@ -19,16 +18,12 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.jwt.crypto.sign.InvalidSignatureException;
-import org.springframework.security.jwt.crypto.sign.MacSigner;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,23 +43,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     public static final String NONEXISTENT_URL = "NONEXISTENT_URL";
 
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private Oauth2ResourceService oauth2ResourceService;
 
 
     /**
      * 接口资源管理器
      */
-    @javax.annotation.Resource
+    @jakarta.annotation.Resource
     private ResourceManager resourceManager;
 
-
-
-    /**
-     * jwt token 密钥，主要用于token解析，签名验证
-     */
-    @Value("${spring.security.oauth2.jwt.signingKey}")
-    private String signingKey;
+    @jakarta.annotation.Resource
+    private OpaqueTokenIntrospector opaqueTokenIntrospector;
 
     /**
      * 不需要网关签权的url配置(/oauth,/open)
@@ -73,11 +63,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${spring.security.oauth2.ignoreUrls}")
     private String ignoreUrls = "/oauth";
 
-
-    /**
-     * jwt验签
-     */
-    private MacSigner verifier;
 
     /**
      * 判断是否有权限访问接口
@@ -153,38 +138,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-    public Jwt getJwt(String authentication) {
-        return JwtHelper.decode(StringUtils.substring(authentication, BEARER_BEGIN_INDEX));
+    public Map<String, Object> getTokenAttributes(String authentication) {
+        return opaqueTokenIntrospector.introspect(StringUtils.substring(authentication, BEARER_BEGIN_INDEX))
+                .getAttributes();
+    }
+
+    @Override
+    public String getClaims(String authentication) {
+        return JSON.toJSONString(getTokenAttributes(authentication));
     }
 
 
     /**
-     * 无效jwttoken
+     * 无效 access token
      *
      * @param authentication
      * @return
      */
-    public boolean invalidJwtAccessToken(String authentication) {
-        verifier = Optional.ofNullable(verifier).orElse(new MacSigner(signingKey));
-        //是否无效true表示无效
-        boolean invalid = Boolean.TRUE;
-
+    public boolean invalidAccessToken(String authentication) {
         try {
-            Jwt jwt = getJwt(authentication);
-            jwt.verifySignature(verifier);
-            // 校验有效期
-            JSONObject res = JSON.parseObject(jwt.getClaims());
-
-            long exp = res.getLong("exp");
-            if (new Date().getTime() / 1000 > exp) { // 过期
-                invalid = Boolean.TRUE;
-            } else {
-                invalid = Boolean.FALSE;
-            }
-        } catch (InvalidSignatureException | IllegalArgumentException ex) {
+            getTokenAttributes(authentication);
+            return false;
+        } catch (RuntimeException ex) {
             log.warn("user token has expired or signature error ");
+            return true;
         }
-        return invalid;
     }
 
 
@@ -201,7 +179,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return R.fail(AuthErrorType.INVALID_TOKEN);
         }
         // token是否有效
-        if (invalidJwtAccessToken(authentication)) {
+        if (invalidAccessToken(authentication)) {
             return R.fail(AuthErrorType.INVALID_LOGIN);
         }
         //从认证服务获取是否有权限

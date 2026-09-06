@@ -9,16 +9,16 @@ import com.wuweibi.bullet.feedback.entity.Feedback;
 import com.wuweibi.bullet.feedback.service.FeedbackService;
 import com.wuweibi.bullet.service.MailService;
 import com.wuweibi.bullet.service.UserService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 意见反馈(Feedback)表控制层
@@ -27,7 +27,7 @@ import java.util.Date;
  * @since 2022-04-01 17:32:37
  */
 @WebApi
-@Api(tags = "意见反馈")
+@Tag(name = "意见反馈")
 @RestController
 @RequestMapping("/api/open/feedback")
 public class FeedbackController {

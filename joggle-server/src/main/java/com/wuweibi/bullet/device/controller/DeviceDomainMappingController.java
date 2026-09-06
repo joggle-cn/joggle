@@ -13,8 +13,6 @@ import com.wuweibi.bullet.entity.DeviceMapping;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
-@Api(tags = "设备域名映射")
+@Tag(name = "设备域名映射")
 @WebApi
 @RestController
 @RequestMapping("/api/user/device/mapping/domain")
@@ -42,7 +42,7 @@ public class DeviceDomainMappingController {
     @Resource
     private DeviceMappingService deviceMappingService;
 
-    @ApiOperation("保存或更新域名映射")
+    @Operation(summary = "保存或更新域名映射")
     @PostMapping("")
     public R save(@JwtUser Session session, @RequestBody @Valid DeviceMappingDomainDTO dto) {
         Long userId = session.getUserId();
@@ -51,7 +51,7 @@ public class DeviceDomainMappingController {
         }
     }
 
-    @ApiOperation("域名映射列表")
+    @Operation(summary = "域名映射列表")
     @GetMapping("/list")
     public R<List<DeviceMappingClientVO>> list(@JwtUser Session session, @RequestParam Long deviceId) {
         DeviceDetailVO deviceInfo = deviceService.getDeviceInfoById(deviceId);
@@ -64,7 +64,7 @@ public class DeviceDomainMappingController {
         return R.success(deviceMappingViewService.getDomainMappings(deviceId, deviceInfo));
     }
 
-    @ApiOperation("映射详情")
+    @Operation(summary = "映射详情")
     @GetMapping("/detail")
     public R<DeviceMappingDetailVO> mappingDomainDetail(@JwtUser Session session, @RequestParam Long mappingId) {
         Long userId = session.getUserId();

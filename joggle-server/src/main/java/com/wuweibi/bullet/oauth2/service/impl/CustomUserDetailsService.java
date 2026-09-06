@@ -18,16 +18,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Oauth2RoleService oauth2RoleService;
 
     @Resource
-    private ClientDetailsService clientDetailsService;
+    private RegisteredClientRepository registeredClientRepository;
 
     private AntPathMatcher monitorAntPathMatcher = new AntPathMatcher();
 
@@ -60,8 +58,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-
         // 支持手机号和账号登录
         OauthUser user = oauthUserService.getByUsername(username);
         if (user == null) {
@@ -75,9 +71,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new LoginException("无权限登录");
         }
         String clientId = authentication.getName();
-        ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        if (authentication instanceof OAuth2ClientAuthenticationToken clientAuthentication
+                && clientAuthentication.getRegisteredClient() != null) {
+            clientId = clientAuthentication.getRegisteredClient().getClientId();
+        }
+        RegisteredClient clientDetails = registeredClientRepository.findByClientId(clientId);
         // 校验管理端登录必须有管理标识的用户
-        if (clientDetails.getScope().contains(ClientScope.SCOPE_ADMIN) && 1 != user.getUserAdmin()) {
+        if (clientDetails != null && clientDetails.getScopes().contains(ClientScope.SCOPE_ADMIN) && 1 != user.getUserAdmin()) {
             throw new LoginException("无权限登录");
         }
 
@@ -110,7 +110,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserDetail getUserDetail(OauthUser user) {
         return new UserDetail(
                 user.getId(),
-                user.getName(),
+                user.getUsername(),
                 user.getUsername(),
                 user.getMobile(),
                 user.getPassword(),

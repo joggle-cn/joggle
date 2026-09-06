@@ -17,15 +17,15 @@ import com.wuweibi.bullet.protocol.MsgUnMapping;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.IpAddrUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ import java.util.Objects;
  * @since 2017-12-09
  */
 @Slf4j
-@Api(tags = "设备映射")
+@Tag(name = "设备映射")
 @WebApi
 @RestController
 @RequestMapping("/api/user/device/mapping")
@@ -51,7 +51,7 @@ public class DeviceMappingController {
     @Resource
     private DeviceMappingManagerService deviceMappingManagerService;
 
-    @ApiOperation("删除映射")
+    @Operation(summary = "删除映射")
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public R delete(@RequestBody @Valid DeviceMappingDelDTO dto) {
         Long userId = SecurityUtils.getUserId();
@@ -83,7 +83,7 @@ public class DeviceMappingController {
         return R.success(deviceMappingService.getByDeviceId(deviceId));
     }
 
-    @ApiOperation("更新映射信息")
+    @Operation(summary = "更新映射信息")
     @Deprecated
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public R save(DeviceMapping deviceMapping) {

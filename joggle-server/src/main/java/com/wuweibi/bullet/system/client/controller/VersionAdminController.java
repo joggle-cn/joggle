@@ -9,14 +9,14 @@ import com.wuweibi.bullet.system.client.domain.ClientVersionAdminListVO;
 import com.wuweibi.bullet.system.client.domain.ClientVersionUpdateDTO;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.system.domain.dto.ClientVersionParam;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -51,7 +51,7 @@ public class VersionAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("客户端分页查询")
+    @Operation(summary = "客户端分页查询")
     @GetMapping("/list")
     public R<Page<ClientVersionAdminListVO>> getPageList(PageParam page, ClientVersionParam params) {
         return R.ok(this.clientVersionService.getAdminList(page.toMybatisPlusPage(), params));
@@ -63,7 +63,7 @@ public class VersionAdminController {
      * 客户端摘要更新
      * @return
      */
-    @ApiOperation("客户端摘要更新")
+    @Operation(summary = "客户端摘要更新")
     @PostMapping(value = "/update")
     public R update(@RequestBody ClientVersionUpdateDTO dto) {
         String type = dto.getType();

@@ -1,16 +1,16 @@
 package com.wuweibi.bullet.system.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class ClientVersionParam {
 
 
-    @ApiModelProperty("标题")
+    @Schema(description = "标题")
     private String title;
 
-    @ApiModelProperty("启用状态 1正常 0禁用")
+    @Schema(description = "启用状态 1正常 0禁用")
     private Integer status;
 
 }

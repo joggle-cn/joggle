@@ -61,7 +61,7 @@
 	<logger name="java.sql.PreparedStatement" level="INFO"/>
 	<logger name="com.baomidou.mybatisplus" level="INFO"/>
 
-	<logger name="springfox.documentation" level="INFO"/>
+	<logger name="org.springdoc" level="INFO"/>
 	<logger name="org.springframework.beans" level="INFO"/>
 	<logger name="org.springframework.data" level="INFO"/>
 	<logger name="org.springframework.security" level="INFO"/>

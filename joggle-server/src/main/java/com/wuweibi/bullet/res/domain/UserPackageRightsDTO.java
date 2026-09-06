@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.res.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 用户套餐权益(UserPackageRights)分页对象
@@ -16,25 +16,25 @@ public class UserPackageRightsDTO {
     /**
      * 用户id
      */        
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
  	private Long userId;
 
     /**
      * 资源类型 1域名 2端口 
      */        
-    @ApiModelProperty("资源类型 1域名 2端口 ")
+    @Schema(description = "资源类型 1域名 2端口 ")
  	private Integer resourceType;
 
     /**
      * 资源id
      */        
-    @ApiModelProperty("资源id")
+    @Schema(description = "资源id")
  	private Long resourceId;
 
     /**
      * 状态 1正常 0禁用
      */        
-    @ApiModelProperty("状态 1正常 0禁用")
+    @Schema(description = "状态 1正常 0禁用")
  	private Integer status;
 
 }

@@ -7,13 +7,13 @@ import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
@@ -33,8 +33,7 @@ public final class SecurityUtils {
         AuthenticationService authenticationService =  SpringUtils.getBean(AuthenticationService.class);
         String claims = null;
         if(StringUtil.isNotBlank(authentication)) {
-            Jwt jwt = authenticationService.getJwt(authentication);
-            claims = jwt.getClaims();
+            claims = authenticationService.getClaims(authentication);
         }
         // 获取如果为空设置默认值
         String sessionJsonStr =  StringUtils.defaultIfBlank(claims, "{}");
@@ -49,10 +48,10 @@ public final class SecurityUtils {
     }
 
     public static void getClienScope() {
-        OAuth2Authentication authentication = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
-        String clientId = authentication.getOAuth2Request().getClientId();
-
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AbstractOAuth2TokenAuthenticationToken<?> tokenAuthentication) {
+            tokenAuthentication.getTokenAttributes().get("client_id");
+        }
     }
 
     public static boolean isNotLogin() {

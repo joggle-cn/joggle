@@ -1,6 +1,6 @@
 package com.wuweibi.bullet.utils;
 
-import javax.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.HandshakeRequest;
 import java.util.List;
 
 

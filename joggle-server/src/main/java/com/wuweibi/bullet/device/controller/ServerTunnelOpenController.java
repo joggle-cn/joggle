@@ -8,15 +8,15 @@ import com.wuweibi.bullet.device.domain.vo.ServerTunnelNodeVO;
 import com.wuweibi.bullet.device.service.ServerTunnelService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.utils.DateTimeUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Date;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 通道(ServerTunnel)表控制层
@@ -25,7 +25,7 @@ import java.util.Objects;
  * @since 2022-04-28 21:27:30
  */
 @WebApi
-@Api(tags = "通道管理")
+@Tag(name = "通道管理")
 @RestController
 @RequestMapping("/api/open/server/tunnel")
 public class ServerTunnelOpenController {
@@ -40,7 +40,7 @@ public class ServerTunnelOpenController {
      *
      * @return 所有数据
      */
-    @ApiOperation("通道节点列表")
+    @Operation(summary = "通道节点列表")
     @GetMapping("/node/list")
     public R<Page<ServerTunnelNodeVO>> getNodeList(PageParam pageParam) {
         Page<ServerTunnelNodeVO> page = this.serverTunnelService.getNodeStatusList(pageParam.toMybatisPlusPage());

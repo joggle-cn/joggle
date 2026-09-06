@@ -38,8 +38,6 @@ import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
 import com.wuweibi.bullet.websocket.Bullet3Annotation;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -51,11 +49,13 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -65,7 +65,7 @@ import java.util.*;
  * @version 1.0
  */
 @WebApi
-@Api(tags = "开放接口")
+@Tag(name = "开放接口")
 @RestController
 @RequestMapping("/api/open")
 public class OpenController {
@@ -234,7 +234,7 @@ public class OpenController {
      * @return
      */
     @Deprecated
-    @ApiOperation("设备秘钥校验【服务端调用校验】")
+    @Operation(summary = "设备秘钥校验【服务端调用校验】")
     @PostMapping(value = "/device/secret" )
     public R devicesecret(@RequestParam String clientNo,
                           @RequestParam String secret,
@@ -259,7 +259,7 @@ public class OpenController {
      *
      * @return
      */
-    @ApiOperation(value = "设备检查更新接口",notes = "支持多个类型检查更新 CLIENT SERVER")
+    @Operation(summary = "设备检查更新接口", description = "支持多个类型检查更新 CLIENT SERVER")
     @PostMapping(value = "/checkUpdate")
     public ReleaseDetail checkUpdate(@RequestBody ClientInfoDTO clientInfoDTO) {
         if ("xxx".equals(clientInfoDTO.getApp_id())){ // 兼容老版本的joggle客户端检查更新
@@ -367,7 +367,7 @@ public class OpenController {
      * 近30日流量情况
      * @return
      */
-    @ApiOperation("近30日流量情况")
+    @Operation(summary = "近30日流量情况")
     @GetMapping("/all/flow/trend")
     @ResponseBody
     public R<List<DeviceDateItemVO>> getFlowTrend(
@@ -381,7 +381,7 @@ public class OpenController {
      * 近24小时流量情况
      * @return
      */
-    @ApiOperation("近24小时流量情况")
+    @Operation(summary = "近24小时流量情况")
     @GetMapping("/all/flow/trend/hour")
     public R<List<DeviceDateItemHourVO>> getHourFlowTrend(
             @JwtUser Session session){

@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -38,15 +38,15 @@ public class Device extends Model<Device> {
     @TableField(value = "userId")
 	private Long userId;
 
-	@ApiModelProperty("设备秘钥")
+	@Schema(description = "设备秘钥")
 	@TableField("device_secret")
 	private String deviceSecret;
 
-	@ApiModelProperty("设备并发连接数")
+	@Schema(description = "设备并发连接数")
 	private Integer concurrentNum;
 
 
-	@ApiModelProperty("设备通道id")
+	@Schema(description = "设备通道id")
 	private Integer serverTunnelId;
 
 

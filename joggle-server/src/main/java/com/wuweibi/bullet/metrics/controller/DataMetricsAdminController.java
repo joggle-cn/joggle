@@ -8,12 +8,12 @@ import com.wuweibi.bullet.metrics.domain.DataMetricsParam;
 import com.wuweibi.bullet.metrics.entity.DataMetrics;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
 import com.wuweibi.bullet.service.DeviceService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 数据收集(DataMetrics)表控制层
@@ -38,7 +38,7 @@ public class DataMetricsAdminController {
      * @param page 分页对象
      * @return 所有数据
      */
-    @ApiOperation("流量明细分页查询")
+    @Operation(summary = "流量明细分页查询")
     @GetMapping("/list")
     public R<Page<DataMetricsListVO>> getPage(Page<DataMetrics> page, DataMetricsParam params) {
         return R.ok(this.dataMetricsService.getList(page, params));

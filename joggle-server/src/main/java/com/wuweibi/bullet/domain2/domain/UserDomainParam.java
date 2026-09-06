@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.domain2.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 用户域名(UserDomain)分页对象
@@ -13,13 +13,13 @@ import lombok.Data;
 @Data
 public class UserDomainParam {
 
-    @ApiModelProperty("id")
+    @Schema(description = "id")
   	private Long id;    
 
     /**
      * 用户id
      */        
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
  	private Long userId;
 
 

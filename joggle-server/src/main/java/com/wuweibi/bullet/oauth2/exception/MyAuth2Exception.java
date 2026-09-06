@@ -20,14 +20,13 @@ package com.wuweibi.bullet.oauth2.exception;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wuweibi.bullet.entity.api.R;
 import lombok.Getter;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 
 /**
  * @author system
  * @date 2020/7/8 自定义OAuth2Exception
  */ @Getter
 @JsonSerialize(using = MyAuth2ExceptionSerializer.class)
-public class MyAuth2Exception extends OAuth2Exception {
+public class MyAuth2Exception extends RuntimeException {
 
 	@Getter
 	private String errorCode;

@@ -10,16 +10,16 @@ import com.wuweibi.bullet.res.entity.ResourcePackage;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.service.ResourcePackageService;
 import com.wuweibi.bullet.res.service.UserPackageService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 用户套餐(UserPackage)表控制层
@@ -30,7 +30,7 @@ import java.util.Date;
 @Slf4j
 @RestController
 @WebApi
-@Api(value = "用户套餐", tags = "用户套餐")
+@Tag(name = "用户套餐")
 @RequestMapping("/api/user/package")
 public class UserPackageApiController {
     /**
@@ -46,7 +46,7 @@ public class UserPackageApiController {
      * 登录用户的套餐信息
      * @return 所有数据
      */
-    @ApiOperation("登录用户的套餐信息")
+    @Operation(summary = "登录用户的套餐信息")
     @GetMapping("/info")
     public R<UserPackageInfoVO> getUserPackInfo() {
         if (SecurityUtils.isNotLogin()) {

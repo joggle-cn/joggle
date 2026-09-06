@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.device.domain.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>
@@ -14,10 +14,10 @@ import lombok.Data;
 @Data
 public class TunnelOption {
 
- 	@ApiModelProperty("通道id")
+ 	@Schema(description = "通道id")
 	private Long id;
 
-	@ApiModelProperty("通道名称")
+	@Schema(description = "通道名称")
 	private String name;
 
 

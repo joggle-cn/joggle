@@ -13,7 +13,7 @@ import com.wuweibi.bullet.domain2.domain.vo.DomainVO;
 import com.wuweibi.bullet.domain2.entity.Domain;
 import com.wuweibi.bullet.res.entity.ResourcePackage;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.List;
 

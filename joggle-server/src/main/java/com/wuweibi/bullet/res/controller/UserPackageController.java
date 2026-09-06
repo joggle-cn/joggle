@@ -9,15 +9,15 @@ import com.wuweibi.bullet.res.domain.UserPackageParam;
 import com.wuweibi.bullet.res.domain.UserPackageVO;
 import com.wuweibi.bullet.res.entity.UserPackage;
 import com.wuweibi.bullet.res.service.UserPackageService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 用户套餐(UserPackage)表控制层
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Api(value = "用户套餐", tags = "用户套餐")
+@Tag(name = "用户套餐")
 @RequestMapping("/admin/school/userPackage")
 public class UserPackageController  {
     /**
@@ -43,7 +43,7 @@ public class UserPackageController  {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<UserPackageVO>> getPageList(PageParam page, UserPackageParam params) {
         return R.ok(this.userPackageService.getPage(page.toMybatisPlusPage(), params));
@@ -55,7 +55,7 @@ public class UserPackageController  {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<UserPackage> detail(@RequestParam Serializable id) {
         return R.ok(this.userPackageService.getById(id));
@@ -67,7 +67,7 @@ public class UserPackageController  {
      * @param userPackage 实体对象
      * @return 新增结果
      */
-    @ApiOperation("新增数据")
+    @Operation(summary = "新增数据")
     @PostMapping
     public R<Boolean> save(@RequestBody UserPackage userPackage) {
         return R.ok(this.userPackageService.save(userPackage));
@@ -79,7 +79,7 @@ public class UserPackageController  {
      * @param userPackage 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     public R<Boolean> update(@RequestBody UserPackage userPackage) {
         return R.ok(this.userPackageService.updateById(userPackage));
@@ -91,7 +91,7 @@ public class UserPackageController  {
      * @param idList 主键结合
      * @return 删除结果
      */
-    @ApiOperation("批量删除数据")
+    @Operation(summary = "批量删除数据")
     @DeleteMapping("/batch")
     public R<Boolean> deleteBatch(@RequestParam("idList") List<Long> idList) {
         return R.ok(this.userPackageService.removeByIds(idList));
@@ -103,7 +103,7 @@ public class UserPackageController  {
      * @param idDTO 主键
      * @return 删除结果
      */
-    @ApiOperation("删除数据")
+    @Operation(summary = "删除数据")
     @DeleteMapping()
     public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
         return R.ok(this.userPackageService.removeById(idDTO.getId()));

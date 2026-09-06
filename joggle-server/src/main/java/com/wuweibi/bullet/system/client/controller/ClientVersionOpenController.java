@@ -9,22 +9,25 @@ import com.wuweibi.bullet.system.client.domain.ClientVersionLatestVO;
 import com.wuweibi.bullet.system.client.entity.ClientVersion;
 import com.wuweibi.bullet.system.client.service.ClientVersionService;
 import com.wuweibi.bullet.utils.SpringUtils;
-import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping("/api/open/client/version")
-@Api(tags = "客户端版本公开接口")
+@Tag(name = "客户端版本公开接口")
 public class ClientVersionOpenController {
 
     @Resource
@@ -34,15 +37,12 @@ public class ClientVersionOpenController {
     private AliOssProperties aliOssProperties;
 
     @GetMapping("/latest")
-    @ApiOperation("获取客户端最新版本")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "os", value = "操作系统", required = true, paramType = "query", dataType = "string", allowableValues = "windows,darwin,linux"),
-            @ApiImplicitParam(name = "arch", value = "处理器架构", required = true, paramType = "query", dataType = "string", allowableValues = "x64,arm64,x86")
-    })
+    @Operation(summary = "获取客户端最新版本")
+    
     public R<ClientVersionLatestVO> latest(
-            @ApiParam(value = "操作系统", required = true, allowableValues = "windows,darwin,linux")
+            @Parameter(description = "操作系统", required = true, schema = @Schema(allowableValues = {"windows", "darwin", "linux"}))
             @RequestParam String os,
-            @ApiParam(value = "处理器架构", required = true, allowableValues = "x64,arm64,x86")
+            @Parameter(description = "处理器架构", required = true, schema = @Schema(allowableValues = {"x64", "arm64", "x86"}))
             @RequestParam String arch) {
         ClientVersion clientVersion = clientVersionService.getLatestVersion(os, arch);
         if (clientVersion == null) {
@@ -62,12 +62,10 @@ public class ClientVersionOpenController {
     }
 
     @GetMapping("/update-manifest")
-    @ApiOperation("Tauri 更新器获取更新清单")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "current_version", value = "当前版本号", required = false, paramType = "query", dataType = "string")
-    })
+    @Operation(summary = "Tauri 更新器获取更新清单")
+    
     public ClientUpdateManifestVO updateManifest(
-            @ApiParam(value = "当前版本号")
+            @Parameter(description = "当前版本号")
             @RequestParam(required = false) String currentVersion) {
         ClientUpdateManifestVO vo = new ClientUpdateManifestVO();
         List<ClientVersion> list = clientVersionService.getUpdateManifestList();

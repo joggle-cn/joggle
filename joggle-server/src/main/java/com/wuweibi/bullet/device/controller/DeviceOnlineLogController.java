@@ -10,16 +10,16 @@ import com.wuweibi.bullet.device.entity.DeviceOnlineLog;
 import com.wuweibi.bullet.device.service.DeviceOnlineLogService;
 import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.Serializable;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 设备在线日志(DeviceOnlineLog)表控制层
@@ -30,7 +30,7 @@ import java.io.Serializable;
 @Slf4j
 @WebApi
 @RestController
-@Api(value = "设备在线日志", tags = "设备在线日志")
+@Tag(name = "设备在线日志")
 @RequestMapping("/api/device/log")
 public class DeviceOnlineLogController  {
     /**
@@ -46,7 +46,7 @@ public class DeviceOnlineLogController  {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<DeviceOnlineLogVO>> getPageList(PageParam page, DeviceOnlineLogParam params) {
         Long userId = SecurityUtils.getUserId();
@@ -60,7 +60,7 @@ public class DeviceOnlineLogController  {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<DeviceOnlineLog> detail(@RequestParam Serializable id) {
         return R.ok(this.deviceOnlineLogService.getById(id));

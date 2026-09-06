@@ -2,11 +2,11 @@ package com.wuweibi.bullet.device.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 通道(ServerTunnel)表实体类
@@ -47,28 +47,28 @@ public class ServerTunnel  {
     // 是否可购买 1可 0不可
     private Integer buyStatus;
 
-    @ApiModelProperty("在线状态 1在线 0不在线")
+    @Schema(description = "在线状态 1在线 0不在线")
     private Integer status;
 
-    @ApiModelProperty("服务器到期时间")
+    @Schema(description = "服务器到期时间")
     private Date serverEndTime;
 
-    @ApiModelProperty("服务器Token")
+    @Schema(description = "服务器Token")
     private String token;
 
-    @ApiModelProperty("启用扣量 1是 0 否")
+    @Schema(description = "启用扣量 1是 0 否")
     private Integer enableFlow;
 
-    @ApiModelProperty("启用TLS 1是 0否")
+    @Schema(description = "启用TLS 1是 0否")
     private Integer enableTls;
 
-    @ApiModelProperty("服务器上线时间")
+    @Schema(description = "服务器上线时间")
     private Date serverUpTime;
 
-    @ApiModelProperty("服务器离线时间")
+    @Schema(description = "服务器离线时间")
     private Date serverDownTime;
 
-    @ApiModelProperty("通道版本")
+    @Schema(description = "通道版本")
     private String version;
 }
 

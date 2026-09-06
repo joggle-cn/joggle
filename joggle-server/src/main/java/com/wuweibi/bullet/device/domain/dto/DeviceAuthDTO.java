@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.device.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class DeviceAuthDTO {
@@ -31,7 +31,7 @@ public class DeviceAuthDTO {
     @NotBlank
     private String version;
 
-    @ApiModelProperty("通道id")
+    @Schema(description = "通道id")
     private Integer serverTunnelId;
 
 }

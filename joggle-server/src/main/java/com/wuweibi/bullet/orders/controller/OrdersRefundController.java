@@ -17,18 +17,18 @@ import com.wuweibi.bullet.orders.service.OrdersRefundService;
 import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.CodeHelper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 退款单(OrdersRefund)表控制层
@@ -38,7 +38,7 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@Api(value = "退款单", tags = "退款单")
+@Tag(name = "退款单")
 @RequestMapping("/admin/order/refund")
 public class OrdersRefundController  {
     /**
@@ -54,7 +54,7 @@ public class OrdersRefundController  {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     @GetMapping("/list")
     public R<Page<OrdersRefundVO>> getPageList(PageParam page, OrdersRefundParam params) {
         return R.ok(this.ordersRefundService.getPage(page.toMybatisPlusPage(), params));
@@ -66,7 +66,7 @@ public class OrdersRefundController  {
      * @param id 主键
      * @return 单条数据
      */
-    @ApiOperation("通过主键查询单条数据")
+    @Operation(summary = "通过主键查询单条数据")
     @GetMapping("/detail")
     public R<OrdersRefund> detail(@RequestParam Serializable id) {
         return R.ok(this.ordersRefundService.getById(id));
@@ -83,7 +83,7 @@ public class OrdersRefundController  {
      *
      * @return 新增结果
      */
-    @ApiOperation("申请退款")
+    @Operation(summary = "申请退款")
     @PostMapping("/apply")
     @Transactional
     public R<Boolean> applyRefund(@RequestBody @Valid OrdersRefundDTO dto) {
@@ -148,7 +148,7 @@ public class OrdersRefundController  {
      *
      * @return 新增结果
      */
-    @ApiOperation("退款审核")
+    @Operation(summary = "退款审核")
     @PostMapping("/audit")
     @Transactional
     public R<Boolean> auditRefund(@RequestBody @Valid RefundAuditDTO dto) {
@@ -162,7 +162,7 @@ public class OrdersRefundController  {
      * @param ordersRefund 实体对象
      * @return 修改结果
      */
-    @ApiOperation("修改数据")
+    @Operation(summary = "修改数据")
     @PutMapping
     public R<Boolean> update(@RequestBody OrdersRefund ordersRefund) {
         return R.ok(this.ordersRefundService.updateById(ordersRefund));

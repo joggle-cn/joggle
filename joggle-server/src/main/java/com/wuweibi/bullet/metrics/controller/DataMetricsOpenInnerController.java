@@ -7,13 +7,13 @@ import com.wuweibi.bullet.entity.api.R;
 import com.wuweibi.bullet.metrics.domain.DataMetricsDTO;
 import com.wuweibi.bullet.metrics.domain.DataMetricsHourSettleDTO;
 import com.wuweibi.bullet.metrics.service.DataMetricsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * 数据收集(DataMetrics)表控制层
@@ -23,7 +23,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @WebApi
-@Api(tags = "数据收集")
+@Tag(name = "数据收集")
 @RestController
 @RequestMapping("/inner/open/data/metrics")
 public class DataMetricsOpenInnerController {
@@ -66,7 +66,7 @@ public class DataMetricsOpenInnerController {
      * @param dataMetrics
      * @return
      */
-    @ApiOperation("[内]流量数据小时结算")
+    @Operation(summary = "[内]流量数据小时结算")
     @PostMapping("/hour/settle")
     public R dataMetricsHourSettle(@RequestHeader String authorization,
                     @RequestBody @Valid DataMetricsHourSettleDTO dataMetrics) {

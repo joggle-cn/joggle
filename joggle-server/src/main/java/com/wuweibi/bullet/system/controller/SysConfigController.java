@@ -9,13 +9,13 @@
 //import com.wuweibi.bullet.system.domain.SysConfigVO;
 //import com.wuweibi.bullet.system.entity.SysConfig;
 //import com.wuweibi.bullet.system.service.SysConfigService;
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
+//import io.swagger.v3.oas.annotations.tags.Tag;
+//import io.swagger.v3.oas.annotations.Operation;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.web.bind.annotation.*;
 //
-//import javax.annotation.Resource;
-//import javax.validation.Valid;
+//import jakarta.annotation.Resource;
+//import jakarta.validation.Valid;
 //import java.io.Serializable;
 //import java.util.List;
 //
@@ -27,7 +27,7 @@
 // */
 //@Slf4j
 //@RestController
-//@Api(value = "系统配置表", tags = "系统配置表")
+//@Tag(name = "系统配置表")
 //@RequestMapping("/admin/school/sysConfig")
 //public class SysConfigController  {
 //    /**
@@ -43,7 +43,7 @@
 //     * @param params 查询实体
 //     * @return 所有数据
 //     */
-//    @ApiOperation("分页查询")
+//    @Operation(summary = "分页查询")
 //    @GetMapping("/list")
 //    public R<Page<SysConfigVO>> getPageList(PageParam page, SysConfigParam params) {
 //        return R.ok(this.sysConfigService.getPage(page.toMybatisPlusPage(), params));
@@ -55,7 +55,7 @@
 //     * @param id 主键
 //     * @return 单条数据
 //     */
-//    @ApiOperation("通过主键查询单条数据")
+//    @Operation(summary = "通过主键查询单条数据")
 //    @GetMapping("/detail")
 //    public R<SysConfig> detail(@RequestParam Serializable id) {
 //        return R.ok(this.sysConfigService.getById(id));
@@ -67,7 +67,7 @@
 //     * @param sysConfig 实体对象
 //     * @return 新增结果
 //     */
-//    @ApiOperation("新增数据")
+//    @Operation(summary = "新增数据")
 //    @PostMapping
 //    public R<Boolean> save(@RequestBody SysConfig sysConfig) {
 //        return R.ok(this.sysConfigService.save(sysConfig));
@@ -79,7 +79,7 @@
 //     * @param sysConfig 实体对象
 //     * @return 修改结果
 //     */
-//    @ApiOperation("修改数据")
+//    @Operation(summary = "修改数据")
 //    @PutMapping
 //    public R<Boolean> update(@RequestBody SysConfig sysConfig) {
 //        return R.ok(this.sysConfigService.updateById(sysConfig));
@@ -91,7 +91,7 @@
 //     * @param idList 主键结合
 //     * @return 删除结果
 //     */
-//    @ApiOperation("批量删除数据")
+//    @Operation(summary = "批量删除数据")
 //    @DeleteMapping("/batch")
 //    public R<Boolean> deleteBatch(@RequestParam("idList") List<Long> idList) {
 //        return R.ok(this.sysConfigService.removeByIds(idList));
@@ -103,7 +103,7 @@
 //     * @param idDTO 主键
 //     * @return 删除结果
 //     */
-//    @ApiOperation("删除数据")
+//    @Operation(summary = "删除数据")
 //    @DeleteMapping()
 //    public R<Boolean> deleteById(@RequestBody @Valid IdDTO idDTO) {
 //        return R.ok(this.sysConfigService.removeById(idDTO.getId()));

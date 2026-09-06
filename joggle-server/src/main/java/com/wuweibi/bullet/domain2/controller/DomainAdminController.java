@@ -30,17 +30,17 @@ import com.wuweibi.bullet.protocol.domain.DomainConfig;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import java.util.Date;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 我的域名接口
@@ -50,7 +50,7 @@ import java.util.Date;
  **/
 @Slf4j
 @AdminApi
-@Api(tags = "域名管理")
+@Tag(name = "域名管理")
 @RestController
 @RequestMapping("/admin/domain")
 public class DomainAdminController {
@@ -79,7 +79,7 @@ public class DomainAdminController {
      * @param params 查询实体
      * @return 所有数据
      */
-    @ApiOperation("域名分页查询")
+    @Operation(summary = "域名分页查询")
     @GetMapping("/list")
     public R<Page<DomainListVO>> getAdminList(PageParam page, DomainAdminParam params) {
         return R.ok(this.domainService.getAdminList(page.toMybatisPlusPage(), params));
@@ -89,7 +89,7 @@ public class DomainAdminController {
     /**
      * 获取我的域名信息
      */
-    @ApiModelProperty("获取域名信息")
+    @Schema(description = "获取域名信息")
     @GetMapping(value = "/detail")
     public R<DomainDetailAdminVO> getInfo(@RequestParam("id") Long domainId) {
         Domain domain = domainService.getById(domainId);
@@ -124,7 +124,7 @@ public class DomainAdminController {
      *
      * @return
      */
-    @ApiOperation("更新域名信息")
+    @Operation(summary = "更新域名信息")
     @PutMapping("/")
     public R updateDomainInfo(@RequestBody @Valid DomainUpdateDTO dto) {
         Long userId = SecurityUtils.getUserId();
@@ -172,7 +172,7 @@ public class DomainAdminController {
     /**
      * 新增域名
      */
-    @ApiOperation(value = "新增域名", tags="后台")
+    @Operation(summary = "新增域名", tags = "后台")
     @PostMapping("/")
     public R<Boolean> addDomain(@RequestBody @Valid DomainAddDTO dto) {
         // 校验参数
@@ -203,7 +203,7 @@ public class DomainAdminController {
     /**
      * 搜索可购买的域名
      */
-    @ApiOperation(value = "发放域名", tags="后台")
+    @Operation(summary = "发放域名", tags = "后台")
     @PostMapping("/release")
     public R<Boolean> releaseDomain(@RequestBody @Valid ReleaseResourceDTO dto) {
         // 校验参数

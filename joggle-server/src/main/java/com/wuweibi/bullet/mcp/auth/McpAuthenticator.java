@@ -3,7 +3,7 @@ package com.wuweibi.bullet.mcp.auth;
 import com.wuweibi.bullet.system.api_key.service.UserApiKeyService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 @Component
 public class McpAuthenticator {

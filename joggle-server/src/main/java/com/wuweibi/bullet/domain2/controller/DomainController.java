@@ -27,18 +27,18 @@ import com.wuweibi.bullet.oauth2.utils.SecurityUtils;
 import com.wuweibi.bullet.service.DeviceMappingService;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.service.DomainService;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  * 我的域名接口
@@ -95,7 +95,7 @@ public class DomainController {
     /**
      * 获取我的域名信息
      */
-    @ApiModelProperty("获取域名信息")
+    @Schema(description = "获取域名信息")
     @GetMapping(value = "/info")
     public R<DomainDetailVO> getInfo(@JwtUser Session session, @RequestParam Long domainId) {
         Long userId = session.getUserId();
@@ -127,12 +127,12 @@ public class DomainController {
      * 获取未绑定的域名列表
      * @return
      */
-    @ApiOperation("获取未绑定的域名/端口列表")
+    @Operation(summary = "获取未绑定的域名/端口列表")
     @GetMapping(value = "/nobind")
     public R<List<DomainOptionVO>> getInfo(
-            @ApiParam("类型： 1端口 2域名")
+            @Parameter(description = "类型： 1端口 2域名")
             @RequestParam Integer type,
-            @ApiParam("服务器通道id")
+            @Parameter(description = "服务器通道id")
             @RequestParam Integer serverTunnelId
     ) {
         Long userId = SecurityUtils.getUserId();
@@ -149,7 +149,7 @@ public class DomainController {
      * 域名绑定设备
      * @return
      */
-    @ApiOperation("域名绑定设备")
+    @Operation(summary = "域名绑定设备")
     @PostMapping(value = "/bind" )
     public R bind(@RequestParam Long domainId, @RequestParam Long deviceId) {
         Long userId = SecurityUtils.getUserId();
@@ -208,7 +208,7 @@ public class DomainController {
     /**
      * 搜索可购买的域名
      */
-    @ApiModelProperty("搜索可购买的域名")
+    @Schema(description = "搜索可购买的域名")
     @GetMapping(value = "/search")
     public R<Page<DomainBuyListVO>> searchDomain(Page pageParams, DomainSearchParam params) {
         Page<DomainBuyListVO> page = domainService.getBuyList(pageParams, params);

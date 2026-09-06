@@ -1,10 +1,10 @@
 package com.wuweibi.bullet.device.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (DeviceWhiteIps)分页对象
@@ -20,14 +20,14 @@ public class DeviceWhiteIpsDTO {
     /**
      * 设备id
      */        
-    @ApiModelProperty("设备id")
+    @Schema(description = "设备id")
     @NotNull(message = "设备id不能为空")
  	private Long deviceId;
 
     /**
      * 分号间隔的ip地址
      */        
-    @ApiModelProperty("分号间隔的ip地址，cidr地址")
+    @Schema(description = "分号间隔的ip地址，cidr地址")
     @NotNull(message = "ip地址不能null")
     @Size(max = 10000, message = "内容过长")
  	private String ips;

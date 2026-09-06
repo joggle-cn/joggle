@@ -1,25 +1,24 @@
 
 package com.wuweibi.bullet.system.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Map;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
-@ApiModel(value = "短信验证码参数")
+@Schema(description = "短信验证码参数")
 public class SendSmsDTO {
 
-    @ApiModelProperty(value = "国家区号")
+    @Schema(description = "国家区号")
     private String countryCode = "86";
 
-    @ApiModelProperty(value = "手机号")
+    @Schema(description = "手机号")
     @NotBlank(message = "手机号不能为空")
     private String phone;
 
-    @ApiModelProperty(value = "短信类型 登录 LOGIN")
+    @Schema(description = "短信类型 登录 LOGIN")
     private String type;
 
     /**

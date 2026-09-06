@@ -1,18 +1,18 @@
 package com.wuweibi.bullet.system.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class UserPassForgetDTO  {
 
-    @ApiModelProperty("新密码")
+    @Schema(description = "新密码")
     @NotBlank(message = "新密码不能空")
     private String pass;
 
-    @ApiModelProperty("修改密码的code")
+    @Schema(description = "修改密码的code")
     @NotBlank(message = "code不能空")
     private String code;
 

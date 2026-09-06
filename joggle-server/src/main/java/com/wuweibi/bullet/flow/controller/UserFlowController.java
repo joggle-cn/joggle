@@ -2,12 +2,12 @@ package com.wuweibi.bullet.flow.controller;
 
 
 import com.wuweibi.bullet.flow.service.UserFlowService;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 用户流量(UserFlow)表控制层
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
-@Api(value = "用户流量", tags = "用户流量")
+@Tag(name = "用户流量")
 @RequestMapping("/admin/hall/userFlow")
 public class UserFlowController  {
     /**

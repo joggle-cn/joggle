@@ -17,7 +17,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * RedisTemplate 配置

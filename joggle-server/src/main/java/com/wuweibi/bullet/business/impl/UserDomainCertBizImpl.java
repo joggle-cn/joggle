@@ -23,7 +23,7 @@ import org.shredzone.acme4j.util.KeyPairUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;

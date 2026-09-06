@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.io.Serializable;
 import lombok.Data; 
 import lombok.EqualsAndHashCode;
-import io.swagger.annotations.ApiModelProperty;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * (DeviceWhiteIps)表实体类
@@ -20,19 +20,19 @@ public class DeviceWhiteIps {
     /**
      * id
      */@TableId
-    @ApiModelProperty("id")
+    @Schema(description = "id")
   	private Long id;
     
     /**
      * 设备id
      */
-    @ApiModelProperty("设备id")
+    @Schema(description = "设备id")
  	private Long deviceId;
     
     /**
      * 分号间隔的ip地址
      */
-    @ApiModelProperty("分号间隔的ip地址")
+    @Schema(description = "分号间隔的ip地址")
  	private String ips;
 
 }

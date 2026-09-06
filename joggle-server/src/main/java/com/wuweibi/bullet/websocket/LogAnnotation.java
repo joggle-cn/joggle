@@ -22,9 +22,9 @@ import com.wuweibi.bullet.protocol.MsgLogOpen;
 import com.wuweibi.bullet.service.DeviceService;
 import com.wuweibi.bullet.utils.SpringUtils;
 
-import javax.websocket.*;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;

@@ -1,37 +1,37 @@
 package com.wuweibi.bullet.domain2.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class DomainBuyListVO {
 
-    @ApiModelProperty("domainId")
+    @Schema(description = "domainId")
     private Long id;
-    @ApiModelProperty("二级域名前缀或端口")
+    @Schema(description = "二级域名前缀或端口")
     private String domain;
-    @ApiModelProperty("类型： 1 端口 2域名")
+    @Schema(description = "类型： 1 端口 2域名")
     private Integer type;
-    @ApiModelProperty("类型名称")
+    @Schema(description = "类型名称")
     private String typeName;
-    @ApiModelProperty("域名状态 ：1已售、0释放、-1 禁售")
+    @Schema(description = "域名状态 ：1已售、0释放、-1 禁售")
     private Integer status;
-    @ApiModelProperty("原价格")
+    @Schema(description = "原价格")
     private BigDecimal originalPrice;
-    @ApiModelProperty("销售价格")
+    @Schema(description = "销售价格")
     private BigDecimal salesPrice;
 
-    @ApiModelProperty("通道区域")
+    @Schema(description = "通道区域")
     private String tunnelName;
-    @ApiModelProperty("通道地区")
+    @Schema(description = "通道地区")
     private String tunnelArea;
-    @ApiModelProperty("通道国家")
+    @Schema(description = "通道国家")
     private String tunnelCountry;
-    @ApiModelProperty("通道宽带")
+    @Schema(description = "通道宽带")
     private Integer tunnelBroadband;
 
-    @ApiModelProperty("宽带峰值 mbps")
+    @Schema(description = "宽带峰值 mbps")
     private Integer bandwidth;
 }

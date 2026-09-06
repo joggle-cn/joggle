@@ -1,7 +1,7 @@
 package com.wuweibi.bullet.device.domain;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 设备在线日志(DeviceOnlineLog)分页对象
@@ -16,13 +16,13 @@ public class DeviceOnlineLogParam {
     /**
      * id
      */
-    @ApiModelProperty(value = "用户id", hidden = true)
+    @Schema(description = "用户id", hidden = true)
   	private Long userId;
 
     /**
      * 设备id
      */        
-    @ApiModelProperty(value = "设备id",required = false)
+    @Schema(description = "设备id", required = false)
  	private Long deviceId;
 
 

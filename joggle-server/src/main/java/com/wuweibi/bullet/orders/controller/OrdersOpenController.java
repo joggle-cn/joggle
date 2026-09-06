@@ -26,17 +26,17 @@ import com.wuweibi.bullet.orders.service.OrdersService;
 import com.wuweibi.bullet.service.DomainService;
 import com.wuweibi.bullet.utils.SpringUtils;
 import com.wuweibi.bullet.utils.StringUtil;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * (Orders)表控制层
@@ -45,7 +45,7 @@ import java.util.HashMap;
  * @since 2022-07-21 16:16:05
  */
 @Slf4j
-@Api(tags = "[App]订单管理")
+@Tag(name = "[App]订单管理")
 @WebApi
 @RestController
 @RequestMapping("/api/open/orders")

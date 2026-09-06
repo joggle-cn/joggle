@@ -11,16 +11,16 @@ import com.wuweibi.bullet.system.domain.UserPassForgetApplyDTO;
 import com.wuweibi.bullet.system.domain.UserPassForgetDTO;
 import com.wuweibi.bullet.utils.HttpUtils;
 import com.wuweibi.bullet.utils.SpringUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
 
 /**
@@ -30,7 +30,7 @@ import javax.validation.Valid;
  * @version 1.0
  */
 @WebApi
-@Api(tags = "用户接口")
+@Tag(name = "用户接口")
 @RestController
 @RequestMapping("/api/open/user")
 public class UserOpenController {
@@ -42,7 +42,7 @@ public class UserOpenController {
     /**
      * 忘记密码-修改密码
      */
-    @ApiOperation("忘记密码-修改密码")
+    @Operation(summary = "忘记密码-修改密码")
     @PostMapping(value = "/changepass")
     public MessageResult changepass(@RequestBody @Valid UserPassForgetDTO dto ) {
         // 根据code查询用户信息
@@ -55,7 +55,7 @@ public class UserOpenController {
      *
      * @return
      */
-    @ApiOperation(value = "申请忘记密码",notes = "忘记密码将收到修改密码的邮件")
+    @Operation(summary = "申请忘记密码", description = "忘记密码将收到修改密码的邮件")
     @PostMapping(value = "/forget")
     public MessageResult forget(@RequestBody UserPassForgetApplyDTO dto,
             HttpServletRequest request) {
